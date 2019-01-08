@@ -13,6 +13,7 @@
 		"neutrino": "./bin/neutrino.js"
 	},
 	"license": "MIT",
+	"repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/dev-neutrino",
 	"dependencies": {
 		"@babel/core": "^7.1.2",
 		"@babel/plugin-proposal-class-properties": "^7.1.0",

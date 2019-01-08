@@ -3,6 +3,7 @@
 	"version": "0.0.1",
 	"main": "lib/index.js",
 	"license": "MIT",
+	"repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/feathers-server",
 	"dependencies": {
 		"@feathersjs/authentication": "^2.1.2",
 		"@feathersjs/authentication-jwt": "^2.0.0",

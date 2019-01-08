@@ -6,6 +6,7 @@
     "microbundle": "./bin/microbundle.js"
   },
   "license": "MIT",
+  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/dev-microbundle",
   "scripts": {
     "build": "microbundle --entry src/index.js --output lib/index.js --format cjs --external all",
     "dev": "microbundle watch --entry src/index.js --output lib/index.js --format cjs --external all",

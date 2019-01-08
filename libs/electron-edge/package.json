@@ -1,0 +1,9 @@
+{
+  "name": "@z1/lib-electron-edge",
+  "version": "0.0.1",
+  "main": "lib/edge.js",
+  "license": "MIT",
+  "dependencies": {
+    "edge-cs": "^1.2.1"
+  }
+}

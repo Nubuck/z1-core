@@ -1,0 +1,17 @@
+{
+  "name": "@z1/lib-common-tasks",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "bundle-external",
+    "dev": "bundle-watch",
+    "prepublish": "yarn run build"
+  },
+  "dependencies": {
+    "@z1/preset-task": "0.0.1"
+  },
+  "devDependencies": {
+    "@z1/preset-dev-bundle": "0.0.1"
+  }
+}

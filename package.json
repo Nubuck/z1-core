@@ -1,0 +1,26 @@
+{
+  "name": "@z1/core",
+  "version": "0.2.0",
+  "description": "Zero One Core",
+  "main": "index.js",
+  "author": "@Nubuck",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "lerna": "lerna",
+    "clean": "lerna clean",
+    "clean:presets": "lerna clean --scope=@z1/preset-*",
+    "clean:libs": "lerna clean --scope=@z1/lib-*",
+    "list": "lerna ls",
+    "dep": "lerna add",
+    "boot": "lerna bootstrap",
+    "boot:presets": "lerna bootstrap --scope=@z1/preset-*",
+    "boot:libs": "lerna bootstrap --scope=@z1/lib-*",
+    "publish": "lerna publish",
+    "publish:presets": "lerna publish --scope=@z1/preset-*",
+    "publish:libs": "lerna publish --scope=@z1/lib-*"
+  },
+  "dependencies": {
+    "lerna": "^3.8.5"
+  }
+}

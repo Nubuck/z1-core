@@ -1,0 +1,18 @@
+{
+  "name": "@z1/preset-dev-microbundle",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "bin": {
+    "microbundle": "./bin/microbundle.js"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "microbundle --entry src/index.js --output lib/index.js --format cjs --external all",
+    "dev": "microbundle watch --entry src/index.js --output lib/index.js --format cjs --external all",
+    "prepublish": "yarn run build",
+    "help": "microbundle --help"
+  },
+  "dependencies": {
+    "microbundle": "^0.4.4"
+  }
+}

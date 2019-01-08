@@ -1,0 +1,38 @@
+{
+	"name": "@z1/preset-dev-neutrino",
+	"version": "0.0.1",
+	"main": "lib/index.js",
+	"files": [
+		"lib/jest.js",
+		"lib/node.js",
+		"lib/react.js",
+		"lib/react-components.js",
+		"lib/style-loader.js"
+	],
+	"bin": {
+		"neutrino": "./bin/neutrino.js"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"@babel/core": "^7.1.2",
+		"@babel/plugin-proposal-class-properties": "^7.1.0",
+		"@babel/preset-react": "^7.0.0",
+		"@neutrinojs/compile-loader": "^8.3.0",
+		"@neutrinojs/jest": "^8.3.0",
+		"@neutrinojs/library": "^8.3.0",
+		"@neutrinojs/loader-merge": "^8.3.0",
+		"@neutrinojs/node": "^8.3.0",
+		"@neutrinojs/react": "^8.3.0",
+		"@neutrinojs/react-components": "^8.3.0",
+		"@neutrinojs/style-loader": "^8.3.0",
+		"babel-loader": "^8.0.4",
+		"deepmerge": "^2.1.0",
+		"eslint": "^4.19.1",
+		"eslint-plugin-react": "^7.7.0",
+		"neutrino": "^8.3.0",
+		"neutrino-middleware-uglifyjs": "^2.0.2",
+		"react-hot-loader": "^4.3.11",
+		"webpack-node-externals": "^1.7.2",
+		"websocket-driver": "^0.7.0"
+	}
+}

@@ -1,0 +1,33 @@
+{
+  "name": "@z1/preset-feathers-server-core",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "bundle-external",
+    "dev": "bundle-watch",
+    "prepublish": "yarn run build"
+  },
+  "devDependencies": {
+    "@z1/preset-dev-bundle": "^0.0.1"
+  },
+  "dependencies": {
+    "@feathersjs/authentication": "^2.1.2",
+    "@feathersjs/authentication-jwt": "^2.0.0",
+    "@feathersjs/authentication-local": "^1.1.0",
+    "@feathersjs/configuration": "^1.0.2",
+    "@feathersjs/errors": "^3.3.0",
+    "@feathersjs/express": "^1.2.0",
+    "@feathersjs/feathers": "^3.1.3",
+    "@feathersjs/socketio": "^3.2.0",
+    "compression": "^1.7.1",
+    "cors": "^2.8.4",
+    "feathers-authentication-hooks": "^0.1.7",
+    "feathers-hooks-common": "^4.10.0",
+    "feathers-logger": "^0.2.3",
+    "helmet": "^3.9.0",
+    "serve-favicon": "^2.4.5",
+    "socket.io": "^2.1.0",
+    "winston": "^2.4.0"
+  }
+}

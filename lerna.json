@@ -1,0 +1,16 @@
+{
+  "version": "0.0.1",
+  "packages": [
+    "apps/**",
+    "brands/**",
+    "kits/**",
+    "libs/**",
+    "presets/**"
+  ],
+  "hoist": false,
+  "useWorkspaces": false,
+  "npmClient": "yarn",
+  "npmClientArgs": [
+    "--no-lockfile"
+  ]
+}

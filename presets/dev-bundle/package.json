@@ -1,0 +1,38 @@
+{
+  "name": "@z1/preset-dev-bundle",
+  "version": "0.0.1",
+  "main": "lib/index.js",
+  "bin": {
+    "babel": "./bin/babel.js",
+    "babel-node": "./bin/babel-node.js",
+    "microbundle": "./bin/microbundle.js",
+    "bundle": "./bin/bundle.js",
+    "bundle-external": "./bin/bundle-external.js",
+    "bundle-watch": "./bin/bundle-watch.js",
+    "bundle-multi": "./bin/bundle-multi.js",
+    "bundle-multi-external": "./bin/bundle-multi-external.js",
+    "build-lib": "./bin/build-lib.js",
+    "build-bundle": "./bin/build-bundle.js",
+    "build-bundle-external": "./bin/build-bundle-external.js",
+    "build-bundle-watch": "./bin/build-bundle-watch.js",
+    "build-bundle-multi": "./bin/build-bundle-multi.js",
+    "build-bundle-multi-external": "./bin/build-bundle-multi-external.js"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "microbundle --entry src/index.js --output lib/index.js --format cjs --external all",
+    "dev": "microbundle watch --entry src/index.js --output lib/index.js --format cjs --external all",
+    "prepublish": "yarn run build",
+    "multi": "yarn build && node bin/multi",
+    "fix:feathers": "babel "
+  },
+  "dependencies": {
+    "@z1/preset-dev-microbundle": "^0.0.1",
+    "@z1/preset-task": "^0.0.1",
+    "@z1/preset-tools": "^0.0.1",
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-react": "^6.24.1"
+  }
+}

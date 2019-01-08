@@ -4,6 +4,9 @@
   "main": "lib/edge.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "edge-cs": "^1.2.1"
   }

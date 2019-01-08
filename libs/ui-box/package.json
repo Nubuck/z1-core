@@ -4,6 +4,9 @@
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "bundle-external",
     "dev": "bundle-watch",

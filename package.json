@@ -16,9 +16,7 @@
     "boot": "lerna bootstrap",
     "boot:presets": "lerna bootstrap --scope=@z1/preset-*",
     "boot:libs": "lerna bootstrap --scope=@z1/lib-*",
-    "publish": "lerna publish",
-    "publish:presets": "lerna publish --scope=@z1/preset-*",
-    "publish:libs": "lerna publish --scope=@z1/lib-*"
+    "publish": "lerna publish"
   },
   "dependencies": {
     "lerna": "^3.8.5"

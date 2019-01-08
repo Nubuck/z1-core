@@ -17,6 +17,6 @@
   },
   "dependencies": {
     "@z1/preset-feathers-client": "^0.0.1",
-    "@z1/preset-task": "0.0.1"
+    "@z1/preset-task": "^0.0.1"
   }
 }

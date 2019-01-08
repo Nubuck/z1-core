@@ -13,9 +13,9 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "0.0.1"
+    "@z1/preset-task": "^0.0.1"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "0.0.1"
+    "@z1/preset-dev-bundle": "^0.0.1"
   }
 }

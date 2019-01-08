@@ -17,7 +17,7 @@
     "redux-logger": "^3.0.6"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "0.0.1",
+    "@z1/preset-dev-bundle": "^0.0.1",
     "redux": "^3.7.2"
   },
   "peerDependencies": {

@@ -19,7 +19,7 @@
     "redux-first-router-restore-scroll": "^1.2.1"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "0.0.1",
+    "@z1/preset-dev-bundle": "^0.0.1",
     "history": "^4.7.2",
     "react": "^16.2.0",
     "react-redux": "^5.0.7",

@@ -13,13 +13,13 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "0.0.1",
+    "@z1/preset-task": "^0.0.1",
     "redux-logic": "^0.12.3",
     "redux-toolbelt": "^2.1.4",
     "rxjs": "^5.5.6"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "0.0.1",
+    "@z1/preset-dev-bundle": "^0.0.1",
     "redux": "^3.7.2"
   },
   "peerDependencies": {

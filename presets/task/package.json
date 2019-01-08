@@ -6,7 +6,7 @@
 	"repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/dev-bundle",
 	"publishConfig": {
 		"access": "public"
-	  },
+	},
 	"devDependencies": {
 		"@neutrinojs/library": "^8.2.3",
 		"neutrino": "^8.2.3"

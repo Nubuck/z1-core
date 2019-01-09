@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"main": "lib/index.js",
 	"license": "MIT",
-	"repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/dev-bundle",
+	"repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/task",
 	"publishConfig": {
 		"access": "public"
 	},

@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "main": "lib/index.js",
   "files": [
+    "lib/index.js.map",
     "lib/jest.js",
     "lib/jest.js.map",
     "lib/node.js",

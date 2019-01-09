@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-virtualbox-cmd",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",
@@ -13,10 +13,10 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.0.1",
-    "@z1/preset-tools": "^0.0.1"
+    "@z1/preset-task": "^0.0.2",
+    "@z1/preset-tools": "^0.0.2"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.0.1"
+    "@z1/preset-dev-bundle": "^0.0.2"
   }
 }

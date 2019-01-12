@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-feature-box",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",
@@ -13,13 +13,13 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-state-box": "^0.0.3",
+    "@z1/lib-state-box": "^0.0.4",
     "redux-first-router": "^2.1.1",
     "redux-first-router-link": "^2.1.1",
     "redux-first-router-restore-scroll": "^1.2.2"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.0.3",
+    "@z1/preset-dev-bundle": "^0.0.4",
     "history": "^4.7.2",
     "react": "^16.2.0",
     "react-redux": "^5.0.7",

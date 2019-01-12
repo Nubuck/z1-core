@@ -124,7 +124,7 @@ export const createStateStore = core.task(
   t => (props = {}) => {
     const combinedBoxes = combineStateBoxes(props.boxes)
     const router = connectRoutes(
-      props.history,
+      // props.history,
       combinedBoxes.routes,
       t.merge(
         { restoreScroll: restoreScroll() },

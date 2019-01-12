@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "@z1/lib-state-box": "^0.0.3",
-    "redux-first-router": "^0.0.16-next",
-    "redux-first-router-link": "^1.4.2",
-    "redux-first-router-restore-scroll": "^1.2.1"
+    "redux-first-router": "^2.1.1",
+    "redux-first-router-link": "^2.1.1",
+    "redux-first-router-restore-scroll": "^1.2.2"
   },
   "devDependencies": {
     "@z1/preset-dev-bundle": "^0.0.3",

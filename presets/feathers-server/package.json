@@ -32,5 +32,6 @@
     "socket.io": "^2.1.0",
     "tedious": "^2.6.1",
     "winston": "^2.4.0"
-  }
+  },
+  "gitHead": "14c4347ede5f23993337aa61bfd659535da6e0ca"
 }

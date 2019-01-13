@@ -16,5 +16,6 @@
 		"common-tags": "^1.7.2",
 		"lodash.throttle": "^4.1.1",
 		"ramda": "^0.25.0"
-	}
+	},
+	"gitHead": "14c4347ede5f23993337aa61bfd659535da6e0ca"
 }

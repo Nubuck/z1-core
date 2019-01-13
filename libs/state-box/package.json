@@ -22,5 +22,6 @@
   },
   "peerDependencies": {
     "redux": "^3.7.2"
-  }
+  },
+  "gitHead": "14c4347ede5f23993337aa61bfd659535da6e0ca"
 }

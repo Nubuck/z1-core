@@ -18,5 +18,6 @@
   "dependencies": {
     "@z1/preset-feathers-client": "^0.0.5",
     "@z1/preset-task": "^0.0.5"
-  }
+  },
+  "gitHead": "14c4347ede5f23993337aa61bfd659535da6e0ca"
 }

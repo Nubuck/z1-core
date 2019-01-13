@@ -18,5 +18,6 @@
   },
   "devDependencies": {
     "@z1/preset-dev-bundle": "^0.0.5"
-  }
+  },
+  "gitHead": "14c4347ede5f23993337aa61bfd659535da6e0ca"
 }

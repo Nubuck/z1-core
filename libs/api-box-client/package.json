@@ -18,5 +18,6 @@
   "dependencies": {
     "@z1/lib-api-box-client-core": "^0.0.5",
     "localforage": "^1.6.0"
-  }
+  },
+  "gitHead": "14c4347ede5f23993337aa61bfd659535da6e0ca"
 }

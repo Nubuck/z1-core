@@ -51,5 +51,6 @@
     "react-hot-loader": "^4.3.11",
     "webpack-node-externals": "^1.7.2",
     "websocket-driver": "^0.7.0"
-  }
+  },
+  "gitHead": "14c4347ede5f23993337aa61bfd659535da6e0ca"
 }

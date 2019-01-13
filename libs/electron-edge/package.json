@@ -9,5 +9,6 @@
   },
   "dependencies": {
     "edge-cs": "^1.2.1"
-  }
+  },
+  "gitHead": "14c4347ede5f23993337aa61bfd659535da6e0ca"
 }

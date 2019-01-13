@@ -10,8 +10,8 @@ export { NOT_FOUND } from 'redux-first-router'
 
 export const selectLocationState = core.task(t => state => t.pick(['location'], state))
 
-export const NavLink = connect(selectLocationState, _NavLink)
-export const Link = connect(selectLocationState, _Link)
+export const NavLink = connect(selectLocationState)(_NavLink)
+export const Link = connect(selectLocationState)(_Link)
 
 const createRoute = core.task(
   t => (actionType, path, props = {}) => {

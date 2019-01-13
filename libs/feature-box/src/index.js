@@ -4,9 +4,14 @@ import { compose, bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { connectRoutes, redirect } from 'redux-first-router'
 import restoreScroll from 'redux-first-router-restore-scroll'
+import { NavLink as _NavLink, default as _Link } from 'redux-first-router-link'
 
 export { NOT_FOUND } from 'redux-first-router'
-export { NavLink, default as Link } from 'redux-first-router-link'
+
+export const selectLocationState = core.task(t => state => t.pick(['location'], state))
+
+export const NavLink = connect(selectLocationState, _NavLink)
+export const Link = connect(selectLocationState, _Link)
 
 const createRoute = core.task(
   t => (actionType, path, props = {}) => {
@@ -19,9 +24,9 @@ const createRoute = core.task(
 export const createStateBox = core.task(
   t => (props) => {
     if (t.isType(
-        t.path([ 'routes' ], props),
-        'Function',
-      )) {
+      t.path(['routes'], props),
+      'Function',
+    )) {
       const box = core.createStateBox(props)
       return t.merge(box, {
         routes: t.mergeAll(props.routes(createRoute, box.actions) || []),
@@ -37,23 +42,23 @@ export const composeStateBox = core.task(
       (collection, part) => {
         return {
           initial: t.not(t.has('initial')(part))
-            ? collection.initial
-            : t.mergeDeepRight(collection.initial, part.initial || {}),
+                   ? collection.initial
+                   : t.mergeDeepRight(collection.initial, part.initial || {}),
           mutations: t.not(t.has('mutations')(part))
-            ? collection.mutations
-            : t.concat(collection.mutations, [ part.mutations ]),
+                     ? collection.mutations
+                     : t.concat(collection.mutations, [part.mutations]),
           routes: t.not(t.has('routes')(part))
-            ? collection.routes
-            : t.concat(collection.routes, [ part.routes ]),
+                  ? collection.routes
+                  : t.concat(collection.routes, [part.routes]),
           guards: t.not(t.has('guards')(part))
-            ? collection.guards
-            : t.concat(collection.guards, [ part.guards ]),
+                  ? collection.guards
+                  : t.concat(collection.guards, [part.guards]),
           effects: t.not(t.has('effects')(part))
-            ? collection.effects
-            : t.concat(collection.effects, [ part.effects ]),
+                   ? collection.effects
+                   : t.concat(collection.effects, [part.effects]),
           onInit: t.not(t.has('onInit')(part))
-            ? collection.onInit
-            : t.concat(collection.onInit, [ part.onInit ]),
+                  ? collection.onInit
+                  : t.concat(collection.onInit, [part.onInit]),
         }
       },
       {
@@ -73,7 +78,7 @@ export const composeStateBox = core.task(
           props.initial || {},
         ),
       },
-      t.omit([ 'initial' ], props || {}),
+      t.omit(['initial'], props || {}),
       {
         mutations(m) {
           return t.flatten(t.map(
@@ -129,12 +134,12 @@ export const createStateStore = core.task(
       t.merge(
         { restoreScroll: restoreScroll() },
         t.not(t.has('routerOptions')(props))
-          ? {}
-          : props.routerOptions,
+        ? {}
+        : props.routerOptions,
       ),
     )
     return core.createStateStore(
-      t.merge(t.omit([ 'routerOptions' ], props), {
+      t.merge(t.omit(['routerOptions'], props), {
         context: t.merge(
           props.context,
           { redirect },
@@ -142,7 +147,7 @@ export const createStateStore = core.task(
         boxes: combinedBoxes,
         middleware: t.concat(
           props.middleware || [],
-          [ router.middleware ],
+          [router.middleware],
         ),
         reducers: t.merge(
           props.reducers || {},
@@ -172,41 +177,41 @@ export const combineFeatures = task(
     (combinedFeatures, feature) => {
       return {
         state: t.notType(
-          t.path([ 'state' ], feature),
+          t.path(['state'], feature),
           'Array',
         )
-          ? combinedFeatures.state
-          : t.concat(
+               ? combinedFeatures.state
+               : t.concat(
             combinedFeatures.state,
-            t.path([ 'state' ], feature),
+            t.path(['state'], feature),
           ),
         ui: t.notType(
-          t.path([ 'ui' ], feature),
+          t.path(['ui'], feature),
           'Object',
         )
-          ? combinedFeatures.ui
-          : t.merge(
+            ? combinedFeatures.ui
+            : t.merge(
             combinedFeatures.ui, {
-              [feature.name]: t.path([ 'ui' ], feature),
+              [feature.name]: t.path(['ui'], feature),
             },
           ),
         routes: t.notType(
-          t.path([ 'routes' ], feature),
+          t.path(['routes'], feature),
           'Array',
         )
-          ? combinedFeatures.routes
-          : t.concat(
+                ? combinedFeatures.routes
+                : t.concat(
             combinedFeatures.routes,
-            t.path([ 'routes' ], feature),
+            t.path(['routes'], feature),
           ),
         tasks: t.notType(
-          t.path([ 'tasks' ], feature),
+          t.path(['tasks'], feature),
           'Object',
         )
-          ? combinedFeatures.tasks
-          : t.merge(
+               ? combinedFeatures.tasks
+               : t.merge(
             combinedFeatures.tasks, {
-              [feature.name]: t.path([ 'tasks' ], feature),
+              [feature.name]: t.path(['tasks'], feature),
             },
           ),
       }
@@ -228,8 +233,8 @@ export const renderRoute = task(
         t.findIndex(
           type => t.eq(actionType, type),
           t.isType(routeDef.type, 'Array')
-            ? routeDef.type
-            : [ routeDef.type ],
+          ? routeDef.type
+          : [routeDef.type],
         ),
         -1,
       ),
@@ -250,31 +255,31 @@ export const connectState = task(
     selector,
     (
       t.notType(mutations, 'Object')
-        ? dispatch => {
-          return { dispatch }
+      ? dispatch => {
+        return { dispatch }
+      }
+      : dispatch => {
+        return {
+          dispatch,
+          mutations:
+            bindActionCreators(
+              mutations,
+              dispatch,
+            ),
         }
-        : dispatch => {
-          return {
-            dispatch,
-            mutations:
-              bindActionCreators(
-                mutations,
-                dispatch,
-              ),
-          }
-        }
+      }
     ),
   ),
 )
 
 export const createKit = task(
   t => (initial, factory) => (props = {}) => {
-    const ui = t.path([ 'ui' ], props)
+    const ui = t.path(['ui'], props)
     return factory(
       t.merge(
         t.mergeDeepRight(
           initial,
-          t.omit([ 'ui' ], props),
+          t.omit(['ui'], props),
         ),
         { ui },
       ),
@@ -284,12 +289,12 @@ export const createKit = task(
 
 export const createFeature = task(
   t => (factory, initial = {}) => (props = {}) => {
-    const ui = t.path([ 'ui' ], props)
+    const ui = t.path(['ui'], props)
     return factory(
       t.merge(
         t.mergeDeepRight(
           initial,
-          t.omit([ 'ui' ], props),
+          t.omit(['ui'], props),
         ),
         { ui },
       ),

@@ -4,16 +4,16 @@ import { compose, bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { connectRoutes, redirect } from 'redux-first-router'
 import restoreScroll from 'redux-first-router-restore-scroll'
-import { NavLink as _NavLink, default as _Link } from 'redux-first-router-link'
-
+// import { NavLink as _NavLink, default as _Link } from 'redux-first-router-link'
+export { NavLink, default as Link } from 'redux-first-router-link'
 export { NOT_FOUND } from 'redux-first-router'
 
-export const selectLocationState = ({ location }) => (
-  { location }
-)
+// export const selectLocationState = ({ location }) => (
+//   { location }
+// )
 
-export const NavLink = connect(selectLocationState)(_NavLink)
-export const Link = connect(selectLocationState)(_Link)
+// export const NavLink = connect(selectLocationState)(_NavLink)
+// export const Link = connect(selectLocationState)(_Link)
 
 const createRoute = core.task(
   t => (actionType, path, props = {}) => {

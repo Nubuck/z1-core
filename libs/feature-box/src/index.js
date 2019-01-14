@@ -8,7 +8,9 @@ import { NavLink as _NavLink, default as _Link } from 'redux-first-router-link'
 
 export { NOT_FOUND } from 'redux-first-router'
 
-export const selectLocationState = core.task(t => state => t.pick(['location'], state))
+export const selectLocationState = ({ location }) => (
+  { location }
+)
 
 export const NavLink = connect(selectLocationState)(_NavLink)
 export const Link = connect(selectLocationState)(_Link)

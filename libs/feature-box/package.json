@@ -13,23 +13,23 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-state-box": "^0.0.4",
+    "@z1/lib-state-box": "^0.0.7",
     "redux-first-router": "^2.1.1",
     "redux-first-router-link": "^2.1.1",
     "redux-first-router-restore-scroll": "^1.2.2"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.0.4",
+    "@z1/preset-dev-bundle": "^0.0.7",
     "history": "^4.7.2",
-    "react": "^16.2.0",
-    "react-redux": "^5.0.7",
+    "react": "^16.7.0",
+    "react-redux": "^6.0.0",
     "redux": "^3.7.2"
   },
   "peerDependencies": {
-    "history": "^4.7.2",
-    "react": "^16.2.0",
-    "react-redux": "^5.0.7",
-    "redux": "^3.7.2"
+    "history": "*",
+    "react": "*",
+    "react-redux": "*",
+    "redux": "*"
   },
   "gitHead": "14c4347ede5f23993337aa61bfd659535da6e0ca"
 }

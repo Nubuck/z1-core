@@ -48,7 +48,7 @@
     "eslint-plugin-react": "^7.7.0",
     "neutrino": "^8.3.0",
     "neutrino-middleware-uglifyjs": "^2.0.2",
-    "react-hot-loader": "^4.3.11",
+    "react-hot-loader": "^4.6.3",
     "webpack-node-externals": "^1.7.2",
     "websocket-driver": "^0.7.0"
   },

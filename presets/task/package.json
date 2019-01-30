@@ -1,6 +1,6 @@
 {
 	"name": "@z1/preset-task",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"main": "lib/index.js",
 	"license": "MIT",
 	"repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/task",

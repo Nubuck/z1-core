@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-feature-box-server",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",
@@ -13,11 +13,11 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-api-box-sql": "^0.0.9",
-    "@z1/preset-task": "^0.0.9"
+    "@z1/lib-api-box-sql": "^0.0.10",
+    "@z1/preset-task": "^0.0.10"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.0.9"
+    "@z1/preset-dev-bundle": "^0.0.10"
   },
   "gitHead": "14c4347ede5f23993337aa61bfd659535da6e0ca"
 }

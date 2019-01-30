@@ -11,13 +11,14 @@ export const createApiClient = task(t => props => {
   client.configure(
     FeathersIO(
       IO(props.path, {
-        pingTimeout: 50000,
-        timeout: 50000,
-        requestTimeout: 20000,
-        // transports: props.polling ? ['polling'] : ['websocket'],
-        // forceNew: true,
+        transports: props.polling ? ['polling'] : ['websocket'],
         reconnect: true,
-      })
+      }),
+      {
+        pingTimeout: props.pingTimeout || 5000,
+        timeout: props.timeout || 5000,
+        requestTimeout: props.requestTimeout || 5000,
+      }
     )
   )
   client.configure(

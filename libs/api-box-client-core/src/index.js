@@ -8,16 +8,18 @@ import {
 
 export const createApiClient = task(t => props => {
   const client = Feathers()
-  const baseProps = {
-    pingTimeout: 50000,
-    timeout: 50000,
-    requestTimeout: 20000,
-  }
-  const nextProps = t.not(props.polling)
-    ? baseProps
-    : t.merge(baseProps, { transports: ['polling', 'websocket'] })
-
-  client.configure(FeathersIO(IO(props.path), nextProps))
+  client.configure(
+    FeathersIO(
+      IO(props.path, {
+        pingTimeout: 50000,
+        timeout: 50000,
+        requestTimeout: 20000,
+        // transports: props.polling ? ['polling'] : ['websocket'],
+        // forceNew: true,
+        reconnect: true,
+      })
+    )
+  )
   client.configure(
     FeathersAuth(
       t.merge(

@@ -14,8 +14,8 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.0.14",
-    "@z1/preset-tools": "^0.0.14",
+    "@z1/preset-task": "^0.0.13",
+    "@z1/preset-tools": "^0.0.13",
     "body-parser": "^1.18.3",
     "compression": "^1.7.1",
     "cors": "^2.8.4",
@@ -24,6 +24,7 @@
     "helmet": "^3.9.0"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.0.14"
-  }
+    "@z1/preset-dev-bundle": "^0.0.13"
+  },
+  "gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"
 }

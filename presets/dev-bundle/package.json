@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-dev-bundle",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "main": "lib/index.js",
   "bin": {
     "babel": "./bin/babel.js",
@@ -31,9 +31,9 @@
     "fix:feathers": "babel "
   },
   "dependencies": {
-    "@z1/preset-dev-microbundle": "^0.0.13",
-    "@z1/preset-task": "^0.0.13",
-    "@z1/preset-tools": "^0.0.13",
+    "@z1/preset-dev-microbundle": "^0.0.14",
+    "@z1/preset-task": "^0.0.14",
+    "@z1/preset-tools": "^0.0.14",
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",

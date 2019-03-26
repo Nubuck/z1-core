@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-dev-neutrino",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "main": "lib/index.js",
   "files": [
     "lib/index.js.map",

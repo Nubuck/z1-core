@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-sql",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",
@@ -13,14 +13,14 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-feathers-server": "^0.0.17",
-    "@z1/preset-task": "^0.0.17",
-    "@z1/preset-tools": "^0.0.17",
+    "@z1/preset-feathers-server": "^0.0.18",
+    "@z1/preset-task": "^0.0.18",
+    "@z1/preset-tools": "^0.0.18",
     "express-history-api-fallback": "^2.2.1",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.0.17"
+    "@z1/preset-dev-bundle": "^0.0.18"
   },
   "gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"
 }

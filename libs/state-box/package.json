@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-state-box",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",
@@ -13,11 +13,11 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-state-box-core": "^0.0.19",
+    "@z1/lib-state-box-core": "^0.0.20",
     "redux-logger": "^3.0.6"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.0.19",
+    "@z1/preset-dev-bundle": "^0.0.20",
     "redux": "^3.7.2"
   },
   "peerDependencies": {

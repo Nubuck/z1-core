@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-client",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",
@@ -13,10 +13,10 @@
     "prepublish": "yarn run build"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.0.18"
+    "@z1/preset-dev-bundle": "^0.0.19"
   },
   "dependencies": {
-    "@z1/lib-api-box-client-core": "^0.0.18",
+    "@z1/lib-api-box-client-core": "^0.0.19",
     "localforage": "^1.6.0"
   },
   "gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"

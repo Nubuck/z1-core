@@ -24,6 +24,7 @@ function socketioClient (connection, options) {
       throw new Error('Only one default client provider can be configured');
     }
 
+    this.connection = connection;
     this.io = connection;
     this.defaultService = defaultService;
   };

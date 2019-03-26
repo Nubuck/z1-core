@@ -1,4 +1,4 @@
-import * as core from '@z1/lib-api-box-client-core'
+import * as core from './client'
 import nodePersist from 'node-persist'
 
 export const createApiClient = core.Task(

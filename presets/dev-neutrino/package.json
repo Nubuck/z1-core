@@ -30,6 +30,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "build": "bundle-multi-external",
+    "dev": "bundle-multi-watch",
+    "prepublish": "yarn run build"
+  },
   "dependencies": {
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
@@ -51,6 +56,9 @@
     "react-hot-loader": "^4.6.3",
     "webpack-node-externals": "^1.7.2",
     "websocket-driver": "^0.7.0"
+  },
+  "devDependencies": {
+    "@z1/preset-dev-bundle": "^0.0.20"
   },
   "gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"
 }

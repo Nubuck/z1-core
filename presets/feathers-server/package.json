@@ -7,6 +7,11 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "build": "bundle-external",
+    "dev": "bundle-watch",
+    "prepublish": "yarn run build"
+  },
   "dependencies": {
     "@feathersjs/authentication": "^2.1.2",
     "@feathersjs/authentication-jwt": "^2.0.0",
@@ -32,6 +37,9 @@
     "socket.io": "^2.1.0",
     "tedious": "^2.6.1",
     "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "@z1/preset-dev-bundle": "^0.0.20"
   },
   "gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"
 }

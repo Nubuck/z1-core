@@ -16,7 +16,8 @@
     "@z1/preset-dev-bundle": "^0.0.20"
   },
   "dependencies": {
-    "@z1/lib-api-box-client-core": "^0.0.20",
+    "@z1/preset-feathers-client-node": "^0.0.20",
+    "@z1/preset-task": "^0.0.20",
     "node-persist": "^3.0.0"
   },
   "gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"

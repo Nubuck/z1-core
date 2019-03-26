@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-dev-microbundle",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "main": "lib/index.js",
   "bin": {
     "microbundle": "./bin/microbundle.js"

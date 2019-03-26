@@ -1,6 +1,6 @@
 // core
 import feathers from '@feathersjs/feathers'
-import feathersIO from '@feathersjs/socketio-client'
+import feathersIO from './feathers-socketio'
 import feathersAuth from '@feathersjs/authentication-client'
 const io = require('socket.io-client')
 

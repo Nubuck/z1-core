@@ -393,6 +393,7 @@ export const combineApiBoxes = task(
         if (t.not(t.eq(sequelize, null))) {
           // persist db instance
           app.set('sequelizeClient', sequelize)
+          app.set('Sequelize', Sequelize)
           // define models
           const define = sequelize
             .define

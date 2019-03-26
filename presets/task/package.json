@@ -1,21 +1,21 @@
 {
-	"name": "@z1/preset-task",
-	"version": "0.0.15",
-	"main": "lib/index.js",
-	"license": "MIT",
-	"repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/task",
-	"publishConfig": {
-		"access": "public"
-	},
-	"devDependencies": {
-		"@neutrinojs/library": "^8.2.3",
-		"neutrino": "^8.2.3"
-	},
-	"dependencies": {
-		"change-case": "^3.0.2",
-		"common-tags": "^1.7.2",
-		"lodash.throttle": "^4.1.1",
-		"ramda": "^0.25.0"
-	},
-	"gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"
+  "name": "@z1/preset-task",
+  "version": "0.0.15",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/task",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@neutrinojs/library": "^8.2.3",
+    "neutrino": "^8.2.3"
+  },
+  "dependencies": {
+    "change-case": "^3.0.2",
+    "common-tags": "^1.7.2",
+    "lodash.throttle": "^4.1.1",
+    "ramda": "^0.25.0"
+  },
+  "gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"
 }

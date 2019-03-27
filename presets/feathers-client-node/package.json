@@ -18,7 +18,7 @@
   "dependencies": {
     "@feathersjs/authentication-client": "^1.0.2",
     "@feathersjs/feathers": "^3.1.3",
-    "@feathersjs/transport-commons": "^4.2.1",
+    "@feathersjs/socketio-client": "^1.2.1",
     "socket.io-client": "^2.2.0"
   },
   "gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"

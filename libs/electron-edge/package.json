@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-electron-edge",
-  "version": "0.0.21",
+  "version": "0.1.0",
   "main": "lib/edge.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",

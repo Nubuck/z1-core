@@ -21,7 +21,7 @@ export const createApiClient = task(t => props => {
         {
           storage: !t.has('storage')(props) ? undefined : props.storage,
         },
-        !t.has('auth')(props) ? {} : props.auth
+        t.not(t.has('auth')(props)) ? {} : props.auth
       )
     )
   )

@@ -13,9 +13,7 @@ import {
 } from './awaiting'
 
 const of = function to(promise) {
-  return promise
-    .then(result => [ null, result ])
-    .catch(err => [ err, null ])
+  return promise.then(result => [null, result]).catch(err => [err, null])
 }
 
 export const TASK_ASYNC = {

@@ -44,7 +44,7 @@ export const Winston = winston
 
 // helpers
 export function plug(factory) {
-  return function () {
+  return function() {
     const app = this
     factory(app)
   }

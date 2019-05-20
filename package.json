@@ -11,11 +11,13 @@
     "clean": "lerna clean",
     "clean:presets": "lerna clean --scope=@z1/preset-*",
     "clean:libs": "lerna clean --scope=@z1/lib-*",
+    "clean:kits": "lerna clean --scope=@z1/kit-*",
     "list": "lerna ls",
     "dep": "lerna add",
     "boot": "lerna bootstrap",
     "boot:presets": "lerna bootstrap --scope=@z1/preset-*",
     "boot:libs": "lerna bootstrap --scope=@z1/lib-*",
+    "boot:kits": "lerna bootstrap --scope=@z1/kit-*",
     "publish": "lerna publish"
   },
   "dependencies": {

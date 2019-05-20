@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "lib/index.js",
   "license": "MIT",
-  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",
+  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/state-box-node",
   "publishConfig": {
     "access": "public"
   },

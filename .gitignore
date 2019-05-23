@@ -10,6 +10,7 @@ shipments
 yarn-error.log
 yarn.lock
 apps/cvlab/data/dnn
+_lab
 
 # Created by https://www.gitignore.io/api/node,macos,linux,bower,vagrant,laravel,windows,composer,intellij,phpstorm,webstorm,wordpress,visualstudio,visualstudiocode
 

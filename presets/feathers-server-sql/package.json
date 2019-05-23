@@ -1,6 +1,6 @@
 {
-  "name": "@z1/preset-feathers-server-nedb",
-  "version": "0.0.1",
+  "name": "@z1/preset-feathers-server-sql",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "license": "MIT",
   "scripts": {
@@ -12,7 +12,12 @@
     "@z1/preset-dev-bundle": "^0.0.1"
   },
   "dependencies": {
-    "feathers-nedb": "^4.0.0",
-    "nedb": "^1.8.0"
+    "feathers-sequelize": "^3.0.1",
+    "mysql": "^2.15.0",
+    "mysql2": "^1.5.2",
+    "pg": "^7.4.1",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.36.0",
+    "tedious": "^2.6.1"
   }
 }

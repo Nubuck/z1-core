@@ -17,7 +17,7 @@ import {
 import { commonHooks, safeServiceName } from './common'
 import { combineApiBoxes } from './box'
 
-// main
+// channels
 const defaultChannelConfig = function(app) {
   app.on('connection', connection => {
     // On a new real-time connection, add it to the anonymous channel
@@ -59,7 +59,6 @@ const defaultChannelConfig = function(app) {
     return app.channel('authenticated')
   })
 }
-
 const configureChannels = task(t => channels => app => {
   if (t.notType(app.channel, 'Function')) {
     // If no real-time functionality has been configured
@@ -74,6 +73,8 @@ const configureChannels = task(t => channels => app => {
     }, channels || [])
   }
 })
+
+// auth
 const authConfig = task(t => app => {
   const config = app.get('authentication')
   return t.merge(config, {

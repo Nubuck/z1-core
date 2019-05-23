@@ -1,0 +1,19 @@
+{
+  "name": "@z1/lib-api-box-nedb",
+  "version": "0.1.3",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "bundle-external",
+    "dev": "bundle-watch",
+    "prepublish": "yarn run build"
+  },
+  "dependencies": {
+    "@z1/preset-feathers-server-nedb": "^0.1.0",
+    "@z1/preset-task": "^0.1.0",
+    "@z1/lib-api-box-core": "^0.1.3"
+  },
+  "devDependencies": {
+    "@z1/preset-dev-bundle": "0.0.1"
+  }
+}

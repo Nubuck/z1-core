@@ -1,5 +1,5 @@
 import { task } from '@z1/preset-task'
-// import { FeathersSequelize } from '@z1/preset-feathers-server'
+import { FeathersSequelize } from '@z1/preset-feathers-server'
 
 // parts
 import { safeServiceName, hookSignature, hookAndEventSignature } from './common'
@@ -36,12 +36,12 @@ import { safeServiceName, hookSignature, hookAndEventSignature } from './common'
 //    patched(data, app){},
 //    removed(data, app){}
 // }
-export const makeCreateService = task(
-  t => adapter => (name, service, modifier = undefined) => app => {
+export const createService = task(
+  t => (name, service, modifier = undefined) => app => {
     if (t.isType(service, 'Function')) {
       app.configure(a =>
         service(a, props =>
-          adapter(
+          FeathersSequelize(
             t.merge(props, {
               name,
               paginate: t.has('paginate')(props)
@@ -53,7 +53,7 @@ export const makeCreateService = task(
       )
     } else {
       const nextService = t.has('Model')(service)
-        ? adapter(
+        ? FeathersSequelize(
             t.merge(t.omit(['Model', 'paginate'], service), {
               name,
               Model: service.Model,

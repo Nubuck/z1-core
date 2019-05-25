@@ -113,84 +113,87 @@ const configureAuthentication = task(
 // middleware(app){}
 // hooks: { before: {...}, after: {...} }
 // channels(app){}
-export const makeCreateApi = task(t => combineApiBoxes =>
-  function({ namespace, boxes, middleware, hooks, authHooks, channels }) {
-    // Parse props
-    const nextBoxes = t.isType(boxes, 'Object') ? boxes : combineApiBoxes(boxes)
+export const createApi = task(
+  t =>
+    function({ namespace, boxes, middleware, hooks, authHooks, channels }) {
+      // Parse props
+      const nextBoxes = t.isType(boxes, 'Object')
+        ? boxes
+        : combineApiBoxes(boxes)
 
-    // Create feathers app with Express engine
-    const api = FeathersExpress(Feathers())
+      // Create feathers app with Express engine
+      const api = FeathersExpress(Feathers())
 
-    // Load app FeathersConfig
-    // NOTE: https://github.com/lorenwest/node-config/wiki/Configuration-Files
-    api.configure(FeathersConfig())
-    api.configure(FeathersLogger(Winston))
-    // Enable Cors, security, compression, favicon and body parsing
-    if (t.not(namespace)) {
-      api.use(Cors())
-      api.use(Compression())
-      api.use(FeathersExpress.json())
-      api.use(FeathersExpress.urlencoded({ extended: true }))
-    }
-    // Set up Plugins and providers
-    api.configure(FeathersExpress.rest())
-    api.configure(FeathersSocketIO())
+      // Load app FeathersConfig
+      // NOTE: https://github.com/lorenwest/node-config/wiki/Configuration-Files
+      api.configure(FeathersConfig())
+      api.configure(FeathersLogger(Winston))
+      // Enable Cors, security, compression, favicon and body parsing
+      if (t.not(namespace)) {
+        api.use(Cors())
+        api.use(Compression())
+        api.use(FeathersExpress.json())
+        api.use(FeathersExpress.urlencoded({ extended: true }))
+      }
+      // Set up Plugins and providers
+      api.configure(FeathersExpress.rest())
+      api.configure(FeathersSocketIO())
 
-    // Lifecycle before
-    api.configure(nextBoxes.lifecycle('beforeConfig'))
+      // Lifecycle before
+      api.configure(nextBoxes.lifecycle('beforeConfig'))
 
-    // Configure authentication
-    if (api.get('authentication')) {
-      api.configure(app =>
-        configureAuthentication(
-          app,
-          nextBoxes.lifecycle('authConfig'),
-          authHooks
+      // Configure authentication
+      if (api.get('authentication')) {
+        api.configure(app =>
+          configureAuthentication(
+            app,
+            nextBoxes.lifecycle('authConfig'),
+            authHooks
+          )
+        )
+      }
+
+      // Configure boxes
+      api.configure(nextBoxes.configure)
+
+      // Configure channels
+      api.configure(
+        configureChannels(
+          t.concat(
+            t.isType(channels, 'Function') ? [channels] : [],
+            nextBoxes.collection.channels || []
+          )
         )
       )
+
+      // Host the public folder
+      if (api.get('public')) {
+        api.use('/', FeathersExpress.static(api.get('public')))
+      }
+
+      // Configure other middleware
+      if (t.isType(middleware, 'Function')) {
+        api.configure(middleware)
+      }
+
+      // Configure a middleware for 404s and the error handler
+      api.use(FeathersExpress.notFound())
+      api.use(FeathersExpress.errorHandler({ logger: Winston }))
+
+      // Attach global hooks
+      if (t.isType(hooks, 'Object')) {
+        api.hooks(hooks)
+      } else if (t.isType(hooks, 'Function')) {
+        api.hooks(hooks(commonHooks))
+      }
+
+      // Lifecycle after and onStart
+      api.configure(nextBoxes.lifecycle('afterConfig'))
+      api.onStart = () => {
+        nextBoxes.lifecycle('onStart')(api)
+      }
+
+      // yield
+      return api
     }
-
-    // Configure boxes
-    api.configure(nextBoxes.configure)
-
-    // Configure channels
-    api.configure(
-      configureChannels(
-        t.concat(
-          t.isType(channels, 'Function') ? [channels] : [],
-          nextBoxes.collection.channels || []
-        )
-      )
-    )
-
-    // Host the public folder
-    if (api.get('public')) {
-      api.use('/', FeathersExpress.static(api.get('public')))
-    }
-
-    // Configure other middleware
-    if (t.isType(middleware, 'Function')) {
-      api.configure(middleware)
-    }
-
-    // Configure a middleware for 404s and the error handler
-    api.use(FeathersExpress.notFound())
-    api.use(FeathersExpress.errorHandler({ logger: Winston }))
-
-    // Attach global hooks
-    if (t.isType(hooks, 'Object')) {
-      api.hooks(hooks)
-    } else if (t.isType(hooks, 'Function')) {
-      api.hooks(hooks(commonHooks))
-    }
-
-    // Lifecycle after and onStart
-    api.configure(nextBoxes.lifecycle('afterConfig'))
-    api.onStart = () => {
-      nextBoxes.lifecycle('onStart')(api)
-    }
-
-    // yield
-    return api
-  }
 )

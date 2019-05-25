@@ -1,6 +1,16 @@
 import { task } from '@z1/preset-task'
-import { Sequelize } from '@z1/preset-feathers-server-sql'
-import * as ApiBox from '@z1/lib-api-box-core'
+import { Sequelize, FeathersSequelize } from '@z1/preset-feathers-server-sql'
+import {
+  makeCreateService,
+  makeCreateApiBox,
+  makeComposeApiBox,
+  makeCombineApiBoxes,
+  makeCreateApi,
+  makeCreateApiServer,
+  makeReloadServer,
+  makeCreateAppServer,
+  makeReloadAppServer,
+} from '@z1/lib-api-box-core'
 
 // defs
 export const operatorsAliases = {
@@ -41,7 +51,7 @@ export const operatorsAliases = {
   $join: Sequelize.Op.join,
 }
 
-// main
+// models
 const createModel = task(t => (name, props, options = {}) => define => {
   if (t.has('associate')(options)) {
     const model = define(name, props, t.omit(['associate'], options))
@@ -73,3 +83,76 @@ const createDBConnection = task(t => app => {
     )
   }
 })
+
+// box
+const createService = makeCreateService(FeathersSequelize)
+export const createApiBox = task(t =>
+  makeCreateApiBox(
+    models => define =>
+      t.map(model => model(define))(
+        models(createModel, Sequelize.DataTypes, Sequelize) || []
+      ),
+    createService
+  )
+)
+export const composeApiBox = makeComposeApiBox(createApiBox)
+export const combineApiBoxes = task(t =>
+  makeCombineApiBoxes({
+    beforeSetup(app, boxes) {
+      // configure DB connection
+      const sequelize = createDBConnection(app)
+      // persist db instance
+      app.set('sequelizeClient', sequelize)
+      app.set('Sequelize', Sequelize)
+      // define models
+      const define = sequelize.define.bind(sequelize)
+      t.forEach(model => {
+        if (t.isType(model, 'Function')) {
+          model(define)
+        }
+      }, boxes.models)
+    },
+    onSetup(app, boxes) {
+      const sequelize = app.get('sequelizeClient')
+      const models = sequelize.models
+
+      t.forEachObjIndexed(model => {
+        if (t.has('associate')(model)) {
+          model.associate(models)
+        }
+      }, models || {})
+
+      // Sync to the database
+      const db = app.get('db')
+      const forceAlter = t.has('forceAlter')(db) ? db.forceAlter : false
+      const syncOptions = forceAlter
+        ? { alter: true }
+        : t.eq(process.env.NODE_ENV, 'development')
+        ? { alter: true }
+        : { force: false }
+
+      sequelize
+        .sync(syncOptions)
+        .then(() => {
+          // lifecycle onSync
+          t.forEach(action => {
+            action('onSync', app)
+          }, boxes.lifecycle)
+        })
+        .catch(error => {
+          app.error('FAILED TO SYNC DB', error)
+        })
+    },
+    getModels(app) {
+      const sequelize = app.get('sequelizeClient')
+      return sequelize.models
+    },
+  })
+)
+// api
+export const createApi = makeCreateApi(combineApiBoxes)
+// server
+export const createApiServer = makeCreateApiServer(createApi)
+export const reloadApiServer = makeReloadServer(createApi)
+export const createAppiServer = makeCreateAppServer(createApi)
+export const reloadAppServer = makeReloadAppServer(createApi)

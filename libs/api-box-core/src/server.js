@@ -6,58 +6,54 @@ import Fallback from 'express-history-api-fallback'
 
 // parts
 import { pathIncludeNamespace, safeServiceName } from './common'
-import { createApi } from './api'
+// import { createApi } from './api'
 
 // main
-export const createApiServer = task(
-  t =>
-    function(props = {}, server = undefined) {
-      try {
-        // check props for namespace and site
-        const namespace = t.path(['namespace'], props)
-        const appFolderName = t.path(['appFolderName'], props)
-        const middleware = t.path(['middleware'], props)
-        if (
-          t.and(
-            t.isType(namespace, 'String'),
-            t.isType(appFolderName, 'String')
-          )
-        ) {
-          // if found add history fallback api + static
-          props = t.merge(props, {
-            middleware(app) {
-              const root = Fs.path(appFolderName)
-              const safeNamespace = `/${safeServiceName(namespace)}`
-              app.use(safeNamespace, FeathersExpress.static(root))
-              app.use(safeNamespace, (req, res, next) => {
-                // app.log('APP REQUEST -> ', req.originalUrl, namespace)
-                if (t.not(pathIncludeNamespace(req.originalUrl, namespace))) {
-                  next()
-                } else {
-                  Fallback('index.html', { root })(req, res, next)
-                }
-              })
-              if (t.isType(middleware, 'Function')) {
-                middleware(app)
+export const makeCreateApiServer = task(t => createApi =>
+  function(props = {}, server = undefined) {
+    try {
+      // check props for namespace and site
+      const namespace = t.path(['namespace'], props)
+      const appFolderName = t.path(['appFolderName'], props)
+      const middleware = t.path(['middleware'], props)
+      if (
+        t.and(t.isType(namespace, 'String'), t.isType(appFolderName, 'String'))
+      ) {
+        // if found add history fallback api + static
+        props = t.merge(props, {
+          middleware(app) {
+            const root = Fs.path(appFolderName)
+            const safeNamespace = `/${safeServiceName(namespace)}`
+            app.use(safeNamespace, FeathersExpress.static(root))
+            app.use(safeNamespace, (req, res, next) => {
+              // app.log('APP REQUEST -> ', req.originalUrl, namespace)
+              if (t.not(pathIncludeNamespace(req.originalUrl, namespace))) {
+                next()
+              } else {
+                Fallback('index.html', { root })(req, res, next)
               }
-            },
-          })
-        }
-        const api = createApi(props)
-        if (t.not(server)) {
-          server = createServer(api)
-        }
-        return {
-          namespace: null,
-          main: t.not(server) ? createServer(api) : null,
-          api,
-          server,
-        }
-      } catch (e) {
-        console.log('ERROR BOOTING APP', e)
-        throw e
+            })
+            if (t.isType(middleware, 'Function')) {
+              middleware(app)
+            }
+          },
+        })
       }
+      const api = createApi(props)
+      if (t.not(server)) {
+        server = createServer(api)
+      }
+      return {
+        namespace: null,
+        main: t.not(server) ? createServer(api) : null,
+        api,
+        server,
+      }
+    } catch (e) {
+      console.log('ERROR BOOTING APP', e)
+      throw e
     }
+  }
 )
 
 export const runServer = task(t => (app, cb) => {
@@ -73,17 +69,18 @@ export const runServer = task(t => (app, cb) => {
   return app
 })
 
-export const reloadServer = function(app, props) {
-  app.server.removeListener('request', app.api)
-  delete app.api
-  const nextApp = createApiServer(props, app.server)
-  app.server.on('request', nextApp.api)
-  nextApp.api.setup(app.server)
-  return nextApp
-}
+export const makeReloadServer = createApiServer =>
+  function(app, props) {
+    app.server.removeListener('request', app.api)
+    delete app.api
+    const nextApp = createApiServer(props, app.server)
+    app.server.on('request', nextApp.api)
+    nextApp.api.setup(app.server)
+    return nextApp
+  }
 
 // app server
-export const createAppServer = task(t => (props, cb) => {
+export const makeCreateAppServer = task(t => createApi => (props, cb) => {
   // check for namespace and configure props
   // -> create main app and mount api at namespace
   const namespace = t.path(['namespace'], props)
@@ -101,7 +98,7 @@ export const createAppServer = task(t => (props, cb) => {
       const root = Fs.path(appFolderName)
       main.use(FeathersExpress.static(root))
       main.use((req, res, next) => {
-        api.log('APP REQUEST -> ', req.originalUrl, namespace)
+        // api.log('APP REQUEST -> ', req.originalUrl, namespace)
         if (pathIncludeNamespace(req.originalUrl, namespace)) {
           next()
         } else {
@@ -130,7 +127,7 @@ export const createAppServer = task(t => (props, cb) => {
   }
 })
 
-export const reloadAppServer = task(t => (app, props) => {
+export const makeReloadAppServer = task(t => createApi => (app, props) => {
   app.server.removeListener('request', app.api)
   delete app.api
   const api = createApi(props)

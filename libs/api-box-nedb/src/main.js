@@ -39,9 +39,13 @@ export const createApiBox = task(t =>
 export const composeApiBox = makeComposeApiBox(createApiBox)
 export const combineApiBoxes = task(t =>
   makeCombineApiBoxes({
-    beforeSetup(app, boxes) {},
-    onSetup(app, boxes) {},
-    getModels(app) {},
+    // beforeSetup(app, boxes) {},
+    onSetup(app, boxes) {
+      app.set('nedbModels', boxes.models)
+    },
+    getModels(app) {
+      return app.set('nedbModels')
+    },
   })
 )
 // api

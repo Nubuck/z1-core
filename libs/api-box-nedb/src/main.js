@@ -14,8 +14,8 @@ import {
 } from '@z1/lib-api-box-core'
 
 // models
-const createModel = task(t => (name, props = {}) => () => {
-  return new Nedb(
+const createModel = task(t => (name, props = {}) => app => {
+  const model = new Nedb(
     t.merge(
       {
         filename: fs.path('nedb', `${name}.db`),
@@ -25,6 +25,13 @@ const createModel = task(t => (name, props = {}) => () => {
       props
     )
   )
+  app.set(
+    'nedbModels',
+    t.merge(app.get('nedbModels') || {}, {
+      [name]: model,
+    })
+  )
+  return model
 })
 
 // box
@@ -41,15 +48,20 @@ export const combineApiBoxes = task(t =>
   makeCombineApiBoxes({
     beforeSetup(app, boxes) {
       fs.dir('nedb')
+      app.set('nedbModels', {})
+      t.forEach(model => {
+        if (t.isType(model, 'Function')) {
+          model(app)
+        }
+      }, boxes.models)
     },
     onSetup(app, boxes) {
-      app.set('nedbModels', boxes.models)
       t.forEach(action => {
         action('onSync', app)
       }, boxes.lifecycle)
     },
     getModels(app) {
-      return app.set('nedbModels')
+      return app.get('nedbModels')
     },
   })
 )

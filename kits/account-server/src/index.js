@@ -1,16 +1,84 @@
-import { createKit } from '@z1/lib-feature-box-sql'
-import { accountApi } from './api'
-import { communicate } from './mails'
-
-export default createKit(
-  { /* default props */ },
-  ({ /* instance props*/ }) => {
-    return {
-      name: 'account',
-      api: [ accountApi ],
-      tasks: {
-        communicate,
-      },
-    }
-  },
-)
+import { createApiBox } from '@z1/lib-feature-box-server'
+import accountFeatureCore from '@z1/kit-account-server-core'
+// main
+export default () =>
+  accountFeatureCore({
+    createApiBox,
+    models(m, T) {
+      return [
+        m(
+          'users',
+          {
+            id: {
+              type: T.UUID,
+              primaryKey: true,
+            },
+            username: {
+              type: T.STRING,
+              allowNull: true,
+            },
+            name: {
+              type: T.STRING,
+              allowNull: true,
+            },
+            surname: {
+              type: T.STRING,
+              allowNull: true,
+            },
+            email: {
+              type: T.STRING,
+              allowNull: false,
+            },
+            password: {
+              type: T.STRING,
+              allowNull: false,
+            },
+            role: {
+              type: T.STRING,
+              allowNull: true,
+            },
+            profile: {
+              type: T.STRING,
+              allowNull: true,
+            },
+            status: {
+              type: T.STRING,
+              allowNull: true,
+            },
+            isVerified: {
+              type: T.BOOLEAN,
+            },
+            verifyToken: {
+              type: T.STRING,
+            },
+            verifyExpires: {
+              type: T.DATE,
+            },
+            verifyChanges: {
+              // type: T.JSON,
+              type: T.TEXT,
+              set(val) {
+                this.setDataValue('verifyChanges', JSON.stringify(val))
+              },
+              // get() {
+              //   return JSON.parse(this.getDataValue('verifyChanges'))
+              // },
+            },
+            resetToken: {
+              type: T.STRING,
+            },
+            resetExpires: {
+              type: T.DATE,
+            },
+          },
+          {
+            hooks: {
+              beforeCount(options) {
+                options.raw = true
+              },
+            },
+          }
+        ),
+      ]
+    },
+  })

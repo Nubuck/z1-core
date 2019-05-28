@@ -1,4 +1,4 @@
-# Z1 Lib Feature Box Server
+# Z1 Lib Feature Box Server Core
 
 Documentation under construction.
 
@@ -7,13 +7,13 @@ Documentation under construction.
 Install
 
 ```
-yarn add @z1/lib-feature-box-server
+yarn add @z1/lib-feature-box-server-core
 ```
 
 Import
 
 ```JavaScript
 
-import * from '@z1/lib-feature-box-server'
+import * from '@z1/lib-feature-box-server-core'
 
 ```

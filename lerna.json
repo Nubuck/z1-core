@@ -5,8 +5,7 @@
     "brands/**",
     "kits/**",
     "libs/**",
-    "presets/**",
-    "_lab/**"
+    "presets/**"
   ],
   "hoist": false,
   "useWorkspaces": false,

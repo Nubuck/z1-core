@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@z1/lib-api-box-sql": "^0.1.3",
-    "@z1/preset-task": "^0.1.0"
+    "@z1/lib-feature-box-server-core": "^0.1.0"
   },
   "devDependencies": {
     "@z1/preset-dev-bundle": "^0.1.0"

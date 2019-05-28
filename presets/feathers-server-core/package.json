@@ -33,5 +33,6 @@
     "serve-favicon": "^2.4.5",
     "socket.io": "^2.1.0",
     "winston": "^2.4.0"
-  }
+  },
+  "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

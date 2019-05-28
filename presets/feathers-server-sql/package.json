@@ -23,5 +23,6 @@
     "pg-hstore": "^2.3.2",
     "sequelize": "^4.36.0",
     "tedious": "^2.6.1"
-  }
+  },
+  "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

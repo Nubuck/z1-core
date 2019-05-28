@@ -22,5 +22,6 @@
   "devDependencies": {
     "@z1/lib-feature-box-server-nedb": "^0.2.0",
     "@z1/preset-dev-neutrino": "^0.2.0"
-  }
+  },
+  "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

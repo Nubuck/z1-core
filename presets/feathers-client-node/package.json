@@ -23,5 +23,5 @@
     "socket.io-client": "^2.2.0",
     "utf-8-validate": "^5.0.2"
   },
-  "gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"
+  "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

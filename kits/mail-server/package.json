@@ -25,5 +25,6 @@
     "@z1/lib-feature-box-server": "^0.2.0",
     "@z1/preset-dev-neutrino": "^0.2.0",
     "aws-sdk": "^2.224.1"
-  }
+  },
+  "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

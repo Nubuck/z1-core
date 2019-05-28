@@ -18,5 +18,6 @@
   "dependencies": {
     "feathers-nedb": "^4.0.0",
     "nedb": "^1.8.0"
-  }
+  },
+  "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

@@ -110,7 +110,7 @@ export const combineApiBoxes = task(t =>
         if (t.isType(model, 'Function')) {
           model(define)
         }
-      }, boxes.models)
+      }, boxes.models || [])
     },
     onSetup(app, boxes) {
       const sequelize = app.get('sequelizeClient')
@@ -137,7 +137,7 @@ export const combineApiBoxes = task(t =>
           // lifecycle onSync
           t.forEach(action => {
             action('onSync', app)
-          }, boxes.lifecycle)
+          }, boxes.lifecycle || [])
         })
         .catch(error => {
           app.error('FAILED TO SYNC DB', error)
@@ -154,5 +154,5 @@ export const createApi = makeCreateApi(combineApiBoxes)
 // server
 export const createApiServer = makeCreateApiServer(createApi)
 export const reloadApiServer = makeReloadServer(createApi)
-export const createAppiServer = makeCreateAppServer(createApi)
+export const createAppServer = makeCreateAppServer(createApi)
 export const reloadAppServer = makeReloadAppServer(createApi)

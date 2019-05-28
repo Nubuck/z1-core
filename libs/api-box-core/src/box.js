@@ -2,7 +2,7 @@ import { task } from '@z1/preset-task'
 // import { Sequelize } from '@z1/preset-feathers-server'
 
 // parts
-// import { commonHooks } from './common'
+import { commonHooks } from './common'
 // import { createModel, createDBConnection } from './models'
 // import { createService } from './services'
 
@@ -103,16 +103,16 @@ export const makeComposeApiBox = task(t => createApiBox => (props, parts) => {
         }
       }, val || [])
     }
-  }, combinedParts.lifecycle)
+  }, combinedParts.lifecycle || [])
 
   return createApiBox(
     t.merge(props, {
-      models(...props) {
-        return t.flatten(t.map(model => model(...props), combinedParts.models))
+      models(m, T) {
+        return t.flatten(t.map(model => model(m, T), combinedParts.models))
       },
-      services(...props) {
+      services(s, m, h) {
         return t.flatten(
-          t.map(service => service(...props), combinedParts.services)
+          t.map(service => service(s, m, h), combinedParts.services)
         )
       },
       channels(a) {
@@ -178,7 +178,7 @@ export const makeCombineApiBoxes = task(
         // }
         // }, nextBoxes.models)
 
-        beforeSetup(app, nextBoxes.models)
+        beforeSetup(app, nextBoxes)
 
         // associate models on setup
         const oldSetup = app.setup
@@ -215,12 +215,12 @@ export const makeCombineApiBoxes = task(
           // app.error('FAILED TO SYNC DB', error)
           // })
 
-          onSetup(app)
+          onSetup(app, nextBoxes)
 
           // lifecycle onSetup
           t.forEach(action => {
             action('onSetup', app)
-          }, nextBoxes.lifecycle)
+          }, nextBoxes.lifecycle || [])
 
           return result
         }
@@ -231,7 +231,7 @@ export const makeCombineApiBoxes = task(
           if (t.isType(service, 'Function')) {
             service(app, nextModels)
           }
-        }, nextBoxes.services)
+        }, nextBoxes.services || [])
         // }
       },
     }

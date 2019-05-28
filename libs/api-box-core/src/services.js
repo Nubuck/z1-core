@@ -79,7 +79,7 @@ export const makeCreateService = task(
               registeredService.on(eventKey, (data, context) => {
                 t.path([eventKey], modifier.events)(data, context)
               })
-            }, t.keys(modifier.events))
+            }, t.keys(modifier.events) || [])
           }
         }
       }

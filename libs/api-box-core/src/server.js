@@ -1,12 +1,11 @@
 import { task } from '@z1/preset-task'
-import { FeathersExpress, Cors, Compression } from '@z1/preset-feathers-server'
+import { FeathersExpress, Cors, Compression } from '@z1/preset-feathers-server-core'
 import { Fs } from '@z1/preset-tools'
 import { createServer } from 'http'
 import Fallback from 'express-history-api-fallback'
 
 // parts
 import { pathIncludeNamespace, safeServiceName } from './common'
-// import { createApi } from './api'
 
 // main
 export const makeCreateApiServer = task(t => createApi =>

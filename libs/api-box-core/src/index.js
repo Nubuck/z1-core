@@ -1,9 +1,8 @@
-import { FeathersExpress } from '@z1/preset-feathers-server'
 import { Fs } from '@z1/preset-tools'
 import Fallback from 'express-history-api-fallback'
 
 // quick exports
-export { FeathersErrors } from '@z1/preset-feathers-server'
+export { FeathersErrors } from '@z1/preset-feathers-server-core'
 
 // parts
 export const appMiddleware = {

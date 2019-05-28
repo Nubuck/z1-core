@@ -4,7 +4,7 @@ import {
   FeathersAuthLocal,
   FeathersCommonHooks,
   FeathersAuthHooks,
-} from '@z1/preset-feathers-server'
+} from '@z1/preset-feathers-server-core'
 import uuidv4 from 'uuid/v4'
 
 // main

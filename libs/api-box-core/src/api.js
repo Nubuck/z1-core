@@ -11,11 +11,10 @@ import {
   Compression,
   Winston,
   FeathersLogger,
-} from '@z1/preset-feathers-server'
+} from '@z1/preset-feathers-server-core'
 
 // parts
 import { commonHooks, safeServiceName } from './common'
-import { combineApiBoxes } from './box'
 
 // channels
 const defaultChannelConfig = function(app) {

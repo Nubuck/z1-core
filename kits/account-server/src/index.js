@@ -1,4 +1,4 @@
-import { createKit } from '@z1/lib-feature-box-server'
+import { createKit } from '@z1/lib-feature-box-sql'
 import { accountApi } from './api'
 import { communicate } from './mails'
 

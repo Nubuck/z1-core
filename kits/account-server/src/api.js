@@ -1,4 +1,4 @@
-import { createApiBox, task } from '@z1/lib-feature-box-server'
+import { createApiBox, task } from '@z1/lib-feature-box-sql'
 import AuthManagement from 'feathers-authentication-management'
 
 import { communicate } from './mails'

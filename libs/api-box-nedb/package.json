@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-nedb",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-nedb",
@@ -10,11 +10,11 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-feathers-server-nedb": "^0.1.0",
-    "@z1/preset-task": "^0.1.0",
-    "@z1/lib-api-box-core": "^0.1.0"
+    "@z1/lib-api-box-core": "^0.2.0",
+    "@z1/preset-feathers-server-nedb": "^0.2.0",
+    "@z1/preset-task": "^0.2.0"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.1.0"
+    "@z1/preset-dev-bundle": "^0.2.0"
   }
 }

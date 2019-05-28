@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-spa-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "lib/index.js",
   "bin": "lib/index.js",
   "license": "MIT",

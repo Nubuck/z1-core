@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-feathers-server",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/feathers-server",
@@ -39,7 +39,7 @@
     "winston": "^2.4.0"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.1.0"
+    "@z1/preset-dev-bundle": "^0.2.0"
   },
   "gitHead": "dd4a75af24947338319a278b676a6f265e1572cc"
 }

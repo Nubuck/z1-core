@@ -18,3 +18,4 @@ coverage
 .idea
 .editorconfig
 .prettierrc
+.neutrinorc.js

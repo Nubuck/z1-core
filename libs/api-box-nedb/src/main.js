@@ -70,5 +70,5 @@ export const createApi = makeCreateApi(combineApiBoxes)
 // server
 export const createApiServer = makeCreateApiServer(createApi)
 export const reloadApiServer = makeReloadServer(createApi)
-export const createAppiServer = makeCreateAppServer(createApi)
+export const createAppServer = makeCreateAppServer(createApi)
 export const reloadAppServer = makeReloadAppServer(createApi)

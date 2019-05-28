@@ -47,7 +47,7 @@ export const commonHooks = task(t => ({
       return hook
     }),
     safeFindMSSQL: task(t => hook => {
-      const db = hook.app.get('db')
+      const db = hook.app.get('db') || {}
       if (t.eq('find', hook.method)) {
         if (t.eq('mssql', db.dialect)) {
           if (t.not(t.path(['params', 'query', '$sort'], hook))) {

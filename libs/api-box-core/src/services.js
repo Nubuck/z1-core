@@ -1,5 +1,4 @@
 import { task } from '@z1/preset-task'
-// import { FeathersSequelize } from '@z1/preset-feathers-server'
 
 // parts
 import { safeServiceName, hookSignature, hookAndEventSignature } from './common'

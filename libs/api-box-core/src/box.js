@@ -3,8 +3,6 @@ import { task } from '@z1/preset-task'
 
 // parts
 import { commonHooks } from './common'
-// import { createModel, createDBConnection } from './models'
-// import { createService } from './services'
 
 // INTERFACE:
 // models(createModel, SequelizeTypes, SequelizeLiteral)
@@ -162,58 +160,12 @@ export const makeCombineApiBoxes = task(
         }, nextBoxes.lifecycle || [])
       },
       configure: app => {
-        // configure DB connection
-        // const sequelize = createDBConnection(app)
-
-        // configure if config file contains valid keys
-        // if (t.not(t.eq(sequelize, null))) {
-        // persist db instance
-        // app.set('sequelizeClient', sequelize)
-        // app.set('Sequelize', Sequelize)
-        // define models
-        // const define = sequelize.define.bind(sequelize)
-        // t.forEach(model => {
-        // if (t.isType(model, 'Function')) {
-        // model(define)
-        // }
-        // }, nextBoxes.models)
-
         beforeSetup(app, nextBoxes)
 
         // associate models on setup
         const oldSetup = app.setup
         app.setup = function(...args) {
           const result = oldSetup.apply(this, args)
-
-          // Set up data relationships
-          // const models = sequelize.models
-
-          // t.forEachObjIndexed(model => {
-          // if (t.has('associate')(model)) {
-          // model.associate(models)
-          // }
-          // }, models || {})
-
-          // Sync to the database
-          // const db = app.get('db')
-          // const forceAlter = t.has('forceAlter')(db) ? db.forceAlter : false
-          // const syncOptions = forceAlter
-          // ? { alter: true }
-          // : t.eq(process.env.NODE_ENV, 'development')
-          // ? { alter: true }
-          // : { force: false }
-
-          // sequelize
-          // .sync(syncOptions)
-          // .then(() => {
-          // lifecycle onSync
-          // t.forEach(action => {
-          //   action('onSync', app)
-          // }, nextBoxes.lifecycle)
-          // })
-          // .catch(error => {
-          // app.error('FAILED TO SYNC DB', error)
-          // })
 
           onSetup(app, nextBoxes)
 
@@ -232,7 +184,6 @@ export const makeCombineApiBoxes = task(
             service(app, nextModels)
           }
         }, nextBoxes.services || [])
-        // }
       },
     }
   }

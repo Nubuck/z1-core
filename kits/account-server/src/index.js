@@ -55,14 +55,10 @@ export default () =>
               type: T.DATE,
             },
             verifyChanges: {
-              // type: T.JSON,
               type: T.TEXT,
               set(val) {
                 this.setDataValue('verifyChanges', JSON.stringify(val))
               },
-              // get() {
-              //   return JSON.parse(this.getDataValue('verifyChanges'))
-              // },
             },
             resetToken: {
               type: T.STRING,

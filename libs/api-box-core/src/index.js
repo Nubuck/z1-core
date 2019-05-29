@@ -1,6 +1,7 @@
 import { Fs } from '@z1/preset-tools'
 import Fallback from 'express-history-api-fallback'
 import { FeathersExpress } from '@z1/preset-feathers-server-core'
+
 // quick exports
 export { FeathersErrors } from '@z1/preset-feathers-server-core'
 

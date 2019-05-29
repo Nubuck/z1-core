@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-core",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "main": "lib/index.js",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-core",
   "license": "MIT",
@@ -13,14 +13,14 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-feathers-server-core": "^0.2.3",
-    "@z1/preset-task": "^0.2.3",
-    "@z1/preset-tools": "^0.2.3",
+    "@z1/preset-feathers-server-core": "^0.2.5",
+    "@z1/preset-task": "^0.2.5",
+    "@z1/preset-tools": "^0.2.5",
     "express-history-api-fallback": "^2.2.1",
     "uuid": "^3.2.1"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.2.3"
+    "@z1/preset-dev-bundle": "^0.2.5"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

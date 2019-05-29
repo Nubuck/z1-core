@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-nano-service",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/nano-service",
@@ -13,11 +13,11 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.2.2",
-    "@z1/preset-tools": "^0.2.2"
+    "@z1/preset-task": "^0.2.3",
+    "@z1/preset-tools": "^0.2.3"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.2.2"
+    "@z1/preset-dev-bundle": "^0.2.3"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

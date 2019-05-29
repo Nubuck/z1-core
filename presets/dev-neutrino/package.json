@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-dev-neutrino",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "lib/index.js",
   "files": [
     "lib/index.js.map",
@@ -58,7 +58,7 @@
     "websocket-driver": "^0.7.0"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.2.2"
+    "@z1/preset-dev-bundle": "^0.2.3"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

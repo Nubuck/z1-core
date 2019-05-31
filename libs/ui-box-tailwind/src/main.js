@@ -205,6 +205,7 @@ const cssProps = task(t => ({
   opacity: v => skipNull(v, `opacity-${v}`),
   fill: v => skipNull(v, t.not(v) ? '' : 'fill-current'),
   stroke: v => skipNull(v, t.not(v) ? '' : 'stroke-current'),
+  className: v => skipNull(v, `{v}`),
 }))
 
 export const toCss = task(t => props => {
@@ -233,7 +234,7 @@ export const toCss = task(t => props => {
 export const uiBox = task(t => (props = {}) => {
   return {
     next(nextProps = {}) {
-      return uiBox(t.deepMergeRight(props, nextProps))
+      return uiBox(t.mergeDeepRight(props, nextProps))
     },
     toBox() {
       return props

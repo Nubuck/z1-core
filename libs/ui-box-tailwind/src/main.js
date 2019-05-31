@@ -128,7 +128,15 @@ const cssProps = task(t => ({
   // flexbox
   flex: v => skipNull(v, `flex-${v}`),
   flexDirection: v => skipNull(v, `flex-${v}`),
-  flexWrap: v => skipNull(v, `flex-${v}`),
+  flexWrap(v) {
+    if (t.isType(v, 'Null')) {
+      return ''
+    }
+    if (t.isType(v, 'Boolean')) {
+      return t.not(v) ? 'flex-no-wrap' : 'flex-wrap'
+    }
+    return `flex-wrap-${v}`
+  },
   alignItems: v => skipNull(v, `items-${v}`),
   alignContent: v => skipNull(v, `content-${v}`),
   alignSelf: v => skipNull(v, `self-${v}`),

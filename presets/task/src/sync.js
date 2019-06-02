@@ -125,6 +125,14 @@ const getMatch = key => cases => {
   return matched ? matched : null
 }
 
+const trampoline = fn => (...args) => {
+  let result = fn(...args)
+  while (typeof result === 'function') {
+    result = result()
+  }
+  return result
+}
+
 export const TASK = {
   addIndex,
   allPass,
@@ -242,4 +250,5 @@ export const TASK = {
   },
   globrex,
   throttle,
+  trampoline,
 }

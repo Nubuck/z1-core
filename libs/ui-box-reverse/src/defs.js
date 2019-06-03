@@ -833,104 +833,138 @@ export const defs = {
   },
   // alignment
   align: {
-    type: 'key',
+    type: 'value',
     map: 'textAlignY',
   },
   whitespace: {
-    type: 'key',
+    type: 'value',
     map: 'whitespace',
   },
   break: {
-    type: 'key',
+    type: 'value',
     map: 'wordBreak',
   },
   items: {
-    type: 'key',
+    type: 'value',
     map: 'alignItems',
   },
   content: {
-    type: 'key',
+    type: 'value',
     map: 'alignContent',
   },
   self: {
-    type: 'key',
+    type: 'value',
     map: 'alignSelf',
   },
   justify: {
-    type: 'key',
+    type: 'value',
     map: 'justifyContent',
   },
   order: {
-    type: 'key',
+    type: 'value',
     map: 'flexOrder',
   },
   // spacing
   m: {
-    type: 'key',
+    type: 'value',
     map: 'margin',
   },
   mt: {
-    type: 'key',
+    type: 'value',
     map: 'margin',
     alias: 'top',
   },
   mr: {
-    type: 'key',
+    type: 'value',
     map: 'margin',
     alias: 'right',
   },
   mb: {
-    type: 'key',
+    type: 'value',
     map: 'margin',
     alias: 'bottom',
   },
   ml: {
-    type: 'key',
+    type: 'value',
     map: 'margin',
     alias: 'left',
   },
   mx: {
-    type: 'key',
+    type: 'value',
     map: 'margin',
     alias: 'x',
   },
   my: {
-    type: 'key',
+    type: 'value',
+    map: 'margin',
+    alias: 'y',
+  },
+  '-m': {
+    type: 'value',
+    map: 'margin',
+  },
+  '-mt': {
+    type: 'value',
+    map: 'margin',
+    alias: 'top',
+  },
+  '-mr': {
+    type: 'value',
+    map: 'margin',
+    alias: 'right',
+  },
+  '-mb': {
+    type: 'value',
+    map: 'margin',
+    alias: 'bottom',
+  },
+  '-ml': {
+    type: 'value',
+    map: 'margin',
+    alias: 'left',
+  },
+  '-mx': {
+    type: 'value',
+    map: 'margin',
+    alias: 'x',
+  },
+  '-my': {
+    type: 'value',
     map: 'margin',
     alias: 'y',
   },
   p: {
-    type: 'key',
+    type: 'value',
     map: 'padding',
   },
   pt: {
-    type: 'key',
+    type: 'value',
     map: 'padding',
     alias: 'top',
   },
   pr: {
-    type: 'key',
+    type: 'value',
     map: 'padding',
     alias: 'right',
   },
   pb: {
-    type: 'key',
+    type: 'value',
     map: 'padding',
     alias: 'bottom',
   },
   pl: {
-    type: 'key',
+    type: 'value',
     map: 'padding',
     alias: 'left',
   },
   px: {
-    type: 'key',
+    type: 'value',
     map: 'padding',
     alias: 'x',
   },
   py: {
-      type: 'key',
-      map: 'padding',
+    type: 'value',
+    map: 'padding',
     alias: 'y',
   },
   // bg
@@ -1071,44 +1105,44 @@ export const defs = {
   },
   // interact
   appearance: {
-    type: 'key',
+    type: 'value',
     map: 'apperance',
   },
   cursor: {
-    type: 'key',
+    type: 'value',
     map: 'cursor',
   },
   outline: {
-    type: 'key',
+    type: 'value',
     map: 'outline',
   },
   pointer: {
-    type: 'key',
+    type: 'value',
     map: 'pointerEvents',
   },
   resize: {
-    type: 'key',
+    type: 'value',
     map: 'resize',
   },
   select: {
-    type: 'key',
+    type: 'value',
     map: 'userSelect',
   },
   // misc
   shadow: {
-    type: 'key',
+    type: 'value',
     map: 'shadow',
   },
   opacity: {
-    type: 'key',
+    type: 'value',
     map: 'shadow',
   },
   fill: {
-    type: 'key',
+    type: 'value',
     map: 'fill',
   },
   stroke: {
-    type: 'key',
+    type: 'value',
     map: 'stroke',
   },
 }

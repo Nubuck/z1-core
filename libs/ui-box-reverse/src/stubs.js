@@ -20,7 +20,7 @@ const cssPropTypes = {
   borderColor: 'String',
   borderStyle: 'String',
   borderWidth: ['String', 'Number'],
-  borderRadius: ['String', 'Boolean'],
+  borderRadius: ['String', 'Boolean', 'Object'],
   width: ['String', 'Number'],
   minWidth: ['String', 'Number'],
   maxWidth: 'String',

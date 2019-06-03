@@ -14,6 +14,7 @@
     "@z1/preset-dev-neutrino": "^0.2.5"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.2.5"
+    "@z1/preset-task": "^0.2.5",
+    "@z1/lib-ui-box-tailwind": "^0.2.8"
   }
 }

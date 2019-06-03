@@ -47,32 +47,12 @@ const computePropList = task(t => (key = '_', list = []) => {
     }
   }
 
-  //   if (t.gt(t.length(forkProps.base), 1)){
-  //       const leadProp = t.head()
-  //   }
-
   return forkProps
-
-  //   let nextProp = null
-  //   if (t.not(t.isZeroLen(forkProps.base))) {
-  //     if (t.gt(t.length(forkProps.base), 1)) {
-  //       nextProp = t.mergeAll(
-  //         t.map(prop => {
-  //           return { [prop.alias]: rejoin(t.tail(prop.chunks)) }
-  //         }, forkProps.base)
-  //       )
-  //     } else {
-  //       const leadProp = t.head(forkProps.base)
-  //       nextProp = leadProp.css
-  //     }
-  //   }
-  //   return {
-  //     [key]: t.isZeroLen(forkProps.prefix)
-  //       ? nextProp
-  //       : [nextProp, forkProps.prefix],
-  //   }
 })
 export const cssToBox = task(t => (css = '') => {
+  if (t.isZeroLen(css)) {
+    return {}
+  }
   const output = t.mergeAll(
     t.map(
       ([key, value]) => computePropList(key, value),
@@ -125,14 +105,13 @@ export const cssToBox = task(t => (css = '') => {
 })
 
 // test
-
-// export const stub =
-//   'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'
-export const stub =
-  'container inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2'
-// export const stub =
-//   'h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden'
-// export const stub =
-//   'flex flex-col w-5/6 lg:w-1/4 mx-auto lg:mx-0 rounded-none lg:rounded-l-lg bg-white mt-4'
-// export const stub =
-//   'flex flex-col w-5/6 lg:w-1/3 mx-auto lg:mx-0 rounded-lg bg-white mt-4 sm:-mt-6 shadow-lg z-10'
+export const box = {
+  borderRadius: [
+    {
+      top: 'sm',
+      bottom: true,
+    },
+    { sm: { top: 'none', bottom: 'sm' } },
+  ],
+}
+export const stub = ''

@@ -87,7 +87,11 @@ const cssProps = task(t => ({
           '',
           t.split('_', t.caseTo.paramCase(key))
         )
-        return `rounded-${keys}-${value}`
+        return t.eq(t.type(value), 'Boolean')
+          ? t.not(value)
+            ? ''
+            : `rounded-${keys}`
+          : `rounded-${keys}-${value}`
       }, t.toPairs(v))}
       `
     }
@@ -230,10 +234,14 @@ export const toCss = task(t => props => {
     return t.tags.oneLineInlineLists`
     ${t.flatten([
       [cssProp(all)],
-      t.map(
-        sizeKey => `${sizeKey}:${cssProp(responsive[sizeKey])}`,
-        responsiveKeys
-      ),
+      t.map(sizeKey => {
+        const responsiveProp = cssProp(responsive[sizeKey])
+        const props = t.split(' ', responsiveProp)
+        return t.tags.oneLineInlineLists`${t.map(
+          prop => `${sizeKey}:${prop}`,
+          props
+        )}`
+      }, responsiveKeys),
     ])}
     `
   }, keys)}`

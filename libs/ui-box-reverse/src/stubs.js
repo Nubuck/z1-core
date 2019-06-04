@@ -1,5 +1,5 @@
 // common
-const cssPropTypes = {
+export const cssPropTypes = {
   container: 'Boolean',
   display: 'String',
   clearfix: 'Boolean',
@@ -20,7 +20,7 @@ const cssPropTypes = {
   borderColor: 'String',
   borderStyle: 'String',
   borderWidth: ['String', 'Number'],
-  borderRadius: ['String', 'Boolean', 'Object'],
+  borderRadius: ['String', 'Boolean'],
   width: ['String', 'Number'],
   minWidth: ['String', 'Number'],
   maxWidth: 'String',

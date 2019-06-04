@@ -1,5 +1,5 @@
 import { task } from '@z1/preset-task'
-import { defs, cssPropTypes } from './defs'
+import { defs } from './defs'
 
 // main
 const rejoin = task(t => list =>
@@ -11,44 +11,7 @@ const rejoin = task(t => list =>
     list
   )
 )
-const computePropList = task(t => (key = '_', list = []) => {
-  const forkProps = t.reduce(
-    (state, prop) => {
-      return t.merge(state, {
-        prefix: t.not(prop.prefix)
-          ? state.prefix
-          : t.concat(state.prefix, [prop]),
-        base: prop.prefix ? state.base : t.concat(state.base, [prop]),
-      })
-    },
-    {
-      prefix: [],
-      base: [],
-    },
-    list
-  )
 
-  //   console.log('OUTPUT: ', key, forkProps)
-  let nextProp = null
-  if (t.not(t.isZeroLen(forkProps.base))) {
-    const leadProp = t.head(forkProps.base)
-    console.log('LEAD PROP', key, leadProp)
-    const canBeObject = t.eq(t.type(leadProp.propType), 'Array')
-      ? t.contains('Object', leadProp.propType)
-      : t.eq(leadProp.propType, 'Object')
-    // console.log('CAN BE OBJECT', key, canBeObject)
-    if (canBeObject) {
-      nextProp = t.mergeAll(
-        t.map(prop => {
-          console.log('OBJ PROP', prop)
-          return { [prop.alias || prop.key]: null }
-        }, forkProps.base)
-      )
-    }
-  }
-
-  return forkProps
-})
 export const cssToBox = task(t => (css = '') => {
   if (t.isZeroLen(css)) {
     return {}
@@ -83,14 +46,12 @@ export const cssToBox = task(t => (css = '') => {
             def.map
           )
         : def
-      const propType = cssPropTypes[nextDef.map]
       return t.mergeAll([
         base,
         {
           key: keyChunk,
           match: matchChunk,
           chunks: defChunks,
-          propType,
         },
         nextDef,
       ])
@@ -106,8 +67,6 @@ export const cssToBox = task(t => (css = '') => {
     output
   )
   console.log('GROUPED OUTPUT:', groupOutput)
-
-  
 
   return output
 })

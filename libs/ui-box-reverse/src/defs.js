@@ -1,174 +1,150 @@
 // defs
 export const defs = {
   container: {
-    type: 'key',
     map: 'container',
+    value: true,
   },
   // display
   hidden: {
-    type: 'value',
     map: 'display',
+    value: 'key',
   },
   block: {
-    type: 'value',
     map: 'display',
+    value: 'key',
   },
   inline: {
-    type: 'value',
     map: 'display',
+    value: 'key',
   },
   flex: {
-    type: 'fork',
     map: [
       // display
       {
         key: 'flex',
         map: 'display',
-        type: 'value',
+        value: 'key',
       },
       // direction
       {
         key: 'row',
         map: 'flexDirection',
-        type: 'value',
+        value: 'key',
       },
       {
         key: 'col',
         map: 'flexDirection',
-        type: 'value',
+        value: 'key',
       },
       // wrap
       {
         key: 'no',
         map: 'flexWrap',
-        type: 'value',
+        value: 'chunk',
+        filter: 'flex',
       },
       {
         key: 'wrap',
         map: 'flexWrap',
-        type: 'value',
       },
       // flex
       {
         key: '1',
         map: 'flex',
-        type: 'value',
       },
       {
         key: 'auto',
         map: 'flex',
-        type: 'value',
       },
       {
         key: 'initial',
         map: 'flex',
-        type: 'value',
       },
       {
         key: 'none',
         map: 'flex',
-        type: 'value',
       },
       // grow
       {
         key: 'grow',
         map: 'flexGrow',
-        type: 'value',
       },
       // shrink
       {
         key: 'shrink',
         map: 'flexShrink',
-        type: 'value',
       },
     ],
   },
   table: {
-    type: 'fork',
     map: [
       // display
       {
         key: 'table',
         map: 'display',
-        type: 'value',
       },
       // layout
       {
         key: 'auto',
         map: 'tableLayout',
-        type: 'value',
       },
       {
         key: 'fixed',
         map: 'tableLayout',
-        type: 'value',
       },
     ],
   },
   // floats
   float: {
-    type: 'key',
     map: 'float',
   },
   clearfix: {
-    type: 'key',
     map: 'clearfix',
   },
   // media
   object: {
-    type: 'fork',
     map: [
       // fit
       {
         key: 'contain',
         map: 'objectFit',
-        type: 'value',
       },
       {
         key: 'cover',
         map: 'objectFit',
-        type: 'value',
       },
       {
         key: 'fill',
         map: 'objectFit',
-        type: 'value',
       },
       {
         key: 'none',
         map: 'objectFit',
-        type: 'value',
       },
       {
         key: 'scale',
         map: 'objectFit',
-        type: 'value',
       },
       // position
       {
         key: 'bottom',
         map: 'objectPosition',
-        type: 'value',
       },
       {
         key: 'center',
         map: 'objectPosition',
-        type: 'value',
       },
       {
         key: 'left',
         map: 'objectPosition',
-        type: 'value',
       },
       {
         key: 'right',
         map: 'objectPosition',
-        type: 'value',
       },
       {
         key: 'top',
         map: 'objectPosition',
-        type: 'value',
       },
     ],
   },
@@ -179,251 +155,202 @@ export const defs = {
       {
         key: 'auto',
         map: 'overflow',
-        type: 'value',
       },
       {
         key: 'hidden',
         map: 'overflow',
-        type: 'value',
       },
       {
         key: 'visible',
         map: 'overflow',
-        type: 'value',
       },
       {
         key: 'scroll',
         map: 'overflow',
-        type: 'value',
       },
       {
         key: 'x',
         map: 'overflowX',
-        type: 'key',
       },
       {
         key: 'y',
         map: 'overflowX',
-        type: 'key',
       },
     ],
   },
   scrolling: {
-    type: 'value',
     map: 'scrolling',
   },
   // position
   static: {
-    type: 'value',
     map: 'position',
   },
   fixed: {
-    type: 'value',
     map: 'position',
   },
   absolute: {
-    type: 'value',
     map: 'position',
   },
   relative: {
-    type: 'value',
     map: 'position',
   },
   sticky: {
-    type: 'value',
     map: 'position',
   },
   // inset
   inset: {
-    type: 'fork',
     map: [
       {
         key: 'auto',
         map: 'inset',
-        type: 'value',
       },
       {
         key: '0',
         map: 'inset',
-        type: 'value',
       },
       {
         key: 'x',
         map: 'insetX',
-        type: 'value',
       },
       {
         key: 'y',
         map: 'insetY',
-        type: 'value',
       },
     ],
   },
   // pin
   top: {
-    type: 'key',
     map: 'pin',
     key: 'top',
   },
   right: {
-    type: 'key',
     map: 'pin',
     key: 'right',
   },
   bottom: {
-    type: 'key',
     map: 'pin',
     key: 'bottom',
   },
   left: {
-    type: 'key',
     map: 'pin',
     key: 'left',
   },
   // visibility
   visible: {
-    type: 'key',
     map: 'visible',
   },
   invisible: {
-    type: 'key',
     map: 'invisible',
   },
   z: {
-    type: 'key',
     map: 'zIndex',
   },
   // borders
   border: {
-    type: 'fork',
     map: [
       // color
       {
         key: 'transparent',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'black',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'white',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'gray',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'red',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'orange',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'yellow',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'green',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'teal',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'blue',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'indigo',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'purple',
         map: 'borderColor',
-        type: 'value',
       },
       {
         key: 'pink',
         map: 'borderColor',
-        type: 'value',
       },
       // style
       {
         key: 'solid',
         map: 'borderStyle',
-        type: 'value',
       },
       {
         key: 'dashed',
         map: 'borderStyle',
-        type: 'value',
       },
       {
         key: 'dotted',
         map: 'borderStyle',
-        type: 'value',
       },
       {
         key: 'none',
         map: 'borderStyle',
-        type: 'value',
       },
       // width
       {
         key: 'border',
         map: 'borderWidth',
-        type: 'key',
       },
       {
         key: 't',
         map: 'borderWidth',
-        type: 'key',
         alias: 'top',
       },
       {
         key: 'r',
         map: 'borderWidth',
-        type: 'key',
         alias: 'right',
       },
       {
         key: 'b',
         map: 'borderWidth',
-        type: 'key',
         alias: 'bottom',
       },
       {
         key: 'l',
         map: 'borderWidth',
-        type: 'key',
         alias: 'left',
       },
       // table collapse
       {
         key: 'collapse',
         map: 'tableCollapse',
-        type: 'value',
       },
       {
         key: 'separate',
         map: 'tableCollapse',
-        type: 'value',
       },
     ],
   },
@@ -433,258 +360,209 @@ export const defs = {
       {
         key: 'rounded',
         map: 'borderRadius',
-        type: 'value',
       },
       {
         key: 'none',
         map: 'borderRadius',
-        type: 'value',
       },
       {
         key: 'sm',
         map: 'borderRadius',
-        type: 'value',
       },
       {
         key: 'lg',
         map: 'borderRadius',
-        type: 'value',
       },
       {
         key: 'full',
         map: 'borderRadius',
-        type: 'value',
       },
       {
         key: 't',
         map: 'borderRadius',
-        type: 'key',
         alias: 'top',
       },
       {
         key: 'r',
         map: 'borderRadius',
-        type: 'key',
         alias: 'right',
       },
       {
         key: 'b',
         map: 'borderRadius',
-        type: 'key',
         alias: 'bottom',
       },
       {
         key: 'l',
         map: 'borderRadius',
-        type: 'key',
         alias: 'left',
       },
       {
         key: 'tl',
         map: 'borderRadius',
-        type: 'key',
         alias: 'topLeft',
       },
       {
         key: 'tr',
         map: 'borderRadius',
-        type: 'key',
         alias: 'topRight',
       },
       {
         key: 'bl',
         map: 'borderRadius',
-        type: 'key',
         alias: 'bottomLeft',
       },
       {
         key: 'br',
         map: 'borderRadius',
-        type: 'key',
         alias: 'bottomRight',
       },
     ],
   },
   // size
   w: {
-    type: 'key',
     map: 'width',
   },
   h: {
-    type: 'key',
     map: 'width',
   },
   min: {
-    type: 'fork',
     map: [
       {
         key: 'w',
         map: 'minWidth',
-        type: 'key',
       },
       {
         key: 'h',
         map: 'minHeight',
-        type: 'key',
       },
     ],
   },
   max: {
-    type: 'fork',
     map: [
       {
         key: 'w',
         map: 'minWidth',
-        type: 'key',
       },
       {
         key: 'h',
         map: 'minHeight',
-        type: 'key',
       },
     ],
   },
   // text
   text: {
-    type: 'fork',
     map: [
       // color
       {
         key: 'transparent',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'black',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'white',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'gray',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'red',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'orange',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'yellow',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'green',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'teal',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'blue',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'indigo',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'purple',
         map: 'color',
-        type: 'value',
       },
       {
         key: 'pink',
         map: 'color',
-        type: 'value',
       },
       // size
       {
         key: 'xs',
         map: 'fontSize',
-        type: 'value',
       },
       {
         key: 'sm',
         map: 'fontSize',
-        type: 'value',
       },
       {
         key: 'base',
         map: 'fontSize',
-        type: 'value',
       },
       {
         key: 'lg',
         map: 'fontSize',
-        type: 'value',
       },
       {
         key: 'xl',
         map: 'fontSize',
-        type: 'value',
       },
       {
         key: '2xl',
         map: 'fontSize',
-        type: 'value',
       },
       {
         key: '3xl',
         map: 'fontSize',
-        type: 'value',
       },
       {
         key: '4xl',
         map: 'fontSize',
-        type: 'value',
       },
       {
         key: '5xl',
         map: 'fontSize',
-        type: 'value',
       },
       {
         key: '6xl',
         map: 'fontSize',
-        type: 'value',
       },
       // alignment
       {
         key: 'left',
         map: 'textAlignX',
-        type: 'value',
       },
       {
         key: 'center',
         map: 'textAlignX',
-        type: 'value',
       },
       {
         key: 'right',
         map: 'textAlignX',
-        type: 'value',
       },
       {
         key: 'justify',
         map: 'textAlignX',
-        type: 'value',
       },
     ],
   },
@@ -695,81 +573,65 @@ export const defs = {
       {
         key: 'sans',
         map: 'fontFamily',
-        type: 'value',
       },
       {
         key: 'serif',
         map: 'fontFamily',
-        type: 'value',
       },
       {
         key: 'mono',
         map: 'fontFamily',
-        type: 'value',
       },
       // weight
       {
         key: 'hairline',
         map: 'fontWeight',
-        type: 'value',
       },
       {
         key: 'thin',
         map: 'fontWeight',
-        type: 'value',
       },
       {
         key: 'light',
         map: 'fontWeight',
-        type: 'value',
       },
       {
         key: 'normal',
         map: 'fontWeight',
-        type: 'value',
       },
       {
         key: 'medium',
         map: 'fontWeight',
-        type: 'value',
       },
       {
         key: 'semibold',
         map: 'fontWeight',
-        type: 'value',
       },
       {
         key: 'bold',
         map: 'fontWeight',
-        type: 'value',
       },
       {
         key: 'extrabold',
         map: 'fontWeight',
-        type: 'value',
       },
       {
         key: 'black',
         map: 'fontWeight',
-        type: 'value',
       },
     ],
   },
   italic: {
     map: 'fontStyle',
-    type: 'value',
   },
   non: {
     map: 'fontStyle',
-    type: 'value',
   },
   tracking: {
     map: 'letterSpacing',
-    type: 'value',
   },
   leading: {
     map: 'lineHeight',
-    type: 'value',
   },
   list: {
     type: 'fork',
@@ -778,192 +640,151 @@ export const defs = {
       {
         key: 'none',
         map: 'listType',
-        type: 'value',
       },
       {
         key: 'disc',
         map: 'listType',
-        type: 'value',
       },
       {
         key: 'decimal',
         map: 'listType',
-        type: 'value',
       },
       // position
       {
         key: 'inside',
         map: 'listPosition',
-        type: 'value',
       },
       {
         key: 'outside',
         map: 'listPosition',
-        type: 'value',
       },
     ],
   },
   underline: {
-    type: 'value',
     map: 'textDecoration',
   },
   line: {
-    type: 'value',
     map: 'textDecoration',
   },
   no: {
-    type: 'value',
     map: 'textDecoration',
   },
   uppercase: {
-    type: 'value',
     map: 'textTransform',
   },
   lowercase: {
-    type: 'value',
     map: 'textTransform',
   },
   capitalize: {
-    type: 'value',
     map: 'textTransform',
   },
   normal: {
-    type: 'value',
     map: 'textTransform',
   },
   // alignment
   align: {
-    type: 'value',
     map: 'textAlignY',
   },
   whitespace: {
-    type: 'value',
     map: 'whitespace',
   },
   break: {
-    type: 'value',
     map: 'wordBreak',
   },
   items: {
-    type: 'value',
     map: 'alignItems',
   },
   content: {
-    type: 'value',
     map: 'alignContent',
   },
   self: {
-    type: 'value',
     map: 'alignSelf',
   },
   justify: {
-    type: 'value',
     map: 'justifyContent',
   },
   order: {
-    type: 'value',
     map: 'flexOrder',
   },
   // spacing
   m: {
-    type: 'value',
     map: 'margin',
   },
   mt: {
-    type: 'value',
     map: 'margin',
     alias: 'top',
   },
   mr: {
-    type: 'value',
     map: 'margin',
     alias: 'right',
   },
   mb: {
-    type: 'value',
     map: 'margin',
     alias: 'bottom',
   },
   ml: {
-    type: 'value',
     map: 'margin',
     alias: 'left',
   },
   mx: {
-    type: 'value',
     map: 'margin',
     alias: 'x',
   },
   my: {
-    type: 'value',
     map: 'margin',
     alias: 'y',
   },
   '-m': {
-    type: 'value',
     map: 'margin',
   },
   '-mt': {
-    type: 'value',
     map: 'margin',
     alias: 'top',
   },
   '-mr': {
-    type: 'value',
     map: 'margin',
     alias: 'right',
   },
   '-mb': {
-    type: 'value',
     map: 'margin',
     alias: 'bottom',
   },
   '-ml': {
-    type: 'value',
     map: 'margin',
     alias: 'left',
   },
   '-mx': {
-    type: 'value',
     map: 'margin',
     alias: 'x',
   },
   '-my': {
-    type: 'value',
     map: 'margin',
     alias: 'y',
   },
   p: {
-    type: 'value',
     map: 'padding',
   },
   pt: {
-    type: 'value',
     map: 'padding',
     alias: 'top',
   },
   pr: {
-    type: 'value',
     map: 'padding',
     alias: 'right',
   },
   pb: {
-    type: 'value',
     map: 'padding',
     alias: 'bottom',
   },
   pl: {
-    type: 'value',
     map: 'padding',
     alias: 'left',
   },
   px: {
-    type: 'value',
     map: 'padding',
     alias: 'x',
   },
   py: {
-    type: 'value',
     map: 'padding',
     alias: 'y',
   },
@@ -974,175 +795,143 @@ export const defs = {
       // attachement
       {
         key: 'fixed',
-        type: 'value',
+
         map: 'bgAttachment',
       },
       {
         key: 'local',
-        type: 'value',
+
         map: 'bgAttachment',
       },
       {
         key: 'scroll',
-        type: 'value',
+
         map: 'bgAttachment',
       },
       // color
       {
         key: 'transparent',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'black',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'white',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'gray',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'red',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'orange',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'yellow',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'green',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'teal',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'blue',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'indigo',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'purple',
         map: 'bgColor',
-        type: 'value',
       },
       {
         key: 'pink',
         map: 'bgColor',
-        type: 'value',
       },
       // position
       {
         key: 'bottom',
         map: 'bgPosition',
-        type: 'value',
       },
       {
         key: 'center',
         map: 'bgPosition',
-        type: 'value',
       },
       {
         key: 'left',
         map: 'bgPosition',
-        type: 'value',
       },
       {
         key: 'right',
         map: 'bgPosition',
-        type: 'value',
       },
       {
         key: 'top',
         map: 'bgPosition',
-        type: 'value',
       },
       // repeat
       {
         key: 'repeat',
         map: 'bgRepeat',
-        type: 'value',
       },
       {
         key: 'no',
         map: 'bgRepeat',
-        type: 'value',
       },
       // size
       {
         key: 'cover',
         map: 'bgSize',
-        type: 'value',
       },
       {
         key: 'contain',
         map: 'bgSize',
-        type: 'value',
       },
     ],
   },
   // interact
   appearance: {
-    type: 'value',
     map: 'apperance',
   },
   cursor: {
-    type: 'value',
     map: 'cursor',
   },
   outline: {
-    type: 'value',
     map: 'outline',
   },
   pointer: {
-    type: 'value',
     map: 'pointerEvents',
   },
   resize: {
-    type: 'value',
     map: 'resize',
   },
   select: {
-    type: 'value',
     map: 'userSelect',
   },
   // misc
   shadow: {
-    type: 'value',
     map: 'shadow',
   },
   opacity: {
-    type: 'value',
     map: 'shadow',
   },
   fill: {
-    type: 'value',
     map: 'fill',
   },
   stroke: {
-    type: 'value',
     map: 'stroke',
   },
 }

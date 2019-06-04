@@ -85,7 +85,7 @@ const cssProps = task(t => ({
             return `${state}${t.head(nextValue)}`
           },
           '',
-          t.split('_', t.caseTo.paramCase(key))
+          t.split('-', t.caseTo.paramCase(key))
         )
         return t.eq(t.type(value), 'Boolean')
           ? t.not(value)
@@ -217,7 +217,7 @@ const cssProps = task(t => ({
   opacity: v => skipNull(v, `opacity-${v}`),
   fill: v => skipNull(v, t.not(v) ? '' : 'fill-current'),
   stroke: v => skipNull(v, t.not(v) ? '' : 'stroke-current'),
-  className: v => skipNull(v, `{v}`),
+  className: v => skipNull(v, `${v}`),
 }))
 
 export const toCss = task(t => props => {

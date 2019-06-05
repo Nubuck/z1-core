@@ -16,6 +16,7 @@ const rejoinFiltered = task(t => (key, list) =>
     : rejoin(t.filter(prop => t.not(t.eq(key, prop)), list))
 )
 
+// macros
 const macroBoolProp = task(t => ({ base, mod }) => {
   if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
     return null
@@ -32,22 +33,44 @@ const macroBoolProp = task(t => ({ base, mod }) => {
     ),
   ]
 })
-const macroCssProp = task(t => ({ base, mod }) => {
-  if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
-    return null
+const macroCssProp = task(
+  t => ({ base, mod }, trueKey = undefined, valSwap = undefined) => {
+    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+      return null
+    }
+    if (t.isZeroLen(mod)) {
+      const result = t.pathOr(null, ['css'], t.head(base))
+      return t.not(t.eq(trueKey, undefined))
+        ? t.eq(result, trueKey)
+          ? true
+          : result.replace(`-${trueKey}`, '')
+        : t.not(t.eq(valSwap, undefined))
+        ? t.eq(result, valSwap.match)
+          ? valSwap.value
+          : result
+        : result
+    }
+    return [
+      t.isZeroLen(base) ? null : t.pathOr(null, ['css'], t.head(base)),
+      t.mergeAll(
+        t.map(item => {
+          const result = t.pathOr(null, ['css'], item)
+          return {
+            [item.prefix]: t.not(t.eq(trueKey, undefined))
+              ? t.eq(result, trueKey)
+                ? true
+                : result.replace(`-${trueKey}`, '')
+              : t.not(t.eq(valSwap, undefined))
+              ? t.eq(result, valSwap.match)
+                ? valSwap.value
+                : result
+              : result,
+          }
+        }, mod)
+      ),
+    ]
   }
-  if (t.isZeroLen(mod)) {
-    return t.pathOr(null, ['css'], t.head(base))
-  }
-  return [
-    t.isZeroLen(base) ? null : t.pathOr(null, ['css'], t.head(base)),
-    t.mergeAll(
-      t.map(item => {
-        return { [item.prefix]: t.pathOr(null, ['css'], item) }
-      }, mod)
-    ),
-  ]
-})
+)
 const macroFilteredKeyProp = task(t => (propKey, { base, mod }) => {
   if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
     return null
@@ -240,10 +263,13 @@ export const boxProps = task(t => ({
     return macroFilteredKeyProp('text', props)
   },
   fontSmoothing(props) {
-    return macroCssProp(props)
+    return macroCssProp(props, 'antialiased')
   },
   fontStyle(props) {
-    return macroCssProp(props)
+    return macroCssProp(props, undefined, {
+      match: 'non-italic',
+      value: 'normal',
+    })
   },
   fontWeight(props) {
     return macroFilteredKeyProp('font', props)
@@ -336,33 +362,33 @@ export const boxProps = task(t => ({
     return null
   },
   appearance(props) {
-    return null
+    return macroFilteredKeyProp('appearance', props)
   },
   cursor(props) {
-    return null
+    return macroFilteredKeyProp('cursor', props)
   },
   outline(props) {
-    return null
+    return macroFilteredKeyProp('cursor', props)
   },
   pointerEvents(props) {
-    return null
+    return macroFilteredKeyProp(['pointer', 'events'], props)
   },
   resize(props) {
     return null
   },
   userSelect(props) {
-    return null
+    return macroFilteredKeyProp('select', props)
   },
   shadow(props) {
     return null
   },
   opacity(props) {
-    return null
+    return macroFilteredKeyProp('opacity', props)
   },
   fill(props) {
-    return null
+    return macroFilteredKeyProp('fill', props)
   },
   stroke(props) {
-    return null
+    return macroFilteredKeyProp('stroke', props)
   },
 }))

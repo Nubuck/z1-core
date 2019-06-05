@@ -615,7 +615,8 @@ export const defs = {
   italic: {
     map: 'fontStyle',
   },
-  antialiased: { map: 'fontStyle' },
+  antialiased: { map: 'fontSmoothing' },
+  subpixel: { map: 'fontSmoothing' },
   non: {
     map: 'fontStyle',
   },

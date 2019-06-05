@@ -112,11 +112,11 @@ export const box = {
   // height: 'screen',
   // minHeight: '2/4',
   // maxHeight: 'screen'
-  color: 'red-500',
-  fontFamily: 'mono',
-  fontSize: '4xl',
-  fontStyle: 'antialiased',
-  className: 'derp huurrrr col-all'
+  // color: 'red-500',
+  // fontFamily: 'mono',
+  // fontSize: '4xl',
+  // fontSmoothing: 'subpixel',
+  // className: 'derp huurrrr col-all',
+  fontStyle: 'normal'
 }
-export const stub =
-  'text-red-500 font-mono text-4xl antialiased non-italic derp huurrrr col-all'
+export const stub = 'non-italic'

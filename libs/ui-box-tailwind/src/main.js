@@ -115,7 +115,10 @@ const cssProps = task(t => ({
     if (t.isType(v, 'Boolean')) {
       return t.not(v) ? '' : 'antialiased'
     }
-    return `${v}-antialiased`
+    return `${v}-antialiased`.replace(
+      '-antialiased-antialiased',
+      '-antialiased'
+    )
   },
   fontStyle: v => skipNull(v, t.eq(v, 'normal') ? 'non-italic' : v),
   fontWeight: v => skipNull(v, `font-${v}`),

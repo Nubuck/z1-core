@@ -116,8 +116,26 @@ export const boxProps = task(t => ({
   insetY(props) {
     return macroFilteredKeyProp(['inset', 'y'], props)
   },
-  pin(props) {
-    return null
+  pin({ base, mod }) {
+    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+      return null
+    }
+    const mergeProps = propList =>
+      t.mergeAll(
+        t.map(prop => {
+          return { [prop.key]: t.not(t.contains('auto', prop.chunks)) }
+        }, propList)
+      )
+    if (t.isZeroLen(mod)) {
+      return mergeProps(base)
+    }
+    return [
+      t.isZeroLen(base) ? null : mergeProps(base),
+      t.mapObjIndexed(
+        value => mergeProps(value),
+        t.groupBy(item => item.prefix, mod)
+      ),
+    ]
   },
   visible(props) {
     return null

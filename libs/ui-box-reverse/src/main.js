@@ -83,9 +83,13 @@ export const box = {
   // overflowX: 'hidden',
   // overflowY: 'scroll',
   // scrolling: 'touch'
-  inset: '0',
-  insetX: '0',
-  insetY: 'auto',
+  // inset: '0',
+  // insetX: '0',
+  // insetY: 'auto',
+  pin: [
+    { top: true, left: false },
+    { sm: { top: true, left: false }, md: { top: true, left: false } },
+  ],
   // borderRadius: [
   //   {
   //     top: 'sm',
@@ -94,4 +98,5 @@ export const box = {
   //   { sm: { top: 'none', bottom: 'sm' } },
   // ],
 }
-export const stub = 'inset-0 inset-x-0 inset-y-auto'
+export const stub =
+  'top-0 left-auto sm:top-0 sm:left-auto md:top-0 md:left-auto'

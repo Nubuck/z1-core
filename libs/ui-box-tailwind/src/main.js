@@ -36,7 +36,7 @@ const cssProps = task(t => ({
     }
     return t.tags.oneLineInlineLists`
     ${t.map(([key, value]) => {
-      return `${key}-${t.not(value) ? '0' : 'auto'}`
+      return `${key}-${t.not(value) ? 'auto' : '0'}`
     }, t.toPairs(v))}
     `
   },

@@ -365,7 +365,10 @@ export const boxProps = task(t => ({
     return macroFilteredKeyProp('order', props)
   },
   tableCollapse(props) {
-    return macroFilteredKeyProp('table', props)
+    return macroFilteredKeyProp('table', props, [
+      { match: 'collapse', value: true },
+      { match: 'separate', value: false },
+    ])
   },
   tableLayout(props) {
     return macroFilteredKeyProp('table', props)
@@ -398,27 +401,33 @@ export const boxProps = task(t => ({
     return macroFilteredKeyProp('cursor', props)
   },
   outline(props) {
-    return macroFilteredKeyProp('cursor', props)
+    return macroFilteredKeyProp('outline', props)
   },
   pointerEvents(props) {
     return macroFilteredKeyProp(['pointer', 'events'], props)
   },
   resize(props) {
-    return null
+    return macroFilteredKeyProp('resize', props, { match: '', value: true })
   },
   userSelect(props) {
     return macroFilteredKeyProp('select', props)
   },
   shadow(props) {
-    return null
+    return macroFilteredKeyProp('shadow', props, { match: '', value: true })
   },
   opacity(props) {
     return macroFilteredKeyProp('opacity', props)
   },
   fill(props) {
-    return macroFilteredKeyProp('fill', props)
+    return macroFilteredKeyProp('fill', props, {
+      match: 'current',
+      value: true,
+    })
   },
   stroke(props) {
-    return macroFilteredKeyProp('stroke', props)
+    return macroFilteredKeyProp('stroke', props, {
+      match: 'current',
+      value: true,
+    })
   },
 }))

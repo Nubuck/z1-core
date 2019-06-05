@@ -152,7 +152,8 @@ const cssProps = task(t => ({
   flexShrink: v => skipNull(v, t.not(v) ? 'flex-shrink-0' : 'flex-shrink'),
   flexOrder: v => skipNull(v, `order-${v}`),
   // tables
-  tableCollapse: v => skipNull(v, `border-${v}`),
+  tableCollapse: v =>
+    skipNull(v, t.not(v) ? 'table-separate' : 'table-collapse'),
   tableLayout: v => skipNull(v, `table-${v}`),
   // backgrounds
   bgAttachment: v => skipNull(v, `bg-${v}`),
@@ -224,7 +225,6 @@ const cssProps = task(t => ({
 }))
 
 export const toCss = task(t => props => {
-  const keys = t.keys(props)
   return t.tags.oneLineInlineLists`
   ${t.map(key => {
     const cssProp = cssProps[key]
@@ -250,7 +250,7 @@ export const toCss = task(t => props => {
       }, responsiveKeys),
     ])}
     `
-  }, keys)}`
+  }, t.keys(props))}`
 })
 
 export const uiBox = task(t => (props = {}) => {

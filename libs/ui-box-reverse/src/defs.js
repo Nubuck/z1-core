@@ -74,6 +74,15 @@ export const defs = {
         key: 'table',
         map: 'display',
       },
+      // collapse
+      {
+        key: 'collapse',
+        map: 'tableCollapse',
+      },
+      {
+        key: 'separate',
+        map: 'tableCollapse',
+      },
       // layout
       {
         key: 'auto',
@@ -922,7 +931,7 @@ export const defs = {
     map: 'shadow',
   },
   opacity: {
-    map: 'shadow',
+    map: 'opacity',
   },
   fill: {
     map: 'fill',

@@ -78,10 +78,13 @@ export const box = {
   // float: ['none', { sm: 'left', md: 'right' }],
   // objectFit: 'contain',
   // objectPosition: ['left-bottom', { sm: 'bottom', md: 'right-top' }],
-  overflow: 'auto',
-  overflowX: 'hidden',
-  overflowY: 'scroll',
-  scrolling: 'touch'
+  // overflow: 'auto',
+  // overflowX: 'hidden',
+  // overflowY: 'scroll',
+  // scrolling: 'touch'
+  inset: '0',
+  insetX: '0',
+  insetY: 'auto',
   // borderRadius: [
   //   {
   //     top: 'sm',
@@ -90,4 +93,4 @@ export const box = {
   //   { sm: { top: 'none', bottom: 'sm' } },
   // ],
 }
-export const stub = 'overflow-auto overflow-x-hidden overflow-y-scroll scrolling-touch'
+export const stub = 'inset-0 inset-x-0 inset-y-auto'

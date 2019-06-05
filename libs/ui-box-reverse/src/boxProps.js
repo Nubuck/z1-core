@@ -108,13 +108,13 @@ export const boxProps = task(t => ({
     return macroCssProp(props)
   },
   inset(props) {
-    return null
+    return macroFilteredKeyProp('inset', props)
   },
   insetX(props) {
-    return null
+    return macroFilteredKeyProp(['inset', 'x'], props)
   },
   insetY(props) {
-    return null
+    return macroFilteredKeyProp(['inset', 'y'], props)
   },
   pin(props) {
     return null

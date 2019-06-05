@@ -25,6 +25,9 @@ export const cssToBox = task(t => (css = '') => {
   return t.mapObjIndexed(
     (val, key) => {
       const boxProp = boxProps[key]
+      if (t.not(boxProp)) {
+        return t.tags.oneLineInlineLists`${t.map(item => item.css, val || [])}`
+      }
       const nextProp = boxProp(splitProps(val))
       return nextProp
     },
@@ -46,7 +49,7 @@ export const cssToBox = task(t => (css = '') => {
         const matchChunk = t.gt(t.length(defChunks), 1)
           ? t.head(t.tail(defChunks))
           : null
-        const def = defs[keyChunk]
+        const def = defs[keyChunk] || { key: className, map: 'className' }
         const nextDef = t.isType(def.map, 'Array')
           ? t.find(
               item =>
@@ -92,17 +95,28 @@ export const box = {
   // ],
   // visible: false,
   // borderColor: ['gray-200', { sm: 'gray-600', md: 'gray-800' }],
-  borderWidth: [
-    true,
-    {
-      sm: { top: '0', bottom: '2', left: '8', right: '8' },
-      lg: { top: '4', bottom: '8', left: '2', right: '2' },
-    },
-  ],
+  // borderWidth: [
+  //   true,
+  //   {
+  //     sm: { top: '0', bottom: '2', left: '8', right: '8' },
+  //     lg: { top: '4', bottom: '8', left: '2', right: '2' },
+  //   },
+  // ],
   // borderRadius: [
   //   true,
   //   { sm: { top: 'none', bottom: 'sm' }, md: { top: 'lg' }, lg: true },
   // ],
+  // width: 'full',
+  // minWidth: '2/4',
+  // maxWidth: 'full',
+  // height: 'screen',
+  // minHeight: '2/4',
+  // maxHeight: 'screen'
+  color: 'red-500',
+  fontFamily: 'mono',
+  fontSize: '4xl',
+  fontSmoothing: true,
+  fontStyle: 'non-italic',
 }
 export const stub =
-  'border sm:border-t-0 sm:border-b-2 sm:border-l-8 sm:border-r-8 lg:border-t-4 lg:border-b-8 lg:border-l-2 lg:border-r-2'
+  'text-red-500 font-mono text-4xl antialiased non-italic derp huurrrr col-all'

@@ -213,121 +213,121 @@ export const boxProps = task(t => ({
     )
   },
   width(props) {
-    return null
+    return macroFilteredKeyProp('w', props)
   },
   minWidth(props) {
-    return null
+    return macroFilteredKeyProp(['min', 'w'], props)
   },
   maxWidth(props) {
-    return null
+    return macroFilteredKeyProp(['max', 'w'], props)
   },
   height(props) {
-    return null
+    return macroFilteredKeyProp('h', props)
   },
   minHeight(props) {
-    return null
+    return macroFilteredKeyProp(['min', 'h'], props)
   },
   maxHeight(props) {
-    return null
+    return macroFilteredKeyProp(['max', 'h'], props)
   },
   color(props) {
-    return null
+    return macroFilteredKeyProp('text', props)
   },
   fontFamily(props) {
-    return null
+    return macroFilteredKeyProp('font', props)
   },
   fontSize(props) {
-    return null
+    return macroFilteredKeyProp('text', props)
   },
   fontSmoothing(props) {
-    return null
+    return macroCssProp(props)
   },
   fontStyle(props) {
-    return null
+    return macroCssProp(props)
   },
   fontWeight(props) {
-    return null
+    return macroFilteredKeyProp('font', props)
   },
   letterSpacing(props) {
-    return null
+    return macroFilteredKeyProp('tracking', props)
   },
   lineHeight(props) {
-    return null
+    return macroFilteredKeyProp('leading', props)
   },
   listType(props) {
-    return null
+    return macroFilteredKeyProp('list', props)
   },
   listPosition(props) {
-    return null
+    return macroFilteredKeyProp('list', props)
   },
   textAlignX(props) {
-    return null
+    return macroFilteredKeyProp('list', props)
   },
   textAlignY(props) {
-    return null
+    return macroFilteredKeyProp('align', props)
   },
   textDecoration(props) {
-    return null
+    return macroCssProp(props)
   },
   textTransform(props) {
-    return null
+    return macroCssProp(props)
   },
   whitespace(props) {
-    return null
+    return macroFilteredKeyProp('whitespace', props)
   },
   wordBreak(props) {
-    return null
+    return macroFilteredKeyProp('break', props)
   },
   flex(props) {
-    return null
+    return macroFilteredKeyProp('flex', props)
   },
   flexDirection(props) {
-    return null
+    return macroFilteredKeyProp('flex', props)
   },
   flexWrap(props) {
-    return null
+    return macroFilteredKeyProp('flex', props)
   },
   alignItems(props) {
-    return null
+    return macroFilteredKeyProp('items', props)
   },
   alignContent(props) {
-    return null
+    return macroFilteredKeyProp('content', props)
   },
   alignSelf(props) {
-    return null
+    return macroFilteredKeyProp('self', props)
   },
   justifyContent(props) {
-    return null
+    return macroFilteredKeyProp('justify', props)
   },
   flexGrow(props) {
-    return null
+    return macroFilteredKeyProp('flex', props)
   },
   flexShrink(props) {
-    return null
+    return macroFilteredKeyProp('flex', props)
   },
   flexOrder(props) {
-    return null
+    return macroFilteredKeyProp('order', props)
   },
   tableCollapse(props) {
-    return null
+    return macroFilteredKeyProp('table', props)
   },
   tableLayout(props) {
-    return null
+    return macroFilteredKeyProp('table', props)
   },
   bgAttachment(props) {
-    return null
+    return macroFilteredKeyProp('bg', props)
   },
   bgColor(props) {
-    return null
+    return macroFilteredKeyProp('bg', props)
   },
   bgPosition(props) {
-    return null
+    return macroFilteredKeyProp('bg', props)
   },
   bgRepeat(props) {
-    return null
+    return macroFilteredKeyProp('bg', props)
   },
   bgSize(props) {
-    return null
+    return macroFilteredKeyProp('bg', props)
   },
   padding(props) {
     return null

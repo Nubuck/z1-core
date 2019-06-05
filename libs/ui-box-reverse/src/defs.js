@@ -415,7 +415,7 @@ export const defs = {
     map: 'width',
   },
   h: {
-    map: 'width',
+    map: 'height',
   },
   min: {
     map: [
@@ -433,11 +433,11 @@ export const defs = {
     map: [
       {
         key: 'w',
-        map: 'minWidth',
+        map: 'maxWidth',
       },
       {
         key: 'h',
-        map: 'minHeight',
+        map: 'maxHeight',
       },
     ],
   },
@@ -615,6 +615,7 @@ export const defs = {
   italic: {
     map: 'fontStyle',
   },
+  antialiased: { map: 'fontStyle' },
   non: {
     map: 'fontStyle',
   },

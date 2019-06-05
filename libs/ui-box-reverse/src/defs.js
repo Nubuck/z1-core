@@ -674,15 +674,18 @@ export const defs = {
   normal: {
     map: 'textTransform',
   },
+  break: {
+    map: 'wordBreak',
+  },
+  truncate: {
+    map: 'wordBreak',
+  },
   // alignment
   align: {
     map: 'textAlignY',
   },
   whitespace: {
     map: 'whitespace',
-  },
-  break: {
-    map: 'wordBreak',
   },
   items: {
     map: 'alignItems',

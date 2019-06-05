@@ -71,29 +71,46 @@ const macroCssProp = task(
     ]
   }
 )
-const macroFilteredKeyProp = task(t => (propKey, { base, mod }) => {
-  if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
-    return null
-  }
-  if (t.isZeroLen(mod)) {
-    return rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base)))
-  }
-  return [
-    t.isZeroLen(base)
+const macroFilteredKeyProp = task(
+  t => (propKey, { base, mod }, swapVal = undefined) => {
+    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+      return null
+    }
+    const findMatch = (result, list) => {
+      const matched = t.find(item => t.eq(item.match, result), list)
+      return t.not(matched) ? result : matched.value
+    }
+    const nextResult = result => {
+      return t.not(t.eq(swapVal, undefined))
+        ? t.isType(swapVal, 'Array')
+          ? findMatch(result, swapVal)
+          : t.eq(swapVal.match, result)
+          ? swapVal.value
+          : result
+        : result
+    }
+    if (t.isZeroLen(mod)) {
+      return nextResult(
+        rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base)))
+      )
+    }
+    const result = t.isZeroLen(base)
       ? null
-      : rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base))),
-    t.mergeAll(
-      t.map(item => {
-        return {
-          [item.prefix]: rejoinFiltered(
-            propKey,
-            t.pathOr([], ['chunks'], item)
-          ),
-        }
-      }, mod)
-    ),
-  ]
-})
+      : rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base)))
+    return [
+      nextResult(result),
+      t.mergeAll(
+        t.map(item => {
+          return {
+            [item.prefix]: nextResult(
+              rejoinFiltered(propKey, t.pathOr([], ['chunks'], item))
+            ),
+          }
+        }, mod)
+      ),
+    ]
+  }
+)
 const macroObjectFilteredKeyProp = task(
   t => (propKey, match, { base, mod }) => {
     if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
@@ -293,7 +310,10 @@ export const boxProps = task(t => ({
     return macroFilteredKeyProp('align', props)
   },
   textDecoration(props) {
-    return macroCssProp(props)
+    return macroCssProp(props, undefined, {
+      match: 'no-underline',
+      value: 'none',
+    })
   },
   textTransform(props) {
     return macroCssProp(props)
@@ -311,7 +331,11 @@ export const boxProps = task(t => ({
     return macroFilteredKeyProp('flex', props)
   },
   flexWrap(props) {
-    return macroFilteredKeyProp('flex', props)
+    return macroFilteredKeyProp('flex', props, [
+      { match: 'wrap', value: true },
+      { match: 'no-wrap', value: false },
+      { match: 'wrap-reverse', value: 'reverse' },
+    ])
   },
   alignItems(props) {
     return macroFilteredKeyProp('items', props)
@@ -326,10 +350,16 @@ export const boxProps = task(t => ({
     return macroFilteredKeyProp('justify', props)
   },
   flexGrow(props) {
-    return macroFilteredKeyProp('flex', props)
+    return macroFilteredKeyProp('flex', props, [
+      { match: 'grow-0', value: false },
+      { match: 'grow', value: true },
+    ])
   },
   flexShrink(props) {
-    return macroFilteredKeyProp('flex', props)
+    return macroFilteredKeyProp('flex', props, [
+      { match: 'shrink', value: true },
+      { match: 'shrink-0', value: false },
+    ])
   },
   flexOrder(props) {
     return macroFilteredKeyProp('order', props)

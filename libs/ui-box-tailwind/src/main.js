@@ -228,6 +228,9 @@ export const toCss = task(t => props => {
   return t.tags.oneLineInlineLists`
   ${t.map(key => {
     const cssProp = cssProps[key]
+    if (t.not(cssProp)) {
+      return ''
+    }
     const value = props[key]
     if (t.not(isResponsive(value))) {
       return cssProp(value)

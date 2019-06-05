@@ -51,12 +51,11 @@ export const cssToBox = task(t => (css = '') => {
           : null
         const def = defs[keyChunk] || { key: className, map: 'className' }
         const nextDef = t.isType(def.map, 'Array')
-          ? t.find(
-              item =>
-                t.or(t.eq(item.key, keyChunk), t.eq(item.key, matchChunk)),
-              def.map
-            )
+          ? t.find(item => t.eq(item.key, matchChunk), def.map)
           : def
+        const propDef = t.not(nextDef)
+          ? t.find(item => t.eq(item.key, keyChunk), def.map)
+          : nextDef
         return t.mergeAll([
           base,
           {
@@ -64,7 +63,7 @@ export const cssToBox = task(t => (css = '') => {
             match: matchChunk,
             chunks: defChunks,
           },
-          nextDef,
+          propDef,
         ])
       }, t.split(' ', css))
     )
@@ -119,5 +118,24 @@ export const box = {
   // className: 'derp huurrrr col-all',
   // fontStyle: 'normal'
   // fontWeight: 'hairline',
+  // letterSpacing: 'tight',
+  // lineHeight: 'snug',
+  // listType: 'disc',
+  // listPosition: 'outside',
+  // textAlignX: 'left',
+  // textAlignY: 'top',
+  // textDecoration: 'line-through',
+  // textTransform: 'uppercase',
+  // whitespace: 'pre',
+  // wordBreak: 'truncate',
+  // flex: 1,
+  // flexDirection: 'row',
+  flexWrap: 'revese',
+  // alignItems: 'center',
+  // alignContent: 'center',
+  // alignSelf: 'center',
+  // justifyContent: 'center',
+  flexGrow: false,
+  flexShrink: false,
 }
-export const stub = ''
+export const stub = 'flex-wrap-reverse flex-grow-0 flex-shrink-0'

@@ -117,6 +117,7 @@ export const box = {
   // fontSize: '4xl',
   // fontSmoothing: 'subpixel',
   // className: 'derp huurrrr col-all',
-  fontStyle: 'normal'
+  // fontStyle: 'normal'
+  // fontWeight: 'hairline',
 }
-export const stub = 'non-italic'
+export const stub = ''

@@ -165,7 +165,7 @@ export const defs = {
       },
       {
         key: 'y',
-        map: 'overflowX',
+        map: 'overflowY',
       },
     ],
   },

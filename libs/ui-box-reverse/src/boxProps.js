@@ -1,22 +1,65 @@
 import { task } from '@z1/preset-task'
 
+// tasks
+const rejoin = task(t => list =>
+  t.reduce(
+    (state, next) => {
+      return t.isZeroLen(state) ? next : `${state}-${next}`
+    },
+    '',
+    list
+  )
+)
+const rejoinFiltered = task(t => (key, list) =>
+  t.isType(key, 'Array')
+    ? rejoin(t.filter(prop => t.not(t.contains(prop, key)), list))
+    : rejoin(t.filter(prop => t.not(t.eq(key, prop)), list))
+)
+
+const macroBoolProp = task(t => ({ base, mod }) => {
+  if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+    return null
+  }
+  if (t.isZeroLen(mod)) {
+    return true
+  }
+  return [
+    t.isZeroLen(base) ? null : true,
+    t.mergeAll(
+      t.map(item => {
+        return { [item.prefix]: true }
+      }, mod)
+    ),
+  ]
+})
+const macroFilteredKeyProp = task(t => (propKey, { base, mod }) => {
+  if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+    return null
+  }
+  if (t.isZeroLen(mod)) {
+    return rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base)))
+  }
+  return [
+    t.isZeroLen(base)
+      ? null
+      : rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base))),
+    t.mergeAll(
+      t.map(item => {
+        return {
+          [item.prefix]: rejoinFiltered(
+            propKey,
+            t.pathOr([], ['chunks'], item)
+          ),
+        }
+      }, mod)
+    ),
+  ]
+})
+
 // main
 export const boxProps = task(t => ({
-  container({ base, mod }) {
-    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
-      return null
-    }
-    if (t.isZeroLen(mod)) {
-      return true
-    }
-    return [
-      t.isZeroLen(base) ? null : true,
-      t.mergeAll(
-        t.map(item => {
-          return { [item.prefix]: true }
-        }, mod)
-      ),
-    ]
+  container(props) {
+    return macroBoolProp(props)
   },
   display({ base, mod }) {
     if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
@@ -35,25 +78,25 @@ export const boxProps = task(t => ({
     ]
   },
   clearfix(props) {
-    return null
+    return macroBoolProp(props)
   },
   float(props) {
-    return null
+    return macroFilteredKeyProp('float', props)
   },
   objectFit(props) {
-    return null
+    return macroFilteredKeyProp('object', props)
   },
   objectPosition(props) {
-    return null
+    return macroFilteredKeyProp('object', props)
   },
   overflow(props) {
-    return null
+    return macroFilteredKeyProp('overflow', props)
   },
   overflowX(props) {
-    return null
+    return macroFilteredKeyProp(['overflow', 'x'], props)
   },
   overflowY(props) {
-    return null
+    return macroFilteredKeyProp(['overflow', 'y'], props)
   },
   scrolling(props) {
     return null

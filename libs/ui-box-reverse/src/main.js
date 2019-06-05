@@ -3,15 +3,6 @@ import { defs } from './defs'
 import { boxProps } from './boxProps'
 
 // main
-const rejoin = task(t => list =>
-  t.reduce(
-    (state, next) => {
-      return t.isZeroLen(state) ? next : `${state}-${next}`
-    },
-    '',
-    list
-  )
-)
 const splitProps = task(t => list =>
   t.reduce(
     (state, next) => {
@@ -79,10 +70,15 @@ export const cssToBox = task(t => (css = '') => {
 // test
 export const box = {
   // container: true,
-  display: [
-    'table-row',
-    { sm: 'block', md: 'inline-block', lg: 'inline-flex', xl: 'table-cell' },
-  ],
+  // display: [
+  //   'table-row',
+  //   { sm: 'block', md: 'inline-block', lg: 'inline-flex', xl: 'table-cell' },
+  // ],
+  // clearfix: true,
+  // float: ['none', { sm: 'left', md: 'right' }],
+  // objectFit: 'contain',
+  // objectPosition: ['left-bottom', { sm: 'bottom', md: 'right-top' }],
+  overflow: 'auto',
   // borderRadius: [
   //   {
   //     top: 'sm',
@@ -91,5 +87,4 @@ export const box = {
   //   { sm: { top: 'none', bottom: 'sm' } },
   // ],
 }
-export const stub =
-  'sm:block md:inline-block lg:inline-flex xl:table-cell table-row'
+export const stub = 'overflow-auto overflow-x-hidden overflow-y-scroll'

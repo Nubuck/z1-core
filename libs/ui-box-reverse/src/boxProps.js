@@ -32,6 +32,22 @@ const macroBoolProp = task(t => ({ base, mod }) => {
     ),
   ]
 })
+const macroCssProp = task(t => ({ base, mod }) => {
+  if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+    return null
+  }
+  if (t.isZeroLen(mod)) {
+    return t.pathOr(null, ['css'], t.head(base))
+  }
+  return [
+    t.isZeroLen(base) ? null : t.pathOr(null, ['css'], t.head(base)),
+    t.mergeAll(
+      t.map(item => {
+        return { [item.prefix]: t.pathOr(null, ['css'], item) }
+      }, mod)
+    ),
+  ]
+})
 const macroFilteredKeyProp = task(t => (propKey, { base, mod }) => {
   if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
     return null
@@ -61,21 +77,8 @@ export const boxProps = task(t => ({
   container(props) {
     return macroBoolProp(props)
   },
-  display({ base, mod }) {
-    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
-      return null
-    }
-    if (t.isZeroLen(mod)) {
-      return t.pathOr(null, ['css'], t.head(base))
-    }
-    return [
-      t.isZeroLen(base) ? null : t.pathOr(null, ['css'], t.head(base)),
-      t.mergeAll(
-        t.map(item => {
-          return { [item.prefix]: t.pathOr(null, ['css'], item) }
-        }, mod)
-      ),
-    ]
+  display(props) {
+    return macroCssProp(props)
   },
   clearfix(props) {
     return macroBoolProp(props)
@@ -99,10 +102,10 @@ export const boxProps = task(t => ({
     return macroFilteredKeyProp(['overflow', 'y'], props)
   },
   scrolling(props) {
-    return null
+    return macroFilteredKeyProp('scrolling', props)
   },
   position(props) {
-    return null
+    return macroCssProp(props)
   },
   inset(props) {
     return null

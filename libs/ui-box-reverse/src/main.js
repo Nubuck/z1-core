@@ -79,6 +79,9 @@ export const box = {
   // objectFit: 'contain',
   // objectPosition: ['left-bottom', { sm: 'bottom', md: 'right-top' }],
   overflow: 'auto',
+  overflowX: 'hidden',
+  overflowY: 'scroll',
+  scrolling: 'touch'
   // borderRadius: [
   //   {
   //     top: 'sm',
@@ -87,4 +90,4 @@ export const box = {
   //   { sm: { top: 'none', bottom: 'sm' } },
   // ],
 }
-export const stub = 'overflow-auto overflow-x-hidden overflow-y-scroll'
+export const stub = 'overflow-auto overflow-x-hidden overflow-y-scroll scrolling-touch'

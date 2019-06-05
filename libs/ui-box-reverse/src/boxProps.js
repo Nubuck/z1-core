@@ -71,29 +71,41 @@ const macroFilteredKeyProp = task(t => (propKey, { base, mod }) => {
     ),
   ]
 })
-const macroObjectFilteredKeyProp = task(t => (propKey, { base, mod }) => {
-  if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
-    return null
-  }
-  const mergeProps = propList =>
-    t.mergeAll(
-      t.map(prop => {
-        return {
-          [prop.key]: rejoinFiltered(propKey, t.pathOr([], ['chunks'], prop)),
+const macroObjectFilteredKeyProp = task(
+  t => (propKey, match, { base, mod }) => {
+    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+      return null
+    }
+    const mergeProps = propList => {
+      if (t.eq(t.length(propList), 1)) {
+        const propHead = t.head(base)
+        if (t.eq(t.length(propHead.chunks), 1)) {
+          return true
         }
-      }, propList)
-    )
-  if (t.isZeroLen(mod)) {
-    return mergeProps(base)
+      }
+      return t.mergeAll(
+        t.map(prop => {
+          return {
+            [t.getMatch(prop.match)(match)]: rejoinFiltered(
+              propKey,
+              t.pathOr([], ['chunks'], prop)
+            ),
+          }
+        }, propList)
+      )
+    }
+    if (t.isZeroLen(mod)) {
+      return mergeProps(base)
+    }
+    return [
+      t.isZeroLen(base) ? null : mergeProps(base),
+      t.mapObjIndexed(
+        value => mergeProps(value),
+        t.groupBy(item => item.prefix, mod)
+      ),
+    ]
   }
-  return [
-    t.isZeroLen(base) ? null : mergeProps(base),
-    t.mapObjIndexed(
-      value => mergeProps(value),
-      t.groupBy(item => item.prefix, mod)
-    ),
-  ]
-})
+)
 
 // main
 export const boxProps = task(t => ({
@@ -172,67 +184,33 @@ export const boxProps = task(t => ({
   borderStyle(props) {
     return macroFilteredKeyProp('border', props)
   },
-  borderWidth({ base, mod }) {
-    const propKey = ['border', 't', 'r', 'b', 'l']
-    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
-      return null
-    }
-    const mergeProps = propList =>
-      t.mergeAll(
-        t.map(prop => {
-          return {
-            [t.getMatch(prop.match)({
-              t: 'top',
-              r: 'right',
-              b: 'bottom',
-              l: 'left',
-            })]: rejoinFiltered(propKey, t.pathOr([], ['chunks'], prop)),
-          }
-        }, propList)
-      )
-    if (t.isZeroLen(mod)) {
-      return mergeProps(base)
-    }
-    return [
-      t.isZeroLen(base) ? null : mergeProps(base),
-      t.mapObjIndexed(
-        value => mergeProps(value),
-        t.groupBy(item => item.prefix, mod)
-      ),
-    ]
+  borderWidth(props) {
+    return macroObjectFilteredKeyProp(
+      ['border', 't', 'r', 'b', 'l'],
+      {
+        t: 'top',
+        r: 'right',
+        b: 'bottom',
+        l: 'left',
+      },
+      props
+    )
   },
-  borderRadius({ base, mod }) {
-    const propKey = ['rounded', 't', 'r', 'b', 'l', 'tl', 'tr', 'bl', 'br']
-    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
-      return null
-    }
-    const mergeProps = propList =>
-      t.mergeAll(
-        t.map(prop => {
-          return {
-            [t.getMatch(prop.match)({
-              t: 'top',
-              r: 'right',
-              b: 'bottom',
-              l: 'left',
-              tl: 'topLeft',
-              tr: 'topRight',
-              bl: 'bottomLeft',
-              br: 'bottomRight',
-            })]: rejoinFiltered(propKey, t.pathOr([], ['chunks'], prop)),
-          }
-        }, propList)
-      )
-    if (t.isZeroLen(mod)) {
-      return mergeProps(base)
-    }
-    return [
-      t.isZeroLen(base) ? null : mergeProps(base),
-      t.mapObjIndexed(
-        value => mergeProps(value),
-        t.groupBy(item => item.prefix, mod)
-      ),
-    ]
+  borderRadius(props) {
+    return macroObjectFilteredKeyProp(
+      ['rounded', 't', 'r', 'b', 'l', 'tl', 'tr', 'bl', 'br'],
+      {
+        t: 'top',
+        r: 'right',
+        b: 'bottom',
+        l: 'left',
+        tl: 'topLeft',
+        tr: 'topRight',
+        bl: 'bottomLeft',
+        br: 'bottomRight',
+      },
+      props
+    )
   },
   width(props) {
     return null

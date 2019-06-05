@@ -92,17 +92,17 @@ export const box = {
   // ],
   // visible: false,
   // borderColor: ['gray-200', { sm: 'gray-600', md: 'gray-800' }],
-  // borderWidth: [
-  //   { top: '1', bottom: '4', left: '2', right: '2' },
-  //   {
-  //     sm: { top: '0', bottom: '2', left: '8', right: '8' },
-  //     lg: { top: '4', bottom: '8', left: '2', right: '2' },
-  //   },
-  // ],
-  borderRadius: [
-    { top: 'sm', bottomLeft: 'md' },
-    { sm: { top: 'none', bottom: 'sm' }, md: { top: 'lg' } },
+  borderWidth: [
+    true,
+    {
+      sm: { top: '0', bottom: '2', left: '8', right: '8' },
+      lg: { top: '4', bottom: '8', left: '2', right: '2' },
+    },
   ],
+  // borderRadius: [
+  //   true,
+  //   { sm: { top: 'none', bottom: 'sm' }, md: { top: 'lg' }, lg: true },
+  // ],
 }
 export const stub =
-  'rounded-t-sm rounded-bl-md sm:rounded-t-none sm:rounded-b-sm md:rounded-t-lg'
+  'border sm:border-t-0 sm:border-b-2 sm:border-l-8 sm:border-r-8 lg:border-t-4 lg:border-b-8 lg:border-l-2 lg:border-r-2'

@@ -71,6 +71,29 @@ const macroFilteredKeyProp = task(t => (propKey, { base, mod }) => {
     ),
   ]
 })
+const macroObjectFilteredKeyProp = task(t => (propKey, { base, mod }) => {
+  if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+    return null
+  }
+  const mergeProps = propList =>
+    t.mergeAll(
+      t.map(prop => {
+        return {
+          [prop.key]: rejoinFiltered(propKey, t.pathOr([], ['chunks'], prop)),
+        }
+      }, propList)
+    )
+  if (t.isZeroLen(mod)) {
+    return mergeProps(base)
+  }
+  return [
+    t.isZeroLen(base) ? null : mergeProps(base),
+    t.mapObjIndexed(
+      value => mergeProps(value),
+      t.groupBy(item => item.prefix, mod)
+    ),
+  ]
+})
 
 // main
 export const boxProps = task(t => ({
@@ -138,22 +161,78 @@ export const boxProps = task(t => ({
     ]
   },
   visible(props) {
-    return null
+    return macroCssProp(props)
   },
   zIndex(props) {
-    return null
+    return macroFilteredKeyProp('z', props)
   },
   borderColor(props) {
-    return null
+    return macroFilteredKeyProp('border', props)
   },
   borderStyle(props) {
-    return null
+    return macroFilteredKeyProp('border', props)
   },
-  borderWidth(props) {
-    return null
+  borderWidth({ base, mod }) {
+    const propKey = ['border', 't', 'r', 'b', 'l']
+    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+      return null
+    }
+    const mergeProps = propList =>
+      t.mergeAll(
+        t.map(prop => {
+          return {
+            [t.getMatch(prop.match)({
+              t: 'top',
+              r: 'right',
+              b: 'bottom',
+              l: 'left',
+            })]: rejoinFiltered(propKey, t.pathOr([], ['chunks'], prop)),
+          }
+        }, propList)
+      )
+    if (t.isZeroLen(mod)) {
+      return mergeProps(base)
+    }
+    return [
+      t.isZeroLen(base) ? null : mergeProps(base),
+      t.mapObjIndexed(
+        value => mergeProps(value),
+        t.groupBy(item => item.prefix, mod)
+      ),
+    ]
   },
-  borderRadius(props) {
-    return null
+  borderRadius({ base, mod }) {
+    const propKey = ['rounded', 't', 'r', 'b', 'l', 'tl', 'tr', 'bl', 'br']
+    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+      return null
+    }
+    const mergeProps = propList =>
+      t.mergeAll(
+        t.map(prop => {
+          return {
+            [t.getMatch(prop.match)({
+              t: 'top',
+              r: 'right',
+              b: 'bottom',
+              l: 'left',
+              tl: 'topLeft',
+              tr: 'topRight',
+              bl: 'bottomLeft',
+              br: 'bottomRight',
+            })]: rejoinFiltered(propKey, t.pathOr([], ['chunks'], prop)),
+          }
+        }, propList)
+      )
+    if (t.isZeroLen(mod)) {
+      return mergeProps(base)
+    }
+    return [
+      t.isZeroLen(base) ? null : mergeProps(base),
+      t.mapObjIndexed(
+        value => mergeProps(value),
+        t.groupBy(item => item.prefix, mod)
+      ),
+    ]
   },
   width(props) {
     return null

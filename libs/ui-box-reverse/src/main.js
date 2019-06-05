@@ -86,17 +86,23 @@ export const box = {
   // inset: '0',
   // insetX: '0',
   // insetY: 'auto',
-  pin: [
-    { top: true, left: false },
-    { sm: { top: true, left: false }, md: { top: true, left: false } },
-  ],
-  // borderRadius: [
-  //   {
-  //     top: 'sm',
-  //     bottomLeft: 'md',
-  //   },
-  //   { sm: { top: 'none', bottom: 'sm' } },
+  // pin: [
+  //   { top: true, left: false },
+  //   { sm: { top: true, left: false }, md: { top: true, left: false } },
   // ],
+  // visible: false,
+  // borderColor: ['gray-200', { sm: 'gray-600', md: 'gray-800' }],
+  // borderWidth: [
+  //   { top: '1', bottom: '4', left: '2', right: '2' },
+  //   {
+  //     sm: { top: '0', bottom: '2', left: '8', right: '8' },
+  //     lg: { top: '4', bottom: '8', left: '2', right: '2' },
+  //   },
+  // ],
+  borderRadius: [
+    { top: 'sm', bottomLeft: 'md' },
+    { sm: { top: 'none', bottom: 'sm' }, md: { top: 'lg' } },
+  ],
 }
 export const stub =
-  'top-0 left-auto sm:top-0 sm:left-auto md:top-0 md:left-auto'
+  'rounded-t-sm rounded-bl-md sm:rounded-t-none sm:rounded-b-sm md:rounded-t-lg'

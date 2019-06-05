@@ -71,39 +71,41 @@ const macroCssProp = task(
     ]
   }
 )
+const findMatch = task(t => (result, list) => {
+  const matched = t.find(item => t.eq(item.match, result), list)
+  return t.not(matched) ? result : matched.value
+})
+const nextMacroResult = task(t => (result, swapVal) => {
+  return t.not(t.eq(swapVal, undefined))
+    ? t.isType(swapVal, 'Array')
+      ? findMatch(result, swapVal)
+      : t.eq(swapVal.match, result)
+      ? swapVal.value
+      : result
+    : result
+})
 const macroFilteredKeyProp = task(
   t => (propKey, { base, mod }, swapVal = undefined) => {
     if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
       return null
     }
-    const findMatch = (result, list) => {
-      const matched = t.find(item => t.eq(item.match, result), list)
-      return t.not(matched) ? result : matched.value
-    }
-    const nextResult = result => {
-      return t.not(t.eq(swapVal, undefined))
-        ? t.isType(swapVal, 'Array')
-          ? findMatch(result, swapVal)
-          : t.eq(swapVal.match, result)
-          ? swapVal.value
-          : result
-        : result
-    }
     if (t.isZeroLen(mod)) {
-      return nextResult(
-        rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base)))
+      return nextMacroResult(
+        rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base))),
+        swapVal
       )
     }
     const result = t.isZeroLen(base)
       ? null
       : rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base)))
     return [
-      nextResult(result),
+      nextMacroResult(result, swapVal),
       t.mergeAll(
         t.map(item => {
           return {
-            [item.prefix]: nextResult(
-              rejoinFiltered(propKey, t.pathOr([], ['chunks'], item))
+            [item.prefix]: nextMacroResult(
+              rejoinFiltered(propKey, t.pathOr([], ['chunks'], item)),
+              swapVal
             ),
           }
         }, mod)
@@ -112,7 +114,7 @@ const macroFilteredKeyProp = task(
   }
 )
 const macroObjectFilteredKeyProp = task(
-  t => (propKey, match, { base, mod }) => {
+  t => (propKey, match, { base, mod }, swapVal = undefined) => {
     if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
       return null
     }
@@ -123,12 +125,28 @@ const macroObjectFilteredKeyProp = task(
           return true
         }
       }
+      if (t.eq(t.length(propList), 1)) {
+        const propHead = t.head(base)
+        if (
+          t.and(
+            t.eq(t.length(propHead.chunks), 2),
+            t.not(t.has('alias')(propHead))
+          )
+        ) {
+          return propHead.match
+        }
+      }
       return t.mergeAll(
         t.map(prop => {
+          const nextKey = t.not(match)
+            ? t.has('alias')(prop)
+              ? prop.alias
+              : prop.match
+            : t.getMatch(prop.match)(match)
           return {
-            [t.getMatch(prop.match)(match)]: rejoinFiltered(
-              propKey,
-              t.pathOr([], ['chunks'], prop)
+            [nextKey]: nextMacroResult(
+              rejoinFiltered(propKey, t.pathOr([], ['chunks'], prop)),
+              swapVal
             ),
           }
         }, propList)
@@ -389,10 +407,35 @@ export const boxProps = task(t => ({
     return macroFilteredKeyProp('bg', props)
   },
   padding(props) {
-    return null
+    console.log('PADDING PROPS', props)
+    return macroObjectFilteredKeyProp(
+      ['p', 'pt', 'pr', 'pb', 'pl', 'px', 'py'],
+      undefined,
+      props
+    )
   },
   margin(props) {
-    return null
+    console.log('MARGIN PROPS', props)
+    return macroObjectFilteredKeyProp(
+      [
+        'm',
+        'mt',
+        'mr',
+        'mb',
+        'ml',
+        'mx',
+        'my',
+        '-m',
+        '-mt',
+        '-mr',
+        '-mb',
+        '-ml',
+        '-mx',
+        '-my',
+      ],
+      undefined,
+      props
+    )
   },
   appearance(props) {
     return macroFilteredKeyProp('appearance', props)

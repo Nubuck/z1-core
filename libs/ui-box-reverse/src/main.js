@@ -18,7 +18,7 @@ const splitProps = task(t => list =>
     list
   )
 )
-export const cssToBox = task(t => (css = '') => {
+export const toBox = task(t => (css = '') => {
   if (t.isZeroLen(css)) {
     return {}
   }
@@ -71,7 +71,7 @@ export const cssToBox = task(t => (css = '') => {
 })
 
 // test
-export const box = {
+// export const box = {
   // container: true,
   // display: [
   //   'table-row',
@@ -155,5 +155,7 @@ export const box = {
   // stroke: true,
   // shadow: '2xl',
   // resize: 'x',
-}
-export const stub = ''
+  // padding: 60,
+  // margin: 4,
+// }
+// export const stub = 'pl-60 mr-4'

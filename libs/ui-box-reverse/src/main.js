@@ -115,8 +115,8 @@ export const box = {
   color: 'red-500',
   fontFamily: 'mono',
   fontSize: '4xl',
-  fontSmoothing: true,
-  fontStyle: 'non-italic',
+  fontStyle: 'antialiased',
+  className: 'derp huurrrr col-all'
 }
 export const stub =
   'text-red-500 font-mono text-4xl antialiased non-italic derp huurrrr col-all'

@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-ui-box-tailwind",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/ui-box-tailwind",
@@ -13,9 +13,9 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.2.5"
+    "@z1/preset-task": "^0.2.9"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.2.5"
+    "@z1/preset-dev-bundle": "^0.2.9"
   }
 }

@@ -21,8 +21,8 @@
     "s3-blob-store": "^3.2.0"
   },
   "peerDependencies": {
-    "@z1/lib-feature-box-server": "^0.1.0",
-    "@z1/preset-tools": "^0.1.0",
+    "@z1/lib-feature-box-server": "*",
+    "@z1/preset-tools": "*",
     "aws-sdk": "^2.224.1"
   },
   "devDependencies": {

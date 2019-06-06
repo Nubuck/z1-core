@@ -17,7 +17,7 @@
     "@z1/kit-account-server-core": "^0.2.9"
   },
   "peerDependencies": {
-    "@z1/lib-feature-box-server-nedb": "^0.1.0"
+    "@z1/lib-feature-box-server-nedb": "*"
   },
   "devDependencies": {
     "@z1/lib-feature-box-server-nedb": "^0.2.9",

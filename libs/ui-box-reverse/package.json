@@ -2,9 +2,11 @@
   "name": "@z1/lib-ui-box-reverse",
   "version": "0.2.0",
   "main": "lib/index.js",
-  "author": "@Nubuck",
   "license": "MIT",
-  "private": false,
+  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/ui-box-reverse",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "neutrino build",
     "start": "neutrino start",

@@ -18,10 +18,10 @@
   },
   "devDependencies": {
     "@z1/preset-dev-bundle": "^0.2.9",
-    "redux": "^3.7.2"
+    "redux": "^4.0.1"
   },
   "peerDependencies": {
-    "redux": "^3.7.2"
+    "redux": "*"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

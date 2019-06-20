@@ -14,10 +14,12 @@
   },
   "devDependencies": {
     "@z1/lib-feature-box": "0.2.10",
-    "@z1/preset-dev-neutrino": "^0.2.9"
+    "@z1/preset-dev-neutrino": "^0.2.9",
+    "react": "^16.8.6"
   },
   "peerDependencies": {
     "@z1/lib-feature-box": "*",
     "react": "*"
-  }
+  },
+  "gitHead": "cc1c8958cfa0184c996d799385e7cf94f0094d94"
 }

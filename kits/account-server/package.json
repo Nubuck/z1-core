@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-server",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/account-server",
@@ -14,7 +14,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/kit-account-server-core": "^0.2.12"
+    "@z1/kit-account-server-core": "^0.2.13"
   },
   "peerDependencies": {
     "@z1/lib-feature-box-server": "*"

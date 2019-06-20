@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-server-nedb",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/account-server-nedb",

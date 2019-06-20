@@ -159,7 +159,7 @@ const nextFormState = task(t => (boxName, macroProps) => (state, action) => {
     type,
     status: nextViewState.status,
     viewData: nextViewState.data,
-    formData: formState.data,
+    formData: action.payload.data || formState.data,
   })
   return t.merge(state, {
     views: t.merge(state.views, {

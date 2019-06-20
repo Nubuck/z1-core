@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-feature-macros",
-  "version": "0.2.11",
+  "version": "0.2.12",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/feature-macros",

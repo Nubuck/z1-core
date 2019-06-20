@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-mail-server",
-  "version": "0.2.10",
+  "version": "0.2.12",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/mail-server",

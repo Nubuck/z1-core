@@ -10,7 +10,7 @@
   "scripts": {
     "build": "neutrino build",
     "start": "neutrino start",
-    "test": "neutrino test"
+    "prepublish": "yarn run build"
   },
   "devDependencies": {
     "@z1/lib-feature-box": "0.2.10",

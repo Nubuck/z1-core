@@ -194,11 +194,7 @@ const cssProps = task(t => ({
           : `m${t.head(key)}-${value}`
       }, t.toPairs(v))}`
     }
-    return t.isType(v, 'Number')
-      ? t.lt(0, v)
-        ? `-m${v}`
-        : `m-${v}`
-      : `m-${v}`
+    return t.lt(0, v) ? `-m${v}` : `m-${v}`
   },
   // interactivity
   appearance: v => skipNull(v, `appearance-${v}`),

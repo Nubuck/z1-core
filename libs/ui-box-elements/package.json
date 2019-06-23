@@ -1,0 +1,27 @@
+{
+  "name": "@z1/lib-ui-box-elements",
+  "version": "0.2.18",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/ui-box-elements",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "neutrino build",
+    "start": "neutrino start",
+    "prepublish": "yarn run build"
+  },
+  "dependencies": {
+    "@z1/preset-task": "^0.2.9",
+    "@z1/lib-ui-box-tailwind": "^0.2.18",
+    "react-value": "^0.2.0"
+  },
+  "peerDependencies": {
+    "react": "*"
+  },
+  "devDependencies": {
+    "@z1/preset-dev-neutrino": "^0.2.9",
+    "react": "^16.8.6"
+  }
+}

@@ -15,16 +15,16 @@ const cleanRoutePath = task(t => routePath =>
 )
 const cleanSuffix = task(t => suffix =>
   suffix
-    ? t.eq(suffix, '/')
-      ? '/'
-      : t.eq(t.head(suffix), '/')
+    ? t.eq(t.head(suffix), '/')
       ? cleanRoutePath(suffix)
       : `/${cleanRoutePath(suffix)}`
     : ''
 )
 const toUrl = task(t => (routePath, suffix) =>
   t.eq(t.head(routePath), '/')
-    ? `${cleanRoutePath(routePath)}${cleanSuffix(suffix)}`
+    ? t.eq(routePath, '/')
+      ? '/'
+      : `${cleanRoutePath(routePath)}${cleanSuffix(suffix)}`
     : `/${cleanRoutePath(routePath)}${cleanSuffix(suffix)}`
 )
 const hasChildren = task(t => t.has(NAV_SCHEMA.CHILDREN))

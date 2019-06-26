@@ -1,5 +1,4 @@
 import { task } from '@z1/preset-task'
-import { camelKeys, tailHead } from './common'
 
 // nav types
 const NAV_SCHEMA = {
@@ -10,18 +9,21 @@ const NAV_SCHEMA = {
 }
 
 // nav tasks
+const hasChildren = task(t => t.has(NAV_SCHEMA.CHILDREN))
 const cleanRoutePath = task(t => routePath =>
-  t.equals(t.last(routePath), '/') ? t.dropLast(1, routePath) : routePath
+  t.eq(t.last(routePath), '/') ? t.dropLast(1, routePath) : routePath
 )
 const cleanSuffix = task(t => suffix =>
   suffix
-    ? t.equals(t.head(suffix), '/')
+    ? t.eq(suffix, '/')
+      ? '/'
+      : t.eq(t.head(suffix), '/')
       ? cleanRoutePath(suffix)
       : `/${cleanRoutePath(suffix)}`
     : ''
 )
 const toUrl = task(t => (routePath, suffix) =>
-  t.equals(t.head(routePath), '/')
+  t.eq(t.head(routePath), '/')
     ? `${cleanRoutePath(routePath)}${cleanSuffix(suffix)}`
     : `/${cleanRoutePath(routePath)}${cleanSuffix(suffix)}`
 )
@@ -45,11 +47,11 @@ const navItem = task(
       item = t.merge(item, { path: nextPath })
     } else {
       item = t.merge(item, {
-        path: path !== '' ? toUrl(path) : originPath,
+        path: t.not(t.eq(path, '')) ? toUrl(path) : originPath,
       })
     }
     // children
-    if (children && t.gt(t.length(children), 0)) {
+    if (t.and(children, t.gt(t.length(children), 0))) {
       const nextChildren = t.map(
         child => child(item.path, parentPath),
         children
@@ -62,7 +64,7 @@ const navItem = task(
 )
 
 // exports schema
-export const navSchema = task(t => factory =>
+export const navSchema = task(t => (factory = () => {}) =>
   t.map(
     item => item(NAV_SCHEMA.ROOT, NAV_SCHEMA.ROOT),
     factory(navItem, NAV_SCHEMA)
@@ -70,13 +72,16 @@ export const navSchema = task(t => factory =>
 )
 
 // matching tasks
-const safeChildren = item => (item && hasChildren(item) ? item.children : [])
+const hasChildren = task(t => t.has('children'))
+const safeChildren = task(t => item =>
+  t.and(t.not(t.isNil(item)), hasChildren(item)) ? item.children : []
+)
 const matchesPath = task(t => (path, item) => {
   return t.not(item)
     ? false
     : t.eq(path, '/')
     ? t.eq(item.path, path)
-    : item.path.includes(decodeURI(path))
+    : t.contains(decodeURI(path), item.path)
 })
 const itemByPath = task(t => (path, list) =>
   t.find(item => matchesPath(path, item), list)
@@ -84,38 +89,31 @@ const itemByPath = task(t => (path, list) =>
 const tailItems = task(t => (items, children) =>
   t.concat(t.tail(items), children)
 )
-export const matchedNavItem = task(t => (outerPath, outerList) => {
-  const search = (path, list) => {
+
+// main
+export const matchedNavItem = task(t =>
+  t.trampoline(function search(path, list) {
     // list empty
-    if (t.equals(t.length(list), 0)) {
+    if (t.isZeroLen(list)) {
       return undefined
     }
     // list has single item
-    if (t.equals(t.length(list), 1)) {
+    if (t.eq(t.length(list), 1)) {
       // match head
       const singleItem = t.head(list)
       if (matchesPath(path, singleItem)) {
         return singleItem
       }
       // recurse breadth first
-      return search(path, safeChildren(singleItem))
+      return () => search(path, safeChildren(singleItem))
     }
     // match item in list
     const item = itemByPath(path, list)
-    if (item) {
+    if (t.not(t.isNil(item))) {
       return item
     }
     // recurse breadth first
-    return search(
-      path,
-      tailItems(
-        list,
-        t.compose(
-          safeChildren,
-          t.head
-        )(list)
-      )
-    )
-  }
-  return search(outerPath, outerList)
-})
+    return () =>
+      search(path, tailItems(list, t.valPipe(list)(t.head, safeChildren)))
+  })
+)

@@ -26,6 +26,8 @@ export const FORM_SCHEMA = task(t =>
       UNIQUE: 'uniqueNames',
       UNIQUE_ITEMS: 'uniqueItems',
       DEFAULT: 'default',
+      ANY_OF: 'anyOf',
+      ONE_OF: 'oneOf',
     },
     UI: {
       WIDGET: 'ui:widget',
@@ -79,12 +81,12 @@ const jsonSchemaFromFieldList = task(t =>
   )
 )
 const uiSchemaFromUiList = task(t => (itemOrItems, collection = {}) => {
-  if (t.equals(t.type(itemOrItems), 'Array')) {
-    if (t.equals(t.length(itemOrItems), 0)) {
+  if (t.eq(t.type(itemOrItems), 'Array')) {
+    if (t.eq(t.length(itemOrItems), 0)) {
       return collection
     }
     const itemHead = t.head(itemOrItems)
-    if (t.equals(t.length(itemOrItems), 1)) {
+    if (t.eq(t.length(itemOrItems), 1)) {
       return t.merge(collection, itemHead)
     }
     return uiSchemaFromUiList(
@@ -92,7 +94,7 @@ const uiSchemaFromUiList = task(t => (itemOrItems, collection = {}) => {
       t.merge(collection, itemHead)
     )
   }
-  if (t.equals(t.type(itemOrItems), 'Object')) {
+  if (t.eq(t.type(itemOrItems), 'Object')) {
     return t.merge(collection, itemOrItems)
   }
   return collection
@@ -114,7 +116,7 @@ const requiredFromSchema = task(t => schema =>
     t.map(([key, value]) => {
       return {
         key,
-        required: !t.has('required')(value)
+        required: t.not(t.has('required')(value))
           ? false
           : t.eq('Array', t.type(value.required))
           ? false
@@ -127,7 +129,7 @@ const correctSchemaFields = task(t => schema =>
   t.compose(
     t.fromPairs,
     t.map(([key, value]) =>
-      !t.has('required')(value)
+      t.not(t.has('required')(value))
         ? [key, value]
         : [key, t.omit(['required'], value)]
     )
@@ -139,18 +141,21 @@ const jsonField = task(t => (name, field, children) => {
   const fieldSchema = t.fromPairs(
     t.filter(
       field =>
-        t.gt(t.findIndex(key => t.equals(t.head(field), key), fieldKeys), -1),
+        t.gt(t.findIndex(key => t.eq(t.head(field), key), fieldKeys), -1),
       fieldList
     )
   )
   const uiSchemaList = t.head(
-    t.filter(field => t.equals(t.head(field), 'ui'), fieldList)
+    t.filter(field => t.eq(t.head(field), 'ui'), fieldList)
   )
   const uiSchema = t.gt(t.length(uiSchemaList), 0)
     ? t.fromPairs(
         t.filter(
           field =>
-            !t.equals(t.head(field), 'undefined') && !t.isNil(t.head(field)),
+            t.and(
+              t.not(t.eq(t.head(field), 'undefined')),
+              t.not(t.isNil(t.head(field)))
+            ),
           t.map(
             field => [t.head(field), tailHead(field)],
             t.toPairs(tailHead(uiSchemaList))
@@ -158,51 +163,83 @@ const jsonField = task(t => (name, field, children) => {
         )
       )
     : {}
+  const propChildKey = t.path(['childKey'], field)
   // fields can only be string, object and array
   // objects and arrays must have children
   // only objects have the required field
-  const nextFieldType = !t.isEmpty(t.path([FORM_SCHEMA.KEY.TYPE], fieldSchema))
+  const nextFieldType = t.not(
+    t.isEmpty(t.path([FORM_SCHEMA.KEY.TYPE], fieldSchema))
+  )
     ? t.path([FORM_SCHEMA.KEY.TYPE], fieldSchema)
-    : !t.isEmpty(children) && !t.isNil(children)
-    ? t.equals(t.length(children), 1)
+    : t.and(t.not(t.isEmpty(children)), t.not(t.isNil(children)))
+    ? t.eq(t.length(children), 1)
       ? FORM_SCHEMA.ARRAY
       : FORM_SCHEMA.OBJECT
     : FORM_SCHEMA.STRING
   // objects have props and arrays have items
-  const childKey =
-    !t.isEmpty(children) && !t.isNil(children)
-      ? t.equals(nextFieldType, FORM_SCHEMA.OBJECT)
-        ? FORM_SCHEMA.KEY.PROPS
-        : FORM_SCHEMA.KEY.ITEMS
-      : ''
+  const childKey = t.and(t.not(t.isEmpty(children)), t.not(t.isNil(children)))
+    ? t.eq(nextFieldType, FORM_SCHEMA.OBJECT)
+      ? FORM_SCHEMA.KEY.PROPS
+      : FORM_SCHEMA.KEY.ITEMS
+    : ''
   const nextChildren = t.isEmpty(childKey)
     ? {}
     : jsonSchemaFromFieldList(children)
   // modify object field schema to include required fields
-  const nextFieldSchema = t.equals(FORM_SCHEMA.OBJECT, nextFieldType)
+  const nextFieldSchema = t.eq(FORM_SCHEMA.OBJECT, nextFieldType)
     ? t.merge(fieldSchema, { required: requiredFromSchema(nextChildren) })
     : fieldSchema
   // schema mutation
   const nextSchema = t.isEmpty(childKey)
     ? t.merge(nextFieldSchema, { type: nextFieldType })
+    : t.not(propChildKey)
+    ? t.merge(nextFieldSchema, {
+        type: nextFieldType,
+        [childKey]: t.eq(childKey, FORM_SCHEMA.KEY.ITEMS)
+          ? correctSchemaFields(nextChildren)[t.head(t.keys(nextChildren))]
+          : correctSchemaFields(nextChildren),
+      })
     : t.merge(nextFieldSchema, {
         type: nextFieldType,
-        [childKey]: correctSchemaFields(nextChildren),
+        [propChildKey]: t.map(
+          ([_, val]) => val,
+          t.toPairs(correctSchemaFields(nextChildren))
+        ),
       })
+  // children ui schema
+  const nextChildUiSchema = t.gt(t.length(children), 0)
+    ? uiSchemaFromFieldList(children)
+    : {}
   // ui schema mutation
-  const nextUiSchema =
-    !t.isEmpty(uiSchema) && !t.isNil(uiSchema)
-      ? t.gt(t.length(children), 0)
-        ? t.merge(
-            {
-              [name]: uiSchema,
-            },
-            uiSchemaFromFieldList(children)
-          )
-        : { [name]: uiSchema }
-      : t.gt(t.length(children), 0)
-      ? uiSchemaFromFieldList(children)
-      : {}
+  const nextUiSchema = t.and(
+    t.not(t.isEmpty(uiSchema)),
+    t.not(t.isNil(uiSchema))
+  )
+    ? t.eq(nextSchema.type, 'object')
+      ? {
+          [name]: t.merge(uiSchema, nextChildUiSchema),
+        }
+      : t.eq(nextSchema.type, 'array')
+      ? {
+          [name]: t.merge(uiSchema, { items: nextChildUiSchema }),
+        }
+      : t.merge(
+          {
+            [name]: uiSchema,
+          },
+          nextChildUiSchema
+        )
+    : t.gt(t.length(t.keys(nextChildUiSchema)), 0)
+    ? t.eq(nextSchema.type, 'object')
+      ? {
+          [name]: nextChildUiSchema,
+        }
+      : t.eq(nextSchema.type, 'array')
+      ? {
+          [name]: { items: nextChildUiSchema },
+        }
+      : nextChildUiSchema
+    : {}
   // yield
   return {
     name,
@@ -214,17 +251,25 @@ const jsonField = task(t => (name, field, children) => {
 // exports
 export const formSchema = task(t => factory => {
   const fieldListOrRootField = factory(jsonField, FORM_SCHEMA)
-  const fieldList = t.equals(t.type(fieldListOrRootField), 'Array')
+  const fieldList = t.eq(t.type(fieldListOrRootField), 'Array')
     ? fieldListOrRootField
     : [fieldListOrRootField]
   const schema = jsonSchemaFromFieldList(fieldList)
   const schemaKeys = t.keys(schema)
-  const nextSchema = t.equals(t.length(schemaKeys), 1)
+  const nextSchema = t.eq(t.length(schemaKeys), 1)
     ? t.path(schemaKeys, schema)
     : schema
   const uiSchema = uiSchemaFromFieldList(fieldList)
+  const uiSchemaKeys = t.keys(uiSchema)
+  const nextUiSchema = t.and(
+    t.eq(t.length(uiSchemaKeys), 1),
+    t.eq(t.head(schemaKeys), t.head(uiSchemaKeys))
+  )
+    ? t.path(uiSchemaKeys, uiSchema)
+    : uiSchema
+
   return {
     schema: nextSchema,
-    uiSchema,
+    uiSchema: nextUiSchema,
   }
 })

@@ -185,9 +185,9 @@ export const Text = task(t => props => {
   const fontFamily = t.pathOr(null, ['family'], props)
   const fontWeight = t.pathOr(null, ['weight'], props)
   const color = t.pathOr(null, ['color'], props)
-  const fontSmoothing = t.pathOr(null, ['smooth'], props)
-  const letterSpacing = t.pathOr(null, ['spacing'], props)
-  const lineHeight = t.pathOr(null, ['height'], props)
+  const fontSmoothing = t.pathOr(null, ['smoothing'], props)
+  const letterSpacing = t.pathOr(null, ['letterSpacing'], props)
+  const lineHeight = t.pathOr(null, ['lineHeight'], props)
   const textAlignX = t.pathOr(null, ['x'], props)
   const textAlignY = t.pathOr(null, ['y'], props)
   const textDecoration = t.pathOr(null, ['decoration'], props)
@@ -207,9 +207,9 @@ export const Text = task(t => props => {
           'family',
           'weight',
           'color',
-          'smooth',
-          'spacing',
-          'height',
+          'smoothing',
+          'letterSpacing',
+          'lineHeight',
           'x',
           'y',
           'decoration',

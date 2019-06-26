@@ -18,16 +18,15 @@ const viewProps = task(t => props => {
   // pair props:
   const propsPairs = t.toPairs(props)
   // node: find @node or default to Box.div
-  const node = t.find(prop => t.equals(t.head(prop), '@node'), propsPairs)
+  const node = t.find(prop => t.eq(t.head(prop), '@node'), propsPairs)
   // ui -> filter ui components:
   const uiList = t.filter(
-    prop =>
-      !t.equals(t.head(prop), '@node') && t.equals(t.head(t.head(prop)), '@'),
+    prop => !t.eq(t.head(prop), '@node') && t.eq(t.head(t.head(prop)), '@'),
     propsPairs
   )
   // handlers -> filter handlers:
   const handlerList = t.filter(
-    prop => t.equals(t.head(t.head(prop)), '#'),
+    prop => t.eq(t.head(t.head(prop)), '#'),
     propsPairs
   )
   // props -> omit node, ui and handler keys from props:
@@ -45,7 +44,7 @@ const viewProps = task(t => props => {
 })
 const viewNode = task(t => (name = 'view', props = {}, children = []) => {
   const nextProps = viewProps(props)
-  const nextChildren = t.equals(t.type(children), 'Array') ? children : []
+  const nextChildren = t.eq(t.type(children), 'Array') ? children : []
   const childrenMap = t.mapObjIndexed(
     (value, key) => t.path([key], t.head(value)),
     t.groupBy(child => t.head(t.head(t.toPairs(child))))(nextChildren)

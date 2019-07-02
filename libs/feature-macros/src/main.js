@@ -369,10 +369,10 @@ export const macroRouteViewState = task(
 )
 
 // ui
-export const createView = (key, { state, ui }) => {
+export const createView = task(t => (key, { state, ui }) => {
   key = key || 'NOT_FOUND'
-  return { key, state, ui }
-}
+  return { key: t.caseTo.constantCase(key), state, ui }
+})
 
 export const combineViews = task(t => (viewList = []) => {
   const nextResult = t.reduce(
@@ -381,7 +381,7 @@ export const combineViews = task(t => (viewList = []) => {
         state: t.merge(result.state, {
           [view.key]: view.state || {},
         }),
-        ui: t.merge(result.views, {
+        ui: t.merge(result.ui, {
           [view.key]: view.ui || null,
         }),
       })

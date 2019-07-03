@@ -244,7 +244,7 @@ export const macroRouteViewState = task(
         return [
           fx(
             [matchBoxRoutes(boxName), box.actions.dataLoad],
-            async ({ getState, api, action }, dispatch, done) => {
+            async ({ getState, api, action, redirect }, dispatch, done) => {
               const state = t.pathOr({}, [boxName], getState())
               const viewLoad = t.pathOr(
                 null,
@@ -281,6 +281,7 @@ export const macroRouteViewState = task(
                   viewLoad({
                     getState,
                     dispatch,
+                    redirect,
                     mutations: box.mutations,
                     api,
                     detailKey,
@@ -313,7 +314,7 @@ export const macroRouteViewState = task(
           ),
           fx(
             [box.actions.formTransmit],
-            async ({ getState, api }, dispatch, done) => {
+            async ({ getState, api, redirect }, dispatch, done) => {
               const state = t.pathOr({}, [boxName], getState())
               const transmit = t.pathOr(
                 null,
@@ -337,6 +338,7 @@ export const macroRouteViewState = task(
                   transmit({
                     getState,
                     dispatch,
+                    redirect,
                     mutations: box.mutations,
                     api,
                     viewData,

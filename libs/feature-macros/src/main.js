@@ -279,7 +279,9 @@ export const macroRouteViewState = task(
                   : 'route-enter'
                 const [loadError, loadResult] = await a.of(
                   viewLoad({
-                    state,
+                    getState,
+                    dispatch,
+                    mutations: box.mutations,
                     api,
                     detailKey,
                     type,
@@ -333,7 +335,9 @@ export const macroRouteViewState = task(
                 )
                 const [transmitError, transmitResult] = await a.of(
                   transmit({
-                    state,
+                    getState,
+                    dispatch,
+                    mutations: box.mutations,
                     api,
                     viewData,
                     formData,

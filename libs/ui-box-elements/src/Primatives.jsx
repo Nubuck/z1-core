@@ -308,6 +308,7 @@ export const Button = task(t => props => {
           'bg',
           'border',
           'radius',
+          'borderWidth',
           'weight',
           'family',
         ],

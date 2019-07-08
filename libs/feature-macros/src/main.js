@@ -230,7 +230,7 @@ const matchBoxRoutes = task(t => boxName =>
   t.globrex(`${boxName}/ROUTE_*`).regex
 )
 const matchNotBoxRoutes = task(t => boxName =>
-  t.globrex(`!(${boxName})/ROUTE_*`).regex
+  t.globrex(`!(${boxName})*/ROUTE_*`, { extended: true }).regex
 )
 
 export const macroRouteViewState = task(

@@ -23,5 +23,6 @@
   "devDependencies": {
     "@z1/preset-dev-neutrino": "^0.2.9",
     "react": "^16.8.6"
-  }
+  },
+  "gitHead": "fff6207d55d4a3ddb903c800e23b95ac91368167"
 }

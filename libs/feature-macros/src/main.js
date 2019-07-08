@@ -294,7 +294,7 @@ export const macroRouteViewState = task(
             [matchNotBoxRoutes(boxName)],
             async ({ getState }, dispatch, done) => {
               const state = getState()
-              if (matchBoxRoutes.test(state.location.prev.type)) {
+              if (matchRoutes.test(state.location.prev.type)) {
                 dispatch(
                   box.mutations.routeExit({ route: state.location.prev.type })
                 )

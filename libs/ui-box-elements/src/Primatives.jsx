@@ -188,8 +188,8 @@ export const Text = task(t => props => {
   const fontSmoothing = t.pathOr(null, ['smoothing'], props)
   const letterSpacing = t.pathOr(null, ['letterSpacing'], props)
   const lineHeight = t.pathOr(null, ['lineHeight'], props)
-  const textAlignX = t.pathOr(null, ['x'], props)
-  const textAlignY = t.pathOr(null, ['y'], props)
+  const textAlignX = t.pathOr(null, ['alignX'], props)
+  const textAlignY = t.pathOr(null, ['alignY'], props)
   const textDecoration = t.pathOr(null, ['decoration'], props)
   const textTransform = t.pathOr(null, ['transform'], props)
   const whitespace = t.pathOr(null, ['space'], props)
@@ -210,8 +210,8 @@ export const Text = task(t => props => {
           'smoothing',
           'letterSpacing',
           'lineHeight',
-          'x',
-          'y',
+          'alignX',
+          'alignY',
           'decoration',
           'transform',
           'space',
@@ -459,4 +459,8 @@ export const Match = task(t => props => {
     : t.eq(nextMatched.type, 'value')
     ? nextMatched.render
     : React.createElement(nextMatched.render, nextProps)
+})
+export const When = task(t => props => {
+  const is = t.pathOr({}, ['is'], props)
+  return t.not(is) ? null : <React.Fragment>{props.children}</React.Fragment>
 })

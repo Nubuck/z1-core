@@ -274,18 +274,25 @@ export const macroRouteViewState = task(
                   ['views', state.viewKey, 'detailKey'],
                   state
                 )
+                const moreKey = t.pathOr(
+                  null,
+                  ['views', state.viewKey, 'moreKey'],
+                  state
+                )
                 const type = t.eq(action.type, box.actions.dataLoad)
                   ? 'data-load'
                   : 'route-enter'
                 const [loadError, loadResult] = await a.of(
                   viewLoad({
+                    type,
+                    action,
                     getState,
                     dispatch,
                     redirect,
                     mutations: box.mutations,
                     api,
                     detailKey,
-                    type,
+                    moreKey,
                     status: VIEW_STATUS.READY,
                     viewData,
                     formData,
@@ -334,17 +341,30 @@ export const macroRouteViewState = task(
                   ['views', state.viewKey, 'form', 'data'],
                   state
                 )
+                const detailKey = t.pathOr(
+                  null,
+                  ['views', state.viewKey, 'detailKey'],
+                  state
+                )
+                const moreKey = t.pathOr(
+                  null,
+                  ['views', state.viewKey, 'moreKey'],
+                  state
+                )
                 const [transmitError, transmitResult] = await a.of(
                   transmit({
+                    type: 'form-transmit',
+                    action,
                     getState,
                     dispatch,
                     redirect,
                     mutations: box.mutations,
                     api,
+                    detailKey,
+                    moreKey,
+                    status: VIEW_STATUS.READY,
                     viewData,
                     formData,
-                    status: VIEW_STATUS.READY,
-                    type: 'form-transmit',
                   })
                 )
                 if (transmitError) {

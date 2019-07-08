@@ -8,13 +8,13 @@
     "access": "public"
   },
   "scripts": {
-    "build": "neutrino build",
-    "start": "neutrino start",
+    "build": "bundle-external",
+    "dev": "bundle-watch",
     "prepublish": "yarn run build"
   },
   "devDependencies": {
     "@z1/lib-feature-box": "0.2.10",
-    "@z1/preset-dev-neutrino": "^0.2.9",
+    "@z1/preset-dev-bundle": "^0.2.9",
     "react": "^16.8.6"
   },
   "peerDependencies": {

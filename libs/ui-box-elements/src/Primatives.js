@@ -47,10 +47,10 @@ const Stack = task(t => direction => props => {
         }),
       }
     : {
-        alignItems: t.getMatch(alignX)({
-          top: 'start',
+        justifyContent: t.getMatch(alignY)({
+          left: 'start',
           center: 'center',
-          bottom: 'end',
+          right: 'end',
         }),
       }
   const justifyProps = t.isNil(alignY)
@@ -64,10 +64,10 @@ const Stack = task(t => direction => props => {
         }),
       }
     : {
-        justifyContent: t.getMatch(alignY)({
-          left: 'start',
+        alignItems: t.getMatch(alignX)({
+          top: 'start',
           center: 'center',
-          right: 'end',
+          bottom: 'end',
         }),
       }
   const stretch = t.pathOr(null, ['stretch'], props)
@@ -460,6 +460,7 @@ export const Match = task(t => props => {
     ? nextMatched.render
     : React.createElement(nextMatched.render, nextProps)
 })
+
 export const When = task(t => props => {
   const is = t.pathOr({}, ['is'], props)
   return t.not(is)

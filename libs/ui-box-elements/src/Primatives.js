@@ -47,7 +47,7 @@ const Stack = task(t => direction => props => {
         }),
       }
     : {
-        justifyContent: t.getMatch(alignY)({
+        justifyContent: t.getMatch(alignX)({
           left: 'start',
           center: 'center',
           right: 'end',
@@ -64,7 +64,7 @@ const Stack = task(t => direction => props => {
         }),
       }
     : {
-        alignItems: t.getMatch(alignX)({
+        alignItems: t.getMatch(alignY)({
           top: 'start',
           center: 'center',
           bottom: 'end',

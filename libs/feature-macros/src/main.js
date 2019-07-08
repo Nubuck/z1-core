@@ -94,6 +94,49 @@ const nextRouteState = task(
   }
 )
 
+const nextRouteExitState = task(
+  t => (boxName = 'box', macroProps = {}) => state => {
+    const viewKey = t.pathOr('home', ['viewKey'], state)
+    const viewProps = t.pathOr(null, [viewKey], macroProps)
+    const viewData = t.pathOr(null, ['data'], viewProps || {})
+    const makeForm = t.pathOr(null, ['form'], viewProps || {})
+    const viewState = t.pathOr({}, ['views', viewKey], state)
+    const nextViewData = t.isNil(viewData)
+      ? viewState.data
+      : t.isType(viewData, 'Function')
+      ? viewData({
+          type: 'route-exit',
+          status: viewState.status,
+          formData: viewState.formData,
+          viewData: viewState.data,
+          error: null,
+        })
+      : viewData
+    return t.merge(state, {
+      views: t.merge(state.views, {
+        [viewKey]: t.mergeAll([
+          viewState,
+          {
+            status: nextViewData.status || viewState.status,
+            error: null,
+            data: nextViewData.data || viewState.data,
+          },
+          {
+            form: t.isNil(makeForm)
+              ? viewState.form
+              : makeForm({
+                  type: 'route-exit',
+                  viewData: nextViewData.data || viewState.data,
+                  formData: viewState.formData,
+                  status: nextViewData.status || viewState.status,
+                }),
+          },
+        ]),
+      }),
+    })
+  }
+)
+
 const nextViewState = task(
   t => (boxName = 'box', macroProps = {}) => (state, action) => {
     const data = t.pathOr(null, [state.viewKey, 'data'], macroProps)
@@ -186,6 +229,9 @@ const nextFormState = task(
 const matchBoxRoutes = task(t => boxName =>
   t.globrex(`${boxName}/ROUTE_*`).regex
 )
+const matchNotBoxRoutes = task(t => boxName =>
+  t.globrex(`!(${boxName})/ROUTE_*`).regex
+)
 
 export const macroRouteViewState = task(
   (t, a) => (boxName = 'box', props = {}) => {
@@ -210,6 +256,7 @@ export const macroRouteViewState = task(
             ['routeHome', 'routeView', 'routeViewDetail', 'routeViewMore'],
             nextRouteState(boxName, macroProps)
           ),
+          m('routeExit', nextRouteExitState(boxName, macroProps)),
           m(
             ['dataChange', 'dataLoad', 'dataLoadComplete'],
             nextViewState(boxName, macroProps)
@@ -241,9 +288,22 @@ export const macroRouteViewState = task(
         ]
       },
       effects(fx, box) {
+        const matchRoutes = matchBoxRoutes(boxName)
         return [
           fx(
-            [matchBoxRoutes(boxName), box.actions.dataLoad],
+            [matchNotBoxRoutes(boxName)],
+            async ({ getState }, dispatch, done) => {
+              const state = getState()
+              if (matchBoxRoutes.test(state.location.prev.type)) {
+                dispatch(
+                  box.mutations.routeExit({ route: state.location.prev.type })
+                )
+              }
+              done()
+            }
+          ),
+          fx(
+            [matchRoutes, box.actions.dataLoad],
             async ({ getState, api, action, redirect }, dispatch, done) => {
               const state = t.pathOr({}, [boxName], getState())
               const viewLoad = t.pathOr(

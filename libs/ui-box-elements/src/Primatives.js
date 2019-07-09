@@ -149,7 +149,7 @@ export const Spacer = task(t => props =>
 // Icon
 export const Icon = task(t => props => {
   const as = t.pathOr('i', ['as'], props)
-  const prefix = t.pathOr('eva', ['prefix'], props)
+  const prefix = t.pathOr('fa', ['prefix'], props)
   const icon = t.pathOr('', ['name'], props)
   const fontSize = t.pathOr(null, ['size'], props)
   const color = t.pathOr(null, ['color'], props)

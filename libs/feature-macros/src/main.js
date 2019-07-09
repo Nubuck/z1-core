@@ -16,10 +16,11 @@ const nextInitState = task(t => (views = {}) => {
           ? viewData({
               type: 'init',
               status: VIEW_STATUS.INIT,
-              formData: null,
               viewData: null,
+              formData: null,
               nextData: null,
               error: null,
+              state: null,
             })
           : viewData
         return {
@@ -34,8 +35,8 @@ const nextInitState = task(t => (views = {}) => {
               : makeForm({
                   type: 'init',
                   status: nextViewData.status || VIEW_STATUS.INIT,
-                  viewData: nextViewData.data,
                   formData: {},
+                  viewData: nextViewData.data,
                 }),
           },
         }
@@ -61,10 +62,11 @@ const nextRouteState = task(
       ? viewData({
           type: 'route-enter',
           status: VIEW_STATUS.WAITING,
-          formData: viewState.formData,
           viewData: viewState.data,
+          formData: viewState.formData,
           nextData: action.payload.data || null,
           error: null,
+          state: t.omit(['views', 'route', 'viewKey'], state),
         })
       : viewData
     return t.merge(state, {
@@ -85,9 +87,9 @@ const nextRouteState = task(
               ? viewState.form
               : makeForm({
                   type: 'route-enter',
-                  viewData: nextViewData.data || viewState.data,
-                  formData: viewState.formData,
                   status: nextViewData.status || VIEW_STATUS.WAITING,
+                  formData: viewState.formData,
+                  viewData: nextViewData.data || viewState.data,
                 }),
           },
         ]),
@@ -96,67 +98,66 @@ const nextRouteState = task(
   }
 )
 
-const nextRouteExitState = task(
-  t => (boxName = 'box', macroProps = {}) => (state, action) => {
-    const viewKey = t.caseTo.constantCase(
-      t.pathOr('home', ['viewKey'], state) ||
-        t.pathOr('home', ['payload', 'data', 'view'], action) ||
-        'home'
-    )
-    const viewProps = t.pathOr(null, [viewKey], macroProps)
-    const viewData = t.pathOr(null, ['data'], viewProps || {})
-    const makeForm = t.pathOr(null, ['form'], viewProps || {})
-    const viewState = t.pathOr({}, ['views', viewKey], state)
-    const detailKey = t.pathOr(
-      viewState.detailKey,
-      ['payload', 'data', 'detail'],
-      action
-    )
-    const moreKey = t.pathOr(
-      viewState.moreKey,
-      ['payload', 'data', 'more'],
-      action
-    )
-    const nextViewData = t.isNil(viewData)
-      ? viewState.data
-      : t.isType(viewData, 'Function')
-      ? viewData({
-          type: 'route-exit',
-          status: viewState.status,
-          formData: viewState.formData,
-          nextData: action.payload.data || null,
-          viewData: viewState.data,
+const nextRouteExitState = task(t => (macroProps = {}) => (state, action) => {
+  const viewKey = t.caseTo.constantCase(
+    t.pathOr('home', ['viewKey'], state) ||
+      t.pathOr('home', ['payload', 'data', 'view'], action) ||
+      'home'
+  )
+  const viewProps = t.pathOr(null, [viewKey], macroProps)
+  const viewData = t.pathOr(null, ['data'], viewProps || {})
+  const makeForm = t.pathOr(null, ['form'], viewProps || {})
+  const viewState = t.pathOr({}, ['views', viewKey], state)
+  const detailKey = t.pathOr(
+    viewState.detailKey,
+    ['payload', 'data', 'detail'],
+    action
+  )
+  const moreKey = t.pathOr(
+    viewState.moreKey,
+    ['payload', 'data', 'more'],
+    action
+  )
+  const nextViewData = t.isNil(viewData)
+    ? viewState.data
+    : t.isType(viewData, 'Function')
+    ? viewData({
+        type: 'route-exit',
+        status: viewState.status,
+        viewData: viewState.data,
+        formData: viewState.formData,
+        nextData: action.payload.data || null,
+        error: null,
+        state: t.omit(['views', 'route', 'viewKey'], state),
+      })
+    : viewData
+  return t.merge(state, {
+    route: t.pathOr(null, ['payload', 'route'], action),
+    viewKey,
+    views: t.merge(state.views, {
+      [viewKey]: t.mergeAll([
+        viewState,
+        {
+          detailKey,
+          moreKey,
+          status: nextViewData.status || viewState.status,
           error: null,
-        })
-      : viewData
-    return t.merge(state, {
-      route: t.pathOr(null, ['payload', 'route'], action),
-      viewKey,
-      views: t.merge(state.views, {
-        [viewKey]: t.mergeAll([
-          viewState,
-          {
-            detailKey,
-            moreKey,
-            status: nextViewData.status || viewState.status,
-            error: null,
-            data: nextViewData.data || viewState.data,
-          },
-          {
-            form: t.isNil(makeForm)
-              ? viewState.form
-              : makeForm({
-                  type: 'route-exit',
-                  viewData: nextViewData.data || viewState.data,
-                  formData: viewState.formData,
-                  status: nextViewData.status || viewState.status,
-                }),
-          },
-        ]),
-      }),
-    })
-  }
-)
+          data: nextViewData.data || viewState.data,
+        },
+        {
+          form: t.isNil(makeForm)
+            ? viewState.form
+            : makeForm({
+                type: 'route-exit',
+                status: nextViewData.status || viewState.status,
+                formData: viewState.formData,
+                viewData: nextViewData.data || viewState.data,
+              }),
+        },
+      ]),
+    }),
+  })
+})
 
 const nextViewState = task(
   t => (boxName = 'box', macroProps = {}) => (state, action) => {
@@ -170,11 +171,12 @@ const nextViewState = task(
           t.path(['views', state.viewKey], state),
           data({
             type,
-            viewData: viewState.data,
-            nextData: action.payload.data || null,
-            formData,
             status: action.payload.status || viewState.status,
+            viewData: viewState.data,
+            formData,
+            nextData: action.payload.data || null,
             error: action.payload.error || viewState.error,
+            state: t.omit(['views', 'route', 'viewKey'], state),
           })
         )
       : t.merge(t.path(['views', state.viewKey], state), {
@@ -185,9 +187,9 @@ const nextViewState = task(
     const nextForm = t.isType(form, 'Function')
       ? form({
           type,
+          status: nextViewState.status,
           formData,
           viewData: nextViewState.data,
-          status: nextViewState.status,
         })
       : t.path(['views', state.viewKey, 'form'], state)
     return t.merge(state, {
@@ -223,8 +225,10 @@ const nextFormState = task(
             type,
             status: viewState.status,
             viewData: viewState.data,
+            nextData: null,
             formData: action.payload.data || formState.data,
             error: action.payload.error || viewState.error,
+            state: t.omit(['views', 'route', 'viewKey'], state),
           })
         : viewState,
     })
@@ -278,7 +282,7 @@ export const macroRouteViewState = task(
             ['routeHome', 'routeView', 'routeViewDetail', 'routeViewMore'],
             nextRouteState(boxName, macroProps)
           ),
-          m('routeExit', nextRouteExitState(boxName, macroProps)),
+          m('routeExit', nextRouteExitState(macroProps)),
           m(
             ['dataChange', 'dataLoad', 'dataLoadComplete'],
             nextViewState(boxName, macroProps)
@@ -294,17 +298,17 @@ export const macroRouteViewState = task(
           r(actions.routeHome, path, routeProps.home || defaultRouteProps),
           r(
             actions.routeView,
-            `${path}:view`,
+            `${path}/:view`,
             routeProps.view || defaultRouteProps
           ),
           r(
             actions.routeViewDetail,
-            `${path}:view/:detail`,
+            `${path}/:view/:detail`,
             routeProps.detail || defaultRouteProps
           ),
           r(
             actions.routeViewMore,
-            `${path}:view/:detail/:more`,
+            `${path}/:view/:detail/:more`,
             routeProps.more || defaultRouteProps
           ),
         ]
@@ -379,10 +383,10 @@ export const macroRouteViewState = task(
                     dispatch,
                     redirect,
                     mutations: box.mutations,
+                    status: VIEW_STATUS.READY,
                     api,
                     detailKey,
                     moreKey,
-                    status: VIEW_STATUS.READY,
                     viewData,
                     formData,
                   })
@@ -448,10 +452,10 @@ export const macroRouteViewState = task(
                     dispatch,
                     redirect,
                     mutations: box.mutations,
+                    status: VIEW_STATUS.READY,
                     api,
                     detailKey,
                     moreKey,
-                    status: VIEW_STATUS.READY,
                     viewData,
                     formData,
                   })

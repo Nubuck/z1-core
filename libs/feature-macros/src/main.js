@@ -18,6 +18,7 @@ const nextInitState = task(t => (views = {}) => {
               status: VIEW_STATUS.INIT,
               formData: null,
               viewData: null,
+              nextData: null,
               error: null,
             })
           : viewData
@@ -46,7 +47,7 @@ const nextInitState = task(t => (views = {}) => {
 const nextRouteState = task(
   t => (boxName = 'box', macroProps = {}) => (state, action) => {
     const viewKey = t.caseTo.constantCase(
-      t.pathOr('home', ['payload', 'view'], action)
+      t.pathOr('home', ['payload', 'view'], action) || 'home'
     )
     const detailKey = t.pathOr(null, ['payload', 'detail'], action)
     const moreKey = t.pathOr(null, ['payload', 'more'], action)
@@ -62,6 +63,7 @@ const nextRouteState = task(
           status: VIEW_STATUS.WAITING,
           formData: viewState.formData,
           viewData: viewState.data,
+          nextData: action.payload.data || null,
           error: null,
         })
       : viewData
@@ -122,6 +124,7 @@ const nextRouteExitState = task(
           type: 'route-exit',
           status: viewState.status,
           formData: viewState.formData,
+          nextData: action.payload.data || null,
           viewData: viewState.data,
           error: null,
         })
@@ -167,7 +170,8 @@ const nextViewState = task(
           t.path(['views', state.viewKey], state),
           data({
             type,
-            viewData: action.payload.data || viewState.data,
+            viewData: viewState.data,
+            nextData: action.payload.data || null,
             formData,
             status: action.payload.status || viewState.status,
             error: action.payload.error || viewState.error,

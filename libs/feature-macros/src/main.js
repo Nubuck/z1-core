@@ -97,12 +97,24 @@ const nextRouteState = task(
 const nextRouteExitState = task(
   t => (boxName = 'box', macroProps = {}) => (state, action) => {
     const viewKey = t.caseTo.constantCase(
-      t.pathOr('home', ['viewKey'], state) || 'home'
+      t.pathOr('home', ['viewKey'], state) ||
+        t.pathOr('home', ['payload', 'data', 'view'], action) ||
+        'home'
     )
     const viewProps = t.pathOr(null, [viewKey], macroProps)
     const viewData = t.pathOr(null, ['data'], viewProps || {})
     const makeForm = t.pathOr(null, ['form'], viewProps || {})
     const viewState = t.pathOr({}, ['views', viewKey], state)
+    const detailKey = t.pathOr(
+      viewState.detailKey,
+      ['payload', 'data', 'detail'],
+      action
+    )
+    const moreKey = t.pathOr(
+      viewState.moreKey,
+      ['payload', 'data', 'more'],
+      action
+    )
     const nextViewData = t.isNil(viewData)
       ? viewState.data
       : t.isType(viewData, 'Function')
@@ -115,12 +127,14 @@ const nextRouteExitState = task(
         })
       : viewData
     return t.merge(state, {
+      route: t.pathOr(null, ['payload', 'route'], action),
+      viewKey,
       views: t.merge(state.views, {
-        route: t.pathOr(null, ['payload', 'route'], action),
-        viewKey,
         [viewKey]: t.mergeAll([
           viewState,
           {
+            detailKey,
+            moreKey,
             status: nextViewData.status || viewState.status,
             error: null,
             data: nextViewData.data || viewState.data,
@@ -300,7 +314,14 @@ export const macroRouteViewState = task(
               const state = getState()
               if (matchRoutes.test(state.location.prev.type)) {
                 dispatch(
-                  box.mutations.routeExit({ route: state.location.prev.type })
+                  box.mutations.routeExit({
+                    route: t.pathOr(null, ['location', 'prev', 'type'], state),
+                    data: t.pathOr(
+                      null,
+                      ['location', 'prev', 'payload'],
+                      state
+                    ),
+                  })
                 )
               }
               done()

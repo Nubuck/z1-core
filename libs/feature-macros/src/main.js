@@ -95,7 +95,7 @@ const nextRouteState = task(
 )
 
 const nextRouteExitState = task(
-  t => (boxName = 'box', macroProps = {}) => state => {
+  t => (boxName = 'box', macroProps = {}) => (state, action) => {
     const viewKey = t.caseTo.constantCase(t.pathOr('home', ['viewKey'], state))
     const viewProps = t.pathOr(null, [viewKey], macroProps)
     const viewData = t.pathOr(null, ['data'], viewProps || {})
@@ -114,6 +114,8 @@ const nextRouteExitState = task(
       : viewData
     return t.merge(state, {
       views: t.merge(state.views, {
+        route: t.pathOr(null, ['payload', 'route'], action),
+        viewKey,
         [viewKey]: t.mergeAll([
           viewState,
           {

@@ -20,7 +20,7 @@ const nextInitState = task(t => (views = {}) => {
               formData: null,
               nextData: null,
               error: null,
-              state: null,
+              state: {},
             })
           : viewData
         return {

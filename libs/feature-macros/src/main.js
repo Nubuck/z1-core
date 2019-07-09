@@ -96,7 +96,9 @@ const nextRouteState = task(
 
 const nextRouteExitState = task(
   t => (boxName = 'box', macroProps = {}) => (state, action) => {
-    const viewKey = t.caseTo.constantCase(t.pathOr('home', ['viewKey'], state))
+    const viewKey = t.caseTo.constantCase(
+      t.pathOr('home', ['viewKey'], state) || 'home'
+    )
     const viewProps = t.pathOr(null, [viewKey], macroProps)
     const viewData = t.pathOr(null, ['data'], viewProps || {})
     const makeForm = t.pathOr(null, ['form'], viewProps || {})

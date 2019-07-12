@@ -259,7 +259,9 @@ export const toCss = task(t => props => {
 export const uiBox = task(t => (props = {}) => {
   return {
     next(nextProps = {}) {
-      return uiBox(t.mergeDeepRight(props, nextProps))
+      return t.isType(nextProps, 'Function')
+        ? nextProps(uiBox(t.mergeDeepRight(props, nextProps)))
+        : uiBox(t.mergeDeepRight(props, nextProps))
     },
     toBox() {
       return props

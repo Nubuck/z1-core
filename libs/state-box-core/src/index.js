@@ -42,7 +42,7 @@ const makeMutationCreator = task(
       mutations: transforms.mutations,
       actions: transforms.actions,
       reducer: (state = initialState, action) => {
-        return !transforms.reducers[action.type]
+        return t.not(transforms.reducers[action.type])
           ? state
           : transforms.reducers[action.type](state, action)
       },
@@ -74,7 +74,7 @@ export const createStateBox = task(
         mutations: {},
         reducers: [],
       },
-      !mutations
+      t.not(mutations)
         ? []
         : mutations(makeMutationCreator(name || 'box', initial || {}))
     )
@@ -82,17 +82,17 @@ export const createStateBox = task(
       actions: nextHandles.actions,
       mutations: nextHandles.mutations,
     }
-    const nextGuards = !guards
+    const nextGuards = t.not(guards)
       ? []
       : guards(createEffect('guards'), effectContext)
-    const fx = !effects ? [] : effects(createEffect('fx'), effectContext)
+    const fx = t.not(effects) ? [] : effects(createEffect('fx'), effectContext)
     return {
       name,
       actions: nextHandles.actions,
       mutations: nextHandles.mutations,
       reducer: composeReducers(...nextHandles.reducers),
       effects: t.concat(nextGuards || [], fx || []),
-      onInit: !onInit
+      onInit: t.not(onInit)
         ? undefined
         : ctx => {
             onInit(
@@ -109,15 +109,16 @@ const passThrough = function() {
   return {}
 }
 export const combineStateBoxes = task(t => (boxes, reducer = undefined) => {
-  const reduceBy =
-    reducer && t.eq('Function', t.type(reducer)) ? reducer : passThrough
+  const reduceBy = t.and(t.not(t.isNil(reducer)), t.isType(reducer, 'Function'))
+    ? reducer
+    : passThrough
   return t.reduce(
     (nextBoxes, box) => {
       return t.merge(
         {
           reducers: t.merge(nextBoxes.reducers, { [box.name]: box.reducer }),
           effects: t.concat(nextBoxes.effects, box.effects),
-          onInit: !box.onInit
+          onInit: t.not(box.onInit)
             ? nextBoxes.onInit
             : t.concat(nextBoxes.onInit, [box.onInit]),
         },
@@ -146,21 +147,23 @@ export const createStateStore = task(
     logger,
     disableLogging,
   }) => {
-    const nextBoxes = t.eq('Object', t.type(boxes))
+    const nextBoxes = t.isType(boxes, 'Object')
       ? boxes
       : combineStateBoxes(boxes)
     const effects = createLogicMiddleware(nextBoxes.effects, context || {})
-    const nextMiddleware = t.concat(
-      t.concat(t.concat(beforeware || [], middleware || []), [effects]),
-      afterware || []
-    )
+    const nextMiddleware = t.flatten([
+      beforeware || [],
+      middleware || [],
+      effects,
+      afterware || [],
+    ])
     if (t.and(logger, t.eq(process.env.NODE_ENV, 'development'))) {
       if (t.not(disableLogging)) {
         nextMiddleware.push(logger)
       }
     }
     const appliedMiddleware = applyMiddleware(...nextMiddleware)
-    const storeArgs = t.eq('Function', t.type(enhance))
+    const storeArgs = t.isType(enhance, 'Function')
       ? enhance(appliedMiddleware)
       : initial
       ? [initial, appliedMiddleware]
@@ -177,7 +180,7 @@ export const createStateStore = task(
       subscribe: store.subscribe,
     })
     t.forEach(onInit => {
-      if (t.eq('Function', t.type(onInit))) {
+      if (t.isType(onInit, 'Function')) {
         onInit(ctx)
       }
     }, nextBoxes.onInit)
@@ -186,9 +189,7 @@ export const createStateStore = task(
 )
 
 export const reloadStateStore = task(t => (store, boxes) => {
-  const nextBoxes = t.eq('Object', t.type(boxes))
-    ? boxes
-    : combineStateBoxes(boxes)
+  const nextBoxes = t.isType(boxes, 'Object') ? boxes : combineStateBoxes(boxes)
   store.replaceReducer(
     combineReducers(t.merge(nextBoxes.reducers, store._reducers))
   )

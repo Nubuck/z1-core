@@ -3,6 +3,17 @@ import { combineReducers, applyMiddleware, createStore } from 'redux'
 import { createLogic, createLogicMiddleware } from 'redux-logic'
 import { composeReducers, makeActionCreator } from 'redux-toolbelt'
 
+// rx
+import { fromEvent, of } from 'rxjs'
+import {
+  filter,
+  tap,
+  map,
+  switchMap,
+  takeUntil,
+  catchError,
+} from 'rxjs/operators'
+
 const makeMutationCreator = task(
   t => (name, initialState) => (actionOrActions, reducer) => {
     const createAction = makeActionCreator.withDefaults({
@@ -197,4 +208,15 @@ export const reloadStateStore = task(t => (store, boxes) => {
   return null
 })
 
-export const Task = task
+export const Task = task((t, a) => factory =>
+  factory(t, a, {
+    of,
+    fromEvent,
+    filter,
+    tap,
+    map,
+    switchMap,
+    takeUntil,
+    catchError,
+  })
+)

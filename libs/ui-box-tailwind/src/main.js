@@ -260,7 +260,7 @@ export const uiBox = task(t => (props = {}) => {
   return {
     next(nextProps = {}) {
       return t.isType(nextProps, 'Function')
-        ? nextProps(uiBox(t.mergeDeepRight(props, nextProps)))
+        ? nextProps(uiBox(props))
         : uiBox(t.mergeDeepRight(props, nextProps))
     },
     toBox() {

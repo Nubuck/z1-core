@@ -16,22 +16,15 @@ export const Box = task(t => props => {
       }
   return React.createElement(
     Element,
-    t.merge(t.omit(['as', 'box', 'className', 'stretch'], props), {
+    t.merge(t.omit(['as', 'box', 'className', 'stretch', 'next'], props), {
       className: t.and(t.and(t.isNil(box), t.isNil(stretch)), t.isNil(next))
         ? t.pathOr('', ['className'], props)
-        : t.isType(next, 'Function')
-        ? next(
-            uiBox(box || {})
-              .next(stretchProps)
-              .next({
-                className: t.pathOr(box.className || '', ['className'], props),
-              })
-          ).toCss()
         : uiBox(box || {})
             .next(stretchProps)
             .next({
               className: t.pathOr(box.className || '', ['className'], props),
             })
+            .next(next || {})
             .toCss(),
     })
   )

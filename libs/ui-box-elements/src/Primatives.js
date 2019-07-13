@@ -8,7 +8,6 @@ export const Box = task(t => props => {
   const box = t.pathOr(null, ['box'], props)
   const next = t.pathOr(null, ['next'], props)
   const stretch = t.pathOr(null, ['stretch'], props)
-  
   return React.createElement(
     Element,
     t.merge(t.omit(['as', 'box', 'className', 'stretch', 'next'], props), {

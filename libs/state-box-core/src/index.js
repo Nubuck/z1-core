@@ -10,6 +10,7 @@ import {
   tap,
   map,
   switchMap,
+  merge,
   takeUntil,
   catchError,
 } from 'rxjs/operators'
@@ -216,6 +217,7 @@ export const Task = task((t, a) => factory =>
     tap,
     map,
     switchMap,
+    merge,
     takeUntil,
     catchError,
   })

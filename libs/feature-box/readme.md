@@ -113,7 +113,7 @@ export const LandingPage = ({ ui: { Box, VStack, Text } }) =>
 
 ```
 
-### /eatures/landing/main.js
+### /features/landing/main.js
 
 ```JavaScript
 

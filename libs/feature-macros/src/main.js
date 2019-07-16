@@ -2,7 +2,7 @@ import { task, VIEW_STATUS } from '@z1/lib-feature-box'
 
 // tasks
 import {
-  STATE_LIFECYCLE,
+  VIEW_LIFECYCLE,
   nextInitState,
   nextRouteState,
   nextRouteExitState,
@@ -138,8 +138,8 @@ export const macroRouteViewState = task(
                   state
                 )
                 const type = t.eq(action.type, actions.dataLoad)
-                  ? STATE_LIFECYCLE.DATA_LOAD
-                  : STATE_LIFECYCLE.ROUTE_ENTER
+                  ? VIEW_LIFECYCLE.DATA_LOAD
+                  : VIEW_LIFECYCLE.ROUTE_ENTER
                 const [loadError, loadResult] = await a.of(
                   loadHandle({
                     type,
@@ -216,7 +216,7 @@ export const macroRouteViewState = task(
                 )
                 const [transmitError, transmitResult] = await a.of(
                   transmitHandle({
-                    type: STATE_LIFECYCLE.FORM_TRANSMIT,
+                    type: VIEW_LIFECYCLE.FORM_TRANSMIT,
                     action,
                     getState,
                     dispatch,

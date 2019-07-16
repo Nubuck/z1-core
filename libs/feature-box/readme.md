@@ -70,7 +70,7 @@ export const landingState = task((t, a) =>
 import React from 'react'
 import { connectState, Link } from '@z1/lib-feature-box'
 
-const stateQuery = ({ brand, landing }) => ({ brand })
+const stateQuery = ({ brand, landing }) => ({ brand, landing })
 
 export const LandingPage = ({ ui: { Box, VStack, Text } }) =>
   connectState(stateQuery)(({ brand, landing }) => {
@@ -158,7 +158,7 @@ export default combineFeatures([
   layoutFeature({
     ui: { ...elements },
     brand: { title: 'Z1 App' },
-}),
+  }),
   accountFeature({ ui: { ...elements } }),
   landingFeature({ ui: { ...elements } }),
 ])

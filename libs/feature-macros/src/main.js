@@ -73,10 +73,10 @@ export const macroRouteViewState = task(
           fx(
             [
               matchNotBoxRoutes(boxName),
-              // actions.routeHome,
-              // actions.routeView,
-              // actions.routeViewDetail,
-              // actions.routeViewMore,
+              actions.routeHome,
+              actions.routeView,
+              actions.routeViewDetail,
+              actions.routeViewMore,
             ],
             async ({ getState }, dispatch, done) => {
               const state = getState()

@@ -114,9 +114,7 @@ export const nextRouteState = task(
 export const nextRouteExitState = task(
   t => (macroProps = {}) => (state, action) => {
     const viewKey = t.caseTo.constantCase(
-      t.pathOr('home', ['viewKey'], state) ||
-        t.pathOr('home', ['payload', 'data', 'view'], action) ||
-        'home'
+      t.pathOr('home', ['payload', 'data', 'view'], action) || 'home'
     )
     // handles
     const dataHandle = t.pathOr(null, [viewKey, 'data'], macroProps)
@@ -135,7 +133,7 @@ export const nextRouteExitState = task(
     )
     const nextViewData = isHandleInvalid(dataHandle)
       ? viewState.data
-      : viewData({
+      : dataHandle({
           type: VIEW_LIFECYCLE.ROUTE_EXIT,
           status: viewState.status,
           viewData: viewState.data,
@@ -145,8 +143,8 @@ export const nextRouteExitState = task(
           state: t.omit(['views', 'route', 'viewKey'], state),
         })
     return t.merge(state, {
-      route: t.pathOr(null, ['payload', 'route'], action),
-      viewKey,
+      // route: t.pathOr(null, ['payload', 'route'], action),
+      // viewKey,
       views: t.merge(state.views, {
         [viewKey]: t.mergeAll([
           viewState,

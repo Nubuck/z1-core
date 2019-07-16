@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-state-box-core",
   "description": "The Z1 core state management solution for universal apps, implemented as a macro interface over Redux, Redux-logic and Redux-toolbelt",
-  "version": "0.2.46",
+  "version": "0.2.47",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/state-box-core",

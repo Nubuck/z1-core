@@ -220,7 +220,7 @@ export const nextFormState = task(
     const formHandle = t.pathOr(null, [state.viewKey, 'form'], macroProps)
     const dataHandle = t.pathOr(null, [state.viewKey, 'data'], macroProps)
     // state
-    if (t.isNil(form)) {
+    if (t.isNil(formHandle)) {
       return state
     }
     const currentView = t.pathOr({}, ['views', state.viewKey], state)

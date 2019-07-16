@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-state-box-node",
-  "version": "0.2.43",
+  "version": "0.2.44",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/state-box-node",
@@ -13,7 +13,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-state-box-core": "^0.2.43",
+    "@z1/lib-state-box-core": "^0.2.44",
     "redux-node-logger": "^0.1.0"
   },
   "devDependencies": {

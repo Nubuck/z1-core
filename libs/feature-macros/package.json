@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-feature-macros",
-  "version": "0.2.43",
+  "version": "0.2.44",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/feature-macros",
@@ -13,7 +13,7 @@
     "prepublish": "yarn run build"
   },
   "devDependencies": {
-    "@z1/lib-feature-box": "^0.2.43",
+    "@z1/lib-feature-box": "^0.2.44",
     "@z1/preset-dev-bundle": "^0.2.9",
     "react": "^16.8.6"
   },

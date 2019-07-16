@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-feature-box",
-  "version": "0.2.43",
+  "version": "0.2.44",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/feature-box",
@@ -13,7 +13,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-state-box": "^0.2.43",
+    "@z1/lib-state-box": "^0.2.44",
     "redux-first-router": "^2.1.1",
     "redux-first-router-link": "^2.1.1",
     "redux-first-router-restore-scroll": "^1.2.2"

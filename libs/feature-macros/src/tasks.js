@@ -143,8 +143,6 @@ export const nextRouteExitState = task(
           state: t.omit(['views', 'route', 'viewKey'], state),
         })
     return t.merge(state, {
-      // route: t.pathOr(null, ['payload', 'route'], action),
-      // viewKey,
       views: t.merge(state.views, {
         [viewKey]: t.mergeAll([
           viewState,

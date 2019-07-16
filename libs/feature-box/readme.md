@@ -5,6 +5,8 @@ The Z1 standard feature development solution for web apps. Feature-box extends [
 ## Install
 
 ```
+yarn add --dev @z1/preset-dev-neutrino
+
 yarn add @z1/lib-feature-box react redux react-redux
 ```
 
@@ -46,9 +48,9 @@ export const landingState = task((t, a) =>
             if (t.eq(accountStatus, 'auth-success')) {
               dispatch(
                 redirect({
-                  type: 'serviceCmd/ROUTE_HOME',
+                  type: 'layout/ROUTE_VIEW',
                   payload: {
-                    view: 'home',
+                    view: 'welcome',
                   },
                 })
               )

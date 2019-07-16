@@ -1,5 +1,6 @@
 {
   "name": "@z1/lib-feature-macros",
+  "description": "Standard macros over both state and ui concerns aimed to reduce repetitive code while implementing the Z1 style managed development pipeline",
   "version": "0.2.45",
   "main": "lib/index.js",
   "license": "MIT",

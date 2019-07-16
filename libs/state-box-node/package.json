@@ -1,5 +1,6 @@
 {
   "name": "@z1/lib-state-box-node",
+  "description": "The Z1 standard state management solution for node apps, implemented as a macro interface over Redux, Redux-logic and Redux-toolbelt",
   "version": "0.2.45",
   "main": "lib/index.js",
   "license": "MIT",

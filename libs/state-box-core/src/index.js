@@ -1,3 +1,4 @@
+// bump 47
 import { task } from '@z1/preset-task'
 import { combineReducers, applyMiddleware, createStore } from 'redux'
 import { createLogic, createLogicMiddleware } from 'redux-logic'

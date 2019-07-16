@@ -1,3 +1,4 @@
+// bump 47
 import * as core from '@z1/lib-state-box-core'
 import { createLogger } from 'redux-logger'
 

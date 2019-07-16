@@ -210,15 +210,29 @@ export const reloadStateStore = task(t => (store, boxes) => {
 })
 
 export const Task = task((t, a) => factory =>
-  factory(t, a, {
-    of,
-    fromEvent,
-    filter,
-    tap,
-    map,
-    switchMap,
-    merge,
-    takeUntil,
-    catchError,
-  })
+  factory(
+    t.merge(t, {
+      anyOf(list = []) {
+        return t.gt(t.findIndex(subject => t.eq(subject, true), list), -1)
+      },
+      allOf(list = []) {
+        return t.eq(
+          t.length(t.filter(subject => t.eq(subject, false), list)),
+          0
+        )
+      },
+    }),
+    a,
+    {
+      of,
+      fromEvent,
+      filter,
+      tap,
+      map,
+      switchMap,
+      merge,
+      takeUntil,
+      catchError,
+    }
+  )
 )

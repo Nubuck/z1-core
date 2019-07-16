@@ -156,7 +156,7 @@ export const nextRouteExitState = task(
             data: nextViewData.data || viewState.data,
           },
           {
-            form: isHandleInvalid(formData)
+            form: isHandleInvalid(formHandle)
               ? viewState.form
               : formHandle({
                   type: VIEW_LIFECYCLE.ROUTE_EXIT,

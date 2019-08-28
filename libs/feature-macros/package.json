@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-feature-macros",
   "description": "Standard macros over both state and ui concerns aimed to reduce repetitive code while implementing the Z1 style managed development pipeline",
-  "version": "0.2.50",
+  "version": "0.2.51",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/feature-macros",

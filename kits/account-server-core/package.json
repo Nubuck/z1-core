@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-server-core",
-  "version": "0.2.13",
+  "version": "0.2.51",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/account-server-core",

@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-feature-box-server-nedb",
-  "version": "0.2.9",
+  "version": "0.2.51",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/feature-box-server-nedb",
@@ -13,7 +13,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-api-box-nedb": "^0.2.9",
+    "@z1/lib-api-box-nedb": "^0.2.51",
     "@z1/lib-feature-box-server-core": "^0.2.9"
   },
   "devDependencies": {

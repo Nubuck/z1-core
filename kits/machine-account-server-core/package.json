@@ -1,9 +1,9 @@
 {
-  "name": "@z1/kit-bucket-storage-server",
+  "name": "@z1/kit-machine-account-server-core",
   "version": "0.2.13",
   "main": "lib/index.js",
   "license": "MIT",
-  "repository": "https://github.com/SaucecodeOfficial/zero-one/tree/master/kits/bucket-storage-server",
+  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/machine-account-server-core",
   "publishConfig": {
     "access": "public"
   },
@@ -14,13 +14,15 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/kit-bucket-storage-server-core": "^0.2.13"
+    "node-rsa": "^1.0.0",
+    "passport-custom": "^1.0.5",
+    "validator": "^10.2.0"
   },
   "peerDependencies": {
-    "@z1/lib-feature-box-server": "*"
+    "@z1/lib-feature-box-server-core": "*"
   },
   "devDependencies": {
-    "@z1/lib-feature-box-server": "^0.2.9",
+    "@z1/lib-feature-box-server-core": "^0.2.9",
     "@z1/preset-dev-neutrino": "^0.2.9"
   }
 }

@@ -1,4 +1,4 @@
-# Z1 Kit Bucket Storage Server
+# Z1 Kit Bucket Storage Server SQL
 
 Documentation under construction.
 
@@ -7,13 +7,13 @@ Documentation under construction.
 Install
 
 ```
-yarn add @z1/kit-bucket-storage-server
+yarn add @z1/kit-bucket-storage-server-sql
 ```
 
 Import
 
 ```JavaScript
 
-import * from '@z1/kit-bucket-storage-server'
+import * from '@z1/kit-bucket-storage-server-sql'
 
 ```

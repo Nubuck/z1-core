@@ -30,10 +30,10 @@ import { safeServiceName, hookSignature, hookAndEventSignature } from './common'
 // }
 // -> events:
 // {
-//    created(data, app){},
-//    updated(data, app) {},
-//    patched(data, app){},
-//    removed(data, app){}
+//    created(data, ctx){},
+//    updated(data, ctx) {},
+//    patched(data, ctx){},
+//    removed(data, ctx){}
 // }
 export const makeCreateService = task(
   t => adapter => (name, service, modifier = undefined) => app => {

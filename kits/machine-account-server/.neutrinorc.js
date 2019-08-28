@@ -7,7 +7,7 @@ module.exports = {
     // '@z1/preset-dev-neutrino/lib/node',
     [
       '@z1/preset-dev-neutrino/lib/library', {
-      name: 'bucket-storage-sql',
+      name: 'machine-account-server',
       target: 'node',
       libraryTarget: 'commonjs2',
       // Add additional Babel plugins, presets, or env options

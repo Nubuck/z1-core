@@ -1,9 +1,9 @@
 {
-  "name": "@z1/kit-bucket-storage-server",
+  "name": "@z1/kit-bucket-storage-server-nedb",
   "version": "0.2.13",
   "main": "lib/index.js",
   "license": "MIT",
-  "repository": "https://github.com/SaucecodeOfficial/zero-one/tree/master/kits/bucket-storage-server",
+  "repository": "https://github.com/SaucecodeOfficial/zero-one/tree/master/kits/bucket-storage-server-nedb",
   "publishConfig": {
     "access": "public"
   },
@@ -17,10 +17,10 @@
     "@z1/kit-bucket-storage-server-core": "^0.2.13"
   },
   "peerDependencies": {
-    "@z1/lib-feature-box-server": "*"
+    "@z1/lib-feature-box-server-nedb": "*"
   },
   "devDependencies": {
-    "@z1/lib-feature-box-server": "^0.2.9",
+    "@z1/lib-feature-box-server-nedb": "^0.2.9",
     "@z1/preset-dev-neutrino": "^0.2.9"
   }
 }

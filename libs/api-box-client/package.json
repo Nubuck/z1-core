@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-client",
-  "version": "0.2.52",
+  "version": "0.2.53",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client",
@@ -16,7 +16,7 @@
     "@z1/preset-dev-bundle": "^0.2.9"
   },
   "dependencies": {
-    "@z1/lib-api-box-client-core": "^0.2.52",
+    "@z1/lib-api-box-client-core": "^0.2.53",
     "localforage": "^1.6.0"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"

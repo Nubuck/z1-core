@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-client-node",
-  "version": "0.2.52",
+  "version": "0.2.53",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",
@@ -16,7 +16,7 @@
     "@z1/preset-dev-bundle": "^0.2.9"
   },
   "dependencies": {
-    "@z1/preset-feathers-client-node": "^0.2.52",
+    "@z1/preset-feathers-client-node": "^0.2.53",
     "@z1/preset-task": "^0.2.9",
     "node-persist": "^3.0.0"
   },

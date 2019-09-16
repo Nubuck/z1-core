@@ -61,7 +61,11 @@ const cssProps = task(t => ({
     if (t.isType(v, 'Object')) {
       return t.tags.oneLineInlineLists`
       ${t.map(([key, value]) => {
-        return `border-${t.head(key)}-${value}`
+        return t.isType(value, 'Boolean')
+          ? t.not(value)
+            ? ''
+            : `border-${t.head(key)}`
+          : `border-${t.head(key)}-${value}`
       }, t.toPairs(v))}
       `
     }

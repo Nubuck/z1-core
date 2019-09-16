@@ -81,7 +81,7 @@ const matchesPath = task(t => (path, item) => {
     ? false
     : t.eq(path, '/')
     ? t.eq(item.path, path)
-    : t.contains(decodeURI(path), item.path)
+    : t.contains(item.path, decodeURI(path))
 })
 const itemByPath = task(t => (path, list) =>
   t.find(item => matchesPath(path, item), list)

@@ -259,7 +259,7 @@ export const nextFormState = task(
           viewState,
           nextViewState,
           {
-            form: t.merge(formState, nextFormState),
+            form: t.mergeDeepRight(formState, nextFormState),
           },
         ]),
       }),

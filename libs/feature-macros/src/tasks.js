@@ -50,6 +50,7 @@ export const nextInitState = task(t => (views = {}) => {
                   type: VIEW_LIFECYCLE.INIT,
                   status: nextViewData.status || VIEW_STATUS.INIT,
                   formData: {},
+                  nextData: null,
                   viewData: nextViewData.data,
                 }),
           },
@@ -102,6 +103,7 @@ export const nextRouteState = task(
                   type: VIEW_LIFECYCLE.ROUTE_ENTER,
                   status: nextViewData.status || VIEW_STATUS.WAITING,
                   formData: viewState.formData,
+                  nextData: null,
                   viewData: nextViewData.data || viewState.data,
                 }),
           },
@@ -160,6 +162,7 @@ export const nextRouteExitState = task(
                   type: VIEW_LIFECYCLE.ROUTE_EXIT,
                   status: nextViewData.status || viewState.status,
                   formData: viewState.formData,
+                  nextData: null,
                   viewData: nextViewData.data || viewState.data,
                 }),
           },
@@ -201,6 +204,7 @@ export const nextViewState = task(
           type,
           status: nextViewState.status,
           formData,
+          nextData: null,
           viewData: nextViewState.data,
         })
       : t.path(['views', state.viewKey, 'form'], state)
@@ -251,7 +255,8 @@ export const nextFormState = task(
       type,
       status: nextViewState.status,
       viewData: nextViewState.data,
-      formData: action.payload.data || formState.data,
+      formData: formState.data,
+      nextData: action.payload.data,
     })
     return t.merge(state, {
       views: t.merge(state.views, {
@@ -259,7 +264,7 @@ export const nextFormState = task(
           viewState,
           nextViewState,
           {
-            form: t.mergeDeepRight(formState, nextFormState),
+            form: t.merge(formState, nextFormState),
           },
         ]),
       }),

@@ -159,7 +159,7 @@ interface CommonModifiers = {
 let classNameTuple: [ ClassNameType, CommonModifiers]
 ```
 
-Available **CssProp Types**
+#### Available CssProp Types
 
 ```TypeScript
 // color range depends on your Tailwind config

@@ -2,8 +2,8 @@
 
 [Tailwind css](https://tailwindcss.com/) is the best™ functional css framework out.
 The functional css approach is the best™ because who really wants to deal with writing
-that css, scss or esoteric runtime generated css-in-js noise and perform the mystical ritual
-of configuring the packing for any pre or post processing magic needed to ship any of it?
+that css, scss or esoteric runtime generated css-in-js noise, let alone performing the mystical ritual
+of configuring the packing for any pre or post processing magic needed to ship anything?
 
 Not me.
 

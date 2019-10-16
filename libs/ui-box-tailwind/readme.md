@@ -7,7 +7,7 @@ of configuring the packing for any pre or post processing magic needed to ship a
 
 Not me.
 
-That said functional css isn't the most ergonomic manner of styling when you end up with a monsterously long line of classNames to style an element. Terrible to read and edit at scale.
+That said functional css is also not the best™ when you end up with a monsterously long line of classNames to style an element. Terrible to read and edit at volume.
 
 This library offers a solution to managing and mutating functional css classNames in a way that's comfortably functional and css-in-js'esque, across any platform free of any runtime DOM concerns.
 

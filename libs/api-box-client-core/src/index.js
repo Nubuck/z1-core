@@ -8,6 +8,7 @@ import {
 
 export const createApiClient = task(t => props => {
   const client = Feathers()
+  client.set('path', props.path)
   const ioClient = t.has('options')(props)
     ? IO(props.path, props.options)
     : IO(props.path)

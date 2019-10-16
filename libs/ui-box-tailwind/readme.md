@@ -10,7 +10,7 @@ That said functional css isn't the most ergonomic manner of styling when you end
 
 This library offers a solution to managing and mutating functional css classNames in a comfortable functional css-in-js'esque way, across any platform free of any runtime DOM concerns.
 
-Ui Box essentially takes a plain object input representing the root [classNames](https://nerdcave.com/tailwind-cheat-sheet) of [Tailwind css](https://tailwindcss.com/) and returns a chained object with a methods\ to mutate the object or render the box state to a monsterously long line of classNames, so you don't have to.
+Ui Box essentially takes a plain object input representing the root [classNames](https://nerdcave.com/tailwind-cheat-sheet) of [Tailwind css](https://tailwindcss.com/) and returns a chained object with a method to mutate the object or render the box state to a monsterously long line of classNames, so you don't have to.
 
 ## Usage
 
@@ -52,6 +52,7 @@ A className property can be either xs size only or multiple sizes and modifiers 
 
 ```TypeScript
 type ClassNameType = boolean | string | number | object
+
 interface CommonModifiers = {
   sm?: classNameType;
   md?: classNameType;
@@ -59,6 +60,7 @@ interface CommonModifiers = {
   xl?: classNameType;
   hover?: classNameType;
 }
+
 let classNameTuple: [ ClassNameType, CommonModifiers]
 ```
 

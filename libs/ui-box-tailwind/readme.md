@@ -9,7 +9,7 @@ Not me.
 
 That said functional css isn't the most ergonomic manner of styling when you end up with a monsterously long line of classNames to style an element. Terrible to read and edit at scale.
 
-This library offers a solution to managing and mutating functional css classNames in a comfortable functional css-in-js'esque way, across any platform free of any runtime DOM concerns.
+This library offers a solution to managing and mutating functional css classNames in a way that's comfortably functional and css-in-js'esque, across any platform free of any runtime DOM concerns.
 
 Ui Box essentially takes a plain object input representing the root [classNames](https://nerdcave.com/tailwind-cheat-sheet) of [Tailwind css](https://tailwindcss.com/) and returns a chained object with a method to mutate the object or render the box state to a monsterously long line of classNames, so you don't have to.
 

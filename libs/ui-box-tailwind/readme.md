@@ -2,7 +2,8 @@
 
 [Tailwind css](https://tailwindcss.com/) is the best™ functional css framework out.
 The functional css approach is the best™ because who really wants to deal with writing
-that css, scss or esoteric runtime generated css-in-js noise and perform the mystical ceremony of configuring the packing for any pre or post processing magic needed to ship any of it?
+that css, scss or esoteric runtime generated css-in-js noise and perform the mystical ritual 
+of configuring the packing for any pre or post processing magic needed to ship any of it?
 
 Not me.
 
@@ -35,7 +36,7 @@ import { uiBox, toCss } from '@z1/lib-ui-box-tailwind'
 ### Top level functions
 
 ```TypeScript
-type UiBox = {
+interface UiBox = {
   next: (box: CssProps) => UiBox;
   toBox: () => CssProps;
   toCss: () => string;
@@ -46,9 +47,10 @@ declare function toCss(box: CssProps): string {}
 
 ### CssProps
 
-An object the root [classNames](https://nerdcave.com/tailwind-cheat-sheet) and their variations of properties.
+An object representing the root [classNames](https://nerdcave.com/tailwind-cheat-sheet) and their variations of properties.
 
-A className property can be either xs size only or multiple sizes and modifiers as a Tuple with first position being the xs size
+A className property can either be the xs size or multiple sizes and modifiers as a Tuple with the head being the xs size and 
+the tail being an object of modifiers. 
 
 ```TypeScript
 type ClassNameType = boolean | string | number | object
@@ -300,20 +302,40 @@ type AlignItems = 'stretch'
   | 'end'
   | 'baseline'
   | null
-type AlignContent = '' | null
-type AlignSelf = '' | null
-type JustifyContent = '' | null
-type FlexGrow = '' | null
-type FlexShrink = '' | null
-type FlexOrder = '' | null
+type AlignContent = 'start'
+  | 'center'
+  | 'end'
+  | 'between'
+  | 'around'
+  | null
+type AlignSelf = 'auto' 
+  | 'start'
+  | 'center'
+  | 'end'
+  | 'stretch'
+  | null
+type JustifyContent = 'start'
+  | 'center'
+  | 'end'
+  | 'between'
+  | 'around'
+  | null
+type FlexGrow = boolean | null
+type FlexShrink = boolean | null
+type FlexOrder = 'first'
+  | 'last'
+  | 'none'
+  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8
+  | 10 | 12
+  | null
 
 // tables
-type TableCollapse = '' | null
-type TableLayout = '' | null
+type TableCollapse = boolean | null
+type TableLayout = 'auto' | 'fixed' | null
 
 // backgrounds
-type BgAttachment = '' | null
-type BgColor = '' | null
+type BgAttachment = 'fixed' | 'local' | 'scroll' | null
+type BgColor = ColorName | null
 type BgPosition = '' | null
 type BgRepeat = '' | null
 type BgSize = '' | null
@@ -477,8 +499,6 @@ const successElement = baseElement.next({
   fontWeight: 'bolder',
 })
 
-// Later on ...
-
 // Mutate the font weight before rendering
 const warningClassNames = warningElement.next({
     fontWeight: 'medium'
@@ -486,15 +506,17 @@ const warningClassNames = warningElement.next({
   .toCss()
 
 // Mutation chain before rendering
+const fontProps = {
+  fontWeight: 'bolder',
+  fontSize: ['xl', { md: '2xl' }],
+}
+// Later on ...
 const dangerClassNames = dangerElement
   .next({
     borderColor: 'red-500',
     bgColor: 'red-500',
   })
-  .next({
-    fontWeight: 'bolder',
-    fontSize: ['xl', { md: '2xl' }],
-  })
+  .next(fontProps)
   .toCss()
 
 // Shorthand render
@@ -502,7 +524,7 @@ const classNames = toCss({
   display: ['block', { sm: 'inline-block' }],
   borderColor: 'blue-500'
 })
-// classNames = 'block border-blue-500 sm:inline-block'
+// classNames === 'block border-blue-500 sm:inline-block'
 
 ```
 

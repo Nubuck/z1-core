@@ -97,7 +97,7 @@ const successElement = baseElement.next({
   className: 'success',
 })
 
-// Mutate the font weight before rendering
+// Mutate the box state before rendering
 const infoProps = {
   borderColor: ['teal-500', { hover: 'transparent' }],
   bgColor: [null, { hover: 'teal-500' }],
@@ -112,12 +112,10 @@ const infoClassNames = successElement
   .toCss()
 // infoClassNames === 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-teal-500 hover:border-transparent hover:bg-teal-500 text-teal-500 hover:text-white info font-medium'
 
-// Mutation chain before rendering
 const fontProps = {
   fontWeight: 'bolder',
   fontSize: ['xl', { md: '2xl' }],
 }
-// Later on ...
 const noticeClassNames = dangerElement
   .next({
     borderColor: 'yellow-500',

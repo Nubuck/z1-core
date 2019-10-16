@@ -520,7 +520,21 @@ type ClassName = string | null
 #### CssProps Interface
 
 ```TypeScript
-type Mod = 'sm' | 'md' | 'lg' | 'xl' | 'hover'
+type Mod = 'sm' 
+  | 'md' 
+  | 'lg' 
+  | 'xl' 
+  | 'hover'
+  | 'focus'
+  | 'active'
+  | 'disabled'
+  | 'visited'
+  | 'first'
+  | 'last'
+  | 'odd'
+  | 'even'
+  | 'group-hover'
+  | 'focus-within'
 
 interface CssProps = {
    // layout

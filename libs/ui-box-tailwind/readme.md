@@ -69,7 +69,7 @@ const baseElement = uiBox({
   className: 'element',
 })
 const defaultClassNames = baseElement.toCss()
-// defaultClassNames = 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-blue-500 hover:border-transparent hover:bg-blue-500 text-blue-500 hover:text-white element'
+// defaultClassNames === 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-blue-500 hover:border-transparent hover:bg-blue-500 text-blue-500 hover:text-white element'
 
 const warningClassNames = baseElement
   .next({
@@ -79,7 +79,7 @@ const warningClassNames = baseElement
     className: 'warning',
   })
   .toCss()
-// warningClassNames = 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-orange-500 hover:border-transparent hover:bg-orange-500 text-orange-500 hover:text-white warning'
+// warningClassNames === 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-orange-500 hover:border-transparent hover:bg-orange-500 text-orange-500 hover:text-white warning'
 
 const dangerElement = baseElement.next({
   borderColor: ['red-500', { hover: 'transparent' }],
@@ -110,7 +110,7 @@ const infoClassNames = successElement
     className: 'info',
   })
   .toCss()
-// infoClassNames = 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-teal-500 hover:border-transparent hover:bg-teal-500 text-teal-500 hover:text-white info font-medium'
+// infoClassNames === 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-teal-500 hover:border-transparent hover:bg-teal-500 text-teal-500 hover:text-white info font-medium'
 
 // Mutation chain before rendering
 const fontProps = {
@@ -127,7 +127,14 @@ const noticeClassNames = dangerElement
   })
   .next(fontProps)
   .toCss()
-// noticeClassNames = 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-yellow-500 bg-yellow-500 text-gray-900 notice font-bolder text-xl md:text-2xl'
+// noticeClassNames === 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-yellow-500 bg-yellow-500 text-gray-900 notice font-bolder text-xl md:text-2xl'
+
+// Shorthand render
+const classNames = toCss({
+  display: ['block', { sm: 'inline-block' }],
+  borderColor: 'blue-500'
+})
+// classNames === 'block border-blue-500 sm:inline-block'
 
 ```
 

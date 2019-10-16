@@ -209,7 +209,7 @@ type Position = 'static'
   | 'relative'
   | 'sticky'
   | null
-type Inset = '0' | 'auto' | null
+type Inset = 0 | 'auto' | null
 interface Pin = {
   top?: boolean;
   right?: boolean;

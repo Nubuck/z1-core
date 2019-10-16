@@ -2,7 +2,7 @@
 
 [Tailwind css](https://tailwindcss.com/) is the best™ functional css framework out.
 The functional css approach is the best™ because who really wants to deal with writing
-that css, scss or esoteric runtime generated css-in-js noise and perform the mystical ritual 
+that css, scss or esoteric runtime generated css-in-js noise and perform the mystical ritual
 of configuring the packing for any pre or post processing magic needed to ship any of it?
 
 Not me.
@@ -45,12 +45,98 @@ declare function uiBox(box: CssProps): UiBox {}
 declare function toCss(box: CssProps): string {}
 ```
 
+### Example
+
+```JavaScript
+
+import { toCss, uiBox } from '@z1/lib-ui-box-tailwind'
+
+const baseElement = uiBox({
+  display: 'flex',
+  flexDirection: ['col', { md: 'row' }],
+  alignItems: 'center',
+  justifySelf: 'stretch',
+  borderWidth: true,
+  borderRadius: [
+    { topLeft: 'sm', bottomRight: 'sm' },
+    {
+      md: { topLeft: 'lg', bottomRight: 'lg' },
+    },
+  ],
+  borderColor: ['blue-500', { hover: 'transparent' }],
+  bgColor: [null, { hover: 'blue-500' }],
+  color: ['blue-500', { hover: 'white' }],
+  className: 'element',
+})
+const defaultClassNames = baseElement.toCss()
+// defaultClassNames = 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-blue-500 hover:border-transparent hover:bg-blue-500 text-blue-500 hover:text-white element'
+
+const warningClassNames = baseElement
+  .next({
+    borderColor: ['orange-500', { hover: 'transparent' }],
+    bgColor: [null, { hover: 'orange-500' }],
+    color: ['orange-500', { hover: 'white' }],
+    className: 'warning',
+  })
+  .toCss()
+// warningClassNames = 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-orange-500 hover:border-transparent hover:bg-orange-500 text-orange-500 hover:text-white warning'
+
+const dangerElement = baseElement.next({
+  borderColor: ['red-500', { hover: 'transparent' }],
+  bgColor: [null, { hover: 'red-500' }],
+  color: ['red-500', { hover: 'white' }],
+  fontWeight: 'bold',
+  className: 'danger',
+})
+
+const successElement = baseElement.next({
+  borderColor: ['green-500', { hover: 'transparent' }],
+  bgColor: [null, { hover: 'green-500' }],
+  color: ['green-500', { hover: 'white' }],
+  fontWeight: 'bolder',
+  className: 'success',
+})
+
+// Mutate the font weight before rendering
+const infoProps = {
+  borderColor: ['teal-500', { hover: 'transparent' }],
+  bgColor: [null, { hover: 'teal-500' }],
+  color: ['teal-500', { hover: 'white' }],
+}
+const infoClassNames = successElement
+  .next(infoProps)
+  .next({
+    fontWeight: 'medium',
+    className: 'info',
+  })
+  .toCss()
+// infoClassNames = 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-teal-500 hover:border-transparent hover:bg-teal-500 text-teal-500 hover:text-white info font-medium'
+
+// Mutation chain before rendering
+const fontProps = {
+  fontWeight: 'bolder',
+  fontSize: ['xl', { md: '2xl' }],
+}
+// Later on ...
+const noticeClassNames = dangerElement
+  .next({
+    borderColor: 'yellow-500',
+    bgColor: 'yellow-500',
+    color: 'gray-900',
+    className: 'notice',
+  })
+  .next(fontProps)
+  .toCss()
+// noticeClassNames = 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-yellow-500 bg-yellow-500 text-gray-900 notice font-bolder text-xl md:text-2xl'
+
+```
+
 ### CssProps
 
 An object representing the root [classNames](https://nerdcave.com/tailwind-cheat-sheet) and their variations of properties.
 
-A className property can either be the xs size or multiple sizes and modifiers as a Tuple with the head being the xs size and 
-the tail being an object of modifiers. 
+A className property can either be the xs size or multiple sizes and modifiers as a Tuple with the head being the xs size and
+the tail being an object of modifiers.
 
 ```TypeScript
 type ClassNameType = boolean | string | number | object
@@ -88,7 +174,7 @@ type Float = 'right'
   | 'left'
   | 'none'
   | null
-type ObjectFit = 'contain' 
+type ObjectFit = 'contain'
   | 'cover'
   | 'fill'
   | 'none'
@@ -110,70 +196,70 @@ type Overflow = 'auto'
   | 'scroll'
   | null
 type Scrolling = 'touch' | 'auto' | null
-type Position = 'static' 
+type Position = 'static'
   | 'fixed'
   | 'absolute'
   | 'relative'
   | 'sticky'
   | null
 type Inset = '0' | 'auto' | null
-type Pin = {
+interface Pin = {
   top?: boolean;
   right?: boolean;
   bottom?: boolean;
   left?: boolean;
 } | null
 type Visible = boolean | null
-type ZIndex = 'auto' 
+type ZIndex = 'auto'
   | 0
-  | 10 
-  | 20 
-  | 30 
-  | 40 
-  | 50 
+  | 10
+  | 20
+  | 30
+  | 40
+  | 50
   | null
 
 // borders
 type BorderColor = ColorName | null
-type BorderStyle = 'solid' 
-  | 'dashed' 
-  | 'dotted' 
-  | 'double' 
-  | 'none' 
+type BorderStyle = 'solid'
+  | 'dashed'
+  | 'dotted'
+  | 'double'
+  | 'none'
   | null
-type BorderWidthRange = boolean 
-  | 0 
-  | 2 
-  | 4 
+type BorderWidthRange = boolean
+  | 0
+  | 2
+  | 4
   | null
-type BorderWidthSides = {
+interface BorderWidthSides = {
   top?: BorderWidthRange;
-  left?: BorderWidthRange;
-  bottom?: BorderWidthRange;
   right?: BorderWidthRange;
+  bottom?: BorderWidthRange;
+  left?: BorderWidthRange;
 }
 type BorderWidth = BorderWidthRange | BorderWidthSides
-type RadiusRange = boolean 
-  | 'none' 
+type RadiusRange = boolean
+  | 'none'
   | 'sm'
   | 'lg'
   | 'full'
   | null
-type RadiusSides = {
+interface RadiusSides = {
   top?: RadiusRange;
-  left?: RadiusRange;
-  bottom?: RadiusRange;
   right?: RadiusRange;
-  topLeft?: RadiusRange;
+  bottom?: RadiusRange;
+  left?: RadiusRange;
   topRight?: RadiusRange;
-  bottomLeft?: RadiusRange;
   bottomRight?: RadiusRange;
+  bottomLeft?: RadiusRange;
+  topLeft?: RadiusRange;
 }
 type BorderRadius = RadiusRange | RadiusSides
 
 // sizing
 type Width = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8
-  | 10 | 12 | 16 | 20 | 24 
+  | 10 | 12 | 16 | 20 | 24
   | 32 | 40 | 48 | 56 | 64
   | 'auto'
   | 'px'
@@ -181,13 +267,13 @@ type Width = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8
   | '1/4' | '2/4' | '3/4'
   | '1/5' | '2/5' | '3/5' | '4/5'
   | '1/6' | '2/6' | '3/6' | '4/6' | '5/6'
-  | '1/12' | '2/12' | '3/12' | '4/12' | '5/12' | '6/12' 
+  | '1/12' | '2/12' | '3/12' | '4/12' | '5/12' | '6/12'
   | '7/12' | '8/12' | '9/12' | '10/12' | '11/12'
   | 'full'
   | 'screen'
   | null
 type MinWidth = 0 | 'full' | null
-type MaxWidth = 'xs' 
+type MaxWidth = 'xs'
   | 'sm'
   | 'md'
   | 'lg'
@@ -200,7 +286,7 @@ type MaxWidth = 'xs'
   | 'full'
   | null
 type Height = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8
-  | 10 | 12 | 16 | 20 | 24 
+  | 10 | 12 | 16 | 20 | 24
   | 32 | 40 | 48 | 56 | 64
   | 'auto'
   | 'px'
@@ -212,7 +298,7 @@ type MaxHeight = 'full' | 'screen' | null
 // typography
 type Color = ColorName | null
 type FontFamily = 'sans' | 'serif' | 'mono' | null
-type FontSize = 'xs' 
+type FontSize = 'xs'
   | 'sm'
   | 'md'
   | 'lg'
@@ -226,7 +312,7 @@ type FontSize = 'xs'
   | null
 type FontSmoothing = boolean | 'subpixel' | null
 type FontStyle = 'normal' | 'italic' | null
-type FontWeight = 'hairline' 
+type FontWeight = 'hairline'
   | 'thin'
   | 'light'
   | 'normal'
@@ -236,67 +322,67 @@ type FontWeight = 'hairline'
   | 'extrabold'
   | 'black'
   | null
-type LetterSpacing = 'tighter' 
+type LetterSpacing = 'tighter'
   | 'tight'
   | null
-type LineHeight = 'none' 
+type LineHeight = 'none'
   | 'tight'
   | 'snug'
   | 'normal'
   | 'relaxed'
   | 'loose'
   | null
-type ListType = 'none' 
-  | 'disc' 
-  | 'decimal' 
+type ListType = 'none'
+  | 'disc'
+  | 'decimal'
   | null
 type ListPosition = 'inside' | 'outside' | null
-type TextAlignX = 'left' 
+type TextAlignX = 'left'
   | 'center'
   | 'right'
-  | 'justify' 
+  | 'justify'
   | null
-type TextAlignY = 'baseline' 
+type TextAlignY = 'baseline'
   | 'top'
   | 'middle'
   | 'bottom'
   | 'text-top'
   | 'text-bottom'
   | null
-type TextDecoration = 'underline' 
-  | 'none' 
-  | 'line-through' 
+type TextDecoration = 'underline'
+  | 'none'
+  | 'line-through'
   | null
-type TextTransform = 'normal' 
+type TextTransform = 'normal'
   | 'uppercase'
   | 'lowercase'
   | 'capitalize'
   | null
-type Whitespace = 'normal' 
+type Whitespace = 'normal'
   | 'no-wrap'
   | 'pre'
   | 'pre-line'
   | 'pre-wrap'
   | null
-type WordBreak = 'normal' 
+type WordBreak = 'normal'
   | 'words'
   | 'all'
   | 'truncate'
   | null
 
 // flexbox
-type Flex = 1 
-  | 'auto' 
-  | 'initial' 
-  | 'none' 
+type Flex = 1
+  | 'auto'
+  | 'initial'
+  | 'none'
   | null
-type FlexDirection = 'row' 
-  | 'row-reverse' 
-  | 'col' 
-  | 'col-reverse' 
+type FlexDirection = 'row'
+  | 'row-reverse'
+  | 'col'
+  | 'col-reverse'
   | null
 type FlexWrap = boolean | 'reverse' | null
-type AlignItems = 'stretch' 
+type AlignItems = 'stretch'
   | 'start'
   | 'center'
   | 'end'
@@ -308,7 +394,7 @@ type AlignContent = 'start'
   | 'between'
   | 'around'
   | null
-type AlignSelf = 'auto' 
+type AlignSelf = 'auto'
   | 'start'
   | 'center'
   | 'end'
@@ -336,27 +422,95 @@ type TableLayout = 'auto' | 'fixed' | null
 // backgrounds
 type BgAttachment = 'fixed' | 'local' | 'scroll' | null
 type BgColor = ColorName | null
-type BgPosition = '' | null
-type BgRepeat = '' | null
-type BgSize = '' | null
+type BgPosition = 'bottom'
+  | 'center'
+  | 'left'
+  | 'left-bottom'
+  | 'left-top'
+  | 'right'
+  | 'right-bottom'
+  | 'right-top'
+  | 'top'
+  | null
+type BgRepeat = 'repeat'
+  | 'no-repeat'
+  | 'repeat-x'
+  | 'repeat-y'
+  | 'repeat-round'
+  | 'repeat-space'
+  | null
+type BgSize = 'auto' | 'cover' | 'contain' | null
 
 // spacing
-type Padding = '' | null
-type Margin = '' | null
+type PaddingRange =  0 | 1 | 2 | 3 | 4 | 5 | 6 | 8
+  | 10 | 12 | 16 | 20 | 24
+  | 32 | 40 | 48 | 56 | 64
+  | 'px'
+  | null
+interface PaddingSides = {
+  x?: PaddingRange;
+  y?: PaddingRange;
+  top?: PaddingRange;
+  right?: PaddingRange;
+  bottom?: PaddingRange;
+  left?: PaddingRange;
+}
+type Padding = PaddingRange | PaddingSides
+type MarginRange = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 8
+  | 10 | 12 | 16 | 20 | 24
+  | 32 | 40 | 48 | 56 | 64
+  | 'auto'
+  | 'px'
+  | -1 | -2 | -3 | -4 | -5 | -6 | -8
+  | -10 | -12 | -16 | -20 | -24
+  | -32 | -40 | -48 | -56 | -64
+interface MarginSides = {
+  x?: MarginRange;
+  y?: MarginRange;
+  top?: MarginRange;
+  right?: MarginRange;
+  bottom?: MarginRange;
+  left?: MarginRange;
+}
+type Margin = MarginRange | MarginSides
 
 // interactivity
-type Appearance = '' | null
-type Cursor = '' | null
-type Outline = '' | null
-type PointerEvents = '' | null
-type Resize = '' | null
-type UserSelect = '' | null
+type Appearance = 'none' | null
+type Cursor = 'auto' 
+  | 'default'
+  | 'pointer'
+  | 'wait'
+  | 'text'
+  | 'move'
+  | 'not-allowed'
+  | null
+type Outline = 'none' | null
+type PointerEvents = 'none' | 'auto' | null
+type Resize = boolean | 'none' | 'x' | 'y' | null
+type UserSelect = 'none' 
+  | 'text' 
+  | 'all' 
+  | 'auto' 
+  | null
 
 // misc
-type Shadow = '' | null
-type Opacity = '' | null
-type Fill = '' | null
-type Stroke = '' | null
+type Shadow = boolean 
+  | 'md'
+  | 'lg'
+  | 'xl'
+  | '2xl'
+  | 'inner'
+  | 'outline'
+  | 'none'
+  | null
+type Opacity = 0 
+  | 25
+  | 50
+  | 75
+  | 100
+  | null
+type Fill = boolean | null
+type Stroke = boolean | null
 
 // extra classNames to add to output
 type ClassName = string | null
@@ -417,15 +571,15 @@ interface CssProps = {
   whitespace?: Whitespace | [Whitespace, { [key: Mod]: Whitespace; }];
   wordBreak?: WordBreak | [WordBreak, { [key: Mod]: WordBreak; }];
   // flexbox
-  flex?: Flex | [Flex, { [key: Mod]: Flex; }];  
-  flexDirection?: FlexDirection | [FlexDirection, { [key: Mod]: FlexDirection; }];  
-  flexWrap?: FlexWrap | [FlexWrap, { [key: Mod]: FlexWrap; }];  
-  alignItems?: AlignItems | [AlignItems, { [key: Mod]: AlignItems; }];  
-  alignContent?: AlignContent | [AlignContent, { [key: Mod]: AlignContent; }];  
-  alignSelf?: AlignSelf | [AlignSelf, { [key: Mod]: AlignSelf; }];  
-  justifyContent?: JustifyContent | [JustifyContent, { [key: Mod]: JustifyContent; }];  
-  flexGrow?: FlexGrow | [FlexGrow, { [key: Mod]: FlexGrow; }];  
-  flexShrink?: FlexShrink | [FlexShrink, { [key: Mod]: FlexShrink; }];  
+  flex?: Flex | [Flex, { [key: Mod]: Flex; }];
+  flexDirection?: FlexDirection | [FlexDirection, { [key: Mod]: FlexDirection; }];
+  flexWrap?: FlexWrap | [FlexWrap, { [key: Mod]: FlexWrap; }];
+  alignItems?: AlignItems | [AlignItems, { [key: Mod]: AlignItems; }];
+  alignContent?: AlignContent | [AlignContent, { [key: Mod]: AlignContent; }];
+  alignSelf?: AlignSelf | [AlignSelf, { [key: Mod]: AlignSelf; }];
+  justifyContent?: JustifyContent | [JustifyContent, { [key: Mod]: JustifyContent; }];
+  flexGrow?: FlexGrow | [FlexGrow, { [key: Mod]: FlexGrow; }];
+  flexShrink?: FlexShrink | [FlexShrink, { [key: Mod]: FlexShrink; }];
   flexOrder?: FlexOrder | [FlexOrder, { [key: Mod]: FlexOrder; }];
   // tables
   tableCollapse?: TableCollapse | [TableCollapse, { [key: Mod]: TableCollapse; }];
@@ -453,78 +607,6 @@ interface CssProps = {
   stroke?: Stroke | [Stroke, { [key: Mod]: Stroke; }];
   className?: ClassName | [ClassName, { [key: Mod]: ClassName; }];
 }
-
-```
-
-Example usage
-
-```JavaScript
-
-import { toCss, uiBox } from '@z1/lib-ui-box-tailwind'
-
-const baseElement = uiBox({
-  display: 'flex',
-  flexDirection: ['col', { md: 'row'} ],
-  alignItems: 'center',
-  justifySelf: 'stretch',
-  borderWidth: true,
-  borderRadius: [
-    { topLeft: 'sm', bottomRight: 'sm' },
-    {
-      md: { topLeft: 'lg', bottomRight: 'lg' },
-    }
-  ],
-  borderColor: ['blue-500', { hover: 'transparent' }],
-  bgColor: [null, { hover: 'blue-500' }],
-  color: ['blue-500', { hover: 'white' }]
-})
-
-const warningElement = baseElement.next({
-  borderColor: ['orange-500', { hover: 'transparent' }],
-  bgColor: [null, { hover: 'orange-500' }],
-  color: ['orange-500', { hover: 'white' }]
-})
-
-const dangerElement = baseElement.next({
-  borderColor: ['red-500', { hover: 'transparent' }],
-  bgColor: [null, { hover: 'red-500' }],
-  color: ['red-500', { hover: 'white' }],
-  fontWeight: 'bold',
-})
-
-const successElement = baseElement.next({
-  borderColor: ['green-500', { hover: 'transparent' }],
-  bgColor: [null, { hover: 'green-500' }],
-  color: ['green-500', { hover: 'white' }],
-  fontWeight: 'bolder',
-})
-
-// Mutate the font weight before rendering
-const warningClassNames = warningElement.next({
-    fontWeight: 'medium'
-  })
-  .toCss()
-
-// Mutation chain before rendering
-const fontProps = {
-  fontWeight: 'bolder',
-  fontSize: ['xl', { md: '2xl' }],
-}
-// Later on ...
-const dangerClassNames = dangerElement
-  .next({
-    borderColor: 'red-500',
-    bgColor: 'red-500',
-  })
-  .next(fontProps)
-  .toCss()
-
-// Shorthand render
-const classNames = toCss({
-  display: ['block', { sm: 'inline-block' }],
-  borderColor: 'blue-500'
-})
-// classNames === 'block border-blue-500 sm:inline-block'
 
 ```
 

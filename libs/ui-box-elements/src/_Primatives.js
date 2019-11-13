@@ -14,12 +14,14 @@ export const Box = task(t => props => {
       className: t.and(t.and(t.isNil(box), t.isNil(stretch)), t.isNil(next))
         ? t.pathOr('', ['className'], props)
         : uiBox(box || {})
-            .next(t.isNil(stretch)
-              ? {}
-              : {
-                  alignSelf: 'stretch',
-                  flex: 'auto',
-                })
+            .next(
+              t.isNil(stretch)
+                ? {}
+                : {
+                    alignSelf: 'stretch',
+                    flex: 'auto',
+                  }
+            )
             .next({
               className: t.pathOr(box.className || '', ['className'], props),
             })
@@ -151,6 +153,7 @@ export const Spacer = task(t => props =>
 export const Icon = task(t => props => {
   const as = t.pathOr('i', ['as'], props)
   const prefix = t.pathOr('fa', ['prefix'], props)
+  const iconPrefix = t.pathOr('fa', ['iconPrefix'], props)
   const icon = t.pathOr('', ['name'], props)
   const fontSize = t.pathOr(null, ['size'], props)
   const color = t.pathOr(null, ['color'], props)
@@ -164,7 +167,7 @@ export const Icon = task(t => props => {
       ),
       {
         as,
-        className: `${prefix} ${prefix}-${icon}${
+        className: `${prefix} ${iconPrefix}-${icon}${
           t.isNil(className) ? '' : ` ${className}`
         }`,
         box: t.merge(

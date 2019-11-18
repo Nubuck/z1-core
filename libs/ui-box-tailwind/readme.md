@@ -329,6 +329,10 @@ type FontWeight = 'hairline'
   | null
 type LetterSpacing = 'tighter'
   | 'tight'
+  | 'normal'
+  | 'wide'
+  | 'wider'
+  | 'widest'
   | null
 type LineHeight = 'none'
   | 'tight'

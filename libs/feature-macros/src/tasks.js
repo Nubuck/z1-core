@@ -23,9 +23,9 @@ export const nextInitState = task(t => (views = {}) => {
     viewKey: null,
     route: null,
     views: t.mergeAll(
-      t.map(([key, value]) => {
-        const dataHandle = t.pathOr(null, ['data'], value)
-        const formHandle = t.pathOr(null, ['form'], value)
+      t.map(([key, val]) => {
+        const dataHandle = t.pathOr(null, ['data'], val)
+        const formHandle = t.pathOr(null, ['form'], val)
         const nextViewData = isHandleInvalid(dataHandle)
           ? {}
           : dataHandle({
@@ -39,19 +39,19 @@ export const nextInitState = task(t => (views = {}) => {
             })
         return {
           [t.caseTo.constantCase(key)]: {
-            status: nextViewData.status || VIEW_STATUS.INIT,
-            error: nextViewData.error || null,
+            status: t.pathOr(VIEW_STATUS.INIT, ['status'], nextViewData || {}),
+            error: t.pathOr(null, ['error'], nextViewData || {}),
             detailKey: null,
             moreKey: null,
-            data: nextViewData.data || {},
+            data: t.pathOr({}, ['data'], nextViewData || {}),
             form: isHandleInvalid(formHandle)
               ? {}
               : formHandle({
                   type: VIEW_LIFECYCLE.INIT,
-                  status: nextViewData.status || VIEW_STATUS.INIT,
+                  status: t.pathOr(VIEW_STATUS.INIT, ['status'], nextViewData || {}),
                   formData: {},
                   nextData: null,
-                  viewData: nextViewData.data,
+                  viewData: t.pathOr({}, ['data'], nextViewData || {}),
                 }),
           },
         }
@@ -73,12 +73,12 @@ export const nextRouteState = task(
     const moreKey = t.pathOr(null, ['payload', 'more'], action)
     const viewState = t.pathOr({}, ['views', viewKey], state)
     const nextViewData = isHandleInvalid(dataHandle)
-      ? viewState.data
+      ? t.pathOr({}, ['data'], viewState)
       : dataHandle({
           type: VIEW_LIFECYCLE.ROUTE_ENTER,
           status: VIEW_STATUS.WAITING,
-          viewData: viewState.data,
-          formData: viewState.formData,
+          viewData: t.pathOr({}, ['data'], viewState),
+          formData: t.pathOr({}, ['formData'], viewState),
           nextData: action.payload.data || null,
           error: null,
           state: t.omit(['views', 'route', 'viewKey'], state),
@@ -92,16 +92,20 @@ export const nextRouteState = task(
           {
             detailKey,
             moreKey,
-            status: nextViewData.status || VIEW_STATUS.WAITING,
+            status: t.pathOr(VIEW_STATUS.WAITING, ['status'], nextViewData  || {}),
             error: null,
-            data: nextViewData.data || viewState.data,
+            data: t.pathOr(viewState.data, ['data'], nextViewData || {}),
           },
           {
             form: isHandleInvalid(formHandle)
               ? viewState.form
               : formHandle({
                   type: VIEW_LIFECYCLE.ROUTE_ENTER,
-                  status: nextViewData.status || VIEW_STATUS.WAITING,
+                  status: t.pathOr(
+                    VIEW_STATUS.WAITING,
+                    ['status'],
+                    nextViewData
+                  ),
                   formData: viewState.formData,
                   nextData: null,
                   viewData: nextViewData.data || viewState.data,

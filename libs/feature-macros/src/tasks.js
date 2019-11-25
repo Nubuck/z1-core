@@ -256,7 +256,7 @@ export const nextViewState = task(
           t.path(['views', viewKey], state),
           dataHandle({
             type,
-            status: viewStateStatus,
+            status: action.payload.status || viewStateStatus,
             viewData: viewStateData,
             formData: viewStateFormData,
             nextData: action.payload.data || null,

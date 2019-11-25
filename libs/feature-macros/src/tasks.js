@@ -355,6 +355,8 @@ export const nextFormState = task(
       viewData: currentData,
       formData: viewStateFormData,
       nextData: action.payload.data,
+      detailKey,
+      moreKey,
     })
     return t.merge(state, {
       views: t.merge(state.views, {
@@ -362,7 +364,7 @@ export const nextFormState = task(
           viewState,
           currentViewState,
           {
-            form: t.merge(viewStateFormData, nextFormState),
+            form: t.merge(viewStateForm, nextFormState),
           },
         ]),
       }),

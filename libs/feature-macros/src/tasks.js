@@ -267,11 +267,11 @@ export const nextViewState = task(
           })
         )
     // current state
-    const currentData = t.pathOr(viewStateData, ['data'], nextViewData || {})
+    const currentData = t.pathOr(viewStateData, ['data'], nextViewState || {})
     const currentStatus = t.pathOr(
       viewStateStatus,
       ['status'],
-      nextViewData || {}
+      nextViewState || {}
     )
     const nextForm = isHandleInvalid(formHandle)
       ? viewStateForm

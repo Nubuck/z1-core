@@ -86,6 +86,17 @@ export const macroRouteViewState = task(
                 state
               )
               if (matchRoutes.test(prevRoute)) {
+                // const prevPath = t.pathOr(
+                //   null,
+                //   ['location', 'prev', 'pathname'],
+                //   state
+                // )
+                // const currentPath = t.pathOr(
+                //   null,
+                //   ['location', 'pathname'],
+                //   state
+                // )
+                // if (t.not(t.eq(prevPath, currentPath))) {
                 dispatch(
                   mutations.exitRoute({
                     route: prevRoute,
@@ -96,6 +107,7 @@ export const macroRouteViewState = task(
                     ),
                   })
                 )
+                // }
               }
               done()
             }

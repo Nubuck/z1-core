@@ -24,8 +24,10 @@ export const nextInitState = task(t => (views = {}) => {
     route: null,
     views: t.mergeAll(
       t.map(([key, val]) => {
+        // handles
         const dataHandle = t.pathOr(null, ['data'], val)
         const formHandle = t.pathOr(null, ['form'], val)
+        // next state
         const nextViewData = isHandleInvalid(dataHandle)
           ? {}
           : dataHandle({
@@ -36,22 +38,33 @@ export const nextInitState = task(t => (views = {}) => {
               nextData: null,
               error: null,
               state: {},
+              detailKey: null,
+              moreKey: null,
             })
+        // current state
+        const currentData = t.pathOr({}, ['data'], nextViewData || {})
+        const currentStatus = t.pathOr(
+          VIEW_STATUS.INIT,
+          ['status'],
+          nextViewData || {}
+        )
         return {
           [t.caseTo.constantCase(key)]: {
-            status: t.pathOr(VIEW_STATUS.INIT, ['status'], nextViewData || {}),
+            status: currentStatus,
             error: t.pathOr(null, ['error'], nextViewData || {}),
             detailKey: null,
             moreKey: null,
-            data: t.pathOr({}, ['data'], nextViewData || {}),
+            data: currentData,
             form: isHandleInvalid(formHandle)
               ? {}
               : formHandle({
                   type: VIEW_LIFECYCLE.INIT,
-                  status: t.pathOr(VIEW_STATUS.INIT, ['status'], nextViewData || {}),
+                  status: currentStatus,
                   formData: {},
                   nextData: null,
-                  viewData: t.pathOr({}, ['data'], nextViewData || {}),
+                  viewData: currentData,
+                  detailKey: null,
+                  moreKey: null,
                 }),
           },
         }
@@ -60,29 +73,62 @@ export const nextInitState = task(t => (views = {}) => {
   }
 })
 
+const nextViewKey = task(t => (action, withoutData = true) =>
+  withoutData
+    ? t.caseTo.constantCase(
+        t.pathOr('home', ['payload', 'view'], action) || 'home'
+      )
+    : t.caseTo.constantCase(
+        t.pathOr('home', ['payload', 'data', 'view'], action) || 'home'
+      )
+)
+
+const nextDetailKey = task(t => (action, viewState = null) =>
+  t.isNil(viewState)
+    ? t.pathOr(null, ['payload', 'detail'], action)
+    : t.pathOr(viewState.detailKey, ['payload', 'data', 'detail'], action)
+)
+
+const nextMoreKey = task(t => (action, viewState = null) =>
+  t.isNil(viewState)
+    ? t.pathOr(null, ['payload', 'more'], action)
+    : t.pathOr(viewState.moreKey, ['payload', 'data', 'more'], action)
+)
+
 export const nextRouteState = task(
   t => (boxName = 'box', macroProps = {}) => (state, action) => {
-    const viewKey = t.caseTo.constantCase(
-      t.pathOr('home', ['payload', 'view'], action) || 'home'
-    )
+    const viewKey = nextViewKey(action)
+    const detailKey = nextDetailKey(action)
+    const moreKey = nextMoreKey(action)
     // handles
     const dataHandle = t.pathOr(null, [viewKey, 'data'], macroProps)
     const formHandle = t.pathOr(null, [viewKey, 'form'], macroProps)
-    // state
-    const detailKey = t.pathOr(null, ['payload', 'detail'], action)
-    const moreKey = t.pathOr(null, ['payload', 'more'], action)
+    // previous state
     const viewState = t.pathOr({}, ['views', viewKey], state)
+    const viewStateData = t.pathOr({}, ['data'], viewState)
+    const viewStateForm = t.pathOr({}, ['form'], viewState)
+    const viewStateFormData = t.pathOr({}, ['data'], viewStateForm)
+    // next state
     const nextViewData = isHandleInvalid(dataHandle)
-      ? t.pathOr({}, ['data'], viewState)
+      ? viewStateData
       : dataHandle({
           type: VIEW_LIFECYCLE.ROUTE_ENTER,
           status: VIEW_STATUS.WAITING,
-          viewData: t.pathOr({}, ['data'], viewState),
-          formData: t.pathOr({}, ['formData'], viewState),
+          viewData: viewStateData,
+          formData: viewStateFormData,
           nextData: action.payload.data || null,
           error: null,
           state: t.omit(['views', 'route', 'viewKey'], state),
+          detailKey,
+          moreKey,
         })
+    // current state
+    const currentData = t.pathOr(viewStateData, ['data'], nextViewData || {})
+    const currentStatus = t.pathOr(
+      VIEW_STATUS.WAITING,
+      ['status'],
+      nextViewData || {}
+    )
     return t.merge(state, {
       viewKey,
       route: action.type.replace(`${boxName}/`, ''),
@@ -92,23 +138,21 @@ export const nextRouteState = task(
           {
             detailKey,
             moreKey,
-            status: t.pathOr(VIEW_STATUS.WAITING, ['status'], nextViewData  || {}),
+            status: currentStatus,
             error: null,
-            data: t.pathOr(viewState.data, ['data'], nextViewData || {}),
+            data: currentData,
           },
           {
             form: isHandleInvalid(formHandle)
-              ? viewState.form
+              ? viewStateForm
               : formHandle({
                   type: VIEW_LIFECYCLE.ROUTE_ENTER,
-                  status: t.pathOr(
-                    VIEW_STATUS.WAITING,
-                    ['status'],
-                    nextViewData
-                  ),
-                  formData: viewState.formData,
+                  status: currentStatus,
+                  formData: viewStateFormData,
                   nextData: null,
-                  viewData: nextViewData.data || viewState.data,
+                  viewData: currentData,
+                  detailKey,
+                  moreKey,
                 }),
           },
         ]),
@@ -119,35 +163,39 @@ export const nextRouteState = task(
 
 export const nextRouteExitState = task(
   t => (macroProps = {}) => (state, action) => {
-    const viewKey = t.caseTo.constantCase(
-      t.pathOr('home', ['payload', 'data', 'view'], action) || 'home'
-    )
+    const viewKey = nextViewKey(action, false)
     // handles
     const dataHandle = t.pathOr(null, [viewKey, 'data'], macroProps)
     const formHandle = t.pathOr(null, [viewKey, 'form'], macroProps)
-    // state
+    // previous state
     const viewState = t.pathOr({}, ['views', viewKey], state)
-    const detailKey = t.pathOr(
-      viewState.detailKey,
-      ['payload', 'data', 'detail'],
-      action
-    )
-    const moreKey = t.pathOr(
-      viewState.moreKey,
-      ['payload', 'data', 'more'],
-      action
-    )
+    const detailKey = nextDetailKey(action, viewState)
+    const moreKey = nextMoreKey(action, viewState)
+    const viewStateData = t.pathOr({}, ['data'], viewState)
+    const viewStateStatus = t.pathOr(VIEW_STATUS.READY, ['status'], viewState)
+    const viewStateForm = t.pathOr({}, ['form'], viewState)
+    const viewStateFormData = t.pathOr({}, ['data'], viewStateForm)
+    // next state
     const nextViewData = isHandleInvalid(dataHandle)
-      ? viewState.data
+      ? viewStateData
       : dataHandle({
           type: VIEW_LIFECYCLE.ROUTE_EXIT,
-          status: viewState.status,
-          viewData: viewState.data,
-          formData: viewState.formData,
+          status: viewStateStatus,
+          viewData: viewStateData,
+          formData: viewStateFormData,
           nextData: action.payload.data || null,
           error: null,
           state: t.omit(['views', 'route', 'viewKey'], state),
+          detailKey,
+          moreKey,
         })
+    // current state
+    const currentData = t.pathOr(viewStateData, ['data'], nextViewData || {})
+    const currentStatus = t.pathOr(
+      viewStateStatus,
+      ['status'],
+      nextViewData || {}
+    )
     return t.merge(state, {
       views: t.merge(state.views, {
         [viewKey]: t.mergeAll([
@@ -155,19 +203,21 @@ export const nextRouteExitState = task(
           {
             detailKey,
             moreKey,
-            status: nextViewData.status || viewState.status,
+            status: currentStatus,
             error: null,
-            data: nextViewData.data || viewState.data,
+            data: currentData,
           },
           {
             form: isHandleInvalid(formHandle)
-              ? viewState.form
+              ? viewStateForm
               : formHandle({
                   type: VIEW_LIFECYCLE.ROUTE_EXIT,
-                  status: nextViewData.status || viewState.status,
-                  formData: viewState.formData,
+                  status: currentStatus,
+                  formData: viewStateFormData,
                   nextData: null,
-                  viewData: nextViewData.data || viewState.data,
+                  viewData: currentData,
+                  detailKey,
+                  moreKey,
                 }),
           },
         ]),
@@ -178,43 +228,65 @@ export const nextRouteExitState = task(
 
 export const nextViewState = task(
   t => (boxName = 'box', macroProps = {}) => (state, action) => {
-    // handles
-    const dataHandle = t.pathOr(null, [state.viewKey, 'data'], macroProps)
-    const formHandle = t.pathOr(null, [state.viewKey, 'form'], macroProps)
-    // state
-    const viewState = t.pathOr({}, ['views', state.viewKey], state)
-    const formData = t.pathOr({}, ['form', 'data'], viewState)
+    const viewKey = state.viewKey || 'home'
     const type = t.caseTo.paramCase(action.type.replace(`${boxName}/`, ''))
-    const nextViewState = t.isType(dataHandle, 'Function')
-      ? t.merge(
-          t.path(['views', state.viewKey], state),
+    // handles
+    const dataHandle = t.pathOr(null, [viewKey, 'data'], macroProps)
+    const formHandle = t.pathOr(null, [viewKey, 'form'], macroProps)
+    // previous state
+    const viewState = t.pathOr({}, ['views', viewKey], state)
+    const detailKey = nextDetailKey(action, viewState)
+    const moreKey = nextMoreKey(action, viewState)
+    const viewStateData = t.pathOr({}, ['data'], viewState)
+    const viewStateStatus = t.pathOr(
+      action.payload.status,
+      ['status'],
+      viewState
+    )
+    const viewStateForm = t.pathOr({}, ['form'], viewState)
+    const viewStateFormData = t.pathOr({}, ['data'], viewStateForm)
+    // next state
+    const nextViewState = isHandleInvalid(dataHandle)
+      ? t.merge(t.path(['views', viewKey], state), {
+          status: action.payload.status || VIEW_STATUS.READY,
+          data: action.payload.data || viewStateData,
+          error: action.payload.error || viewState.error,
+        })
+      : t.merge(
+          t.path(['views', viewKey], state),
           dataHandle({
             type,
-            status: action.payload.status || viewState.status,
-            viewData: viewState.data,
-            formData,
+            status: viewStateStatus,
+            viewData: viewStateData,
+            formData: viewStateFormData,
             nextData: action.payload.data || null,
             error: action.payload.error || viewState.error,
             state: t.omit(['views', 'route', 'viewKey'], state),
+            detailKey,
+            moreKey,
           })
         )
-      : t.merge(t.path(['views', state.viewKey], state), {
-          status: action.payload.status || VIEW_STATUS.READY,
-          data: action.payload.data || viewState.data,
-          error: action.payload.error || viewState.error,
-        })
-    const nextForm = t.isType(formHandle, 'Function')
-      ? formHandle({
+    // current state
+    const currentData = t.pathOr(viewStateData, ['data'], nextViewData || {})
+    const currentStatus = t.pathOr(
+      viewStateStatus,
+      ['status'],
+      nextViewData || {}
+    )
+    const nextForm = isHandleInvalid(formHandle)
+      ? viewStateForm
+      : formHandle({
           type,
-          status: nextViewState.status,
-          formData,
+          status: currentStatus,
+          formData: viewStateFormData,
           nextData: null,
-          viewData: nextViewState.data,
+          viewData: currentData,
+          detailKey,
+          moreKey,
         })
-      : t.path(['views', state.viewKey, 'form'], state)
     return t.merge(state, {
       views: t.merge(state.views, {
-        [state.viewKey]: t.merge(nextViewState, { form: nextForm }),
+        [viewKey]: t.merge(nextViewState, { form: nextForm }),
       }),
     })
   }
@@ -222,53 +294,75 @@ export const nextViewState = task(
 
 export const nextFormState = task(
   t => (boxName = 'box', macroProps = {}) => (state, action) => {
+    const viewKey = state.viewKey || 'home'
     // handles
-    const formHandle = t.pathOr(null, [state.viewKey, 'form'], macroProps)
-    const dataHandle = t.pathOr(null, [state.viewKey, 'data'], macroProps)
-    // state
-    if (t.isNil(formHandle)) {
+    const formHandle = t.pathOr(null, [viewKey, 'form'], macroProps)
+    if (isHandleInvalid(formHandle)) {
       return state
     }
-    const currentView = t.pathOr({}, ['views', state.viewKey], state)
     const type = t.caseTo.paramCase(action.type.replace(`${boxName}/`, ''))
+    const dataHandle = t.pathOr(null, [viewKey, 'data'], macroProps)
+    // partial state
+    const partialViewState = t.pathOr({}, ['views', viewKey], state)
+    const partialViewStateStatus = t.pathOr(
+      VIEW_STATUS.READY,
+      ['status'],
+      partialViewState
+    )
     const matchType = t.getMatch(type)
     const nextStatus = matchType({
-      [VIEW_LIFECYCLE.FORM_CHANGE]: currentView.status,
+      [VIEW_LIFECYCLE.FORM_CHANGE]: partialViewStateStatus,
       [VIEW_LIFECYCLE.FORM_TRANSMIT]: VIEW_STATUS.LOADING,
       [VIEW_LIFECYCLE.FORM_TRANSMIT_COMPLETE]:
-        action.payload.status || currentView.status,
+        action.payload.status || partialViewStateStatus,
     })
-    const viewState = t.merge(currentView, { status: nextStatus })
-    const formState = t.pathOr({}, ['form'], viewState)
+    // previous state
+    const viewState = t.merge(partialViewState, { status: nextStatus })
+    const detailKey = nextDetailKey(action, viewState)
+    const moreKey = nextMoreKey(action, viewState)
+    const viewStateData = t.pathOr({}, ['data'], viewState)
+    const viewStateForm = t.pathOr({}, ['form'], viewState)
+    const viewStateFormData = t.pathOr({}, ['data'], viewStateForm)
+    // next state
     const nextViewState = matchType({
       [VIEW_LIFECYCLE.FORM_CHANGE]: viewState,
       [VIEW_LIFECYCLE.FORM_TRANSMIT]: viewState,
-      [VIEW_LIFECYCLE.FORM_TRANSMIT_COMPLETE]: t.isType(dataHandle, 'Function')
-        ? dataHandle({
+      [VIEW_LIFECYCLE.FORM_TRANSMIT_COMPLETE]: isHandleInvalid(dataHandle)
+        ? viewState
+        : dataHandle({
             type,
             status: viewState.status,
-            viewData: viewState.data,
+            viewData: viewStateData,
             nextData: null,
-            formData: action.payload.data || formState.data,
+            formData: action.payload.data || viewStateFormData,
             error: action.payload.error || viewState.error,
             state: t.omit(['views', 'route', 'viewKey'], state),
-          })
-        : viewState,
+            detailKey,
+            moreKey,
+          }),
     })
+    // current state
+    const currentViewState = nextViewState || {}
+    const currentData = t.pathOr(viewStateData, ['data'], currentViewState)
+    const currentStatus = t.pathOr(
+      viewState.status,
+      ['status'],
+      currentViewState
+    )
     const nextFormState = formHandle({
       type,
-      status: nextViewState.status,
-      viewData: nextViewState.data,
-      formData: formState.data,
+      status: currentStatus,
+      viewData: currentData,
+      formData: viewStateFormData,
       nextData: action.payload.data,
     })
     return t.merge(state, {
       views: t.merge(state.views, {
-        [state.viewKey]: t.mergeAll([
+        [viewKey]: t.mergeAll([
           viewState,
-          nextViewState,
+          currentViewState,
           {
-            form: t.merge(formState, nextFormState),
+            form: t.merge(viewStateFormData, nextFormState),
           },
         ]),
       }),

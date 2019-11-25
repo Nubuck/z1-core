@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-client-core",
-  "version": "0.2.53",
+  "version": "0.2.57",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-client-core",

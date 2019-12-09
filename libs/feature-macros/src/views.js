@@ -3,6 +3,7 @@ import { task } from '@z1/lib-feature-box'
 
 // ui
 export const createView = task(t => (key, { state, ui }) => {
+  // TODO: allow a view to render on detail or more keys
   key = key || 'NOT_FOUND'
   return { key: t.caseTo.constantCase(key), state, ui }
 })

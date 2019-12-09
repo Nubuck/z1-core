@@ -268,3 +268,69 @@ export const macroRouteViewState = task(
     }
   }
 )
+
+// useful stuff => moving to include modals
+export const featureStateQuery = task(t => (name, otherKeys = []) => state => {
+  const boxName = t.caseTo.camelCase(name)
+  return t.merge(
+    {
+      brand: t.pathOr({}, ['brand'], state),
+      [boxName]: t.pathOr({}, [boxName], state),
+    },
+    t.isZeroLen(otherKeys) ? {} : t.pick(otherKeys, state)
+  )
+})
+
+export const formByKey = task(t => (key, form) => {
+  return t.merge(t.pathOr({}, [key], form), {
+    data: t.pathOr({}, ['data', key], form),
+  })
+})
+
+export const stateToModalProps = task(t => (state, modalProps = {}) => {
+  const type = t.pathOr('form', ['data', 'modal', 'type'], state)
+  const mode = t.pathOr(null, ['data', 'modal', 'mode'], state)
+  const modalConfirm = t.eq(mode, 'delete')
+  const open = t.pathOr(false, ['data', 'modal', 'open'], state)
+  const color = t.pathOr(null, ['data', 'modal', 'content', 'color'], state)
+  return {
+    modal: {
+      open,
+      icon: modalConfirm
+        ? null
+        : t.pathOr(null, ['data', 'modal', 'icon'], state),
+      color,
+      title: modalConfirm
+        ? null
+        : t.pathOr(null, ['data', 'modal', 'content', 'title'], state),
+      text: modalConfirm
+        ? null
+        : t.pathOr(null, ['data', 'modal', 'content', 'text'], state),
+      body: modalConfirm ? { y: 'center', box: { padding: { top: 0 } } } : {},
+      md: 10,
+      lg: 6,
+      xl: 5,
+      ...modalProps,
+    },
+    confirm: {
+      status: state.status,
+      open,
+      icon: t.pathOr(null, ['data', 'modal', 'content', 'icon'], state),
+      color,
+      title: t.pathOr(null, ['data', 'modal', 'content', 'title'], state),
+      payload: {
+        data: {
+          [type]: t.pathOr({}, ['data', 'modal', 'record'], state),
+        },
+      },
+    },
+    form: {
+      type,
+      buttonColor: color,
+      error: state.error,
+      status: state.status,
+      form: formByKey(type, state.form),
+      text: t.pathOr('Save', ['data', 'modal', 'content', 'submit'], state),
+    },
+  }
+})

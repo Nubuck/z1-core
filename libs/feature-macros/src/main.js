@@ -294,24 +294,26 @@ export const stateToModalProps = task(t => (state, modalProps = {}) => {
   const open = t.pathOr(false, ['data', 'modal', 'open'], state)
   const color = t.pathOr(null, ['data', 'modal', 'content', 'color'], state)
   return {
-    modal: {
-      open,
-      icon: modalConfirm
-        ? null
-        : t.pathOr(null, ['data', 'modal', 'icon'], state),
-      color,
-      title: modalConfirm
-        ? null
-        : t.pathOr(null, ['data', 'modal', 'content', 'title'], state),
-      text: modalConfirm
-        ? null
-        : t.pathOr(null, ['data', 'modal', 'content', 'text'], state),
-      body: modalConfirm ? { y: 'center', box: { padding: { top: 0 } } } : {},
-      md: 10,
-      lg: 6,
-      xl: 5,
-      ...modalProps,
-    },
+    modal: t.merge(
+      {
+        open,
+        icon: modalConfirm
+          ? null
+          : t.pathOr(null, ['data', 'modal', 'icon'], state),
+        color,
+        title: modalConfirm
+          ? null
+          : t.pathOr(null, ['data', 'modal', 'content', 'title'], state),
+        text: modalConfirm
+          ? null
+          : t.pathOr(null, ['data', 'modal', 'content', 'text'], state),
+        body: modalConfirm ? { y: 'center', box: { padding: { top: 0 } } } : {},
+        md: 10,
+        lg: 6,
+        xl: 5,
+      },
+      modalProps
+    ),
     confirm: {
       status: state.status,
       open,

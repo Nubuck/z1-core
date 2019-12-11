@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-state-box",
   "description": "The Z1 standard state management solution for web apps, implemented as a macro interface over Redux, Redux-logic and Redux-toolbelt",
-  "version": "0.2.47",
+  "version": "0.3.0",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/state-box",
@@ -14,11 +14,11 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-state-box-core": "^0.2.47",
+    "@z1/lib-state-box-core": "^0.3.0",
     "redux-logger": "^3.0.6"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.2.9",
+    "@z1/preset-dev-bundle": "^0.3.0",
     "redux": "^4.0.1"
   },
   "peerDependencies": {

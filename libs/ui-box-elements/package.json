@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-ui-box-elements",
-  "version": "0.2.57",
+  "version": "0.3.0",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/ui-box-elements",
@@ -13,15 +13,15 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-ui-box-tailwind": "^0.2.57",
-    "@z1/preset-task": "^0.2.9",
+    "@z1/lib-ui-box-tailwind": "^0.3.0",
+    "@z1/preset-task": "^0.3.0",
     "react-value": "^0.2.0"
   },
   "peerDependencies": {
     "react": "*"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.2.9",
+    "@z1/preset-dev-bundle": "^0.3.0",
     "react": "^16.8.6"
   },
   "gitHead": "fff6207d55d4a3ddb903c800e23b95ac91368167"

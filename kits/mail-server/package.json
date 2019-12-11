@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-mail-server",
-  "version": "0.2.53",
+  "version": "0.3.0",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/mail-server",
@@ -22,8 +22,8 @@
     "aws-sdk": "^2.224.1"
   },
   "devDependencies": {
-    "@z1/lib-feature-box-server": "^0.2.53",
-    "@z1/preset-dev-neutrino": "^0.2.9",
+    "@z1/lib-feature-box-server": "^0.3.0",
+    "@z1/preset-dev-neutrino": "^0.3.0",
     "aws-sdk": "^2.224.1"
   },
   "gitHead": "cc1c8958cfa0184c996d799385e7cf94f0094d94"

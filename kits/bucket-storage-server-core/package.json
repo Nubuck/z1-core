@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-bucket-storage-server-core",
-  "version": "0.2.51",
+  "version": "0.3.0",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one/tree/master/kits/bucket-storage-server-core",
@@ -26,9 +26,9 @@
     "aws-sdk": "^2.224.1"
   },
   "devDependencies": {
-    "@z1/lib-feature-box-server-core": "^0.2.9",
-    "@z1/preset-dev-neutrino": "^0.2.9",
-    "@z1/preset-tools": "^0.2.5",
+    "@z1/lib-feature-box-server-core": "^0.3.0",
+    "@z1/preset-dev-neutrino": "^0.3.0",
+    "@z1/preset-tools": "^0.3.0",
     "aws-sdk": "^2.224.1"
   }
 }

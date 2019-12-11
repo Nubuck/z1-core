@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-tools",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/tools",
@@ -13,7 +13,7 @@
     "prepublish": "yarn run build"
   },
   "devDependencies": {
-    "@z1/preset-dev-microbundle": "^0.2.5"
+    "@z1/preset-dev-microbundle": "^0.3.0"
   },
   "dependencies": {
     "execa": "^0.9.0",

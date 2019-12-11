@@ -23,6 +23,7 @@ import {
   has,
   hasIn,
   head,
+  includes,
   isEmpty,
   isNil,
   keys,
@@ -115,14 +116,23 @@ import throttle from 'lodash.throttle'
 
 const isType = (subject, matcher) => equals(type(subject), matcher)
 
-const runMatch = (key, value) => cases => {
-  const matched = cases[key]
-  return isType(matched, 'Function') ? matched(value) : null
+const getMatch = key => cases => {
+  const matched = has(key)(cases) ? cases[key] : null
+  const nextElseCase = isNil(matched)
+    ? has('_')(cases)
+      ? cases['_']
+      : null
+    : null
+  return and(isNil(matched), isNil(nextElseCase))
+    ? null
+    : isNil(matched)
+    ? nextElseCase
+    : matched
 }
 
-const getMatch = key => cases => {
-  const matched = cases[key]
-  return matched ? matched : null
+const runMatch = (key, value) => cases => {
+  const matched = getMatch(key)(cases)
+  return isType(matched, 'Function') ? matched(value) : null
 }
 
 const trampoline = fn => (...args) => {
@@ -133,11 +143,23 @@ const trampoline = fn => (...args) => {
   return result
 }
 
+const anyOf = (list = []) => {
+  return gt(
+    findIndex(subject => equals(subject, true), list),
+    -1
+  )
+}
+const allOf = (list = []) => {
+  return equals(length(filter(subject => equals(subject, false), list)), 0)
+}
+
 export const TASK = {
   addIndex,
   allPass,
   anyPass,
   and,
+  anyOf,
+  allOf,
   append,
   compose,
   concat,
@@ -159,6 +181,7 @@ export const TASK = {
   has,
   hasIn,
   head,
+  includes,
   isEmpty,
   isNil,
   keys,

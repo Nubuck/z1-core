@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('babel-cli/bin/babel-node')
+require('@babel/node/bin/babel-node')

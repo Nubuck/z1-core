@@ -17,7 +17,7 @@ const WILDCARD_SEGMENT = `([^${SEP_ESC}]*)`
  * @param {String} [opts.flags=''] RegExp globs
  * @returns {Object} converted object with string, segments and RegExp object
  */
-function globrex(
+function _globrex(
   glob,
   {
     extended = false,
@@ -279,4 +279,4 @@ function globrex(
   return result
 }
 
-module.exports = globrex
+export const globrex = _globrex

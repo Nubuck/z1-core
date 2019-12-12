@@ -1,7 +1,7 @@
 {
   "name": "@z1/core",
-  "version": "0.3.0",
-  "description": "Zero One Core",
+  "version": "0.3.1",
+  "description": "Z1 Core Mono Repo",
   "main": "index.js",
   "author": "@Nubuck",
   "license": "MIT",
@@ -14,10 +14,10 @@
     "clean:kits": "lerna clean --scope=@z1/kit-*",
     "list": "lerna ls",
     "dep": "lerna add",
-    "boot": "lerna bootstrap",
-    "boot:presets": "lerna bootstrap --scope=@z1/preset-*",
-    "boot:libs": "lerna bootstrap --scope=@z1/lib-*",
-    "boot:kits": "lerna bootstrap --scope=@z1/kit-*",
+    "boot": "lerna bootstrap --force-local",
+    "boot:presets": "lerna bootstrap --force-local --scope=@z1/preset-*",
+    "boot:libs": "lerna bootstrap --force-local --scope=@z1/lib-*",
+    "boot:kits": "lerna bootstrap --force-local --scope=@z1/kit-*",
     "publish": "lerna publish"
   },
   "dependencies": {

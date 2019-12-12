@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-feathers-server",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/feathers-server",
@@ -12,32 +12,7 @@
     "dev": "bundle-watch",
     "prepublish": "yarn run build"
   },
-  "dependencies": {
-    "@feathersjs/authentication": "^4.4.3",
-    "@feathersjs/authentication-jwt": "^2.0.10",
-    "@feathersjs/authentication-local": "^4.4.3",
-    "@feathersjs/configuration": "^4.4.3",
-    "@feathersjs/errors": "^4.4.3",
-    "@feathersjs/express": "^4.4.3",
-    "@feathersjs/feathers": "^4.4.3",
-    "@feathersjs/socketio": "^4.4.3",
-    "compression": "^1.7.1",
-    "cors": "^2.8.4",
-    "feathers-authentication-hooks": "^0.1.7",
-    "feathers-hooks-common": "^4.10.0",
-    "feathers-logger": "^0.2.3",
-    "feathers-sequelize": "^3.0.1",
-    "helmet": "^3.9.0",
-    "mysql": "^2.15.0",
-    "mysql2": "^1.5.2",
-    "pg": "^7.4.1",
-    "pg-hstore": "^2.3.2",
-    "sequelize": "^4.36.0",
-    "serve-favicon": "^2.4.5",
-    "socket.io": "^2.2.0",
-    "tedious": "^2.6.1",
-    "winston": "^2.4.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@z1/preset-dev-bundle": "^0.3.0"
   },

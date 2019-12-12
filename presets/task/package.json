@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-task",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/task",
@@ -10,17 +10,20 @@
   "scripts": {
     "build": "neutrino build",
     "dev": "neutrino start",
+    "_build": "microbundle --entry src/index.js --output lib/index.js --format cjs --target web",
+    "_dev": "microbundle watch --entry src/index.js --output lib/index.js --format cjs --target web",
     "prepublish": "yarn run build"
   },
   "devDependencies": {
-    "@neutrinojs/library": "^8.2.3",
-    "neutrino": "^8.2.3"
+    "@z1/preset-dev-microbundle": "^0.3.1",
+    "@neutrinojs/library": "^8.3.0",
+    "neutrino": "^8.3.0"
   },
   "dependencies": {
-    "change-case": "^3.0.2",
-    "common-tags": "^1.7.2",
+    "change-case": "^4.1.0",
+    "common-tags": "^1.8.0",
     "lodash.throttle": "^4.1.1",
-    "ramda": "^0.25.0"
+    "ramda": "^0.26.1"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

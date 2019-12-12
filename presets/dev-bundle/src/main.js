@@ -19,21 +19,24 @@ const babelCommand = task(t => (output = 'build') => {
   return t.tags.inlineLists`babel ${base}`
 })
 
-const bundleCommand = task(t => (entry, file, watch, external) => {
-  const base = [
-    '--entry',
-    `${entry}/${file}`,
-    '--output',
-    `lib/${file}`,
-    '--format',
-    'cjs',
-  ]
-  const flags = watch ? ['watch', ...base] : [...base]
-  if (external) {
-    flags.push('--external all')
+const bundleCommand = task(
+  t => (entry, file, watch, external, target = 'web') => {
+    const base = [
+      '--entry',
+      `${entry}/${file}`,
+      '--output',
+      `lib/${file}`,
+      '--format',
+      'cjs',
+      `--target ${target}`,
+    ]
+    const flags = watch ? ['watch', ...base] : [...base]
+    if (external) {
+      flags.push('--external all')
+    }
+    return t.tags.inlineLists`microbundle ${flags}`
   }
-  return t.tags.inlineLists`microbundle ${flags}`
-})
+)
 
 async function compile(build = false, watch = false, external = false) {
   try {
@@ -59,6 +62,10 @@ export async function bundleExternal() {
   await compile(false, false, true)
 }
 
+export async function bundleExternalNode() {
+  await compile(false, false, true, 'node')
+}
+
 export async function bundleWatch() {
   await compile(false, true, true)
 }
@@ -76,7 +83,12 @@ export async function buildBundleWatch() {
 }
 
 const compileList = task(
-  (t, a) => async (build = false, watch = false, external = false) => {
+  (t, a) => async (
+    build = false,
+    watch = false,
+    external = false,
+    target = 'web'
+  ) => {
     const entry = build ? 'build' : 'src'
     const list = await Fs.listAsync(entry)
     if (build) {
@@ -87,7 +99,7 @@ const compileList = task(
     await a.map(list, 1, async file => {
       try {
         const result = await Execa.shell(
-          bundleCommand(entry, file, watch, external),
+          bundleCommand(entry, file, watch, external, target),
           { cwd: Fs.cwd() }
         )
         process.stdout.write(`\nComplete bundling -> ${result.stdout}`)
@@ -104,6 +116,10 @@ export async function bundleMulti() {
 
 export async function bundleMultiExternal() {
   await compileList(false, false, true)
+}
+
+export async function bundleMultiExternalNode() {
+  await compileList(false, false, true, 'node')
 }
 
 export async function bundleMultiWatch() {

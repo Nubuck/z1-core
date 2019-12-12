@@ -10,8 +10,12 @@ import auth from '@feathersjs/authentication'
 import authJWT from '@feathersjs/authentication-jwt'
 import authLocal from '@feathersjs/authentication-local'
 
+// db
+import sequelize from 'sequelize'
+import feathersSequelize from 'feathers-sequelize'
+
 // eco-system + plus
-// import logger from 'feathers-logger'
+import logger from 'feathers-logger'
 import commonHooks from 'feathers-hooks-common'
 import authHooks from 'feathers-authentication-hooks'
 
@@ -29,7 +33,9 @@ export const FeathersConfig = config
 export const FeathersAuth = auth
 export const FeathersAuthJWT = authJWT
 export const FeathersAuthLocal = authLocal
-// export const FeathersLogger = logger
+export const Sequelize = sequelize
+export const FeathersSequelize = feathersSequelize
+export const FeathersLogger = logger
 export const FeathersCommonHooks = commonHooks
 export const FeathersAuthHooks = authHooks
 export const Cors = cors
@@ -38,7 +44,7 @@ export const Winston = winston
 
 // helpers
 export function plug(factory) {
-  return function () {
+  return function() {
     const app = this
     factory(app)
   }

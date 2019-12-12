@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-dev-neutrino",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "lib/index.js",
   "files": [
     "lib/index.js.map",
@@ -36,9 +36,9 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-proposal-class-properties": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
     "@neutrinojs/compile-loader": "^8.3.0",
     "@neutrinojs/jest": "^8.3.0",
     "@neutrinojs/library": "^8.3.0",
@@ -47,18 +47,18 @@
     "@neutrinojs/react": "^8.3.0",
     "@neutrinojs/react-components": "^8.3.0",
     "@neutrinojs/style-loader": "^8.3.0",
-    "babel-loader": "^8.0.4",
-    "deepmerge": "^2.1.0",
-    "eslint": "^4.19.1",
-    "eslint-plugin-react": "^7.7.0",
+    "babel-loader": "^8.0.6",
+    "deepmerge": "^4.2.2",
+    "eslint": "^6.7.2",
+    "eslint-plugin-react": "^7.17.0",
     "neutrino": "^8.3.0",
     "neutrino-middleware-uglifyjs": "^2.0.2",
-    "react-hot-loader": "^4.6.3",
+    "react-hot-loader": "^4.12.18",
     "webpack-node-externals": "^1.7.2",
-    "websocket-driver": "^0.7.0"
+    "websocket-driver": "^0.7.3"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.3.0"
+    "@z1/preset-dev-bundle": "^0.3.1"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

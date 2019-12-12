@@ -78,23 +78,16 @@ import {
 
 import {
   camelCase,
+  capitalCase,
   constantCase,
   dotCase,
   headerCase,
-  isLowerCase,
-  isUpperCase,
-  lowerCase,
-  lowerCaseFirst,
   noCase,
   paramCase,
   pascalCase,
   pathCase,
   sentenceCase,
   snakeCase,
-  swapCase,
-  titleCase,
-  upperCase,
-  upperCaseFirst,
 } from 'change-case'
 
 import {
@@ -110,7 +103,7 @@ import {
   oneLineCommaLists,
 } from 'common-tags'
 
-import globrex from './globrex'
+import { globrex } from './globrex'
 
 import throttle from 'lodash.throttle'
 
@@ -241,23 +234,16 @@ export const TASK = {
   getMatch,
   caseTo: {
     camelCase,
+    capitalCase,
     constantCase,
     dotCase,
     headerCase,
-    isLowerCase,
-    isUpperCase,
-    lowerCase,
-    lowerCaseFirst,
     noCase,
     paramCase,
     pascalCase,
     pathCase,
     sentenceCase,
     snakeCase,
-    swapCase,
-    titleCase,
-    upperCase,
-    upperCaseFirst,
   },
   tags: {
     html,

@@ -1,32 +1,3 @@
-/**
- * The async/await utility for browsers and Node.js.
- *
- * (
- * [examples](https://github.com/hunterloftis/awaiting#examples) -
- * [github](https://github.com/hunterloftis/awaiting) -
- * [npm](https://www.npmjs.com/package/awaiting) -
- * [suggestions / bug reports](https://github.com/hunterloftis/awaiting/issues) -
- * [installation](https://github.com/hunterloftis/awaiting#installation) -
- * [motivation](https://github.com/hunterloftis/awaiting#motivation)
- * )
- *
- * **`$ yarn add awaiting`**
- *
- * **`$ npm install awaiting --save`**
- *
- * **`<script src='awaiting.js'>`**
- *
- * [![Build Status](https://travis-ci.org/hunterloftis/awaiting.svg?branch=master)](https://travis-ci.org/hunterloftis/awaiting)
- * [![Coverage Status](https://coveralls.io/repos/hunterloftis/awaiting/badge.svg?branch=master)](https://coveralls.io/r/hunterloftis/awaiting?branch=master)
- *
- * @license MIT
- * @file
- * @example
- *
- * const a = require('awaiting')
- * // ...
- * await a.delay(1000)
- */
 
 export {
   delay,
@@ -49,34 +20,7 @@ export {
   ErrorList,
 }
 
-/**
- * Iterable Error type
- *
- * Functions that operate on lists throw ErrorLists,
- * making it possible to inspect all of the Errors that may have been thrown.
- *
- * @class
- * @param {string} message top-level Error message
- * @returns {iterable.<Error>}
- * @example
- *
- * const err = new ErrorList('several errors')
- * err.add(new Error('first'))
- * err.add(new Error('second'))
- * console.log(err.message, err.get(1).message)
- * // => several errors second
- *
- * @example
- *
- * try {
- *   await a.list([ failing1, failing2, failing3 ])
- * }
- * catch (errorList) {
- *   for (let err of errorList) {
- *     console.error(err.stack)
- *   }
- * }
- */
+
 function ErrorList(message) {
   this.name = 'ErrorList'
   this.message = message

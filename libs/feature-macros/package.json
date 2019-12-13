@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-feature-macros",
   "description": "Standard macros over both state and ui concerns aimed to reduce repetitive code while implementing the Z1 style managed development pipeline",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/feature-macros",
@@ -14,13 +14,9 @@
     "prepublish": "yarn run build"
   },
   "devDependencies": {
-    "@z1/lib-feature-box": "^0.3.0",
-    "@z1/preset-dev-bundle": "^0.3.0",
-    "react": "^16.8.6"
-  },
-  "peerDependencies": {
-    "@z1/lib-feature-box": "*",
-    "react": "*"
+    "@z1/lib-feature-box": "^0.3.1",
+    "@z1/preset-dev-bundle": "^0.3.1",
+    "react": "^16.12.0"
   },
   "gitHead": "fff6207d55d4a3ddb903c800e23b95ac91368167"
 }

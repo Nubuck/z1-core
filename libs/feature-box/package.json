@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-feature-box",
   "description": "The Z1 standard feature development solution for web apps",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/feature-box",
@@ -14,23 +14,16 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-state-box": "^0.3.0",
-    "redux-first-router": "^2.1.1",
+    "@z1/lib-state-box": "^0.3.1",
+    "redux-first-router": "^2.1.5",
     "redux-first-router-link": "^2.1.1",
     "redux-first-router-restore-scroll": "^1.2.2"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.3.0",
-    "history": "^4.7.2",
-    "react": "^16.8.6",
-    "react-redux": "^7.0.3",
-    "redux": "^4.0.1"
-  },
-  "peerDependencies": {
-    "history": "*",
-    "react": "*",
-    "react-redux": "*",
-    "redux": "*"
+    "@z1/preset-dev-bundle": "^0.3.1",
+    "react": "^16.12.0",
+    "react-redux": "^7.1.3",
+    "redux": "^4.0.4"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

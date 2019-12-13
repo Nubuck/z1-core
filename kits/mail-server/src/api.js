@@ -1,7 +1,7 @@
 import { createApiBox, task } from '@z1/lib-feature-box-server'
 import FeathersMailer from 'feathers-mailer'
-import AWS from 'aws-sdk'
-import MG from 'nodemailer-mailgun-transport'
+// import AWS from 'aws-sdk'
+// import MG from 'nodemailer-mailgun-transport'
 
 export const mailApi = createApiBox({
   models(m, T) {
@@ -146,27 +146,27 @@ export const mailApi = createApiBox({
             const endPoint = '/mail'
             const transport = t.prop('transport', mail)
             if (t.eq(transport, 'aws')) {
-              const awsAuth = app.get('aws')
-              if (awsAuth) {
-                AWS.config.update(awsAuth)
-                app.use(endPoint, FeathersMailer({
-                    SES: new AWS.SES({ apiVersion: '2010-12-01' }),
-                  }),
-                )
-                app.set('communication', 'active')
-              }
+              // const awsAuth = app.get('aws')
+              // if (awsAuth) {
+              //   AWS.config.update(awsAuth)
+              //   app.use(endPoint, FeathersMailer({
+              //       SES: new AWS.SES({ apiVersion: '2010-12-01' }),
+              //     }),
+              //   )
+              //   app.set('communication', 'active')
+              // }
             }
             else if (t.eq(transport, 'mg')) {
-              const mgAuth = app.get('mg')
-              if (mgAuth) {
-                app.use(endPoint, FeathersMailer(
-                  MG({
-                    auth: mgAuth,
-                  }),
-                  ),
-                )
-                app.set('communication', 'active')
-              }
+              // const mgAuth = app.get('mg')
+              // if (mgAuth) {
+              //   app.use(endPoint, FeathersMailer(
+              //     MG({
+              //       auth: mgAuth,
+              //     }),
+              //     ),
+              //   )
+              //   app.set('communication', 'active')
+              // }
             }
             else if (t.eq(transport, 'smtp')) {
               const smtpAuth = app.get('smtp')

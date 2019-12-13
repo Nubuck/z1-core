@@ -1,11 +1,9 @@
 import { task } from '@z1/lib-feature-box-server-core'
 import { Fs } from '@z1/preset-tools'
 import FeathersBlogService from 'feathers-blob'
-import S3BlobStore from 's3-blob-store'
 import FsBlobStore from 'fs-blob-store'
 import Dauria from 'dauria'
 import Multer from 'multer'
-import AWS from 'aws-sdk'
 
 import { PATHS } from './context'
 
@@ -49,12 +47,15 @@ export const storageApi = ({ createApiBox, models }) =>
             if (storage) {
               const engine = t.prop('engine', storage)
               const bucket = t.prop('bucket', storage)
-              const Model = t.eq(engine, 's3')
-                ? S3BlobStore({
-                    client: new AWS.S3(app.get('s3')),
-                    bucket,
-                  })
-                : t.eq(engine, 'fs')
+              // const Model = t.eq(engine, 's3')
+              //   ? S3BlobStore({
+              //       client: new AWS.S3(app.get('s3')),
+              //       bucket,
+              //     })
+              //   : t.eq(engine, 'fs')
+              //   ? FsBlobStore(Fs.path(bucket))
+              //   : null
+              const Model = t.eq(engine, 'fs')
                 ? FsBlobStore(Fs.path(bucket))
                 : null
               if (Model) {
@@ -215,9 +216,7 @@ export const storageApi = ({ createApiBox, models }) =>
                                 'Content-Disposition, Content-Length, X-Content-Transfer-Id',
                               'Content-Type': content.MIME,
                               'Content-Length': content.buffer.length,
-                              'Content-Disposition': `inline; filename="${
-                                regFile.originalName
-                              }"`,
+                              'Content-Disposition': `inline; filename="${regFile.originalName}"`,
                               'X-Content-Transfer-Id': id,
                             })
                             .status(200)

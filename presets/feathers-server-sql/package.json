@@ -16,6 +16,8 @@
     "@z1/preset-dev-bundle": "^0.3.1"
   },
   "dependencies": {
+    "feathers-knex": "^7.1.0",
+    "knex": "^0.20.4",
     "feathers-sequelize": "^6.1.0",
     "sequelize": "^5.21.2",
     "mysql": "^2.17.1",

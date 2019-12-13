@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-machine-account-server-core",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/machine-account-server-core",
@@ -18,11 +18,8 @@
     "passport-custom": "^1.0.5",
     "validator": "^10.2.0"
   },
-  "peerDependencies": {
-    "@z1/lib-feature-box-server-core": "*"
-  },
   "devDependencies": {
-    "@z1/lib-feature-box-server-core": "^0.3.0",
-    "@z1/preset-dev-neutrino": "^0.3.0"
+    "@z1/lib-feature-box-server-core": "^0.3.1",
+    "@z1/preset-dev-neutrino": "^0.3.1"
   }
 }

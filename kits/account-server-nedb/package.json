@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-server-nedb",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "lib/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/account-server-nedb",
@@ -14,14 +14,11 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/kit-account-server-core": "^0.3.0"
-  },
-  "peerDependencies": {
-    "@z1/lib-feature-box-server-nedb": "^0.2.9"
+    "@z1/kit-account-server-core": "^0.3.1"
   },
   "devDependencies": {
-    "@z1/lib-feature-box-server-nedb": "^0.3.0",
-    "@z1/preset-dev-neutrino": "^0.3.0"
+    "@z1/lib-feature-box-server-nedb": "^0.3.1",
+    "@z1/preset-dev-neutrino": "^0.3.1"
   },
   "gitHead": "cc1c8958cfa0184c996d799385e7cf94f0094d94"
 }

@@ -1,16 +1,13 @@
-// bump 47
 import React from 'react'
 import * as core from '@z1/lib-state-box'
 import { compose, bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { connectRoutes, redirect } from 'redux-first-router'
 import restoreScroll from 'redux-first-router-restore-scroll'
+
+// out
 export { NavLink, default as Link } from 'redux-first-router-link'
 export { NOT_FOUND } from 'redux-first-router'
-
-// export const selectLocationState = ({ location }) => (
-//   { location }
-// )
 
 const createRoute = core.task(t => (actionType, path, props = {}) => {
   return {
@@ -124,12 +121,7 @@ export const createStateStore = core.task(t => (props = {}) => {
         location: router.reducer,
       }),
       enhance(appliedMiddleware) {
-        return [
-          compose(
-            router.enhancer,
-            appliedMiddleware
-          ),
-        ]
+        return [compose(router.enhancer, appliedMiddleware)]
       },
     })
   )

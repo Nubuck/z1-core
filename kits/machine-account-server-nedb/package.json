@@ -14,13 +14,10 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/kit-machine-account-server-core": "^0.3.0"
-  },
-  "peerDependencies": {
-    "@z1/lib-feature-box-server-nedb": "*"
+    "@z1/kit-machine-account-server-core": "^0.3.1"
   },
   "devDependencies": {
-    "@z1/lib-feature-box-server-nedb": "^0.3.0",
-    "@z1/preset-dev-neutrino": "^0.3.0"
+    "@z1/lib-feature-box-server-nedb": "^0.3.1",
+    "@z1/preset-dev-neutrino": "^0.3.1"
   }
 }

@@ -7,7 +7,7 @@ site
 dist
 yarn-error.log
 yarn.lock
-_check
+_checked
 
 # Created by https://www.gitignore.io/api/node,macos,linux,bower,vagrant,laravel,windows,composer,intellij,phpstorm,webstorm,wordpress,visualstudio,visualstudiocode
 

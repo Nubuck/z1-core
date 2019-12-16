@@ -1,3 +1,4 @@
+// import addIndex1 from 'ramda/es/addIndex'
 import {
   addIndex,
   allPass,

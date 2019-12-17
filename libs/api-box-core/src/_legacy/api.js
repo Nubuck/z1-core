@@ -18,6 +18,11 @@ import { commonHooks, safeServiceName } from './common'
 
 // channels
 const defaultChannelConfig = function(app) {
+  if (typeof app.channel !== 'function') {
+    // If no real-time functionality has been configured just return
+    return
+  }
+
   app.on('connection', connection => {
     // On a new real-time connection, add it to the anonymous channel
     app.channel('anonymous').join(connection)
@@ -121,9 +126,18 @@ export const makeCreateApi = task(t => combineApiBoxes =>
     const api = FeathersExpress(Feathers())
 
     // Load app FeathersConfig
-    // NOTE: https://github.com/lorenwest/node-config/wiki/Configuration-Files
     api.configure(FeathersConfig())
-    api.configure(FeathersLogger(Winston))
+
+    const logger = createLogger({
+      level: t.eq(process.env.NODE_ENV, 'development') ? 'debug' : 'info',
+      format: Winston.format.combine(
+        Winston.format.splat(),
+        Winston.format.simple()
+      ),
+      transports: [new Winston.transports.Console()],
+    })
+
+    api.configure(FeathersLogger(logger))
     // Enable Cors, security, compression, favicon and body parsing
     if (t.not(namespace)) {
       api.use(Cors())
@@ -174,7 +188,7 @@ export const makeCreateApi = task(t => combineApiBoxes =>
 
     // Configure a middleware for 404s and the error handler
     api.use(FeathersExpress.notFound())
-    api.use(FeathersExpress.errorHandler({ logger: Winston }))
+    api.use(FeathersExpress.errorHandler({ logger }))
 
     // Attach global hooks
     if (t.isType(hooks, 'Object')) {

@@ -7,8 +7,8 @@ import config from '@feathersjs/configuration'
 
 // auth
 import auth from '@feathersjs/authentication'
-import authJWT from '@feathersjs/authentication-jwt'
 import authLocal from '@feathersjs/authentication-local'
+import authO from '@feathersjs/authentication-oauth'
 
 // eco-system + plus
 import { Logger } from './logger'
@@ -27,8 +27,8 @@ export const FeathersSocketIO = socketIO
 export const FeathersErrors = errors
 export const FeathersConfig = config
 export const FeathersAuth = auth
-export const FeathersAuthJWT = authJWT
 export const FeathersAuthLocal = authLocal
+export const FeathersOAuth = authO
 export const FeathersLogger = Logger
 export const FeathersCommonHooks = commonHooks
 export const FeathersAuthHooks = authHooks

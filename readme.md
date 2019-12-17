@@ -2,7 +2,7 @@
 
 # Z1 Composable Software System
 
-Z1 is a modular software system of declaritive macros that automates the labor and complexity out of building composable, multi-platform apps.
+Z1 is a modular software system of declaritive macros that automates the labor and complexity out of building composable multi-platform apps.
 
 This mono repo houses the Z1 core packages augmenting the [Feathers](https://feathersjs.com/), [React](https://reactjs.org/), [Redux](https://redux.js.org/) and [Tailwind](https://tailwindcss.com/) ecosystems.
 

@@ -4,4 +4,4 @@ module.exports = {
   use: [
     node()
   ]
-};
+}

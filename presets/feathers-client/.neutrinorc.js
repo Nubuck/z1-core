@@ -27,6 +27,7 @@ module.exports = {
           ],
         },
       },
+      'neutrino-middleware-uglifyjs'
     ],
     neutrino => neutrino
       .config

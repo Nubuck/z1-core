@@ -1,5 +1,5 @@
 {
-  "name": "app-check-server",
+  "name": "app-check-server-nedb",
   "version": "0.3.1",
   "description": "Lib check",
   "main": "lib/index.js",
@@ -15,7 +15,6 @@
     "@z1/preset-dev-neutrino": "^0.3.1"
   },
   "dependencies": {
-    "@z1/lib-feature-box-server": "^0.3.1",
-    "@z1/kit-account-server": "^0.3.1"
+    "@z1/lib-feature-box-server-nedb": "^0.3.1"
   }
 }

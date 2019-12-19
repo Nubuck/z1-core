@@ -1,41 +1,37 @@
-import { task as Task } from '@z1/preset-task'
+import { task as fn } from '@z1/preset-task'
 
-export const combineFeatures = Task(t => featureList =>
-  t.reduce(
-    (combinedFeatures, feature) => {
-      return {
-        api: t.notType(t.path(['api'], feature), 'Array')
-          ? combinedFeatures.api
-          : t.concat(combinedFeatures.api, t.path(['api'], feature)),
-        hooks: t.notType(t.path(['hooks'], feature), 'Object')
-          ? combinedFeatures.hooks
-          : t.merge(combineFeatures.hooks, {
-              [feature.name || 'common']: t.path(['hooks'], feature),
-            }),
-        tasks: t.notType(t.path(['tasks'], feature), 'Object')
-          ? combinedFeatures.tasks
-          : t.merge(combineFeatures.tasks, {
-              [feature.name || 'common']: t.path(['tasks'], feature),
-            }),
-      }
-    },
-    {
-      api: [],
-      hooks: {},
-      tasks: {},
-    },
-    featureList
-  )
-)
-
-export const createKit = Task(t => (initial, factory) => (props = {}) => {
-  return factory(t.mergeDeepRight(initial, props))
-})
-
-export const createFeature = Task(
-  t => (factory, initial = {}) => (props = {}) => {
-    return factory(t.mergeDeepRight(initial, props))
+// main
+export const featureBox = fn(f => ({
+  create(factory, initial = {}) {
+    return (props = {}) => factory(f.mergeDeepRight(initial, props))
+  },
+  combine(features = []){
+    return  f.reduce(
+      (combined, feature) => {
+        return {
+          api: f.notType(f.path(['api'], feature), 'Array')
+            ? combined.api
+            : f.concat(combined.api, f.path(['api'], feature)),
+          hooks: f.notType(f.path(['hooks'], feature), 'Object')
+            ? combined.hooks
+            : f.merge(combineFeatures.hooks, {
+                [feature.name || 'common']: f.path(['hooks'], feature),
+              }),
+          tasks: f.notType(f.path(['tasks'], feature), 'Object')
+            ? combined.tasks
+            : f.merge(combineFeatures.tasks, {
+                [feature.name || 'common']: f.path(['tasks'], feature),
+              }),
+        }
+      },
+      {
+        api: [],
+        hooks: {},
+        tasks: {},
+      },
+      features
+    )
   }
-)
+}))
 
-export const task = Task
+export const task = fn

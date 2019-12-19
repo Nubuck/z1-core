@@ -1,20 +1,11 @@
-import * as ApiBox from '@z1/lib-api-box-sql'
-export {
-  combineFeatures,
-  createKit,
-  createFeature,
-  task,
-} from '@z1/lib-feature-box-server-core'
+import { task as fn } from '@z1/lib-feature-box-server-core'
+import { apiBoxCore } from '@z1/lib-api-box-core'
+import { withNedbAdapter } from '@z1/lib-api-box-nedb'
+import { withSequelizeAdapter } from '@z1/lib-api-box-sql'
 
-export const createApiBox = ApiBox.createApiBox
-export const composeApiBox = ApiBox.composeApiBox
-export const combineApiBoxes = ApiBox.combineApiBoxes
-export const createApi = ApiBox.createApi
-export const createApiServer = ApiBox.createApiServer
-export const runServer = ApiBox.runServer
-export const reloadServer = ApiBox.reloadServer
-export const createAppServer = ApiBox.createAppServer
-export const reloadAppServer = ApiBox.reloadAppServer
-export const FeathersErrors = ApiBox.FeathersErrors
-export const appMiddleware = ApiBox.appMiddleware
-export const fs = ApiBox.fs
+export * from '@z1/lib-feature-box-server-core'
+
+// main
+export const apiBox = fn(f =>
+  f.pipe(withNedbAdapter, withSequelizeAdapter, apiBoxCore)()
+)

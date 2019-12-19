@@ -1,19 +1,22 @@
+import { task } from '@z1/lib-feature-box-server-core'
 import AuthManagement from 'feathers-authentication-management'
 
-// tasks
-import { isAction } from './tasks'
+import { communicate } from './mails'
 
-// main
-export const api = ({ adapter, models, apiBox }) =>
-  apiBox.create({
+const isAction = task(t => actions => hook =>
+  !!t.find(action => t.eq(action, hook.data.action), actions)
+)
+
+export const accountApi = ({ models, createApiBox }) =>
+  createApiBox({
     models,
-    services(s, { auth, common, data }) {
+    services(s, m, { auth, common, data }) {
       return [
         s(
-          [adapter, 'users'],
-          m => ({
+          'users',
+          {
             Model: m.users,
-          }),
+          },
           {
             hooks: {
               before: {
@@ -35,7 +38,7 @@ export const api = ({ adapter, models, apiBox }) =>
                   }),
                 ],
                 create: [
-                  auth.hashPassword('password'),
+                  auth.hashPassword(),
                   data.withIdUUIDV4,
                   data.withUUIDV4('username'),
                   AuthManagement.hooks.addVerification('auth-management'),
@@ -45,8 +48,21 @@ export const api = ({ adapter, models, apiBox }) =>
                   common.disallow('external'),
                 ],
                 patch: [
+                  // NOTE: MIGRATE THIS TOO
+                  // common.preventChanges(
+                  //   common.isProvider('external'),
+                  //   'email',
+                  //   'isVerified',
+                  //   'verifyToken',
+                  //   'verifyShortToken',
+                  //   'verifyExpires',
+                  //   'verifyChanges',
+                  //   'resetToken',
+                  //   'resetShortToken',
+                  //   'resetExpires',
+                  // ),
                   common.iff(common.isProvider('external'), [
-                    auth.hashPassword('password'),
+                    auth.hashPassword(),
                     auth.authenticate('jwt'),
                     // NOTE: ALLOW ADMINS
                     auth.restrictToOwner({
@@ -74,7 +90,7 @@ export const api = ({ adapter, models, apiBox }) =>
                     }
                     const user = hook.result
                     if (hook.data && hook.data.email && user) {
-                      // communicate(hook.app, user)['resendVerifySignup']()
+                      communicate(hook.app, user)['resendVerifySignup']()
                       return hook
                     }
                     return hook
@@ -93,10 +109,8 @@ export const api = ({ adapter, models, apiBox }) =>
               path: 'auth-management',
               identifyUserProps: ['email'],
               notifier(type, user) {
-                // const actions = communicate(app, user)
-                // return !actions[type] ? null : actions[type]()
-                app.debug('Account notifier', action, user.enail)
-                return null
+                const actions = communicate(app, user)
+                return !actions[type] ? null : actions[type]()
               },
             })
             service.apply(app, app)

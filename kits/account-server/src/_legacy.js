@@ -1,15 +1,14 @@
-import { apiBox } from '@z1/lib-feature-box-server'
+import { createApiBox } from '@z1/lib-feature-box-server'
 import accountFeatureCore from '@z1/kit-account-server-core'
-
 // main
 export default () =>
   accountFeatureCore({
-    adapter: 'sequelize',
-    apiBox,
-    models(m) {
+    createApiBox,
+    models(m, T) {
       return [
-        m(['sequelize', 'users'], (define, T) =>
-          define({
+        m(
+          'users',
+          {
             id: {
               type: T.UUID,
               primaryKey: true,
@@ -67,13 +66,14 @@ export default () =>
             resetExpires: {
               type: T.DATE,
             },
-          }, {
+          },
+          {
             hooks: {
               beforeCount(options) {
                 options.raw = true
               },
             },
-          })
+          }
         ),
       ]
     },

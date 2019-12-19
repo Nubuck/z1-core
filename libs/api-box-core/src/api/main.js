@@ -17,7 +17,7 @@ import {
 import { db } from './db'
 
 // main
-export const api = task(t => ({}) => {
+export const api = task(t => ({adapters}) => {
   return function({
     namespace,
     boxes,

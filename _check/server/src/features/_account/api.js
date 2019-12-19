@@ -1,14 +1,11 @@
 import { apiBox } from '@z1/lib-feature-box-server'
-import accountFeatureCore from '@z1/kit-account-server-core'
 
 // main
-export default () =>
-  accountFeatureCore({
-    adapter: 'sequelize',
-    apiBox,
+export const api = () =>
+  apiBox.create({
     models(m) {
       return [
-        m(['sequelize', 'users'], (define, T) =>
+        m(['sequelize', 'user'], (define, T) =>
           define({
             id: {
               type: T.UUID,
@@ -76,5 +73,33 @@ export default () =>
           })
         ),
       ]
+    },
+    services(s, h) {
+      const baseHook = []
+      return [
+        s(
+          ['sequelize', 'users'],
+          m => ({
+            Model: m.user,
+          }),
+          {
+            hooks: {
+              before: {
+                get: baseHook,
+                find: [],
+                create: [],
+                patch: baseHook,
+                update: baseHook,
+                remove: baseHook,
+              },
+            },
+          }
+        ),
+      ]
+    },
+    lifecycle: {
+      authConfig(app) {
+        app.debug('auth')
+      },
     },
   })

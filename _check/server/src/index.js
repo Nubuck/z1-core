@@ -13,11 +13,12 @@ let app = apiBox.server.app.create(
     namespace: 'api',
     site: 'site',
   },
-  () => {
-    const host = app.api.get('host')
-    const port = app.api.get('port')
-    app.api.log(`App Server started on http://${host}:${port}`)
-  }
+  () =>
+    app.api.log(
+      `App Server started on http://${app.api.get('host')}:${app.api.get(
+        'port'
+      )}`
+    )
 )
 
 if (module.hot) {

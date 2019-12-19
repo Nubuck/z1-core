@@ -1,4 +1,4 @@
-import { Sequelize, FeathersSequelize } from '@z1/preset-feathers-server-sql'
+import { Sequelize } from '@z1/preset-feathers-server-sql'
 import { task } from '@z1/preset-task'
 
 export const operatorsAliases = {
@@ -39,25 +39,18 @@ export const operatorsAliases = {
   $join: Sequelize.Op.join,
 }
 
-export const const createDBConnection = task(t => app => {
-  // const db = app.get('db')
-  // const dbConfig = app.get(db.dialect)
-  // if (t.not(dbConfig)) {
-  //   return null
-  // }
-  // const baseSQLProps = {
-  //   logging: false,
-  //   operatorsAliases,
-  //   define: {
-  //     freezeTableName: true,
-  //   },
-  // }
-  // if (t.isType(dbConfig, 'Object')) {
-  //   return new Sequelize(t.mergeAll([dbConfig, baseSQLProps, db]))
-  // } else {
-  //   return new Sequelize(
-  //     dbConfig,
-  //     t.merge(baseSQLProps, { dialect: db.dialect })
-  //   )
-  // }
+export const createDBConnection = task(t => app => {
+  const db = app.get('db')
+  const dbConfig = t.path(['sequelize'], db)
+  if (t.isNil(dbConfig)) {
+    return null
+  }
+  const baseSQLProps = {
+    logging: false,
+    operatorsAliases,
+    define: {
+      freezeTableName: true,
+    },
+  }
+  return new Sequelize(t.mergeAll([dbConfig, baseSQLProps, db]))
 })

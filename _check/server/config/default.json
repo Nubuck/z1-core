@@ -1,0 +1,52 @@
+{
+  "host": "localhost",
+  "port": 3035,
+  "paginate": {
+    "default": 1000,
+    "max": 50000
+  },
+  "db": {
+    "nedb": "nedb",
+    "sequelize": {
+      "database": "z1_check",
+      "username": "Tistro",
+      "password": "T!str0",
+      "host": "localhost",
+      "dialect": "mssql",
+      "forceAlter": true,
+      "dialectOptions": {
+        "port": 51757,
+        "encrypt": true,
+        "requestTimeout": 0
+      }
+    }
+  },
+  "storage": {
+    "engine": "fs",
+    "bucket": "bucket"
+  },
+  "management": {
+    "path": "/account/manage",
+    "from": "noreply@saucecode.tech",
+    "product": "Z1 check"
+  },
+  "authentication": {
+    "entity": "user",
+    "service": "users",
+    "secret": "H+4NgJQmbG0j4OCf+U031NCAhH4=",
+    "authStrategies": ["jwt", "local"],
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "usernameField": "email",
+      "passwordField": "password"
+    }
+  }
+}

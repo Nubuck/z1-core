@@ -9,32 +9,37 @@ export const withSequelizeAdapter = fn(t => (ctx = {}) => {
   const adapters = t.pathOr([], ['adapters'], ctx)
   const adapter = app => {
     const dbTasks = app.get('dbTasks')
-    return {
-      name: 'sequelize',
+    dbTasks.setAdapter('sequelize', {
       beforeSetup(boxes) {
-         // configure DB connection
-      const sequelize = createDBConnection(app)
-      // persist db instance
-      app.set('sequelizeClient', sequelize)
-      app.set('Sequelize', Sequelize)
-      // define models
-      const define = sequelize.define.bind(sequelize)
-      t.forEach(model => {
-        if (t.isType(model, 'Function')) {
-          model(define)
+        // configure DB connection
+        const sequelize = createDBConnection(app)
+        // persist db instance
+        // app.set('sequelizeClient', sequelize)
+        // app.set('Sequelize', Sequelize)
+        const adapter = dbTasks.getAdapter('sequelize')
+        const connection = {
+          client: sequelize,
+          lib: Sequelize,
         }
-      }, boxes.models || [])
+
+        // define models
+        const define = sequelize.define.bind(sequelize)
+        t.forEach(model => {
+          if (t.isType(model, 'Function')) {
+            model(define)
+          }
+        }, boxes.models || [])
       },
       onSetup(boxes) {
         const sequelize = app.get('sequelizeClient')
         const models = sequelize.models
-  
+
         t.forEachObjIndexed(model => {
           if (t.has('associate')(model)) {
             model.associate(models)
           }
         }, models || {})
-  
+
         // Sync to the database
         const db = app.get('db')
         const forceAlter = t.has('forceAlter')(db) ? db.forceAlter : false
@@ -43,7 +48,7 @@ export const withSequelizeAdapter = fn(t => (ctx = {}) => {
           : t.eq(process.env.NODE_ENV, 'development')
           ? { alter: true }
           : { force: false }
-  
+
         sequelize
           .sync(syncOptions)
           .then(() => {
@@ -57,9 +62,11 @@ export const withSequelizeAdapter = fn(t => (ctx = {}) => {
           })
       },
       afterSetup(boxes) {},
-      model(name, factory = {}) {},
+      model(name, factory = {}) {
+        return define => {}
+      },
       service(name, factory, props) {},
-    }
+    })
   }
   return t.merge(ctx, {
     adapters: t.concat(adapters, [adapter]),

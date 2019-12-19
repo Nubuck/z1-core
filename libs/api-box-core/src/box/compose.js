@@ -32,7 +32,7 @@ export const compose = task(t => ctx => {
       t.fromPairs(t.map(nxKey => [nxKey, [source[nxKey]]], nextKeys)),
     ])
   }
-  return createApiBox => (props, parts) => {
+  return (props, parts) => {
     const combinedParts = t.reduce(
       (collection, part) => {
         return {
@@ -69,14 +69,14 @@ export const compose = task(t => ctx => {
       }
     }, combinedParts.lifecycle || [])
 
-    return createApiBox(
+    return ctx.create(
       t.merge(props, {
-        models(m, T) {
-          return t.flatten(t.map(model => model(m, T), combinedParts.models))
+        models(m) {
+          return t.flatten(t.map(model => model(m), combinedParts.models))
         },
-        services(s, m, h) {
+        services(s, h) {
           return t.flatten(
-            t.map(service => service(s, m, h), combinedParts.services)
+            t.map(service => service(s, h), combinedParts.services)
           )
         },
         channels(a) {

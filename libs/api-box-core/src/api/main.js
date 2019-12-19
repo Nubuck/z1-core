@@ -15,9 +15,10 @@ import {
 
 // parts
 import { db } from './db'
+import { services } from './services'
 
 // main
-export const api = task(t => ({adapters}) => {
+export const api = task(t => (ctx = {}) => {
   return function({
     namespace,
     boxes,
@@ -26,7 +27,7 @@ export const api = task(t => ({adapters}) => {
     authHooks,
     channels,
   }) {
-    // const nextBoxes = t.isType(boxes, 'Object') ? boxes : combineApiBoxes(boxes)
+    const nextBoxes = t.isType(boxes, 'Object') ? boxes : ctx.box.combine(boxes)
 
     // Create feathers app with Express engine
     const api = FeathersExpress(Feathers())
@@ -42,8 +43,8 @@ export const api = task(t => ({adapters}) => {
       ),
       transports: [new Winston.transports.Console()],
     })
-
     api.configure(FeathersLogger(logger))
+
     // Enable Cors, security, compression, favicon and body parsing
     if (t.not(namespace)) {
       api.use(Cors())
@@ -56,10 +57,20 @@ export const api = task(t => ({adapters}) => {
     api.configure(FeathersSocketIO())
 
     // db init
-    db.init(app)
+    db.init(api)
+
+    // services init
+    services.init(api)
+
+    // adapters
+    t.forEach(adapter => {
+      if (t.isType(adapter, 'Function')) {
+        adapter(api)
+      }
+    }, ctx.adapters || [])
 
     // Lifecycle before
-    // api.configure(nextBoxes.lifecycle('beforeConfig'))
+    api.configure(nextBoxes.lifecycle('beforeConfig'))
 
     // Configure authentication
     if (api.get('authentication')) {
@@ -73,17 +84,17 @@ export const api = task(t => ({adapters}) => {
     }
 
     // Configure boxes
-    // api.configure(nextBoxes.configure)
+    api.configure(nextBoxes.configure)
 
     // Configure channels
-    // api.configure(
-    //   configureChannels(
-    //     t.concat(
-    //       t.isType(channels, 'Function') ? [channels] : [],
-    //       nextBoxes.collection.channels || []
-    //     )
-    //   )
-    // )
+    api.configure(
+      configureChannels(
+        t.concat(
+          t.isType(channels, 'Function') ? [channels] : [],
+          nextBoxes.collection.channels || []
+        )
+      )
+    )
 
     // Host the public folder
     if (api.get('public')) {
@@ -107,10 +118,10 @@ export const api = task(t => ({adapters}) => {
     }
 
     // Lifecycle after and onStart
-    // api.configure(nextBoxes.lifecycle('afterConfig'))
-    // api.onStart = () => {
-    //   nextBoxes.lifecycle('onStart')(api)
-    // }
+    api.configure(nextBoxes.lifecycle('afterConfig'))
+    api.onStart = () => {
+      nextBoxes.lifecycle('onStart')(api)
+    }
 
     // yield
     return api

@@ -6,8 +6,7 @@ export const withNedbAdapter = fn(t => (ctx = {}) => {
   const adapters = t.pathOr([], ['adapters'], ctx)
   const adapter = app => {
     const dbTasks = app.get('dbTasks')
-    return {
-      name: 'nedb',
+    dbTasks.setAdapter('nedb', {
       beforeSetup(boxes) {
         const config = dbTasks.getConfig('nedb')
         fs.dir(config || 'nedb')
@@ -39,7 +38,7 @@ export const withNedbAdapter = fn(t => (ctx = {}) => {
         }
         return FeathersNedb(factory(adapter.models))
       },
-    }
+    })
   }
   return t.merge(ctx, {
     adapters: t.concat(adapters, [adapter]),

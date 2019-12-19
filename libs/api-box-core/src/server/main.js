@@ -5,9 +5,9 @@ import { api } from './api'
 import { app } from './app'
 
 // main
-export const server = task(t => ctx => {
+export const server = ctx => {
   return {
-    app: null,
-    api: null,
+    app: app(ctx),
+    api: api(ctx),
   }
-})
+}

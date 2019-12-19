@@ -37,29 +37,48 @@ export const combine = task(t => ctx => {
           }
         }, nextBoxes.lifecycle || [])
       },
-      configure: app => {
-        // beforeSetup(app, nextBoxes)
-        // const dbTasks = app.get('dbTasks')
-        const dbCtx = app.get('dbCtx')
-        t.forEach(key => {
-          const adapter = dbCtx[key]
-          if (t.isType(adapter.beforeSetup, 'Function')) {
-            adapter.beforeSetup(nextBoxes)
+      configure(app) {
+        const adapterStore = app.get('adapterStore')
+        const adapterKeys = t.keys(adapterStore)
+
+        // register models
+        t.forEach(modelsFactory => {
+          if (t.isType(modelsFactory, 'Function')) {
+            modelsFactory(app)
           }
-        }, t.keys(dbCtx) || [])
+        }, nextBoxes.models)
+
+        // register services
+        t.forEach(servicesFactory => {
+          if (t.isType(servicesFactory, 'Function')) {
+            servicesFactory(app)
+          }
+        }, nextBoxes.services || [])
+
+        // adapter beforeSetup
+        t.forEach(adapterName => {
+          const beforeSetup = t.pathOr(
+            () => {},
+            [adapterName, 'beforeSetup'],
+            adapterStore
+          )
+          beforeSetup(nextBoxes)
+        }, adapterKeys)
 
         // associate models on setup
         const oldSetup = app.setup
         app.setup = function(...args) {
           const result = oldSetup.apply(this, args)
 
-          // onSetup(app, nextBoxes)
-          t.forEach(key => {
-            const adapter = dbCtx[key]
-            if (t.isType(adapter.onSetup, 'Function')) {
-              adapter.onSetup(nextBoxes)
-            }
-          }, t.keys(dbCtx) || [])
+          // adapter onSetup
+          t.forEach(adapterName => {
+            const onSetup = t.pathOr(
+              () => {},
+              [adapterName, 'onSetup'],
+              adapterStore
+            )
+            onSetup(nextBoxes)
+          }, adapterKeys)
 
           // lifecycle onSetup
           t.forEach(action => {
@@ -69,19 +88,15 @@ export const combine = task(t => ctx => {
           return result
         }
 
-        // const nextModels = getModels(app)
-        // register services
-        // t.forEach(service => {
-        //   if (t.isType(service, 'Function')) {
-        //     // service(app, nextModels)
-        //   }
-        // }, nextBoxes.services || [])
-        t.forEach(key => {
-          const adapter = dbCtx[key]
-          if (t.isType(adapter.afterSetup, 'Function')) {
-            adapter.afterSetup(nextBoxes)
-          }
-        }, t.keys(dbCtx) || [])
+        // adapter afterSetup
+        t.forEach(adapterName => {
+          const afterSetup = t.pathOr(
+            () => {},
+            [adapterName, 'afterSetup'],
+            adapterStore
+          )
+          afterSetup(nextBoxes)
+        }, adapterKeys)
       },
     }
   }

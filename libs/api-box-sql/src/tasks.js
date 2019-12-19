@@ -40,8 +40,8 @@ export const operatorsAliases = {
 }
 
 export const createDBConnection = task(t => app => {
-  const db = app.get('db')
-  const dbConfig = t.path(['sequelize'], db)
+  const dbTools = app.get('dbTools')
+  const dbConfig = dbTools.dbConfig('sequelize')
   if (t.isNil(dbConfig)) {
     return null
   }
@@ -52,5 +52,5 @@ export const createDBConnection = task(t => app => {
       freezeTableName: true,
     },
   }
-  return new Sequelize(t.mergeAll([dbConfig, baseSQLProps, db]))
+  return new Sequelize(t.mergeAll([dbConfig, baseSQLProps]))
 })

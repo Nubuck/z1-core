@@ -100,6 +100,7 @@ export const api = ({ adapter, models, apiBox }) =>
               },
             })
             service.apply(app, app)
+            return null
           },
           {
             hooks: {

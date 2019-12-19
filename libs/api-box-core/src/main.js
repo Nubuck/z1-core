@@ -10,7 +10,7 @@ import { common } from './common'
 export const apiBoxCore = task(t => (ctx = {}) => {
   const nextCtx = t.merge(common, ctx)
   const Box = box(nextCtx)
-  const Api = api(t.merge({ box: Box }, nextCtx))
+  const Api = api(t.merge(Box, nextCtx))
   const Server = server(t.merge({ api: Api }, nextCtx))
   return t.merge(Box, {
     api: Api,

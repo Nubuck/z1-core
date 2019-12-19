@@ -4,9 +4,6 @@ import {
   FeathersExpress,
   FeathersSocketIO,
   FeathersConfig,
-  // FeathersAuth,
-  // FeathersAuthLocal,
-  // FeathersOAuth,
   Cors,
   Compression,
   Winston,
@@ -14,11 +11,13 @@ import {
 } from '@z1/preset-feathers-server-core'
 
 // parts
-import { db } from './db'
-import { services } from './services'
+import { adapters } from './adapters'
+import { auth } from './auth'
+import { channels } from './channels'
 
 // main
 export const api = task(t => (ctx = {}) => {
+  const Adapters = adapters(ctx)
   return function({
     namespace,
     boxes,
@@ -27,7 +26,7 @@ export const api = task(t => (ctx = {}) => {
     authHooks,
     channels,
   }) {
-    const nextBoxes = t.isType(boxes, 'Object') ? boxes : ctx.box.combine(boxes)
+    const nextBoxes = t.isType(boxes, 'Object') ? boxes : ctx.combine(boxes)
 
     // Create feathers app with Express engine
     const api = FeathersExpress(Feathers())
@@ -56,31 +55,17 @@ export const api = task(t => (ctx = {}) => {
     api.configure(FeathersExpress.rest())
     api.configure(FeathersSocketIO())
 
-    // db init
-    db.init(api)
-
-    // services init
-    services.init(api)
-
     // adapters
-    t.forEach(adapter => {
-      if (t.isType(adapter, 'Function')) {
-        adapter(api)
-      }
-    }, ctx.adapters || [])
+    Adapters.configure(api)
 
     // Lifecycle before
     api.configure(nextBoxes.lifecycle('beforeConfig'))
 
     // Configure authentication
     if (api.get('authentication')) {
-      // api.configure(app =>
-      //   configureAuthentication(
-      //     app,
-      //     nextBoxes.lifecycle('authConfig'),
-      //     authHooks
-      //   )
-      // )
+      api.configure(() =>
+        auth(api, nextBoxes.lifecycle('authConfig'), authHooks)
+      )
     }
 
     // Configure boxes
@@ -88,7 +73,7 @@ export const api = task(t => (ctx = {}) => {
 
     // Configure channels
     api.configure(
-      configureChannels(
+      channels(
         t.concat(
           t.isType(channels, 'Function') ? [channels] : [],
           nextBoxes.collection.channels || []

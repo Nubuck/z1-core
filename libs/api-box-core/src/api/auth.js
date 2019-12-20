@@ -12,21 +12,24 @@ export const auth = task(t => ctx => (app, lifecycle, authHooks) => {
   authentication.register('local', new FeathersAuthLocal.LocalStrategy())
 
   app.use('/authentication', authentication)
+  console.log('AUTH SERVICE', app.service('authentication'))
   app.configure(FeathersOAuth.expressOauth())
   app.configure(lifecycle)
   // The `authentication` service is used to create a JWT.
   // The before `create` hook registers strategies that can be used
   // to create a new valid JWT (e.g. local or oauth2)
   const config = app.get('authentication')
+  console.log('AUTH CONFIG', config)
   const nextHooks = t.isType(authHooks, 'Object')
     ? authHooks
     : t.isType(authHooks, 'Function')
     ? authHooks(ctx.commonHooks, config)
     : {
-        before: {
-          create: [commonHooks.auth.authenticate(config.authStrategies)],
-          remove: [commonHooks.auth.authenticate('jwt')],
-        },
+        // before: {
+        //   create: [ctx.commonHooks.auth.authenticate(config.strategies)],
+        //   create: [ctx.commonHooks.auth.authenticate(config.strategies)],
+        //   remove: [ctx.commonHooks.auth.authenticate('jwt')],
+        // },
       }
   app.service('authentication').hooks(nextHooks)
 })

@@ -70,7 +70,7 @@ export const api = task(t => (ctx = {}) => {
     // Configure authentication
     if (api.get('authentication')) {
       api.configure(() =>
-        auth(api, nextBoxes.lifecycle('authConfig'), authHooks)
+        auth(ctx)(api, nextBoxes.lifecycle('authConfig'), authHooks)
       )
     }
 

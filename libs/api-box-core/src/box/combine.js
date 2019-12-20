@@ -55,7 +55,7 @@ export const combine = task(t => ctx => {
           }
         }, nextBoxes.services || [])
 
-        console.log('CHECK', app.get('adapterStore'), app.service)
+        console.log('CHECK', app.get('adapterStore'), nextBoxes.services)
 
         // adapter beforeSetup
         t.forEach(adapterName => {

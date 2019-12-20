@@ -55,9 +55,15 @@ export const withSequelizeAdapter = task(t => (ctx = {}) => {
         t.forEach(serviceName => {
           const serviceDef = adapter.services[serviceName]
           const serviceProps = serviceDef.factory(nextModels)
-          const nextServiceName = app.get('serviceTools').safeServiceName(serviceName)
+          const nextServiceName = app
+            .get('serviceTools')
+            .safeServiceName(serviceName)
+
+            console.log('SERVICE PROPS SQL', serviceProps)
+
           app.use(
             `/${nextServiceName}`,
+            // nextServiceName,
             FeathersSequelize(
               t.mergeAll([
                 { name: nextServiceName },

@@ -8,7 +8,7 @@ import { create } from './create'
 // main
 export const box = task(t => ctx => {
   const Create = create(ctx)
-  const Compose = compose({ create: Create, ...ctx })
+  const Compose = compose(t.merge({ create: Create }, ctx))
   const Combine = combine(ctx)
   return {
     create: Create,

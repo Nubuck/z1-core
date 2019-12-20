@@ -11,7 +11,7 @@ let app = apiBox.server.app.create(
   {
     boxes: features.api,
     namespace: 'api',
-    site: 'site',
+    appFolderName: 'site',
   },
   () =>
     app.api.log(

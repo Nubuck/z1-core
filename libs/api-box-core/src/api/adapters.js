@@ -12,7 +12,7 @@ export const adapters = task(t => ctx => {
           return t.pathOr(null, [adapterName], app.get('db'))
         },
         get(adapterName) {
-          return t.pathOr(null, [adapterName], app.get(storeName))
+          return t.pathOr({}, [adapterName], app.get(storeName))
         },
         set(adapterName, adapter) {
           app.set(
@@ -29,28 +29,25 @@ export const adapters = task(t => ctx => {
           },
           add(adapterName, modelName, factory) {
             const currentStore = app.get(storeName)
-            const adapterStore = currentStore[adapterName]
-            app.set(
-              store,
-              t.merge(currentStore, {
-                [adapterName]: t.merge(adapterStore, {
-                  models: t.merge(adapterStore.models || {}, {
-                    [modelName]: factory,
-                  }),
+            console.log('CURRENT STORE', currentStore)
+            const adapterStore = currentStore[adapterName] || {}
+            console.log('adap STORE', adapterStore)
+            const nextStore = t.merge(currentStore, {
+              [adapterName]: t.merge(adapterStore, {
+                models: t.merge(adapterStore.models || {}, {
+                  [modelName]: factory,
                 }),
-              })
-            )
+              }),
+            })
+            console.log('Next STORE', nextStore)
+            app.set(storeName, nextStore)
             return null
           },
           create(modelId = [], factory = null) {
             const [adapterName, modelName] = modelId
             const dbTools = app.get(toolsName)
             // const adapter = dbTools.get(adapterName)
-            dbTools.models.add(
-              adapterName,
-              modelName,
-              factory
-            )
+            dbTools.models.add(adapterName, modelName, factory)
             return null
           },
         },
@@ -62,7 +59,7 @@ export const adapters = task(t => ctx => {
             const currentStore = app.get(storeName)
             const adapterStore = currentStore[adapterName]
             app.set(
-              store,
+              storeName,
               t.merge(currentStore, {
                 [adapterName]: t.merge(adapterStore, {
                   services: t.merge(adapterStore.services || {}, {
@@ -79,6 +76,7 @@ export const adapters = task(t => ctx => {
             if (t.eq(mode, 'adapter')) {
               const [adapterName, serviceName] = serviceId
               const adapter = dbTools.get(adapterName)
+              console.log('APADTER', adapter)
               dbTools.services.add(
                 adapterName,
                 serviceName,
@@ -98,6 +96,7 @@ export const adapters = task(t => ctx => {
           },
           wire(serviceName, hooksEvents) {
             const service = app.service(serviceName)
+            console.log('WIRE', service)
             if (t.and(hooksEvents, service)) {
               if (ctx.hookSignature(hooksEvents)) {
                 service.hooks(hooksEvents)
@@ -124,6 +123,9 @@ export const adapters = task(t => ctx => {
           },
         },
       })
+      t.forEach(adapter => {
+        adapter(app)
+      }, t.pathOr([], ['adapters'], ctx))
     },
   }
 })

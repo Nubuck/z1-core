@@ -1,11 +1,11 @@
-import { apiBoxCore, fn, fs } from '@z1/lib-api-box-core'
+import { apiBoxCore, task, fs } from '@z1/lib-api-box-core'
 import { Sequelize, FeathersSequelize } from '@z1/preset-feathers-server-sql'
 
 // tasks
 import { createDBConnection } from './tasks'
 
 // main
-export const withSequelizeAdapter = fn(t => (ctx = {}) => {
+export const withSequelizeAdapter = task(t => (ctx = {}) => {
   const adapterName = 'sequelize'
   const adapters = t.pathOr([], ['adapters'], ctx)
   const sequelizeAdapter = app => {
@@ -29,11 +29,15 @@ export const withSequelizeAdapter = fn(t => (ctx = {}) => {
             (fields, props) => {
               if (t.has('associate')(props)) {
                 const currentList = t.pathOr([], ['associate'], adapter)
-                dbTools.set(adapterName, {
-                  associate: t.concat(currentList, [props.associate]),
-                })
+                const currentAdapter = dbTools.get(adapterName)
+                dbTools.set(
+                  adapterName,
+                  t.merge(currentAdapter, {
+                    associate: t.concat(currentList, [props.associate]),
+                  })
+                )
               }
-              define(modelName, fields, t.omit([associate], props))
+              define(modelName, fields, t.omit(['associate'], props))
             },
             Sequelize.DataTypes,
             Sequelize
@@ -51,7 +55,7 @@ export const withSequelizeAdapter = fn(t => (ctx = {}) => {
         t.forEach(serviceName => {
           const serviceDef = adapter.services[serviceName]
           const serviceProps = serviceDef.factory(nextModels)
-          const nextServiceName = ctx.safeServiceName(serviceName)
+          const nextServiceName = app.get('serviceTools').safeServiceName(serviceName)
           app.use(
             `/${nextServiceName}`,
             FeathersSequelize(

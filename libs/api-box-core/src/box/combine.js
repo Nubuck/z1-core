@@ -55,6 +55,8 @@ export const combine = task(t => ctx => {
           }
         }, nextBoxes.services || [])
 
+        console.log('CHECK', app.get('adapterStore'), app.service)
+
         // adapter beforeSetup
         t.forEach(adapterName => {
           const beforeSetup = t.pathOr(

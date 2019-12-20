@@ -9,5 +9,5 @@ export default featureBox.create(
       tasks: {},
     }
   },
-  { adapter:'nedb', models: null, apiBox: { create: () => null } }
+  { adapter: 'nedb', models: null, apiBox: { create: () => null } }
 )

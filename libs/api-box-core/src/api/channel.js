@@ -49,17 +49,19 @@ const defaultChannelConfig = function(app) {
 }
 
 // main
-export const channels = task(t => channels => app => {
-  if (t.notType(app.channel, 'Function')) {
-    // If no real-time functionality has been configured
-    // just return
-    return null
-  }
-  if (t.isZeroLen(channels)) {
-    defaultChannelConfig(app)
-  } else {
-    t.forEach(channel => {
-      channel(app)
-    }, channels || [])
-  }
-})
+export const channel = task(t => ({
+  config: channelList => app => {
+    if (t.notType(app.channel, 'Function')) {
+      // If no real-time functionality has been configured
+      // just return
+      return null
+    }
+    if (t.isZeroLen(channelList)) {
+      defaultChannelConfig(app)
+    } else {
+      t.forEach(channel => {
+        channel(app)
+      }, channelList || [])
+    }
+  },
+}))

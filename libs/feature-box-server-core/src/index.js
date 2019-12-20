@@ -5,8 +5,8 @@ export const featureBox = fn(f => ({
   create(factory, initial = {}) {
     return (props = {}) => factory(f.mergeDeepRight(initial, props))
   },
-  combine(features = []){
-    return  f.reduce(
+  combine(features = []) {
+    return f.reduce(
       (combined, feature) => {
         return {
           api: f.notType(f.path(['api'], feature), 'Array')
@@ -14,12 +14,12 @@ export const featureBox = fn(f => ({
             : f.concat(combined.api, f.path(['api'], feature)),
           hooks: f.notType(f.path(['hooks'], feature), 'Object')
             ? combined.hooks
-            : f.merge(combineFeatures.hooks, {
+            : f.merge(combined.hooks, {
                 [feature.name || 'common']: f.path(['hooks'], feature),
               }),
           tasks: f.notType(f.path(['tasks'], feature), 'Object')
             ? combined.tasks
-            : f.merge(combineFeatures.tasks, {
+            : f.merge(combined.tasks, {
                 [feature.name || 'common']: f.path(['tasks'], feature),
               }),
         }
@@ -31,7 +31,7 @@ export const featureBox = fn(f => ({
       },
       features
     )
-  }
+  },
 }))
 
 export const task = fn

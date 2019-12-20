@@ -8,6 +8,7 @@ export const api = ({ adapter, models, apiBox }) =>
   apiBox.create({
     models,
     services(s, { auth, common, data }) {
+      console.log('adapter', adapter)
       return [
         s(
           [adapter, 'users'],
@@ -20,19 +21,19 @@ export const api = ({ adapter, models, apiBox }) =>
                 find: [
                   auth.authenticate('jwt'),
                   // NOTE: ALLOW ADMINS
-                  auth.restrictToOwner({
-                    idField: 'id',
-                    ownerField: 'id',
-                  }),
+                  // auth.restrictToOwner({
+                  //   idField: 'id',
+                  //   ownerField: 'id',
+                  // }),
                   data.safeFindMSSQL,
                 ],
                 get: [
                   auth.authenticate('jwt'),
                   // NOTE: ALLOW ADMINS
-                  auth.restrictToOwner({
-                    idField: 'id',
-                    ownerField: 'id',
-                  }),
+                  // auth.restrictToOwner({
+                  //   idField: 'id',
+                  //   ownerField: 'id',
+                  // }),
                 ],
                 create: [
                   auth.hashPassword('password'),
@@ -49,19 +50,19 @@ export const api = ({ adapter, models, apiBox }) =>
                     auth.hashPassword('password'),
                     auth.authenticate('jwt'),
                     // NOTE: ALLOW ADMINS
-                    auth.restrictToOwner({
-                      idField: 'id',
-                      ownerField: 'id',
-                    }),
+                    // auth.restrictToOwner({
+                    //   idField: 'id',
+                    //   ownerField: 'id',
+                    // }),
                   ]),
                 ],
                 remove: [
                   auth.authenticate('jwt'),
                   // NOTE: ALLOW ADMINS
-                  auth.restrictToOwner({
-                    idField: 'id',
-                    ownerField: 'id',
-                  }),
+                  // auth.restrictToOwner({
+                  //   idField: 'id',
+                  //   ownerField: 'id',
+                  // }),
                 ],
               },
               after: {
@@ -110,7 +111,7 @@ export const api = ({ adapter, models, apiBox }) =>
                   common.iff(isAction(['passwordChange', 'identityChange']), [
                     auth.authenticate('jwt'),
                     // NOTE: ALLOW ADMINS
-                    auth.restrictToOwner({ ownerField: 'id' }),
+                    // auth.restrictToOwner({ ownerField: 'id' }),
                   ]),
                 ],
               },

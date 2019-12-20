@@ -1,5 +1,5 @@
 import { Sequelize } from '@z1/preset-feathers-server-sql'
-import { task } from '@z1/preset-task'
+import { task } from '@z1/lib-api-box-core'
 
 export const operatorsAliases = {
   $eq: Sequelize.Op.eq,

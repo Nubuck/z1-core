@@ -16,6 +16,9 @@ export const common = task(t => ({
       t.has('error')(def),
     ])
   },
+  hookAndEventSignature(def) {
+    return t.anyOf([t.has('hooks')(def), t.has('events')(def)])
+  },
   safeServiceName(path) {
     return t.and(t.startsWith('/', path), t.endsWith('/', path))
       ? t.valPipe(path)(t.tail, t.dropLast(1))

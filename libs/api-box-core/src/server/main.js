@@ -1,5 +1,3 @@
-import { task } from '@z1/preset-task'
-
 // parts
 import { api } from './api'
 import { app } from './app'

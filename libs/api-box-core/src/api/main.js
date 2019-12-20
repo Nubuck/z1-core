@@ -13,7 +13,7 @@ import {
 // parts
 import { adapters } from './adapters'
 import { auth } from './auth'
-import { channels } from './channels'
+import { channel } from './channel'
 
 // main
 export const api = task(t => (ctx = {}) => {
@@ -34,15 +34,15 @@ export const api = task(t => (ctx = {}) => {
     // Load app FeathersConfig
     api.configure(FeathersConfig())
 
-    const logger = createLogger({
-      level: t.eq(process.env.NODE_ENV, 'development') ? 'debug' : 'info',
-      format: Winston.format.combine(
-        Winston.format.splat(),
-        Winston.format.simple()
-      ),
-      transports: [new Winston.transports.Console()],
-    })
-    api.configure(FeathersLogger(logger))
+    // const logger = Winston.createLogger({
+    //   level: t.eq(process.env.NODE_ENV, 'development') ? 'debug' : 'info',
+    //   format: Winston.format.combine(
+    //     Winston.format.splat(),
+    //     Winston.format.simple()
+    //   ),
+    //   transports: [new Winston.transports.Console()],
+    // })
+    api.configure(FeathersLogger(Winston))
 
     // Enable Cors, security, compression, favicon and body parsing
     if (t.not(namespace)) {
@@ -54,6 +54,12 @@ export const api = task(t => (ctx = {}) => {
     // Set up Plugins and providers
     api.configure(FeathersExpress.rest())
     api.configure(FeathersSocketIO())
+
+    // service tools
+    api.set(
+      'serviceTools',
+      t.pick(['hookSignature', 'hookAndEventSignature', 'safeServiceName'], ctx)
+    )
 
     // adapters
     Adapters.configure(api)
@@ -73,7 +79,7 @@ export const api = task(t => (ctx = {}) => {
 
     // Configure channels
     api.configure(
-      channels(
+      channel.config(
         t.concat(
           t.isType(channels, 'Function') ? [channels] : [],
           nextBoxes.collection.channels || []
@@ -93,7 +99,8 @@ export const api = task(t => (ctx = {}) => {
 
     // Configure a middleware for 404s and the error handler
     api.use(FeathersExpress.notFound())
-    api.use(FeathersExpress.errorHandler({ logger }))
+    // api.use(FeathersExpress.errorHandler(Winston))
+    api.use(FeathersExpress.errorHandler())
 
     // Attach global hooks
     if (t.isType(hooks, 'Object')) {

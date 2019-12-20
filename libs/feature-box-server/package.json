@@ -15,6 +15,7 @@
   "dependencies": {
     "@z1/lib-api-box-sql": "^0.3.1",
     "@z1/lib-api-box-nedb": "^0.3.1",
+    "@z1/lib-api-box-core": "^0.3.1",
     "@z1/lib-feature-box-server-core": "^0.3.1"
   },
   "devDependencies": {

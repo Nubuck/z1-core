@@ -7,11 +7,11 @@ process.on('unhandledRejection', (reason, p) =>
   console.log('Unhandled Rejection at: Promise ', p, reason)
 )
 
-let app = apiBox.server.app.create(
+let app = apiBox.app.create(
   {
     boxes: features.api,
-    namespace: 'api',
-    appFolderName: 'site',
+    apiPath: 'api',
+    sitePath: 'site',
   },
   () =>
     app.api.log(
@@ -23,6 +23,6 @@ let app = apiBox.server.app.create(
 
 if (module.hot) {
   module.hot.accept(['./features'], () => {
-    app = apiBox.server.app.reload(app, { boxes: features.api })
+    app = apiBox.app.reload(app, { boxes: features.api })
   })
 }

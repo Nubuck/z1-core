@@ -1,7 +1,7 @@
-import { task as fn } from '@z1/preset-task'
+import { task as Fn } from '@z1/preset-task'
 
 // main
-export const featureBox = fn(f => ({
+export const featureBox = Fn(f => ({
   create(factory, initial = {}) {
     return (props = {}) => factory(f.mergeDeepRight(initial, props))
   },
@@ -34,4 +34,5 @@ export const featureBox = fn(f => ({
   },
 }))
 
-export const task = fn
+export const task = Fn
+export const fn = Fn

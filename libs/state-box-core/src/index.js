@@ -1,5 +1,5 @@
 // bump 47
-import { task } from '@z1/preset-task'
+import { task as Fn } from '@z1/preset-task'
 import { combineReducers, applyMiddleware, createStore } from 'redux'
 import { createLogic, createLogicMiddleware } from 'redux-logic'
 import { composeReducers, makeActionCreator } from 'redux-toolbelt'
@@ -16,7 +16,7 @@ import {
   catchError,
 } from 'rxjs/operators'
 
-const makeMutationCreator = task(
+const makeMutationCreator = Fn(
   t => (name, initialState) => (actionOrActions, reducer) => {
     const createAction = makeActionCreator.withDefaults({
       prefix: `${name}/`,
@@ -53,6 +53,7 @@ const makeMutationCreator = task(
     )
     return {
       mutations: transforms.mutations,
+      mutators: transforms.mutations,
       actions: transforms.actions,
       reducer: (state = initialState, action) => {
         return t.not(transforms.reducers[action.type])
@@ -63,7 +64,7 @@ const makeMutationCreator = task(
   }
 )
 
-const createEffect = task(
+const createEffect = Fn(
   t => type => (actionOrActions, processOrGuard, options = {}) => {
     const fx = t.eq('fx', type)
       ? { process: processOrGuard }
@@ -72,7 +73,7 @@ const createEffect = task(
   }
 )
 
-export const createStateBox = task(
+const createStateBox = Fn(
   t => ({ name, initial, mutations, guards, effects, onInit }) => {
     const nextHandles = t.reduce(
       (handles, mutation) => {
@@ -93,6 +94,8 @@ export const createStateBox = task(
     )
     const effectContext = {
       actions: nextHandles.actions,
+      mutators: nextHandles.mutations,
+      // for back compat
       mutations: nextHandles.mutations,
     }
     const nextGuards = t.not(guards)
@@ -111,6 +114,8 @@ export const createStateBox = task(
             onInit(
               t.merge(ctx, {
                 actions: nextHandles.actions,
+                mutators: nextHandles.mutations,
+                // for back compat
                 mutations: nextHandles.mutations,
               })
             )
@@ -121,7 +126,7 @@ export const createStateBox = task(
 const passThrough = function() {
   return {}
 }
-export const combineStateBoxes = task(t => (boxes, reducer = undefined) => {
+const combineStateBoxes = Fn(t => (boxes, reducer = undefined) => {
   const reduceBy = t.and(t.not(t.isNil(reducer)), t.isType(reducer, 'Function'))
     ? reducer
     : passThrough
@@ -147,7 +152,7 @@ export const combineStateBoxes = task(t => (boxes, reducer = undefined) => {
   )
 })
 
-export const createStateStore = task(
+const createStateStore = Fn(
   t => ({
     boxes,
     context,
@@ -201,7 +206,7 @@ export const createStateStore = task(
   }
 )
 
-export const reloadStateStore = task(t => (store, boxes) => {
+const reloadStateStore = Fn(t => (store, boxes) => {
   const nextBoxes = t.isType(boxes, 'Object') ? boxes : combineStateBoxes(boxes)
   store.replaceReducer(
     combineReducers(t.merge(nextBoxes.reducers, store._reducers))
@@ -210,20 +215,28 @@ export const reloadStateStore = task(t => (store, boxes) => {
   return null
 })
 
-export const Task = task((t, a) => factory =>
-  factory(
-    t,
-    a,
-    {
-      of,
-      fromEvent,
-      filter,
-      tap,
-      map,
-      switchMap,
-      merge,
-      takeUntil,
-      catchError,
-    }
-  )
+const Task = Fn((t, a) => factory =>
+  factory(t, a, {
+    of,
+    fromEvent,
+    filter,
+    tap,
+    map,
+    switchMap,
+    merge,
+    takeUntil,
+    catchError,
+  })
 )
+
+// next
+export const stateBox = {
+  create: createStateBox,
+  combine: combineStateBoxes,
+  store: {
+    create: createStateStore,
+    reload: reloadStateStore,
+  },
+}
+export const task = Task
+export const fn = Task

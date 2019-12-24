@@ -7,6 +7,6 @@ export default () =>
     adapter: 'nedb',
     apiBox,
     models(m) {
-      return [m(['nedb', 'users'])]
+      m(['nedb', 'users'])
     },
   })

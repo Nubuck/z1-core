@@ -18,6 +18,7 @@ import { channel } from './channel'
 // main
 export const api = task(t => (ctx = {}) => {
   const Adapters = adapters(ctx)
+  const Auth = auth(ctx)
   return function({
     namespace,
     boxes,
@@ -62,27 +63,69 @@ export const api = task(t => (ctx = {}) => {
     )
 
     // adapters
-    Adapters.configure(api)
+    api.configure(Adapters.configure)
 
     // Lifecycle before
     api.configure(nextBoxes.lifecycle('beforeConfig'))
 
     // Configure authentication
     if (api.get('authentication')) {
-      api.configure(() =>
-        auth(ctx)(api, nextBoxes.lifecycle('authConfig'), authHooks)
-      )
+      api.configure(Auth(nextBoxes.lifecycle('authConfig')))
     }
 
     // Configure boxes
-    api.configure(nextBoxes.configure)
+    // api.configure(nextBoxes.configure)
+    const adapterStore = api.get('adapterStore')
+    const adapterKeys = t.keys(adapterStore)
+
+    // register models
+    t.forEach(modelsFactory => {
+      if (t.isType(modelsFactory, 'Function')) {
+        modelsFactory(api.get('dbTools').models.create)
+      }
+    }, nextBoxes.models || [])
+
+    // register services
+    t.forEach(servicesFactory => {
+      if (t.isType(servicesFactory, 'Function')) {
+        servicesFactory(api.get('dbTools').services.create)
+      }
+    }, nextBoxes.services || [])
+
+    // adapter beforeSetup
+    t.forEach(adapterName => {
+      t.pathOr(() => {}, [adapterName, 'beforeSetup'], adapterStore)(nextBoxes)
+    }, adapterKeys)
+
+    // associate models on setup
+    const oldSetup = api.setup
+    api.setup = function(...args) {
+      const result = oldSetup.apply(this, args)
+
+      // adapter onSetup
+      t.forEach(adapterName => {
+        t.pathOr(() => {}, [adapterName, 'onSetup'], adapterStore)(nextBoxes)
+      }, adapterKeys)
+
+      // lifecycle onSetup
+      t.forEach(action => {
+        action('onSetup', api)
+      }, nextBoxes.lifecycle || [])
+
+      return result
+    }
+
+    // adapter afterSetup
+    t.forEach(adapterName => {
+      t.pathOr(() => {}, [adapterName, 'afterSetup'], adapterStore)(nextBoxes)
+    }, adapterKeys)
 
     // Configure channels
     api.configure(
       channel.config(
         t.concat(
           t.isType(channels, 'Function') ? [channels] : [],
-          nextBoxes.collection.channels || []
+          nextBoxes.channels || []
         )
       )
     )
@@ -99,8 +142,8 @@ export const api = task(t => (ctx = {}) => {
 
     // Configure a middleware for 404s and the error handler
     api.use(FeathersExpress.notFound())
-    // api.use(FeathersExpress.errorHandler(Winston))
-    api.use(FeathersExpress.errorHandler())
+    api.use(FeathersExpress.errorHandler({ logger: Winston }))
+    // api.use(FeathersExpress.errorHandler())
 
     // Attach global hooks
     if (t.isType(hooks, 'Object')) {

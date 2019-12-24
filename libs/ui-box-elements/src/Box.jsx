@@ -3,7 +3,7 @@ import { task } from '@z1/preset-task'
 import { uiBox } from '@z1/lib-ui-box-tailwind'
 
 // main
-export const Box = task(t => props => {
+const renderBox = task(t => props => {
   const Element = t.pathOr('div', ['as'], props)
   const box = t.pathOr(null, ['box'], props)
   const next = t.pathOr(null, ['next'], props)
@@ -30,3 +30,9 @@ export const Box = task(t => props => {
     })
   )
 })
+
+export class Box extends React.Component {
+  render() {
+    return renderBox(this.props)
+  }
+}

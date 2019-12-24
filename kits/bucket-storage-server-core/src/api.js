@@ -71,6 +71,7 @@ export const storageApi = ({ createApiBox, models }) =>
                   })
                 )
               }
+              return null
             }
           }),
           {

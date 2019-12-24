@@ -28,8 +28,8 @@ export const combine = task(t => ctx => {
       },
       boxes
     )
-    return {
-      collection: nextBoxes,
+    const partialBoxes = t.pick(['models', 'services', 'channels'], nextboxes)
+    return t.merge(partialBoxes, {
       lifecycle: key => app => {
         t.forEach(action => {
           if (t.isType(action, 'Function')) {
@@ -37,69 +37,6 @@ export const combine = task(t => ctx => {
           }
         }, nextBoxes.lifecycle || [])
       },
-      configure(app) {
-        const adapterStore = app.get('adapterStore')
-        const adapterKeys = t.keys(adapterStore)
-
-        // register models
-        t.forEach(modelsFactory => {
-          if (t.isType(modelsFactory, 'Function')) {
-            modelsFactory(app)
-          }
-        }, nextBoxes.models)
-
-        // register services
-        t.forEach(servicesFactory => {
-          if (t.isType(servicesFactory, 'Function')) {
-            servicesFactory(app)
-          }
-        }, nextBoxes.services || [])
-
-        console.log('CHECK', app.get('adapterStore'), nextBoxes.services)
-
-        // adapter beforeSetup
-        t.forEach(adapterName => {
-          const beforeSetup = t.pathOr(
-            () => {},
-            [adapterName, 'beforeSetup'],
-            adapterStore
-          )
-          beforeSetup(nextBoxes)
-        }, adapterKeys)
-
-        // associate models on setup
-        const oldSetup = app.setup
-        app.setup = function(...args) {
-          const result = oldSetup.apply(this, args)
-
-          // adapter onSetup
-          t.forEach(adapterName => {
-            const onSetup = t.pathOr(
-              () => {},
-              [adapterName, 'onSetup'],
-              adapterStore
-            )
-            onSetup(nextBoxes)
-          }, adapterKeys)
-
-          // lifecycle onSetup
-          t.forEach(action => {
-            action('onSetup', app)
-          }, nextBoxes.lifecycle || [])
-
-          return result
-        }
-
-        // adapter afterSetup
-        t.forEach(adapterName => {
-          const afterSetup = t.pathOr(
-            () => {},
-            [adapterName, 'afterSetup'],
-            adapterStore
-          )
-          afterSetup(nextBoxes)
-        }, adapterKeys)
-      },
-    }
+    })
   }
 })

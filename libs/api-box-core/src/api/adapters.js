@@ -4,6 +4,7 @@ import { task } from '@z1/preset-task'
 export const adapters = task(t => ctx => {
   return {
     configure(app) {
+      // setup store
       const storeName = 'adapterStore'
       const toolsName = 'dbTools'
       app.set(storeName, {})
@@ -43,7 +44,6 @@ export const adapters = task(t => ctx => {
           create(modelId = [], factory = null) {
             const [adapterName, modelName] = modelId
             const dbTools = app.get(toolsName)
-            // const adapter = dbTools.get(adapterName)
             dbTools.models.add(adapterName, modelName, factory)
             return null
           },
@@ -73,19 +73,17 @@ export const adapters = task(t => ctx => {
             if (t.eq(mode, 'adapter')) {
               const [adapterName, serviceName] = serviceId
               const adapter = dbTools.get(adapterName)
-              console.log('create service', adapterName, serviceName)
-              dbTools.services.add(
-                adapterName,
-                serviceName,
-                adapter.service(serviceName, factory, hooksEvents)
-              )
+              dbTools.services.add(adapterName, serviceName, {
+                name: serviceName,
+                factory,
+                hooksEvents,
+              })
             } else {
               app.configure(() => {
                 const service = factory(app)
                 const serviceName = ctx.safeServiceName(serviceId)
                 if (t.not(t.isNil(service))) {
                   app.use(`/${serviceName}`, service)
-                  // app.use(serviceName, service)
                 }
                 dbTools.services.wire(serviceName, hooksEvents)
               })
@@ -120,8 +118,10 @@ export const adapters = task(t => ctx => {
           },
         },
       })
-      t.forEach(adapter => {
-        adapter(app)
+      // load adapters
+      t.forEach(adapterFactory => {
+        adapter = adapterFactory(app)
+        app.get('dbTools').set(adapter.name, adapter)
       }, t.pathOr([], ['adapters'], ctx))
     },
   }

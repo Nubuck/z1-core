@@ -2,33 +2,24 @@ import { task } from '@z1/preset-task'
 
 // main
 export const compose = task(t => ctx => {
+  const hasKey = (matchKey, keyList) =>
+    t.gt(
+      t.findIndex(key => t.eq(matchKey, key), keyList),
+      -1
+    )
   const mergeLifecycle = (collection, source) => {
     const srcKeys = t.keys(source)
     const existingKeys = t.filter(
-      colKey =>
-        t.gt(
-          t.findIndex(srcKey => t.eq(colKey, srcKey), srcKeys),
-          -1
-        ),
+      colKey => hasKey(colKey, srcKeys),
       t.keys(collection)
     )
-    const nextKeys = t.filter(
-      srcKey =>
-        t.lt(
-          t.findIndex(exKey => t.eq(srcKey, exKey), existingKeys),
-          0
-        ),
-      srcKeys
-    )
+    const nextKeys = t.filter(srcKey => hasKey(srcKey, existingKeys), srcKeys)
     return t.mergeAll([
-      t.mapObjIndexed((val, key) => {
-        return t.gt(
-          t.findIndex(exKey => t.eq(key, exKey), existingKeys),
-          -1
-        )
-          ? t.concat(val || [], [source[key]])
-          : val
-      }, collection),
+      t.mapObjIndexed(
+        (val, key) =>
+          hasKey(key, existingKeys) ? t.concat(val || [], [source[key]]) : val,
+        collection
+      ),
       t.fromPairs(t.map(nxKey => [nxKey, [source[nxKey]]], nextKeys)),
     ])
   }
@@ -72,15 +63,28 @@ export const compose = task(t => ctx => {
     return ctx.create(
       t.merge(props, {
         models(m) {
-          return t.flatten(t.map(model => model(m), combinedParts.models))
+          return t.flatten(
+            t.map(
+              modelsFactory => modelsFactory && modelsFactory(m),
+              combinedParts.models
+            )
+          )
         },
         services(s, h) {
           return t.flatten(
-            t.map(service => service(s, h), combinedParts.services)
+            t.map(
+              servicesFactory => servicesFactory && servicesFactory(s, h),
+              combinedParts.services
+            )
           )
         },
         channels(a) {
-          return t.flatten(t.map(channel => channel(a), combinedParts.channels))
+          return t.flatten(
+            t.map(
+              channelFactory => channelFactory && channelFactory(a),
+              combinedParts.channels
+            )
+          )
         },
         lifecycle,
       })

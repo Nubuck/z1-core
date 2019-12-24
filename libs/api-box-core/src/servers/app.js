@@ -13,8 +13,8 @@ export const app = task(t => ctx => {
   const create = (props, cb) => {
     // check for namespace and configure props
     // -> create main app and mount api at namespace
-    const namespace = t.path(['namespace'], props)
-    const appFolderName = t.path(['appFolderName'], props)
+    const namespace = t.pathOr('api',['apiPath'], props)
+    const appFolderName = t.pathOr('site', ['sitePath'], props)
     const configure = t.path(['configure'], props)
     const api = ctx.api(props)
     const main = FeathersExpress()

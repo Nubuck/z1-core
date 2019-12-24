@@ -6,26 +6,16 @@ export const create = task(t => ctx => {
     return {
       models: t.notType(models, 'Function')
         ? undefined
-        : app => {
-            models(app.get('dbTools').models.create)
-          },
+        : createModel => models(createModel),
       services: t.notType(services, 'Function')
         ? undefined
-        : app => {
-            services(app.get('dbTools').services.create, ctx.commonHooks)
-          },
+        : createService => services(createService, ctx.commonHooks),
       channels: t.notType(channels, 'Function')
         ? undefined
-        : app => {
-            channels(app)
-          },
+        : app => channels(app),
       lifecycle: t.notType(lifecycle, 'Object')
         ? undefined
-        : (key, app) => {
-            if (t.isType(t.path([key], lifecycle), 'Function')) {
-              t.path([key], lifecycle)(app)
-            }
-          },
+        : (key, app) => t.pathOr(() => {}, [key], lifecycle || {})(app),
     }
   }
 })

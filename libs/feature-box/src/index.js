@@ -223,3 +223,28 @@ export const VIEW_STATUS = {
   SUCCESS: 'success',
   FAIL: 'fail',
 }
+
+export const featureBox = {
+  create: createFeature,
+  combine: combineFeatures,
+  state: {
+    create: createStateBox,
+    compose: composeStateBox,
+    combine: combineStateBoxes,
+  },
+  store: {
+    create: createStateStore,
+    reload: reloadStateStore,
+  },
+  ui: {
+    connect: connectState,
+    query: null,
+    Link,
+    NavLink,
+  },
+  route: {
+    render: renderRoute,
+    actions: null,
+    notFound: NOT_FOUND,
+  },
+}

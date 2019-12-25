@@ -4,15 +4,13 @@ import AuthManagement from 'feathers-authentication-management'
 import { isAction } from './tasks'
 
 // main
-export const api = ({ adapter, models, apiBox }) =>
+export const api = ({ adapter, models, apiBox, serviceFactory }) =>
   apiBox.create({
     models,
     services(s, { auth, common, data }) {
       s(
         [adapter, 'users'],
-        m => ({
-          Model: m.users,
-        }),
+        serviceFactory,
         {
           hooks: {
             before: {

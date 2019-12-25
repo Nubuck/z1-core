@@ -16,8 +16,8 @@
   },
   "devDependencies": {
     "@z1/preset-dev-microbundle": "^0.3.1",
-    "@neutrinojs/library": "^8.3.0",
-    "neutrino": "^8.3.0"
+    "@neutrinojs/library": "^9.0",
+    "neutrino": "^9.0"
   },
   "dependencies": {
     "change-case": "^4.1.0",

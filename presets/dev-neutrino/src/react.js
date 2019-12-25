@@ -1,7 +1,8 @@
-const react = require('@neutrinojs/react')
+module.exports = require('@neutrinojs/react')
+// const react = require('@neutrinojs/react')
 
-module.exports = {
-  use: [
-    react()
-  ]
-}
+// module.exports = {
+//   use: [
+//     react()
+//   ]
+// }

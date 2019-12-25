@@ -1,10 +1,18 @@
-import { createKit } from '@z1/lib-feature-box-server-core'
-import { storageApi } from './api'
+import { featureBox } from '@z1/lib-feature-box-server-core'
+import { api } from './api'
 
-export default createKit({ models: null, createApiBox: null }, props => {
-  return {
-    name: 'bucketStorage',
-    api: [storageApi(props)],
-  
+export default featureBox.create(
+  props => {
+    return {
+      name: 'bucketStorage',
+      api: [api(props)],
+      tasks: {},
+    }
+  },
+  {
+    adapter: 'nedb',
+    models: null,
+    apiBox: { create: () => null },
+    serviceFactory: () => ({}),
   }
-})
+)

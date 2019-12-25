@@ -215,3 +215,4 @@ export const apiBox = apiBoxCore(withSequelizeAdapter())
 export const task = Fn
 export const fn = Fn
 export const fs = Fs
+export { FeathersErrors } from '@z1/lib-api-box-core'

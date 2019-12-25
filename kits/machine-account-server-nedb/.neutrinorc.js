@@ -1,12 +1,11 @@
+const library = require('@z1/preset-dev-neutrino/lib/library')
 module.exports = {
   options: {
     output: 'lib',
     root: __dirname,
   },
   use: [
-    // '@z1/preset-dev-neutrino/lib/node',
-    [
-      '@z1/preset-dev-neutrino/lib/library', {
+    library({
       name: 'machine-account-server-nedb',
       target: 'node',
       libraryTarget: 'commonjs2',
@@ -15,16 +14,15 @@ module.exports = {
         // Override options for babel-preset-env
         presets: [
           [
-            'babel-preset-env', {
-            targets: {
-              node: '8.0',
+            'babel-preset-env',
+            {
+              targets: {
+                node: '10.0',
+              },
             },
-          },
           ],
         ],
       },
-    },
-    ],
-    '@z1/preset-dev-neutrino/lib/jest',
+    }),
   ],
 }

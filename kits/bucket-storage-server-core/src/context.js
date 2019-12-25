@@ -1,3 +1,8 @@
+export const SERVICES = {
+  REGISTRY: 'bucket-registry',
+  STORAGE: 'bucket-storage',
+  CONTENT: 'bucket-content',
+}
 export const PATHS = {
   RESULT_ID:[
     'result',

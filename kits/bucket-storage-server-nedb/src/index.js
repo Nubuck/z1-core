@@ -1,12 +1,17 @@
-import { createApiBox, FeathersErrors } from '@z1/lib-feature-box-server-nedb'
+import { featureBox } from '@z1/lib-feature-box-server-nedb'
 import bucketStorageFeatureCore from '@z1/kit-bucket-storage-server-core'
 
 // main
 export default () =>
   bucketStorageFeatureCore({
-    createApiBox,
+    adapter: 'nedb',
+    apiBox: featureBox.api,
     models(m) {
-      return [m('bucket_registry')]
+      m(['nedb', 'bucket_registry'])
     },
-    FeathersErrors,
+    serviceFactory(m) {
+      return {
+        Model: m.bucket_registry,
+      }
+    },
   })

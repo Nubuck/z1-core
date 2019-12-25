@@ -1,4 +1,4 @@
-import { apiBox } from '@z1/lib-feature-box-server'
+import { featureBox } from '@z1/lib-feature-box-server'
 
 // main
 import features from './features'
@@ -7,7 +7,7 @@ process.on('unhandledRejection', (reason, p) =>
   console.log('Unhandled Rejection at: Promise ', p, reason)
 )
 
-let app = apiBox.app.create(
+let app = featureBox.app.create(
   {
     boxes: features.api,
     apiPath: 'api',
@@ -23,6 +23,6 @@ let app = apiBox.app.create(
 
 if (module.hot) {
   module.hot.accept(['./features'], () => {
-    app = apiBox.app.reload(app, { boxes: features.api })
+    app = featureBox.app.reload(app, { boxes: features.api })
   })
 }

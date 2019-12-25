@@ -5,7 +5,7 @@ import { task } from '@z1/preset-task'
 import { Box } from './Box'
 
 // main
-export const Input = task(t => props => {
+const renderInput = task(t => props => {
   const as = t.pathOr('input', ['as'], props)
   const className = t.pathOr(null, ['className'], props)
   return React.createElement(
@@ -23,3 +23,9 @@ export const Input = task(t => props => {
     })
   )
 })
+
+export class Input extends React.Component {
+  render() {
+    return renderInput(this.props)
+  }
+}

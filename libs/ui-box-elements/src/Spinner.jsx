@@ -5,23 +5,28 @@ import { task } from '@z1/preset-task'
 import { Box } from './Box'
 
 // main
-export const Spinner = task(t => props => {
-    const size = t.pathOr(null, ['size'], props)
-    const color = t.pathOr(null, ['color'], props)
-    const className = t.pathOr(null, ['className'], props)
-    return React.createElement(
-      Box,
-      t.merge(t.omit(['className', 'size', 'color', 'box'], props), {
-        className: `spinner ${t.isNil(size) ? '' : ` spinner-${size}`} ${
-          t.isNil(className) ? '' : ` ${className}`
-        }`,
-        box: t.merge(
-          {
-            color,
-          },
-          t.pathOr({}, ['box'], props)
-        ),
-      })
-    )
-  })
-  
+const renderSpinner = task(t => props => {
+  const size = t.pathOr(null, ['size'], props)
+  const color = t.pathOr(null, ['color'], props)
+  const className = t.pathOr(null, ['className'], props)
+  return React.createElement(
+    Box,
+    t.merge(t.omit(['className', 'size', 'color', 'box'], props), {
+      className: `spinner ${t.isNil(size) ? '' : ` spinner-${size}`} ${
+        t.isNil(className) ? '' : ` ${className}`
+      }`,
+      box: t.merge(
+        {
+          color,
+        },
+        t.pathOr({}, ['box'], props)
+      ),
+    })
+  )
+})
+
+export class Spinner extends React.Component {
+  render() {
+    return renderSpinner(this.props)
+  }
+}

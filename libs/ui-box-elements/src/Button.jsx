@@ -5,7 +5,7 @@ import { task } from '@z1/preset-task'
 import { Box } from './Box'
 
 // main
-export const Button = task(t => props => {
+const renderButton = task(t => props => {
   const as = t.pathOr('button', ['as'], props)
   const className = t.pathOr(null, ['className'], props)
   const size = t.pathOr('md', ['size'], props)
@@ -16,20 +16,21 @@ export const Button = task(t => props => {
   const borderWidth = t.pathOr(null, ['borderWidth'], props)
   const fontWeight = t.pathOr(null, ['weight'], props)
   const fontFamily = t.pathOr(null, ['family'], props)
+  const fontSize = t.pathOr(null, ['fontSize'], props)
   const proportion = t.getMatch(size)({
     sm: {
-      padding: { x: 3, y: 2 },
-      fontSize: 'sm',
+      padding: { x: 2, y: 2 },
+      fontSize: fontSize || 'sm',
       fontWeight: fontWeight || 'normal',
     },
     md: {
-      padding: { x: 4, y: 2 },
-      fontSize: 'base',
+      padding: { x: 3, y: 2 },
+      fontSize: fontSize || 'base',
       fontWeight: fontWeight || 'bold',
     },
     lg: {
-      padding: { x: 6, y: 3 },
-      fontSize: 'lg',
+      padding: { x: 4, y: 3 },
+      fontSize: fontSize || 'lg',
       fontWeight: fontWeight || 'bold',
     },
   })
@@ -75,3 +76,9 @@ export const Button = task(t => props => {
     )
   )
 })
+
+export class Button extends React.Component {
+  render() {
+    return renderButton(this.props)
+  }
+}

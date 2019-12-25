@@ -5,7 +5,7 @@ import { task } from '@z1/preset-task'
 import { Box } from './Box'
 
 // main
-export const Checkbox = task(t => props => {
+const renderCheckbox = task(t => props => {
   const as = t.pathOr('input', ['as'], props)
   const type = t.pathOr('checkbox', ['as'], props)
   const className = t.pathOr(null, ['className'], props)
@@ -18,3 +18,9 @@ export const Checkbox = task(t => props => {
     })
   )
 })
+
+export class Checkbox extends React.Component {
+  render() {
+    return renderCheckbox(this.props)
+  }
+}

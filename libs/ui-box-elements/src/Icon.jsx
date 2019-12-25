@@ -5,7 +5,7 @@ import { task } from '@z1/preset-task'
 import { Box } from './Box'
 
 // main
-export const Icon = task(t => props => {
+const renderIcon = task(t => props => {
   const as = t.pathOr('i', ['as'], props)
   const prefix = t.pathOr('fa', ['prefix'], props)
   const iconPrefix = t.pathOr('fa', ['iconPrefix'], props)
@@ -36,3 +36,9 @@ export const Icon = task(t => props => {
     )
   )
 })
+
+export class Icon extends React.Component {
+  render() {
+    return renderIcon(this.props)
+  }
+}

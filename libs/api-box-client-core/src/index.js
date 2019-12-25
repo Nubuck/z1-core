@@ -1,4 +1,4 @@
-import { task } from '@z1/preset-task'
+import { task as fn } from '@z1/preset-task'
 import {
   Feathers,
   FeathersIO,
@@ -6,7 +6,7 @@ import {
   FeathersAuth,
 } from '@z1/preset-feathers-client'
 
-export const createApiClient = task(t => props => {
+export const apiClient = fn(t => props => {
   const client = Feathers()
   const ioClient = t.has('options')(props)
     ? IO(props.path, props.options)
@@ -31,4 +31,4 @@ export const createApiClient = task(t => props => {
   return client
 })
 
-export const Task = task
+export const task = fn

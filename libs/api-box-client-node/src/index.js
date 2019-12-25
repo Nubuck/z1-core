@@ -1,7 +1,7 @@
 import * as core from './client'
 import nodePersist from 'node-persist'
 
-export const createApiClient = core.Task(t => async props => {
+export const apiClient = core.task(t => async props => {
   const options = {
     dir: './storage',
     stringify: JSON.stringify,
@@ -24,7 +24,7 @@ export const createApiClient = core.Task(t => async props => {
       t.not(t.has('storageOptions')(props)) ? {} : props.storageOptions
     )
   )
-  return core.createApiClient(
+  return core.apiClient(
     t.merge(props, {
       storage: nodePersist,
     })

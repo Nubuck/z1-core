@@ -10,7 +10,7 @@ const colWidth = task(t => width =>
 )
 
 // main
-export const Col = task(t => props =>
+const renderCol = task(t => props =>
   React.createElement(
     VStack,
     t.merge(t.omit(['box'], props), {
@@ -32,3 +32,9 @@ export const Col = task(t => props =>
     })
   )
 )
+
+export class Col extends React.Component {
+  render() {
+    return renderCol(this.props)
+  }
+}

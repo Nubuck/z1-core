@@ -2,15 +2,22 @@ import React from 'react'
 import { task } from '@z1/preset-task'
 
 // main
-export const MapIndexed = task(t => props => {
+const renderMapIndexed = task(t => props => {
   const render = t.pathOr(null, ['render'], props)
   if (t.notType(render, 'Function')) {
     return null
   }
-  const list = t.pathOr([], ['list'], props)
+  const list = t.pathOr(null, ['list'], props)
+  const items = t.isNil(list) ? t.pathOr([], ['items'], props) : list
   return React.createElement(
     React.Fragment,
     {},
-    t.mapIndexed((item, index) => render(item, index), list)
+    t.mapIndexed((item, index) => render(item, index), items)
   )
 })
+
+export class MapIndexed extends React.Component {
+  render() {
+    return renderMapIndexed(this.props)
+  }
+}

@@ -1,11 +1,11 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // elements
 import { Box } from './Box'
 
 // main
-const renderStack = task(t => (direction, props) => {
+const renderStack = fn(t => (direction, props) => {
   const stackProps = {
     flexDirection: t.eq(direction, 'vertical') ? 'col' : 'row',
   }

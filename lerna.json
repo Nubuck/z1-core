@@ -1,7 +1,7 @@
 {
   "version": "0.3.1",
   "packages": [
-    "_check/**",
+    "examples/**",
     "kits/**",
     "libs/**",
     "presets/**"

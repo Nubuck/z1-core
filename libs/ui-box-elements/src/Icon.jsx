@@ -1,11 +1,11 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // elements
 import { Box } from './Box'
 
 // main
-const renderIcon = task(t => props => {
+const renderIcon = fn(t => props => {
   const as = t.pathOr('i', ['as'], props)
   const prefix = t.pathOr('fa', ['prefix'], props)
   const iconPrefix = t.pathOr('fa', ['iconPrefix'], props)

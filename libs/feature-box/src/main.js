@@ -4,7 +4,7 @@ import { fn as Fn } from '@z1/lib-state-box'
 import { box } from './box'
 import { state } from './state'
 import { store } from './store'
-import { route } from './route'
+import { routing } from './routing'
 import { ui } from ''
 
 // main
@@ -13,7 +13,7 @@ export const featureBox = Fn(t =>
     state,
     store: store({ combine: state.combine }),
     ui,
-    route,
+    routing,
   })
 )
 export const fn = Fn

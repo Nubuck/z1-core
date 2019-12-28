@@ -18,7 +18,7 @@
     "boot:presets": "lerna bootstrap --force-local --scope=@z1/preset-*",
     "boot:libs": "lerna bootstrap --force-local --scope=@z1/lib-*",
     "boot:kits": "lerna bootstrap --force-local --scope=@z1/kit-*",
-    "publish": "lerna publish"
+    "publish": "lerna publish --scope=@z1/*"
   },
   "dependencies": {
     "lerna": "3.19.0"

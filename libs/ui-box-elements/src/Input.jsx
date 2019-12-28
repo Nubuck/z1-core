@@ -1,11 +1,11 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // elements
 import { Box } from './Box'
 
 // main
-const renderInput = task(t => props => {
+const renderInput = fn(t => props => {
   const as = t.pathOr('input', ['as'], props)
   const className = t.pathOr(null, ['className'], props)
   return React.createElement(

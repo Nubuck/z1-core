@@ -1,11 +1,11 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // elements
 import { HStack } from './Stack'
 
 // main
-const renderRow = task(t => props =>
+const renderRow = fn(t => props =>
   React.createElement(
     HStack,
     t.merge(t.omit(['box'], props), {

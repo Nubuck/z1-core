@@ -1,8 +1,8 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // main
-const renderWhen = task(t => props => {
+const renderWhen = fn(t => props => {
   const is = t.pathOr(false, ['is'], props)
   return t.not(is)
     ? null

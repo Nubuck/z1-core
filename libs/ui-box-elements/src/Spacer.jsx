@@ -1,11 +1,11 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // elements
 import { Box } from './Box'
 
 // main
-const renderSpacer = task(t => props =>
+const renderSpacer = fn(t => props =>
   React.createElement(
     Box,
     t.merge(t.omit(['box'], props), {

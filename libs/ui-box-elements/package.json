@@ -13,9 +13,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-ui-box-tailwind": "^0.3.1",
-    "@z1/preset-task": "^0.3.1",
-    "react-value": "^0.2.0"
+    "@z1/lib-ui-box": "^0.3.1"
   },
   "devDependencies": {
     "@z1/preset-dev-bundle": "^0.3.1",

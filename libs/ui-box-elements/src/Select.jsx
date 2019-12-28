@@ -1,11 +1,11 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // elements
 import { Box } from './Box'
 
 // main
-const renderSelect = task(t => props => {
+const renderSelect = fn(t => props => {
   const as = t.pathOr('select', ['as'], props)
   const multiple = t.pathOr(null, ['multiple'], props)
   const className = t.pathOr(null, ['className'], props)

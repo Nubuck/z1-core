@@ -1,24 +1,35 @@
 import { stateBox, fn } from '@z1/lib-state-box'
 
 // main
-const createRouteFactory = fn(t => boxName => (actionType, pathOrProps, reducer) => {
-  return t.mergeAll([
-    {
-      action: `${boxName}/${t.caseTo.constantCase(actionType)}`,
-      type: t.caseTo.camelCase(actionType),
-    },
-    t.isType(pathOrProps, 'String') ? { path: pathOrProps } : pathOrProps,
-    { reducer },
-  ])
-})
+const createRouteFactory = fn(
+  t => boxName => (actionType, path, reducer, props = {}) => {
+    return t.mergeAll([
+      {
+        action: `${boxName}/${t.caseTo.constantCase(actionType)}`,
+        type: t.caseTo.camelCase(actionType),
+      },
+      { path, reducer },
+      props,
+    ])
+    // const actionType = props.action
+    // return t.mergeAll([
+    //   {
+    //     action: `${boxName}/${t.caseTo.constantCase(actionType)}`,
+    //     type: t.caseTo.camelCase(actionType),
+    //   },
+    //   t.omit(['action'], pathOrProps),
+    //   { reducer },
+    // ])
+  }
+)
 
 const createStateBox = fn(t => props => {
-  const routesProp = t.pathOr(null,['routes'], props)
-  if (t.isNil(routesProp)){
+  const routesProp = t.pathOr(null, ['routes'], props)
+  if (t.isNil(routesProp)) {
     return stateBox.create(props)
   }
   const routes = routesProp(createRouteFactory(props.name))
-  const mutationsProp = t.pathOr(null,['mutations'], props)
+  const mutationsProp = t.pathOr(null, ['mutations'], props)
   const mutations = m => {
     const routeMuts = t.map(route => {
       return m(route.type, route.reducer)
@@ -86,9 +97,7 @@ const composeStateBox = fn(t => (props, parts) => {
           )
         },
         routes(r) {
-          return t.flatten(
-            t.map(route => route(r))(nextParts.routes || [])
-          )
+          return t.flatten(t.map(route => route(r))(nextParts.routes || []))
         },
         guards(g, box) {
           return t.flatten(

@@ -1,20 +1,9 @@
 import { task } from '@z1/preset-task'
 
 // main
-const isResponsive = task(t => value => {
-  if (t.and(t.isType(value, 'Array'), t.lt(t.length(value), 2))) {
-    return false
-  }
-  if (t.isType(value, 'Array')) {
-    const [_, responsiveProps] = value
-    return t.isType(responsiveProps, 'Object')
-  }
-  return false
-})
-
-const skipNull = task(t => (v, nextV) => (t.isType(v, 'Null') ? '' : nextV))
+const skipNull = task(t => (v, nextV) => (t.isNil(v) ? '' : nextV))
 const sides = ['top', 'right', 'bottom', 'left']
-const cssProps = task(t => ({
+export const cssProps = task(t => ({
   // layout
   container: v => (t.not(v) ? '' : 'container'),
   display: v => skipNull(v, `${v}`),
@@ -230,48 +219,3 @@ const cssProps = task(t => ({
   stroke: v => skipNull(v, t.not(v) ? '' : 'stroke-current'),
   className: v => skipNull(v, `${v}`),
 }))
-
-export const toCss = task(t => props => {
-  return t.tags.oneLineInlineLists`
-  ${t.map(key => {
-    const cssProp = cssProps[key]
-    if (t.not(cssProp)) {
-      return ''
-    }
-    const value = props[key]
-    if (t.not(isResponsive(value))) {
-      return cssProp(value)
-    }
-    const [all, responsive] = value
-    const responsiveKeys = t.keys(responsive)
-    return t.tags.oneLineInlineLists`
-    ${t.flatten([
-      [cssProp(all)],
-      t.map(sizeKey => {
-        const responsiveProp = cssProp(responsive[sizeKey])
-        const props = t.split(' ', responsiveProp)
-        return t.tags.oneLineInlineLists`${t.map(
-          prop => `${sizeKey}:${prop}`,
-          props
-        )}`
-      }, responsiveKeys),
-    ])}
-    `
-  }, t.keys(props))}`
-})
-
-export const uiBox = task(t => (props = {}) => {
-  return {
-    next(nextProps = {}) {
-      return t.isType(nextProps, 'Function')
-        ? nextProps(uiBox(props))
-        : uiBox(t.mergeDeepRight(props, nextProps))
-    },
-    toBox() {
-      return props
-    },
-    toCss() {
-      return toCss(props)
-    },
-  }
-})

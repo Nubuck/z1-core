@@ -1,9 +1,8 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
-import { uiBox } from '@z1/lib-ui-box-tailwind'
+import { uiBox, fn } from '@z1/lib-ui-box-tailwind'
 
 // main
-const renderBox = task(t => props => {
+const renderBox = fn(t => props => {
   const Element = t.pathOr('div', ['as'], props)
   const box = t.pathOr(null, ['box'], props)
   const next = t.pathOr(null, ['next'], props)

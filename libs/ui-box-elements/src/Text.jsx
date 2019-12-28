@@ -1,11 +1,11 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // elements
 import { Box } from './Box'
 
 // main
-const renderText = task(t => props => {
+const renderText = fn(t => props => {
   const as = t.pathOr('span', ['as'], props)
   const fontSize = t.pathOr(null, ['size'], props)
   const fontFamily = t.pathOr(null, ['family'], props)

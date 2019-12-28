@@ -1,11 +1,11 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // elements
 import { Box } from './Box'
 
 // main
-const renderSpinner = task(t => props => {
+const renderSpinner = fn(t => props => {
   const size = t.pathOr(null, ['size'], props)
   const color = t.pathOr(null, ['color'], props)
   const className = t.pathOr(null, ['className'], props)

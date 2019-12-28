@@ -4,6 +4,6 @@
 
 Z1 is a modular software system of declaritive macros that automates the labor and complexity out of building composable multi-platform apps.
 
-This mono repo houses the Z1 core packages augmenting the [Feathers](https://feathersjs.com/), [React](https://reactjs.org/), [Redux](https://redux.js.org/) and [Tailwind](https://tailwindcss.com/) ecosystems.
+This mono repo houses the Z1 core packages augmenting the [Feathers](https://feathersjs.com/), [React](https://reactjs.org/), [Redux](https://redux.js.org/) and [Tailwind](https://tailwindcss.com/) ecosystems to conform to the Z1 system.
 
 Documentation under construction. 

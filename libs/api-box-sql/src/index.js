@@ -3,7 +3,7 @@ import { Sequelize, FeathersSequelize } from '@z1/preset-feathers-server-sql'
 import { Knex, FeathersKnex } from '@z1/preset-feathers-server-sql'
 
 // tasks
-import { createDBConnection } from './tasks'
+import { createDBConnection } from './db'
 
 // main
 export const withSequelizeAdapter = Fn(t => (ctx = {}) => {

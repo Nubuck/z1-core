@@ -1,16 +1,16 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // elements
 import { VStack } from './Stack'
 
 // tasks
-const colWidth = task(t => width =>
+const colWidth = fn(t => width =>
   t.isNil(width) ? width : t.gte(width, 12) ? 'full' : `${width}/12`
 )
 
 // main
-const renderCol = task(t => props =>
+const renderCol = fn(t => props =>
   React.createElement(
     VStack,
     t.merge(t.omit(['box'], props), {

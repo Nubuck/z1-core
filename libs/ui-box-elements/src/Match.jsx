@@ -1,8 +1,8 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // main
-const renderMatch = task(t => props => {
+const renderMatch = fn(t => props => {
   const cases = t.pathOr({}, ['when'], props)
   const handleCases = t.pathOr({}, ['renderWhen'], props)
   const value = t.pathOr(null, ['value'], props)

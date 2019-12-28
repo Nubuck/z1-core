@@ -20,9 +20,9 @@ const combineFeatures = fn(t => (featureList = []) =>
           : t.merge(combined.ui, {
               [feature.name]: t.path(['ui'], feature),
             }),
-        routes: t.notType(t.path(['routes'], feature), 'Array')
-          ? combined.routes
-          : t.concat(combined.routes, t.path(['routes'], feature)),
+        routing: t.notType(t.path(['routing'], feature), 'Array')
+          ? combined.routing
+          : t.concat(combined.routing, t.path(['routing'], feature)),
         parts: t.notType(t.path(['parts'], feature), 'Object')
           ? combined.parts
           : t.merge(combined.parts, {
@@ -33,7 +33,7 @@ const combineFeatures = fn(t => (featureList = []) =>
     {
       state: [],
       ui: {},
-      routes: [],
+      routing: [],
       parts: {},
     },
     featureList

@@ -3,8 +3,8 @@ import { fn } from '@z1/lib-state-box'
 export { NOT_FOUND } from 'redux-first-router'
 
 // main
-export const route = fn(t => ({
-  render(actionType, routes) {
+export const routing = fn(t => ({
+  render(actionType, routing = []) {
     const matchedDef = t.find(
       routeDef =>
         t.gt(
@@ -16,7 +16,7 @@ export const route = fn(t => ({
           ),
           -1
         ),
-      routes
+      routing
     )
     if (!matchedDef.ui) {
       return null

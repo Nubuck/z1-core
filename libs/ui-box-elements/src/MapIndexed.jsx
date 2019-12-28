@@ -1,8 +1,8 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // main
-const renderMapIndexed = task(t => props => {
+const renderMapIndexed = fn(t => props => {
   const render = t.pathOr(null, ['render'], props)
   if (t.notType(render, 'Function')) {
     return null

@@ -63,7 +63,7 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
     }
   }
   return t.merge(ctx, {
-    adapters: t.concat(adapters, [adapter]),
+    adapters: t.concat(adapters, [nedbAdapter]),
   })
 })
 

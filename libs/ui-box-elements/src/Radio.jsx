@@ -1,11 +1,11 @@
 import React from 'react'
-import { task } from '@z1/preset-task'
+import { fn } from '@z1/lib-ui-box-tailwind'
 
 // elements
 import { Box } from './Box'
 
 // main
-const renderRadio = task(t => props => {
+const renderRadio = fn(t => props => {
   const as = t.pathOr('input', ['as'], props)
   const type = t.pathOr('radio', ['as'], props)
   const className = t.pathOr(null, ['className'], props)

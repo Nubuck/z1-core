@@ -17,7 +17,7 @@ export const configure = fn((t, a) => (boxName, props = {}) => {
     ['routes'],
     props
   )
-  const macroProps = t.pathOr({}, ['views'], props)
+  const state = t.pathOr({}, ['state'], props)
   return {
     initial: {
       route: {
@@ -29,12 +29,15 @@ export const configure = fn((t, a) => (boxName, props = {}) => {
         detail: null,
         more: null,
       },
-      active: null,
+      active: {
+        param: null,
+        view: null,
+      },
       views: {},
     },
     mutations(m) {
       return [
-        m('exitRoute', (state, action) => {
+        m(['enterRoute', 'exitRoute'], (state, action) => {
           return state
         }),
         m(['dataChange', 'dataLoad', 'dataLoadComplete'], (state, action) => {

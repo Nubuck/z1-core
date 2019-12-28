@@ -19,7 +19,19 @@ export const configure = fn((t, a) => (boxName, props = {}) => {
   )
   const macroProps = t.pathOr({}, ['views'], props)
   return {
-    initial: {},
+    initial: {
+      route: {
+        path: null,
+        action: null,
+      },
+      params: {
+        view: null,
+        detail: null,
+        more: null,
+      },
+      active: null,
+      views: {},
+    },
     mutations(m) {
       return [
         m('exitRoute', (state, action) => {

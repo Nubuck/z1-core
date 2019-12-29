@@ -1,4 +1,4 @@
-import { fn as Fn } from '@z1/lib-state-box'
+import { fn } from '@z1/lib-state-box'
 
 // parts
 import { box } from './box'
@@ -8,7 +8,7 @@ import { routing } from './routing'
 import { ui } from ''
 
 // main
-export const featureBox = Fn(t =>
+export const featureBox = fn(t =>
   t.merge(box, {
     state,
     store: store({ combine: state.combine }),
@@ -16,5 +16,4 @@ export const featureBox = Fn(t =>
     routing,
   })
 )
-export const fn = Fn
-export const task = Fn
+

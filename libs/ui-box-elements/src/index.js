@@ -1,20 +1,4 @@
+import * as elements from './main'
 export { uiBox, toCss, fn } from '@z1/lib-ui-box-tailwind'
-
-// main
-export * from './Box'
-export * from './Button'
-export * from './Checkbox'
-export * from './Col'
-export * from './Icon'
-export * from './Input'
-export * from './MapIndexed'
-export * from './Match'
-export * from './Radio'
-export * from './Row'
-export * from './Select'
-export * from './Spacer'
-export * from './Spinner'
-export * from './Stack'
-export * from './Text'
-export * from './TextArea'
-export * from './When'
+export * from './main'
+export default elements

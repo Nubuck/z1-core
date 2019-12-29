@@ -1,8 +1,8 @@
-import * as core from '@z1/lib-api-box-client-core'
+import apiCore from '@z1/lib-api-box-client-core'
 import { default as localforage } from 'localforage'
 
-export const apiClient = core.task(t => props =>
-  core.apiClient(
+const api = core.task(t => props =>
+  apiCore(
     t.merge(
       {
         storage: localforage,
@@ -11,3 +11,5 @@ export const apiClient = core.task(t => props =>
     )
   )
 )
+export const apiClient = api
+export default api

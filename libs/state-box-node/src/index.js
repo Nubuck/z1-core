@@ -1,6 +1,7 @@
 import { stateBoxCore, fn as Fn } from '@z1/lib-state-box-core'
 import createNodeLogger from 'redux-node-logger'
 
+// outs
 export const stateBox = Fn(t =>
   t.merge(stateBoxCore, {
     store: t.merge(stateBoxCore.store, {
@@ -14,3 +15,5 @@ export const stateBox = Fn(t =>
 )
 export const fn = Fn
 export const task = Fn
+export default stateBox
+

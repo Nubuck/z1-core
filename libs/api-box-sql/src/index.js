@@ -150,7 +150,7 @@ export const withKnexAdapter = Fn(t => (ctx = {}) => {
         //   adapterName,
         //   t.mergeAll([adapter, { models: nextModels }, connection])
         // )
-        
+
         // register services
         t.forEach(serviceName => {
           //   const serviceDef = adapter.services[serviceName]
@@ -211,8 +211,10 @@ export const withKnexAdapter = Fn(t => (ctx = {}) => {
   })
 })
 
-export const apiBox = apiBoxCore(withSequelizeAdapter())
+const abx = apiBoxCore(withSequelizeAdapter())
+export const apiBox = abx
 export const task = Fn
 export const fn = Fn
 export const fs = Fs
 export { FeathersErrors } from '@z1/lib-api-box-core'
+export default abx

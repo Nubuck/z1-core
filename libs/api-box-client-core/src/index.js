@@ -6,7 +6,7 @@ import {
   FeathersAuth,
 } from '@z1/preset-feathers-client'
 
-export const apiClient = fn(t => props => {
+const api = fn(t => props => {
   const client = Feathers()
   const ioClient = t.has('options')(props)
     ? IO(props.path, props.options)
@@ -30,5 +30,6 @@ export const apiClient = fn(t => props => {
   }
   return client
 })
-
+export const apiClientCore = api
 export const task = fn
+export default api

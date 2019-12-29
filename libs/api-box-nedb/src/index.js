@@ -67,8 +67,10 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
   })
 })
 
-export const apiBox = apiBoxCore(withNedbAdapter())
+const abx = apiBoxCore(withNedbAdapter())
+export const apiBox = abx
 export const task = Fn
 export const fn = Fn
 export const fs = Fs
 export { FeathersErrors } from '@z1/lib-api-box-core'
+export default abx

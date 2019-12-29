@@ -13,7 +13,7 @@ const createStateStore = fn(t => ({ combine }) => props => {
       t.not(t.has('routerOptions')(props)) ? {} : props.routerOptions
     )
   )
-  return core.createStateStore(
+  return stateBox.store.create(
     t.merge(t.omit(['routerOptions'], props), {
       context: t.merge(props.context, { redirect }),
       boxes: combinedBoxes,

@@ -20,7 +20,7 @@ function styleLoaders(tailwindConfigPath) {
   ]
 }
 
-export const tailwindConfig = fn(t => props => {
+export const tailwindConfig = fn(t => (props = {}) => {
   // TODO: smurter merge
   return t.mergeDeepRight(
     {

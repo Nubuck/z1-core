@@ -1,10 +1,14 @@
 import { fn } from '@z1/lib-state-box'
 
 // main
-const createFeature = fn(t => (factory, initial = {}) => (props = {}) => {
+const createFeature = fn(t => (name, factory, initial = {}) => (props = {}) => {
   const ui = t.path(['ui'], props)
   return factory(
-    t.merge(t.mergeDeepRight(initial, t.omit(['ui'], props)), { ui })
+    t.mergeAll([
+      { name },
+      t.mergeDeepRight(initial, t.omit(['ui'], props)),
+      { ui },
+    ])
   )
 })
 

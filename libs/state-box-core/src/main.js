@@ -1,17 +1,12 @@
 import { fn as Fn } from './fn'
-// import { createMutationFactory, createEffectFactory } from './parts'
-import { create } from './create'
+import { createOrCompose } from './createOrCompose'
 import { combine } from './combine'
 import { store } from './store'
 
 export const stateBoxCore = {
-  create,
+  create: createOrCompose,
   combine,
   store,
-  // parts: {
-  //   createMutationFactory,
-  //   createEffectFactory,
-  // },
 }
 export const fn = Fn
 export const task = Fn

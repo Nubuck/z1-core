@@ -8,9 +8,7 @@ export const create = fn(t => (name, { state, ui, render }) => {
     ? 'viewList'
     : t.eq(t.len(name), 2)
     ? 'detail'
-    : t.eq(t.len(name), 3)
-    ? 'more'
-    : 'extra'
+    : 'more'
   return {
     key: t.match(param)({
       view: `${t.to.camelCase(name)}`,
@@ -23,11 +21,15 @@ export const create = fn(t => (name, { state, ui, render }) => {
       )}
       `,
     }),
-    // param: t.eq(param, 'viewList') ? 'view' : param,
+    param: t.eq(param, 'viewList') ? 'view' : param,
     state(ctx) {
       const nextState = t.isType(state, 'function') ? state(ctx) : state
       return {
-        initial: t.pathOr({}, ['initial'], nextState),
+        initial: t.pathOr(
+          { data: {}, form: {}, modal: {} },
+          ['initial'],
+          nextState
+        ),
         data(props) {
           const dataHandle = t.pathOr(() => null, ['data'], nextState)
           return dataHandle(props)

@@ -1,13 +1,7 @@
 import { fn } from './fn'
 
 // main
-const passThrough = function() {
-  return {}
-}
-export const combine = fn(t => (boxes, reducer = undefined) => {
-  const reduceBy = t.and(t.not(t.isNil(reducer)), t.isType(reducer, 'Function'))
-    ? reducer
-    : passThrough
+export const combine = fn(t => (boxes = [], combineWith = () => ({})) => {
   return t.reduce(
     (nextBoxes, box) => {
       return t.merge(
@@ -18,7 +12,7 @@ export const combine = fn(t => (boxes, reducer = undefined) => {
             ? nextBoxes.onInit
             : t.concat(nextBoxes.onInit, [box.onInit]),
         },
-        reduceBy(nextBoxes, box)
+        combineWith(nextBoxes, box)
       )
     },
     {

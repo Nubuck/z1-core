@@ -23,12 +23,12 @@ const createRouteFactory = fn(
   }
 )
 
-const createStateBox = fn(t => props => {
+const createStateBox = fn(t => (name, props) => {
   const routesProp = t.pathOr(null, ['routes'], props)
   if (t.isNil(routesProp)) {
     return stateBox.create(props)
   }
-  const routes = routesProp(createRouteFactory(props.name))
+  const routes = routesProp(createRouteFactory(name))
   const mutationsProp = t.pathOr(null, ['mutations'], props)
   const mutations = m => {
     const routeMuts = t.map(route => {
@@ -37,7 +37,7 @@ const createStateBox = fn(t => props => {
     const muts = t.isNil(mutationsProp) ? [] : mutationsProp(m)
     return t.concat(muts, routeMuts)
   }
-  const box = stateBox.create(t.merge(props, { mutations }))
+  const box = stateBox.create(name, t.merge(props, { mutations }))
   const nextRoutes = t.mergeAll(
     t.map(
       route => ({
@@ -50,72 +50,38 @@ const createStateBox = fn(t => props => {
     routes: nextRoutes,
   })
 })
-const composeStateBox = fn(t => (props, parts) => {
-  const nextParts = t.reduce(
-    (collection, part) => {
+
+const composeStateBox = fn(t => (name, boxes = []) => {
+  return stateBox.create(
+    name,
+    boxes,
+    (nextParts, part) => {
       return {
-        initial: t.not(t.has('initial')(part))
-          ? collection.initial
-          : t.mergeDeepRight(collection.initial, part.initial || {}),
-        mutations: t.not(t.has('mutations')(part))
-          ? collection.mutations
-          : t.concat(collection.mutations, [part.mutations]),
         routes: t.not(t.has('routes')(part))
-          ? collection.routes
-          : t.concat(collection.routes, [part.routes]),
-        guards: t.not(t.has('guards')(part))
-          ? collection.guards
-          : t.concat(collection.guards, [part.guards]),
-        effects: t.not(t.has('effects')(part))
-          ? collection.effects
-          : t.concat(collection.effects, [part.effects]),
-        onInit: t.not(t.has('onInit')(part))
-          ? collection.onInit
-          : t.concat(collection.onInit, [part.onInit]),
+          ? nextParts.routes || []
+          : t.concat(nextParts.routes || [], [part.routes]),
       }
     },
-    {
-      initial: {},
-      mutations: [],
-      routes: [],
-      guards: [],
-      effects: [],
-      onInit: [],
-    },
-    parts || []
-  )
-  return createStateBox(
-    t.mergeAll([
-      {
-        initial: t.mergeDeepRight(nextParts.initial || {}, props.initial || {}),
-      },
-      t.omit(['initial'], props || {}),
-      {
-        mutations(m) {
-          return t.flatten(
-            t.map(mutation => mutation(m))(nextParts.mutations || [])
-          )
-        },
-        routes(r) {
-          return t.flatten(t.map(route => route(r))(nextParts.routes || []))
-        },
-        guards(g, box) {
-          return t.flatten(
-            t.map(guard => guard(g, box))(nextParts.guards || [])
-          )
-        },
-        effects(fx, box) {
-          return t.flatten(
-            t.map(effect => effect(fx, box))(nextParts.effects || [])
-          )
-        },
-        onInit(ctx) {
-          t.forEach(onInit => onInit(ctx), nextParts.onInit || [])
-        },
-      },
-    ])
+    (nextParts = {}) => (props = {}) => {
+      return createStateBox(
+        name,
+        t.merge(props, {
+          routes(r) {
+            return t.flatten(t.map(route => route(r))(nextParts.routes || []))
+          },
+        })
+      )
+    }
   )
 })
+
+const createOrCompose = fn(t => (name, boxOrBoxes) => {
+  if (t.isType(boxOrBoxes, 'array')) {
+    return composeStateBox(name, boxOrBoxes)
+  }
+  return createStateBox(name, boxOrBoxes)
+})
+
 const combineStateBoxes = fn(t => boxes => {
   return stateBox.combine(boxes, (nextBoxes, box) => {
     return {
@@ -125,7 +91,6 @@ const combineStateBoxes = fn(t => boxes => {
 })
 
 export const state = {
-  create: createStateBox,
-  compose: composeStateBox,
+  create: createOrCompose,
   combine: combineStateBoxes,
 }

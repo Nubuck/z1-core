@@ -1,10 +1,10 @@
 import { fn } from '@z1/lib-feature-box'
 
 // ctx
-import { types } from './types'
+import { types } from '../types'
 
 // main
-export const configure = fn((t, a) => (boxName, props = {}) => {
+export const configure = fn((t, a, rx) => (boxName, props = {}) => {
   const path = t.pathOr('/', ['path'], props)
   const defaultRoute = { authenticate: false }
   const routes = t.pathOr(

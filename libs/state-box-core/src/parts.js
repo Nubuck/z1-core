@@ -39,8 +39,9 @@ export const createMutationFactory = fn(
       ) || []
     )
     return {
-      mutations: transforms.mutators,
       mutators: transforms.mutators,
+      // back compat
+      mutations: transforms.mutators,
       actions: transforms.actions,
       reducer: (state = initialState, action) => {
         return t.not(transforms.reducers[action.type])

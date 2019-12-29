@@ -17,7 +17,7 @@ export const configure = fn((t, a) => (boxName, props = {}) => {
     ['routes'],
     props
   )
-  const state = t.pathOr({}, ['state'], props)
+  const viewState = t.merge(t.pathOr({}, ['state'], props), { _: null })
   return {
     initial: {
       route: {
@@ -60,6 +60,7 @@ export const configure = fn((t, a) => (boxName, props = {}) => {
           'routeHome',
           path,
           (state, action) => {
+            // home viewState
             return state
           },
           routes.home || defaultRoute
@@ -68,7 +69,20 @@ export const configure = fn((t, a) => (boxName, props = {}) => {
           'routeView',
           `${path}/:view`,
           (state, action) => {
-            return state
+            // :view viewState
+            const view = t.pathOr(null, ['payload', 'view'], action)
+            const matchedViewState = t.match(t.to.camelCase(view))(viewState)
+            if (t.isNil(matchedViewState)) {
+              return state
+            }
+            const nextState = matchedViewState.data({
+              event: viewLifecycle.routeEnter,
+              status: null,
+              error: null,
+              viewData: {},
+              nextData: {},
+            })
+            return t.isNil(nextState) ? state : nextState
           },
           routes.view || defaultRoute
         ),
@@ -76,14 +90,16 @@ export const configure = fn((t, a) => (boxName, props = {}) => {
           'routeViewDetail',
           `${path}/:view/:detail`,
           (state, action) => {
+            // :detail or :view viewState
             return state
           },
           routes.detail || defaultRoute
         ),
         r(
-          'routeViewDetail',
+          'routeViewMore',
           `${path}/:view/:detail/:more`,
           (state, action) => {
+            // :more or :detail or :view viewState
             return state
           },
           routes.more || defaultRoute

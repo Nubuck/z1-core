@@ -105,7 +105,8 @@ import { globrex } from './globrex'
 
 import throttle from 'lodash.throttle'
 
-const isType = (subject, matcher) => equals(rType(subject), matcher)
+const isType = (subject, matcher) =>
+  equals(toLower(rType(subject)), toLower(matcher))
 
 const getMatch = key => cases => {
   const matched = has(key)(cases) ? cases[key] : null
@@ -146,6 +147,23 @@ const allOf = (list = []) => {
 
 const isZeroLen = subject => equals(length(subject), 0)
 
+const to = {
+  camelCase,
+  capitalCase,
+  constantCase,
+  dotCase,
+  headerCase,
+  noCase,
+  paramCase,
+  pascalCase,
+  pathCase,
+  sentenceCase,
+  snakeCase,
+  lowerCase: toLower,
+  pairs: toPairs,
+  string: toString,
+}
+
 export const TASK = {
   addIndex,
   allPass,
@@ -182,6 +200,7 @@ export const TASK = {
   keysIn,
   last,
   length,
+  len: length,
   lt,
   lte,
   map,
@@ -218,8 +237,9 @@ export const TASK = {
   tail,
   take,
   takeLast,
-  toLower,
+  // back compat
   toPairs,
+  // back compat
   toString,
   trim,
   tryCatch,
@@ -234,19 +254,9 @@ export const TASK = {
   valPipe: val => (...args) => pipe(...args)(val),
   runMatch,
   getMatch,
-  caseTo: {
-    camelCase,
-    capitalCase,
-    constantCase,
-    dotCase,
-    headerCase,
-    noCase,
-    paramCase,
-    pascalCase,
-    pathCase,
-    sentenceCase,
-    snakeCase,
-  },
+  to,
+  // back compat
+  caseTo: to,
   tags: {
     html,
     safeHtml,

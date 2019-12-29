@@ -4,10 +4,22 @@ import { fn } from '@z1/lib-feature-box'
 export const combine = fn(t => (views = []) => {
   return {
     state(ctx) {
-      return {}
+      return t.mergeAll(
+        t.map(view => {
+          return {
+            [view.key]: view.state(ctx),
+          }
+        }, views)
+      )
     },
     ui(ctx) {
-      return {}
+      return t.mergeAll(
+        t.map(view => {
+          return {
+            [view.key]: view.ui(ctx),
+          }
+        }, views)
+      )
     },
   }
 })

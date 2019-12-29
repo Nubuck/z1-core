@@ -1,7 +1,7 @@
 import { fn } from '@z1/lib-feature-box'
 
 // ctx
-import { viewLifecycle } from './context'
+import { types } from './types'
 
 // main
 export const configure = fn((t, a) => (boxName, props = {}) => {
@@ -76,7 +76,7 @@ export const configure = fn((t, a) => (boxName, props = {}) => {
               return state
             }
             const nextState = matchedViewState.data({
-              event: viewLifecycle.routeEnter,
+              event: types.event.routeEnter,
               status: null,
               error: null,
               viewData: {},

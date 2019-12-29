@@ -1,13 +1,11 @@
 import { fn } from '@z1/lib-feature-box'
 
 // main
-export const create = task(t => (name, { state, ui, render }) => {
+export const create = fn(t => (name, { state, ui, render }) => {
   const param = t.isType(name, 'string')
-    ? t.eq(t.to.lowerCase(name), 'home')
-      ? 'home'
-      : 'view'
-    : t.eq(t.len(name), 1)
     ? 'view'
+    : t.eq(t.len(name), 1)
+    ? 'viewList'
     : t.eq(t.len(name), 2)
     ? 'detail'
     : t.eq(t.len(name), 3)
@@ -15,8 +13,8 @@ export const create = task(t => (name, { state, ui, render }) => {
     : 'extra'
   return {
     key: t.match(param)({
-      home: `${t.to.camelCase(name)}`,
       view: `${t.to.camelCase(name)}`,
+      viewList: `${t.to.camelCase(t.head(name))}`,
       _: t.tags.oneLineTrim`
       ${t.mapIndexed(
         (key, index) =>
@@ -25,7 +23,7 @@ export const create = task(t => (name, { state, ui, render }) => {
       )}
       `,
     }),
-    param,
+    // param: t.eq(param, 'viewList') ? 'view' : param,
     state(ctx) {
       const nextState = t.isType(state, 'function') ? state(ctx) : state
       return {

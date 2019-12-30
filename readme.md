@@ -1,6 +1,5 @@
 <p align="center"><img align="center" style="width:480px;max-width:480px" width="480px" src="https://rawcdn.githack.com/SaucecodeOfficial/zero-one-core/17207f1792105cbc32079ff7eb157c591eaf2501/logo-text.png"/></p>
 
-# Z1 Software System
 
 Z1 is a modular software system of declaritive macros that automates the labor and complexity out of building composable multi-platform apps.
 

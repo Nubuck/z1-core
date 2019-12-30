@@ -54,7 +54,9 @@
     "neutrino-middleware-uglifyjs": "^2.0.2",
     "react-hot-loader": "^4.12.18",
     "webpack-node-externals": "^1.7.2",
-    "websocket-driver": "^0.7.3"
+    "websocket-driver": "^0.7.3",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
   },
   "devDependencies": {
     "@z1/preset-dev-bundle": "^0.3.1"

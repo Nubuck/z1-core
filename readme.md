@@ -1,4 +1,4 @@
-<p align="center"><img align="center" style="width:320px;max-width:320px" width="320px" src="https://rawcdn.githack.com/SaucecodeOfficial/zero-one-core/088db6a2362941ba3e22486111bbc84f16037d0a/logo.png"/></p>
+<p align="center"><img align="center" style="width:320px;max-width:320px" width="320px" src="https://rawcdn.githack.com/SaucecodeOfficial/zero-one-core/17207f1792105cbc32079ff7eb157c591eaf2501/logo-text.png"/></p>
 
 # Z1 Software System
 

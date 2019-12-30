@@ -10,10 +10,3 @@ Install
 yarn add @z1/preset-feathers-server-sql
 ```
 
-Import
-
-```JavaScript
-
-import * from '@z1/preset-feathers-server-sql'
-
-```

@@ -9,11 +9,3 @@ Install
 ```
 yarn add @z1/preset-feathers-client-node
 ```
-
-Import
-
-```JavaScript
-
-import * from '@z1/preset-feathers-client-node'
-
-```

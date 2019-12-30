@@ -30,3 +30,4 @@ export const apiClient = core.task(t => async props => {
     })
   )
 })
+export default apiClient

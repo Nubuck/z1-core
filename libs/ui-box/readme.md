@@ -12,25 +12,29 @@ That said functional css is also not the best™ when you end up with a monstero
 
 This library offers a solution to managing and mutating functional css classNames in a way that's comfortably functional and css-in-js'esque, across any platform free of any runtime DOM concerns.
 
-Ui Box essentially takes a plain object input representing the root [classNames](https://nerdcave.com/tailwind-cheat-sheet) of [Tailwind css](https://tailwindcss.com/) and returns a chained object with a method to mutate the object or render the box state to a monsterously long line of classNames, so you don't have to.
+Ui Box essentially takes a plain object input representing the root [classNames](https://nerdcave.com/tailwind-cheat-sheet) of [Tailwind css](https://tailwindcss.com/) and returns a chained object with a method to mutate the object or render the box state to a monsterously long string of classNames, so you don't have to.
 
 ## Usage
 
 ### Install
 
 ```
-yarn add @z1/lib-ui-box-tailwind
+yarn add @z1/lib-ui-box
 ```
 
 ```
-npm i --save @z1/lib-ui-box-tailwind
+npm i --save @z1/lib-ui-box
 ```
 
 ### Import
 
 ```JavaScript
 
-import { uiBox, toCss } from '@z1/lib-ui-box-tailwind'
+import { uiBox, toCss } from '@z1/lib-ui-box'
+
+// or with default
+
+import ubx, { toCss } from '@z1/lib-ui-box'
 
 ```
 

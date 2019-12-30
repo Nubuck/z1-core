@@ -1,4 +1,4 @@
-import { featureBox as core } from '@z1/lib-feature-box-server-core'
+import core from '@z1/lib-feature-box-server-core'
 import { apiBox } from '@z1/lib-api-box-nedb'
 
 // main
@@ -13,3 +13,4 @@ export const task = Fn
 export const fn = Fn
 export const fs = Fs
 export { FeathersErrors } from '@z1/lib-api-box-core'
+export default featureBox

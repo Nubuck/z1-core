@@ -9,11 +9,3 @@ Install
 ```
 yarn add @z1/lib-feature-box-server-core
 ```
-
-Import
-
-```JavaScript
-
-import * from '@z1/lib-feature-box-server-core'
-
-```

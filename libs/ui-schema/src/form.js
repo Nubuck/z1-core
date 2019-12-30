@@ -11,7 +11,7 @@ const SCALAR = {
   BOOL: 'boolean',
   NULL: 'null',
 }
-export const FORM_SCHEMA = task(t =>
+const FORM_SCHEMA = task(t =>
   t.mergeDeepRight(SCALAR, {
     KEY: {
       TITLE: 'title',

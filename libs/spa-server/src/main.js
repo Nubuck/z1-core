@@ -7,7 +7,7 @@ import { Fs } from '@z1/preset-tools'
 import { task } from '@z1/preset-task'
 
 export const createAppServer = task(t => props => {
-  const appFolderName = t.path(['appFolderName'], props)
+  const appFolderName = t.path(['sitePath'], props)
   const onReq = t.path(['onReq'], props)
   const main = Express()
   main.use(Cors())

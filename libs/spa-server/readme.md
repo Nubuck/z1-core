@@ -14,9 +14,9 @@ Usage
 
 ```JavaScript
 
-import { createAppServer } from '@z1/lib-spa-server'
+import spa from '@z1/lib-spa-server'
 
-const app = createAppServer({ appFolderName: 'site' })
+const app = spa({ sitePath: 'site' })
 app.listen(3030, () =>
   console.log('SPA server running on http://localhost:3030')
 )

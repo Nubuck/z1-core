@@ -10,10 +10,3 @@ Install
 yarn add @z1/lib-api-box-sql
 ```
 
-Import
-
-```JavaScript
-
-import * from '@z1/lib-api-box-sql'
-
-```

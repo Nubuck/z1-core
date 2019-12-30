@@ -36,3 +36,4 @@ export const featureBox = Fn(f => ({
 
 export const task = Fn
 export const fn = Fn
+export default featureBox

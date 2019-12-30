@@ -1,4 +1,4 @@
-import { featureBox as core } from '@z1/lib-feature-box-server-core'
+import core from '@z1/lib-feature-box-server-core'
 import { apiBoxCore, task as Fn, fs as Fs } from '@z1/lib-api-box-core'
 import { withNedbAdapter } from '@z1/lib-api-box-nedb'
 import { withSequelizeAdapter } from '@z1/lib-api-box-sql'
@@ -18,3 +18,4 @@ export const task = Fn
 export const fn = Fn
 export const fs = Fs
 export { FeathersErrors } from '@z1/lib-api-box-core'
+export default featureBox

@@ -15,15 +15,14 @@
     "lib/react.js.map",
     "lib/react-components.js",
     "lib/react-components.js.map",
-    "lib/react-external.js",
-    "lib/react-external.js.map",
     "lib/style-loader.js",
-    "lib/style-loader.js.map",
-    "lib/uglify.js",
-    "lib/uglify.js.map"
+    "lib/style-loader.js.map"
   ],
   "bin": {
-    "neutrino": "./bin/neutrino.js"
+    "neutrino": "./bin/neutrino.js",
+    "webpack-cli": "./bin/cli.js",
+    "webpack": "./bin/webpack.js",
+    "webpack-dev-server": "./bin/webpack-dev-server.js"
   },
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/dev-neutrino",
@@ -56,7 +55,8 @@
     "webpack-node-externals": "^1.7.2",
     "websocket-driver": "^0.7.3",
     "webpack": "^4.41.5",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3"
   },
   "devDependencies": {
     "@z1/preset-dev-bundle": "^0.3.1"

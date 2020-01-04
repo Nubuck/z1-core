@@ -8,16 +8,15 @@
     "access": "public"
   },
   "scripts": {
-    "build": "neutrino build",
-    "dev": "neutrino start",
-    "_build": "microbundle --entry src/index.js --output lib/index.js --format cjs --target web",
-    "_dev": "microbundle watch --entry src/index.js --output lib/index.js --format cjs --target web",
+    "build": "webpack --mode production",
     "prepublish": "yarn run build"
   },
   "devDependencies": {
-    "@z1/preset-dev-microbundle": "^0.3.1",
+    "@babel/preset-env": "^7.7.7",
     "@neutrinojs/library": "^9.0",
-    "neutrino": "^9.0"
+    "neutrino": "^9.0",
+    "webpack": "^4",
+    "webpack-cli": "^3"
   },
   "dependencies": {
     "change-case": "^4.1.0",

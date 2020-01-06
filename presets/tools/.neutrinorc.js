@@ -6,8 +6,8 @@ module.exports = {
   },
   use: [
     library({
-      name: '@z1/preset-task',
-      target: 'web',
+      name: '@z1/preset-tools',
+      target: 'node',
       libraryTarget: 'commonjs2',
       babel: {
         // Override options for babel-preset-env
@@ -15,10 +15,8 @@ module.exports = {
           [
             '@babel/preset-env',
             {
-              // Passing in browser targets to babel-preset-env will replace them
-              // instead of merging them when using the 'web' target
               targets: {
-                browsers: ['safari >= 6'],
+                node: '10.0',
               },
             },
           ],
@@ -33,6 +31,5 @@ module.exports = {
         ],
       },
     }),
-    neutrino => neutrino.config.externals([]),
   ],
 }

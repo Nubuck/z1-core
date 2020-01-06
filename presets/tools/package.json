@@ -8,12 +8,17 @@
     "access": "public"
   },
   "scripts": {
-    "build": "microbundle --entry src/index.js --output lib/index.js --format cjs --external all --target node",
-    "dev": "microbundle watch --entry src/index.js --output lib/index.js --format cjs --external all --target node",
+    "build": "webpack --mode production",
     "prepublish": "yarn run build"
   },
   "devDependencies": {
-    "@z1/preset-dev-microbundle": "^0.3.1"
+    "@babel/preset-env": "^7.7.7",
+    "@babel/runtime":"^7.7.7",
+    "@babel/plugin-transform-runtime":"^7.7.6",
+    "@neutrinojs/library": "^9.0",
+    "neutrino": "^9.0",
+    "webpack": "^4",
+    "webpack-cli": "^3"
   },
   "dependencies": {
     "execa": "^0.9.0",

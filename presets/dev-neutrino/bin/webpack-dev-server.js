@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('webpack-cli/bin/webpack-dev-server')
+require('webpack-dev-server/bin/webpack-dev-server')

@@ -13,6 +13,8 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.7.7",
+    "@babel/runtime":"^7.7.7",
+    "@babel/plugin-transform-runtime":"^7.7.6",
     "@neutrinojs/library": "^9.0",
     "neutrino": "^9.0",
     "webpack": "^4",

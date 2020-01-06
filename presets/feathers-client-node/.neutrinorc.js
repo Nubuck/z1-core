@@ -14,10 +14,10 @@ module.exports = {
         // Override options for babel-preset-env
         presets: [
           [
-            'babel-preset-env',
+            '@babel/preset-env',
             {
               targets: {
-                node: '8.0',
+                node: '10.0',
               },
             },
           ],

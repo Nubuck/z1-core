@@ -1,9 +1,9 @@
-import { Execa, Fs } from '@z1/preset-tools'
+import tools, { Fs, Execa } from '@z1/preset-tools'
 import { task } from '@z1/preset-task'
 
 // with babel
 const babelCommand = task(t => (output = 'build') => {
-  const libDir = Fs.cwd(__dirname, '..')
+  const libDir = tools.fs.cwd(__dirname, '..')
   const base = [
     `--presets ${libDir.path('node_modules', 'babel-preset-react')}`,
     `--plugins ${libDir.path(
@@ -13,7 +13,7 @@ const babelCommand = task(t => (output = 'build') => {
     '--no-babelrc',
     `-d ${output}`,
     `--ignore '*.test.js'`,
-    `${Fs.path('src')}`,
+    `${tools.fs.path('src')}`,
   ]
 
   return t.tags.inlineLists`babel ${base}`
@@ -43,11 +43,11 @@ async function compile(build = false, watch = false, external = false) {
     const entry = build ? 'build' : 'src'
     if (build) {
       const buildCmd = babelCommand('build')
-      const build = await Execa.shell(buildCmd, { cwd: Fs.cwd() })
+      const build = await tools.execa.shell(buildCmd, { cwd: tools.fs.cwd() })
       process.stdout.write(`\nComplete building -> ${build.stdout}`)
     }
     const cmd = bundleCommand(entry, 'index.js', watch, external)
-    const result = await Execa.shell(cmd, { cwd: Fs.cwd() })
+    const result = await tools.execa.shell(cmd, { cwd: tools.fs.cwd() })
     process.stdout.write(`\nComplete bundling -> ${result.stdout}`)
   } catch (e) {
     process.stdout.write(`\nError in quick compile -> ${e}`)
@@ -90,17 +90,17 @@ const compileList = task(
     target = 'web'
   ) => {
     const entry = build ? 'build' : 'src'
-    const list = await Fs.listAsync(entry)
+    const list = await tools.fs.listAsync(entry)
     if (build) {
       const buildCmd = babelCommand('build')
-      const build = await Execa.shell(buildCmd, { cwd: Fs.cwd() })
+      const build = await tools.execa.shell(buildCmd, { cwd: tools.fs.cwd() })
       process.stdout.write(`\nComplete building -> ${build.stdout}`)
     }
     await a.map(list, 1, async file => {
       try {
-        const result = await Execa.shell(
+        const result = await tools.execa.shell(
           bundleCommand(entry, file, watch, external, target),
-          { cwd: Fs.cwd() }
+          { cwd: tools.fs.cwd() }
         )
         process.stdout.write(`\nComplete bundling -> ${result.stdout}`)
       } catch (e) {
@@ -141,7 +141,7 @@ export async function buildBundleMultiWatch() {
 export async function buildLib() {
   try {
     const buildCmd = babelCommand('lib')
-    const build = await Execa.shell(buildCmd, { cwd: Fs.cwd() })
+    const build = await tools.execa.shell(buildCmd, { cwd: tools.fs.cwd() })
     process.stdout.write(`\nComplete building -> ${build.stdout}`)
   } catch (e) {
     process.stdout.write(`\nError in quick compile -> ${e}`)

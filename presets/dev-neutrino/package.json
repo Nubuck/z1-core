@@ -20,7 +20,7 @@
   ],
   "bin": {
     "neutrino": "./bin/neutrino.js",
-    "webpack-cli": "./bin/cli.js",
+    "webpack-cli": "./bin/webpack-cli.js",
     "webpack": "./bin/webpack.js",
     "webpack-dev-server": "./bin/webpack-dev-server.js"
   },
@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.7.5",
+    "@babel/preset-env": "^7.7.7",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@babel/preset-react": "^7.7.4",
     "@neutrinojs/compile-loader": "^9.0",

@@ -1,1 +1,2 @@
-export * from 'neutrino'
+import neutrino from 'neutrino'
+export default neutrino

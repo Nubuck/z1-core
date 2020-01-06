@@ -13,7 +13,7 @@ module.exports = {
         // Override options for babel-preset-env
         presets: [
           [
-            'babel-preset-env',
+            '@babel/preset-env',
             {
               // Passing in browser targets to babel-preset-env will replace them
               // instead of merging them when using the 'web' target

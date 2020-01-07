@@ -1,18 +1,17 @@
 {
-  "name": "app-check-server",
+  "name": "example-app-server",
   "version": "0.3.1",
   "description": "Lib check",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "author": "@Nubuck",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "neutrino build",
-    "start": "neutrino start",
-    "test": "neutrino test"
+    "build": "parcel build --target node src/index.js",
+    "start": "parcel watch --target node src/index.js"
   },
   "devDependencies": {
-    "@z1/preset-dev-neutrino": "^0.3.1"
+    "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
     "@z1/lib-feature-box-server": "^0.3.1",

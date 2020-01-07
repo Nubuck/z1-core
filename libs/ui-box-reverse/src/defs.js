@@ -909,7 +909,7 @@ export const defs = {
   },
   // interact
   appearance: {
-    map: 'apperance',
+    map: 'appearance',
   },
   cursor: {
     map: 'cursor',

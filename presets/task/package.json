@@ -1,24 +1,18 @@
 {
   "name": "@z1/preset-task",
   "version": "0.3.1",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/task",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "webpack --mode production",
+    "build": "parcel build src/index.js --experimental-scope-hoisting",
     "prepublish": "yarn run build"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.7.7",
-    "@babel/runtime":"^7.7.7",
-    "@babel/plugin-transform-runtime":"^7.7.6",
-    "@neutrinojs/library": "^9.0",
-    "neutrino": "^9.0",
-    "webpack": "^4",
-    "webpack-cli": "^3"
+    "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
     "change-case": "^4.1.0",

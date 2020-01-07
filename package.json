@@ -12,12 +12,14 @@
     "clean:presets": "lerna clean --scope=@z1/preset-*",
     "clean:libs": "lerna clean --scope=@z1/lib-*",
     "clean:kits": "lerna clean --scope=@z1/kit-*",
+    "clean:examples": "lerna clean --scope=example-app-*",
     "list": "lerna ls",
     "dep": "lerna add",
     "boot": "lerna bootstrap --force-local",
     "boot:presets": "lerna bootstrap --force-local --scope=@z1/preset-*",
     "boot:libs": "lerna bootstrap --force-local --scope=@z1/lib-*",
     "boot:kits": "lerna bootstrap --force-local --scope=@z1/kit-*",
+    "boot:examples": "lerna bootstrap --force-local --scope=example-app-*",
     "publish": "lerna publish --scope=@z1/*"
   },
   "dependencies": {

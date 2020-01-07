@@ -1,13 +1,12 @@
 {
-  "name": "app-check-web",
+  "name": "example-app-web",
   "version": "0.3.1",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "neutrino build --debug",
-    "start": "neutrino start",
-    "test": "neutrino test"
+    "build": "parcel build src/index.js --experimental-scope-hoisting",
+    "start": "parcel serve src/index.js"
   },
   "dependencies": {
     "@z1/lib-api-box-client": "^0.3.1",
@@ -22,7 +21,7 @@
     "redux": "^4.0.4"
   },
   "devDependencies": {
-    "@z1/preset-dev-neutrino": "^0.3.1",
+    "parcel-bundler": "^1.12.4",
     "@z1/lib-ui-box-tailwind": "^0.3.1"
   }
 }

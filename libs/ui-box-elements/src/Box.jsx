@@ -12,7 +12,8 @@ const renderBox = fn(t => props => {
     t.merge(t.omit(['as', 'box', 'className', 'stretch', 'next'], props), {
       className: t.and(t.and(t.isNil(box), t.isNil(stretch)), t.isNil(next))
         ? t.pathOr('', ['className'], props)
-        : uiBox(box || {})
+        : uiBox
+            .create(box || {})
             .next(
               t.isNil(stretch)
                 ? {}

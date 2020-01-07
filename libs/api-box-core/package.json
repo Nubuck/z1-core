@@ -1,15 +1,14 @@
 {
   "name": "@z1/lib-api-box-core",
   "version": "0.3.1",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-core",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "neutrino build",
-    "dev": "bundle-watch",
+    "build": "parcel build --target node src/index.js",
     "prepublish": "yarn run build"
   },
   "dependencies": {
@@ -21,8 +20,7 @@
     "rxjs": "^6.5.3"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.3.1",
-    "@z1/preset-dev-neutrino": "^0.3.1"
+    "parcel-bundler": "^1.12.4"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

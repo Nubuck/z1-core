@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-common-tasks",
   "version": "0.3.1",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/common-tasks",
   "publishConfig": {

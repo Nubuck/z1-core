@@ -1,24 +1,5 @@
 import { task as fn } from '@z1/preset-task'
 import defaultTheme from 'tailwindcss/defaultTheme'
-import reactWeb from '@z1/preset-dev-neutrino/lib/react'
-import styleLoader from '@z1/preset-dev-neutrino/style-loader'
-
-function styleLoaders(tailwindConfigPath) {
-  return [
-    {
-      loader: 'postcss-loader',
-      options: {
-        plugins() {
-          return [
-            require('precss'),
-            require('tailwindcss')(tailwindConfigPath),
-            require('autoprefixer'),
-          ]
-        },
-      },
-    },
-  ]
-}
 
 export const tailwindConfig = fn(t => (props = {}) => {
   // TODO: smurter merge
@@ -571,30 +552,3 @@ export const tailwindConfig = fn(t => (props = {}) => {
     props
   )
 })
-
-export const neutrinoConfig = fn(
-  t => (props, tailwindConfigPath, useMore = []) => {
-    return t.concat(
-      [
-        reactWeb(props),
-        styleLoader({
-          loaders: styleLoaders(tailwindConfigPath),
-          test: /\.css$/,
-          extractId: 'extract',
-          extract: {
-            plugin: {
-              filename: '[name].css',
-              ignoreOrder: false,
-              allChunks: true,
-            },
-            loader: {
-              fallback: 'style-loader',
-              use: styleLoaders(tailwindConfigPath),
-            },
-          },
-        }),
-      ],
-      useMore
-    )
-  }
-)

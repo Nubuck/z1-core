@@ -1,16 +1,14 @@
 {
   "name": "@z1/kit-machine-account-server",
   "version": "0.3.1",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/machine-account-server",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "neutrino build",
-    "start": "neutrino start",
-    "test": "neutrino test",
+    "build": "parcel build --target node src/index.js",
     "prepublish": "yarn run build"
   },
   "dependencies": {

@@ -22,3 +22,6 @@ coverage
 
 #logs
 yarn-error.log
+
+# parcel
+.cache

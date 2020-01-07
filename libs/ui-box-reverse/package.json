@@ -1,19 +1,18 @@
 {
   "name": "@z1/lib-ui-box-reverse",
   "version": "0.3.1",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/ui-box-reverse",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "bundle-external",
-    "dev": "bundle-watch",
+    "build": "parcel build src/index.js --experimental-scope-hoisting",
     "prepublish": "yarn run build"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.3.1"
+    "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
     "@z1/preset-task": "^0.3.1"

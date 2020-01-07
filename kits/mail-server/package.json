@@ -1,16 +1,14 @@
 {
   "name": "@z1/kit-mail-server",
   "version": "0.3.1",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/mail-server",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "neutrino build",
-    "start": "neutrino start",
-    "test": "neutrino test",
+    "build": "parcel build --target node src/index.js",
     "prepublish": "yarn run build"
   },
   "dependencies": {
@@ -19,7 +17,7 @@
 
   "devDependencies": {
     "@z1/lib-feature-box-server": "^0.3.1",
-    "@z1/preset-dev-neutrino": "^0.3.1"
+    "parcel-bundler": "^1.12.4"
   },
   "gitHead": "cc1c8958cfa0184c996d799385e7cf94f0094d94"
 }

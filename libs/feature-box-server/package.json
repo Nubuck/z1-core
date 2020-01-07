@@ -1,15 +1,14 @@
 {
   "name": "@z1/lib-feature-box-server",
   "version": "0.3.1",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/feature-box-server",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "bundle-external",
-    "dev": "bundle-watch",
+    "build": "parcel build --target node src/index.js",
     "prepublish": "yarn run build"
   },
   "dependencies": {
@@ -19,7 +18,7 @@
     "@z1/lib-feature-box-server-core": "^0.3.1"
   },
   "devDependencies": {
-    "@z1/preset-dev-bundle": "^0.3.1"
+    "parcel-bundler": "^1.12.4"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

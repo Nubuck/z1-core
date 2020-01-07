@@ -1,18 +1,13 @@
-import { task } from '@z1/preset-task'
-
 // parts
 import { combine } from './combine'
-import { compose } from './compose'
-import { create } from './create'
+import { createOrCompose } from './createOrCompose'
 
 // main
-export const box = task(t => ctx => {
-  const Create = create(ctx)
-  const Compose = compose(t.merge({ create: Create }, ctx))
+export const box = ctx => {
+  const CreateOrCompose = createOrCompose(ctx)
   const Combine = combine(ctx)
   return {
-    create: Create,
-    compose: Compose,
+    create: CreateOrCompose,
     combine: Combine,
   }
-})
+}

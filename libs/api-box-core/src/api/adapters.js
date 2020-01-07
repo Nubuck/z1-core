@@ -72,7 +72,7 @@ export const adapters = task(t => ctx => {
             const dbTools = app.get(toolsName)
             if (t.eq(mode, 'adapter')) {
               const [adapterName, serviceName] = serviceId
-              const adapter = dbTools.get(adapterName)
+              // const adapter = dbTools.get(adapterName)
               dbTools.services.add(adapterName, serviceName, {
                 name: serviceName,
                 factory,

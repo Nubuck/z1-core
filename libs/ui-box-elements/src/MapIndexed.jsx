@@ -1,5 +1,5 @@
 import React from 'react'
-import { fn } from '@z1/lib-ui-box-tailwind'
+import { fn } from '@z1/lib-ui-box'
 
 // main
 const renderMapIndexed = fn(t => props => {

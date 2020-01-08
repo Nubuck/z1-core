@@ -1,5 +1,5 @@
 import React from 'react'
-import { uiBox, fn } from '@z1/lib-ui-box-tailwind'
+import { uiBox, fn } from '@z1/lib-ui-box'
 
 // main
 const renderBox = fn(t => props => {

@@ -5,7 +5,7 @@ import { box } from './box'
 import { state } from './state'
 import { store } from './store'
 import { routing } from './routing'
-import { ui } from ''
+import { ui } from './ui'
 
 // main
 export const featureBox = fn(t =>

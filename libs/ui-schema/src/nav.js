@@ -27,7 +27,6 @@ const toUrl = task(t => (routePath, suffix) =>
       : `${cleanRoutePath(routePath)}${cleanSuffix(suffix)}`
     : `/${cleanRoutePath(routePath)}${cleanSuffix(suffix)}`
 )
-const hasChildren = task(t => t.has(NAV_SCHEMA.CHILDREN))
 const navItem = task(
   t => (path, props, children) => (parentPath, originPath) => {
     const nextOriginPath = originPath || NAV_SCHEMA.ROOT
@@ -72,7 +71,6 @@ export const navSchema = task(t => (factory = () => {}) =>
 )
 
 // matching tasks
-const hasChildren = task(t => t.has('children'))
 const safeChildren = task(t => item =>
   t.and(t.not(t.isNil(item)), hasChildren(item)) ? item.children : []
 )

@@ -8,7 +8,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "parcel build src/index.js --experimental-scope-hoisting",
+    "build": "parcel build --target node src/index.js",
     "prepublish": "yarn run build"
   },
   "devDependencies": {

@@ -114,7 +114,8 @@ const compose = task(t => ctx => {
 export const createOrCompose = fn(t => ctx => {
   const Create = create(ctx)
   const Compose = compose(t.merge(ctx, { create: Create }))
-  return (name, boxOrBoxes) => {
+  return (rawName, boxOrBoxes) => {
+    const name = t.to.camelCase(rawName)
     if (t.isType(boxOrBoxes, 'array')) {
       return Compose({ name }, boxOrBoxes)
     }

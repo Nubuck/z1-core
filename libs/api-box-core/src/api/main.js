@@ -24,7 +24,6 @@ export const api = task(t => (ctx = {}) => {
     boxes,
     middleware,
     hooks,
-    authHooks,
     channels,
   }) {
     const nextBoxes = t.isType(boxes, 'Object') ? boxes : ctx.combine(boxes)

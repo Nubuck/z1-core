@@ -33,9 +33,22 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
         }, t.keys(adapter.models || {}))
         // register services
         const nextModels = dbTools.models.get(adapterName)
+        const serviceModelProps = (factoryObj = {}) => {
+          const modelName = t.pathOr(null, ['modelName'], factoryObj)
+          if (t.isNil(modelName)) {
+            return null
+          }
+          const Model = t.pathOr(null, [modelName], nextModels)
+          if (t.isNil(Model)) {
+            return null
+          }
+          return t.merge({ Model }, t.omit(['modelName'], factoryObj))
+        }
         t.forEach(serviceName => {
           const serviceDef = adapter.services[serviceName]
-          const serviceProps = serviceDef.factory(nextModels)
+          const serviceProps = t.isType(serviceDef.factory, 'function')
+            ? serviceDef.factory(nextModels)
+            : serviceModelProps(serviceDef.factory)
           const nextServiceName = app
             .get('serviceTools')
             .safeServiceName(serviceName)

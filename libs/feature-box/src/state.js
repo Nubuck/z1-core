@@ -5,21 +5,12 @@ const createRouteFactory = fn(
   t => boxName => (actionType, path, reducer, props = {}) => {
     return t.mergeAll([
       {
-        action: `${boxName}/${t.caseTo.constantCase(actionType)}`,
-        type: t.caseTo.camelCase(actionType),
+        action: `${boxName}/${t.to.constantCase(actionType)}`,
+        type: t.to.camelCase(actionType),
       },
       { path, reducer },
       props,
     ])
-    // const actionType = props.action
-    // return t.mergeAll([
-    //   {
-    //     action: `${boxName}/${t.caseTo.constantCase(actionType)}`,
-    //     type: t.caseTo.camelCase(actionType),
-    //   },
-    //   t.omit(['action'], pathOrProps),
-    //   { reducer },
-    // ])
   }
 )
 
@@ -28,13 +19,13 @@ const createStateBox = fn(t => (name, props) => {
   if (t.isNil(routesProp)) {
     return stateBox.create(props)
   }
-  const routes = routesProp(createRouteFactory(name))
+  const routes = routesProp(createRouteFactory(name), { name })
   const mutationsProp = t.pathOr(null, ['mutations'], props)
-  const mutations = m => {
+  const mutations = (m, b) => {
     const routeMuts = t.map(route => {
       return m(route.type, route.reducer)
     }, routes || [])
-    const muts = t.isNil(mutationsProp) ? [] : mutationsProp(m)
+    const muts = t.isNil(mutationsProp) ? [] : mutationsProp(m, b)
     return t.concat(muts, routeMuts)
   }
   const box = stateBox.create(name, t.merge(props, { mutations }))
@@ -66,8 +57,10 @@ const composeStateBox = fn(t => (name, boxes = []) => {
       return createStateBox(
         name,
         t.merge(props, {
-          routes(r) {
-            return t.flatten(t.map(route => route(r))(nextParts.routes || []))
+          routes(r, b) {
+            return t.flatten(
+              t.map(route => route(r, b))(nextParts.routes || [])
+            )
           },
         })
       )
@@ -75,7 +68,8 @@ const composeStateBox = fn(t => (name, boxes = []) => {
   )
 })
 
-const createOrCompose = fn(t => (name, boxOrBoxes) => {
+const createOrCompose = fn(t => (rawName, boxOrBoxes) => {
+  const name = t.to.camelCase(rawName)
   if (t.isType(boxOrBoxes, 'array')) {
     return composeStateBox(name, boxOrBoxes)
   }

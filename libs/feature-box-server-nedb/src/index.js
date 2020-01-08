@@ -1,11 +1,13 @@
 import core from '@z1/lib-feature-box-server-core'
-import { apiBox } from '@z1/lib-api-box-nedb'
+import { apiBoxCore, task as Fn, fs as Fs } from '@z1/lib-api-box-core'
+import { withNedbAdapter } from '@z1/lib-api-box-nedb'
 
 // main
+const apiBox = Fn(t => t.pipe(withNedbAdapter, apiBoxCore)())
 export const featureBox = Fn(t =>
   t.mergeAll([
     core,
-    { api: t.pick(['create', 'compose', 'combine', 'configure'], apiBox) },
+    { api: t.pick(['create', 'combine', 'configure'], apiBox) },
     t.pick(['server', 'app', apiBox]),
   ])
 )

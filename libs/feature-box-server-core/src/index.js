@@ -2,8 +2,13 @@ import { task as Fn } from '@z1/preset-task'
 
 // main
 export const featureBox = Fn(f => ({
-  create(factory, initial = {}) {
-    return (props = {}) => factory(f.mergeDeepRight(initial, props))
+  create(rawName, factory, initial = {}) {
+    const name = t.to.camelCase(rawName)
+    return (props = {}) =>
+      t.merge(
+        { name },
+        factory(f.mergeDeepRight(initial, t.merge({ name }, props) || {}))
+      )
   },
   combine(features = []) {
     return f.reduce(
@@ -17,21 +22,22 @@ export const featureBox = Fn(f => ({
             : f.merge(combined.hooks, {
                 [feature.name || 'common']: f.path(['hooks'], feature),
               }),
-          tasks: f.notType(f.path(['tasks'], feature), 'Object')
-            ? combined.tasks
-            : f.merge(combined.tasks, {
-                [feature.name || 'common']: f.path(['tasks'], feature),
+          parts: f.notType(f.path(['parts'], feature), 'Object')
+            ? combined.parts
+            : f.merge(combined.parts, {
+                [feature.name || 'common']: f.path(['parts'], feature),
               }),
         }
       },
       {
         api: [],
         hooks: {},
-        tasks: {},
+        parts: {},
       },
       features
     )
   },
+  fn: Fn,
 }))
 
 export const task = Fn

@@ -49,26 +49,41 @@ export const withSequelizeAdapter = Fn(t => (ctx = {}) => {
           t.mergeAll([adapter, { models: nextModels }, connection])
         )
         // register services
+        const serviceModelProps = (factoryObj = {}) => {
+          const modelName = t.pathOr(null, ['modelName'], factoryObj)
+          if (t.isNil(modelName)) {
+            return null
+          }
+          const Model = t.pathOr(null, [modelName], nextModels)
+          if (t.isNil(Model)) {
+            return null
+          }
+          return t.merge({ Model }, t.omit(['modelName'], factoryObj))
+        }
         t.forEach(serviceName => {
           const serviceDef = adapter.services[serviceName]
-          const serviceProps = serviceDef.factory(nextModels)
+          const serviceProps = t.isType(serviceDef.factory, 'function')
+            ? serviceDef.factory(nextModels)
+            : serviceModelProps(serviceDef.factory)
           const nextServiceName = app
             .get('serviceTools')
             .safeServiceName(serviceName)
-          app.use(
-            `/${nextServiceName}`,
-            FeathersSequelize(
-              t.mergeAll([
-                serviceProps,
-                {
-                  paginate: t.has('paginate')(serviceProps)
-                    ? serviceProps.paginate
-                    : app.get('paginate'),
-                },
-              ])
+          if (t.not(t.isNil(serviceProps))) {
+            app.use(
+              `/${nextServiceName}`,
+              FeathersSequelize(
+                t.mergeAll([
+                  serviceProps,
+                  {
+                    paginate: t.has('paginate')(serviceProps)
+                      ? serviceProps.paginate
+                      : app.get('paginate'),
+                  },
+                ])
+              )
             )
-          )
-          dbTools.services.wire(nextServiceName, serviceDef.hooksEvents)
+            dbTools.services.wire(nextServiceName, serviceDef.hooksEvents)
+          }
         }, t.keys(adapter.services || {}))
       },
       onSetup(boxes) {
@@ -79,7 +94,7 @@ export const withSequelizeAdapter = Fn(t => (ctx = {}) => {
           }
         }, adapter.associate || [])
 
-        // Sync to the database
+        // Sync props
         const config = dbTools.dbConfig(adapterName)
         const forceAlter = t.has('forceAlter')(config)
           ? config.forceAlter
@@ -90,6 +105,7 @@ export const withSequelizeAdapter = Fn(t => (ctx = {}) => {
           ? { alter: true }
           : { force: false }
 
+        // Sync
         adapter.client
           .sync(syncOptions)
           .then(() => {

@@ -22,7 +22,9 @@ const create = fn(
       },
       t.not(mutations)
         ? []
-        : mutations(createMutationFactory(name || 'box', initial || {}))
+        : mutations(createMutationFactory(name || 'box', initial || {}), {
+            name,
+          })
     )
     const effectContext = {
       name,
@@ -102,9 +104,9 @@ const compose = fn(t => (props, parts, composeWith, createWith) => {
       },
       t.omit(['initial'], props || {}),
       {
-        mutations(m) {
+        mutations(m, box) {
           return t.flatten(
-            t.map(mutation => mutation(m))(nextParts.mutations || [])
+            t.map(mutation => mutation(m, box))(nextParts.mutations || [])
           )
         },
         guards(g, box) {
@@ -127,11 +129,12 @@ const compose = fn(t => (props, parts, composeWith, createWith) => {
 
 export const createOrCompose = fn(
   t => (
-    name,
+    rawName,
     boxOrBoxes,
     composeWith = () => ({}),
     createWith = () => props => create(props)
   ) => {
+    const name = t.to.camelCase(rawName)
     if (t.isType(boxOrBoxes, 'array')) {
       return compose({ name }, boxOrBoxes, composeWith, createWith)
     }

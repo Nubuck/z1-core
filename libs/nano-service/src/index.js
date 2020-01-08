@@ -1,2 +1,2 @@
 export * from './main'
-export { service as default } service
+export { service as default } from './main'

@@ -14,6 +14,7 @@ export const featureBox = fn(t =>
     store: store({ combine: state.combine }),
     ui,
     routing,
+    fn
   })
 )
 

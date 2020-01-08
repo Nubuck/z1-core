@@ -44,9 +44,7 @@ export default () =>
         })
       )
     },
-    serviceFactory(m) {
-      return {
-        Model: m.bucket_registry,
-      }
+    serviceFactory: {
+      modelName: 'bucket_registry',
     },
   })

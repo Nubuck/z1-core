@@ -9,8 +9,8 @@ import { SERVICES, PATHS } from './context'
 
 // main
 export const api = task(
-  (t, a) => ({ adapter, models, apiBox, serviceFactory }) =>
-    apiBox.create({
+  (t, a) => ({ models, apiBox, serviceFactory }) =>
+    apiBox.create('bucketStorage', {
       models,
       services(s, { auth, common, data }) {
         const stripUri = ctx => {

@@ -1,4 +1,4 @@
-import { featureBox } from '@z1/lib-feature-box-server'
+import zbx from '@z1/lib-feature-box-server'
 
 // main
 import features from './features'
@@ -7,11 +7,11 @@ process.on('unhandledRejection', (reason, p) =>
   console.log('Unhandled Rejection at: Promise ', p, reason)
 )
 
-let app = featureBox.app.create(
+let app = zbx.app.create(
   {
     boxes: features.api,
     apiPath: 'api',
-    sitePath: 'site',
+    siteFolder: 'site',
   },
   () =>
     app.api.log(
@@ -23,6 +23,6 @@ let app = featureBox.app.create(
 
 if (module.hot) {
   module.hot.accept(['./features'], () => {
-    app = featureBox.app.reload(app, { boxes: features.api })
+    app = zbx.app.reload(app, { boxes: features.api })
   })
 }

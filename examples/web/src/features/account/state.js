@@ -1,8 +1,7 @@
-import { featureBox as fbx } from '@z1/lib-feature-box'
+import zbx from '@z1/lib-feature-box'
 
 // main
-export const state = fbx.state.create({
-  name: 'account',
+export const state = zbx.state.create('account', {
   intial: {},
   mutations(m) {
     return []

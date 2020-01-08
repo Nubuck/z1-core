@@ -2,9 +2,9 @@ import { featureBox } from '@z1/lib-feature-box-server-core'
 import { api } from './api'
 
 export default featureBox.create(
+  'bucketStorage',
   props => {
     return {
-      name: 'bucketStorage',
       api: [api(props)],
       tasks: {},
     }

@@ -1,10 +1,9 @@
-import { featureBox } from '@z1/lib-feature-box-server'
+import zbx from '@z1/lib-feature-box-server'
 
 // api
 import { api } from './api'
 
 // main
-export const feature = featureBox.create(ctx => ({
-  name: 'account',
+export const feature = zbx.create('account', ctx => ({
   api: [api(ctx)],
 }))

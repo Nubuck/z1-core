@@ -9,9 +9,5 @@ export default () =>
     models(m) {
       m(['nedb', 'bucket_registry'])
     },
-    serviceFactory(m) {
-      return {
-        Model: m.bucket_registry,
-      }
-    },
+    serviceFactory: { modelName: 'bucket_registry' },
   })

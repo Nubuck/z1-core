@@ -1,8 +1,8 @@
-import { apiBox } from '@z1/lib-feature-box-server'
+import zbx from '@z1/lib-feature-box-server'
 
 // main
 export const api = () =>
-  apiBox.create({
+  zbx.api.create('account', {
     models(m) {
       return [
         m(['sequelize', 'user'], (define, T) =>
@@ -79,9 +79,7 @@ export const api = () =>
       return [
         s(
           ['sequelize', 'users'],
-          m => ({
-            Model: m.user,
-          }),
+          { modelName: 'user' },
           {
             hooks: {
               before: {

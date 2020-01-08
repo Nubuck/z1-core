@@ -1,4 +1,4 @@
-import { featureBox } from '@z1/lib-feature-box-server'
+import zbx from '@z1/lib-feature-box-server'
 
 // kits
 import account from '@z1/kit-account-server'
@@ -7,4 +7,4 @@ import account from '@z1/kit-account-server'
 const ctx = {}
 
 // exports
-export default featureBox.combine([account(ctx)])
+export default zbx.combine([account(ctx)])

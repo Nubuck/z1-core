@@ -9,9 +9,5 @@ export default () =>
     models(m) {
       m(['nedb', 'users'])
     },
-    serviceFactory(m) {
-      return {
-        Model: m.users,
-      }
-    },
+    serviceFactory: { modelName: 'users' },
   })

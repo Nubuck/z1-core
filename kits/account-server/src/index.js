@@ -75,9 +75,5 @@ export default () =>
         })
       )
     },
-    serviceFactory(m) {
-      return {
-        Model: m.users,
-      }
-    },
+    serviceFactory: { modelName: 'users' },
   })

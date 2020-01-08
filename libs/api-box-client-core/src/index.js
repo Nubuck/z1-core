@@ -6,11 +6,11 @@ import {
   FeathersAuth,
 } from '@z1/preset-feathers-client'
 
-const api = fn(t => props => {
+const api = fn(t => (path = '/', props = {}) => {
   const client = Feathers()
   const ioClient = t.has('options')(props)
-    ? IO(props.path, props.options)
-    : IO(props.path)
+    ? IO(path, props.options)
+    : IO(path)
   const feathersClient = t.has('timeout')(props)
     ? FeathersIO(ioClient, props.timeout)
     : FeathersIO(ioClient)

@@ -1,8 +1,9 @@
 import apiCore from '@z1/lib-api-box-client-core'
 import { default as localforage } from 'localforage'
 
-const api = core.task(t => props =>
+const api = core.task(t => (path, props = {}) =>
   apiCore(
+    path,
     t.merge(
       {
         storage: localforage,

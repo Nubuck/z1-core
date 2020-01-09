@@ -26,7 +26,7 @@ export const create = fn(t => (name, { state, ui, render }) => {
       const nextState = t.isType(state, 'function') ? state(ctx) : state
       return {
         initial: t.pathOr(
-          { data: {}, form: {}, modal: {} },
+          { subbed: false, data: {}, form: {}, modal: {} },
           ['initial'],
           nextState
         ),

@@ -79,14 +79,20 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
             if (t.isNil(matchedViewState)) {
               return state
             }
-            const nextState = matchedViewState.data({
+            const nextViewState = matchedViewState.data({
               event: types.event.routeEnter,
               status: null,
               error: null,
               viewData: {},
               nextData: {},
             })
-            return t.isNil(nextState) ? state : nextState
+            return t.isNil(nextState)
+              ? state
+              : t.merge(state, {
+                  views: t.merge(state.views, {
+                    [view]: { data: nextViewState },
+                  }),
+                })
           },
           routes.view || defaultRoute
         ),

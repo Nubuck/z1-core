@@ -122,6 +122,8 @@ const getMatch = key => cases => {
     : matched
 }
 
+const match = cases => key => getMatch(`${key}`)(cases)
+
 const runMatch = (key, value) => cases => {
   const matched = getMatch(key)(cases)
   return isType(matched, 'Function') ? matched(value) : null
@@ -254,6 +256,7 @@ export const TASK = {
   valPipe: val => (...args) => pipe(...args)(val),
   runMatch,
   getMatch,
+  match,
   to,
   // back compat
   caseTo: to,

@@ -37,7 +37,7 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
     },
     mutations(m) {
       return [
-        m(['enterRoute', 'exitRoute'], (state, action) => {
+        m(['routeExit'], (state, action) => {
           return state
         }),
         m(['dataChange', 'dataLoad', 'dataLoadComplete'], (state, action) => {
@@ -46,10 +46,14 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
         m(
           ['formChange', 'formTransmit', 'formTransmitComplete'],
           (state, action) => {
+            // payload: form: string, data: obj
             return state
           }
         ),
         m('modalChange', (state, action) => {
+          return state
+        }),
+        m(['sub', 'unsub'], (state, action) => {
           return state
         }),
       ]
@@ -57,8 +61,8 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
     routes(r) {
       return [
         r(
-          'routeHome',
           path,
+          'routeHome',
           (state, action) => {
             // home viewState
             return state
@@ -66,12 +70,12 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
           routes.home || defaultRoute
         ),
         r(
-          'routeView',
           `${path}/:view`,
+          'routeView',
           (state, action) => {
             // :view viewState
             const view = t.pathOr(null, ['payload', 'view'], action)
-            const matchedViewState = t.match(t.to.camelCase(view))(viewState)
+            const matchedViewState = t.match(viewState)(t.to.camelCase(view))
             if (t.isNil(matchedViewState)) {
               return state
             }
@@ -87,8 +91,8 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
           routes.view || defaultRoute
         ),
         r(
-          'routeViewDetail',
           `${path}/:view/:detail`,
+          'routeViewDetail',
           (state, action) => {
             // :detail or :view viewState
             return state
@@ -96,8 +100,8 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
           routes.detail || defaultRoute
         ),
         r(
-          'routeViewMore',
           `${path}/:view/:detail/:more`,
+          'routeViewMore',
           (state, action) => {
             // :more or :detail or :view viewState
             return state
@@ -109,19 +113,32 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
     effects(fx, { actions, mutators }) {
       return [
         // routes enter / data load
-        fx([], async (ctx, dispatch, done) => {
-          done()
-        }),
+        fx(
+          [
+            actions.routeHome,
+            actions.routeView,
+            actions.routeViewDetail,
+            actions.routeViewMore,
+            actions.dataLoad,
+          ],
+          async (ctx, dispatch, done) => {
+            done()
+          }
+        ),
         // form transmit
-        fx([], async (ctx, dispatch, done) => {
+        fx([actions.formTransmit], async (ctx, dispatch, done) => {
           done()
         }),
         // routes exit
-        fx([], async (ctx, dispatch, done) => {
-          done()
-        }),
+        // t.globrex('*/ROUTING/*').regex
+        fx(
+          [t.globrex(`!(${boxName})*/ROUTING/*`, { extended: true }).regex],
+          async (ctx, dispatch, done) => {
+            done()
+          }
+        ),
         // subscribe
-        fx([], async (ctx, dispatch, done) => {
+        fx([], (ctx, dispatch, done) => {
           done()
         }),
       ]

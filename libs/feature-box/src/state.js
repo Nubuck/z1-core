@@ -2,11 +2,11 @@ import { stateBox, fn } from '@z1/lib-state-box'
 
 // main
 const createRouteFactory = fn(
-  t => boxName => (actionType, path, reducer, props = {}) => {
+  t => boxName => (path, actionType, reducer, props = {}) => {
     return t.mergeAll([
       {
-        action: `${boxName}/${t.to.constantCase(actionType)}`,
-        type: t.to.camelCase(actionType),
+        action: `${boxName}/ROUTING/${t.to.constantCase(actionType)}`,
+        type: `ROUTING/${t.to.constantCase(actionType)}`,
       },
       { path, reducer },
       props,

@@ -58,3 +58,19 @@ const routeFromAction = fn(t => (boxName, action) => {
 const routeEnter = fn(t => (boxName, views) => (state, action) => {
   const route = routeFromAction(boxName, action)
 })
+
+const routeExist = fn(t => (boxName, views) => (state, action) => {
+  const route = routeFromAction(boxName, action)
+})
+
+const viewData = fn(t=>(boxName,views)=>(state, action)=>{
+
+})
+
+const formData = fn(t=>(boxName,views)=>(state, action)=>{
+  
+})
+
+const modalData = fn(t=>(boxName,views)=>(state, action)=>{
+  
+})

@@ -28,9 +28,18 @@ export const createMutationFactory = fn(
         reducers: {},
       },
       t.map(type => {
+        const nextType = `${type}`.replace(`${name}/`, '')
+        const namespaces = t.split('/', nextType)
+        const actionType = t.last(namespaces)
+        const mutatorAction = t.eq(t.length(namespaces), 1)
+          ? t.to.constantCase(actionType)
+          : t.tags.oneLineInlineLists`${t.concat(
+              t.take(t.length(namespaces) - 1, namespaces),
+              [t.to.constantCase(actionType)]
+            )}`.replace(' ', '/')
         return {
-          action: t.caseTo.camelCase(type),
-          mutator: createAction(t.caseTo.constantCase(type)),
+          action: t.to.camelCase(actionType),
+          mutator: createAction(mutatorAction),
         }
       })(
         t.eq('Array', t.type(actionOrActions))

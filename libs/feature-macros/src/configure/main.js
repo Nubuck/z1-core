@@ -17,7 +17,6 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
     ['routes'],
     props
   )
-  const viewState = t.merge(t.pathOr({}, ['state'], props), { _: null })
   return {
     initial: {
       route: {
@@ -74,25 +73,7 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
           'routeView',
           (state, action) => {
             // :view viewState
-            const view = t.pathOr(null, ['payload', 'view'], action)
-            const matchedViewState = t.match(viewState)(t.to.camelCase(view))
-            if (t.isNil(matchedViewState)) {
-              return state
-            }
-            const nextViewState = matchedViewState.data({
-              event: types.event.routeEnter,
-              status: null,
-              error: null,
-              viewData: {},
-              nextData: {},
-            })
-            return t.isNil(nextState)
-              ? state
-              : t.merge(state, {
-                  views: t.merge(state.views, {
-                    [view]: { data: nextViewState },
-                  }),
-                })
+           return state
           },
           routes.view || defaultRoute
         ),
@@ -136,9 +117,9 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
           done()
         }),
         // routes exit
-        // t.globrex('*/ROUTING/*').regex
+        // t.globrex(`!(${boxName})*/ROUTING/*`, { extended: true }).regex
         fx(
-          [t.globrex(`!(${boxName})*/ROUTING/*`, { extended: true }).regex],
+          [t.globrex('*/ROUTING/*').regex],
           async (ctx, dispatch, done) => {
             done()
           }

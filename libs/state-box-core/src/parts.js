@@ -31,10 +31,10 @@ export const createMutationFactory = fn(
         const nextType = `${type}`.replace(`${name}/`, '')
         const namespaces = t.split('/', nextType)
         const actionType = t.last(namespaces)
-        const mutatorAction = t.eq(t.length(namespaces), 1)
+        const mutatorAction = t.eq(t.len(namespaces), 1)
           ? t.to.constantCase(actionType)
           : t.tags.oneLineInlineLists`${t.concat(
-              t.take(t.length(namespaces) - 1, namespaces),
+              t.take(t.len(namespaces) - 1, namespaces),
               [t.to.constantCase(actionType)]
             )}`.replace(' ', '/')
         return {

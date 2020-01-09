@@ -22,6 +22,7 @@ const init = fn(t => (views = {}) => {
         key,
         {
           status: types.status.init,
+          subbed: false,
           error: null,
           data: t.pathOr({}, ['initial', 'data'], props),
           form: t.pathOr({}, ['initial', 'form'], props),
@@ -55,22 +56,37 @@ const routeFromAction = fn(t => (boxName, action) => {
   )
 })
 
-const routeEnter = fn(t => (boxName, views) => (state, action) => {
+const routeEnter = fn(t => (boxName, props) => (state, action) => {
   const route = routeFromAction(boxName, action)
+  // const viewState = t.merge(t.pathOr({}, ['state'], props), { _: null })
+
+  // const view = t.pathOr(null, ['payload', 'view'], action)
+  // const matchedViewState = t.match(viewState)(t.to.camelCase(view))
+  // if (t.isNil(matchedViewState)) {
+  //   return state
+  // }
+  // const nextViewState = matchedViewState.data({
+  //   event: types.event.routeEnter,
+  //   status: null,
+  //   error: null,
+  //   viewData: {},
+  //   nextData: {},
+  // })
+  // return t.isNil(nextState)
+  //   ? state
+  //   : t.merge(state, {
+  //       views: t.merge(state.views, {
+  //         [view]: { data: nextViewState },
+  //       }),
+  //     })
 })
 
 const routeExist = fn(t => (boxName, views) => (state, action) => {
   const route = routeFromAction(boxName, action)
 })
 
-const viewData = fn(t=>(boxName,views)=>(state, action)=>{
+const viewData = fn(t => (boxName, views) => (state, action) => {})
 
-})
+const formData = fn(t => (boxName, views) => (state, action) => {})
 
-const formData = fn(t=>(boxName,views)=>(state, action)=>{
-  
-})
-
-const modalData = fn(t=>(boxName,views)=>(state, action)=>{
-  
-})
+const modalData = fn(t => (boxName, views) => (state, action) => {})

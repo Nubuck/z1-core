@@ -8,9 +8,9 @@
   "db": {
     "nedb": "nedb",
     "sequelize": {
-      "database": "z1_check",
-      "username": "Tistro",
-      "password": "T!str0",
+      "database": "z1_example",
+      "username": "example",
+      "password": "example",
       "host": "localhost",
       "dialect": "mssql",
       "forceAlter": true,
@@ -28,7 +28,7 @@
   "management": {
     "path": "/account/manage",
     "from": "noreply@saucecode.tech",
-    "product": "Z1 check"
+    "brand": "Z1 Example"
   },
   "authentication": {
     "entity": "user",

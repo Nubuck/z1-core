@@ -1,7 +1,7 @@
 import zbx from '@z1/lib-feature-box'
 
 // main
-export const state = zbx.state.create('account', [
+export const state = zbx.state.create('landing', [
   {
     intial: {},
     mutations(m) {

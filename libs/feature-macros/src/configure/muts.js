@@ -4,35 +4,6 @@ import { fn } from '@z1/lib-feature-box'
 import { types } from '../types'
 
 // main
-const init = fn(t => (views = {}) => {
-  return {
-    route: {
-      action: null,
-      key: null,
-      view: null,
-      detail: null,
-      more: null,
-    },
-    active: {
-      param: null,
-      view: null,
-    },
-    views: t.fromPairs(([key, props]) => {
-      return [
-        key,
-        {
-          status: types.status.init,
-          subbed: false,
-          error: null,
-          data: t.pathOr({}, ['initial', 'data'], props),
-          form: t.pathOr({}, ['initial', 'form'], props),
-          modal: t.pathOr({}, ['initial', 'modal'], props),
-        },
-      ]
-    }, t.to.pairs(views)),
-  }
-})
-
 const routeFromAction = fn(t => (boxName, action) => {
   const params = {
     view: t.pathOr('home', ['payload', 'view'], action),

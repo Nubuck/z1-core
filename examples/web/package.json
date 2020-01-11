@@ -5,12 +5,13 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "parcel build src/index.js --experimental-scope-hoisting",
-    "start": "parcel serve src/index.js"
+    "build": "parcel build src/index.html --experimental-scope-hoisting",
+    "start": "parcel serve src/index.html"
   },
   "dependencies": {
     "@z1/lib-api-box-client": "^0.3.1",
     "@z1/lib-feature-box": "^0.3.1",
+    "@z1/lib-feature-macros": "^0.3.1",
     "@z1/lib-ui-box-elements": "^0.3.1",
     "@z1/lib-ui-schema": "^0.3.1",
     "react": "^16.12.0",

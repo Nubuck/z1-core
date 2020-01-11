@@ -10,7 +10,7 @@ export const create = fn(t => (name, { state, ui, render }) => {
     ? 'detail'
     : 'more'
   return {
-    key: t.match(param)({
+    key: t.match({
       view: `${t.to.camelCase(name)}`,
       viewList: `${t.to.camelCase(t.head(name))}`,
       _: t.tags.oneLineTrim`
@@ -20,15 +20,14 @@ export const create = fn(t => (name, { state, ui, render }) => {
         name
       )}
       `,
-    }),
+    })(param),
     param: t.eq(param, 'viewList') ? 'view' : param,
     state(ctx) {
       const nextState = t.isType(state, 'function') ? state(ctx) : state
       return {
-        initial: t.pathOr(
-          { subbed: false, data: {}, form: {}, modal: {} },
-          ['initial'],
-          nextState
+        initial: t.merge(
+          { subbed: false },
+          t.pathOr({ data: {}, form: {}, modal: {} }, ['initial'], nextState)
         ),
         data(props) {
           const dataHandle = t.pathOr(() => null, ['data'], nextState)

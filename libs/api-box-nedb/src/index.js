@@ -30,8 +30,9 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
         }
         // register models
         t.forEach(modelName => {
-          const modelFactory = adapter.models[modelName]
-          modelFactory && modelFactory(define)
+          // const modelFactory = adapter.models[modelName]
+          // modelFactory && modelFactory(define)
+          define(modelName)
         }, t.keys(adapter.models || {}))
         // register services
         const nextModels = dbTools.models.get(adapterName)

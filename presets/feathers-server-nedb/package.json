@@ -17,7 +17,7 @@
   "dependencies": {
     "feathers-nedb": "^5.1.0",
     "nedb": "^1.8.0",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "0.4.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

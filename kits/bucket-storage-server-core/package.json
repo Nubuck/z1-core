@@ -20,7 +20,7 @@
     "fs-blob-store": "^5.2.1",
     "multer": "^1.4.2",
     "@z1/lib-feature-box-server-core": "^0.3.1",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "0.4.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

@@ -17,7 +17,7 @@ export const withSequelizeAdapter = Fn(t => (ctx = {}) => {
       beforeSetup() {
         const sequelize = createDBConnection(app)
         if (t.not(t.isNil(sequelize))) {
-          app.debug('Sequelize db connection did not connect')
+          app.debug('Sequelize client skipped')
           const adapter = dbTools.get(adapterName)
           if (t.notZeroLen(t.keys(adapter.models || {}))) {
             const define = sequelize.define.bind(sequelize)

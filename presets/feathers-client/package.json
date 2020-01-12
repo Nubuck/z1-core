@@ -19,7 +19,7 @@
     "@feathersjs/errors": "^4.4.3",
     "@feathersjs/feathers": "^4.4.3",
     "@feathersjs/socketio-client": "^4.4.3",
-    "source-map-support": "^0.5.16",
+    "source-map-support": "0.4.3",
     "socket.io-client": "2.3.0"
   },
   "devDependencies": {

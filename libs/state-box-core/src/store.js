@@ -58,7 +58,7 @@ const create = fn(
   }
 )
 
-const reload = Fn(t => (store, boxes) => {
+const reload = fn(t => (store, boxes) => {
   const nextBoxes = t.isType(boxes, 'Object') ? boxes : combine(boxes)
   store.replaceReducer(
     combineReducers(t.merge(nextBoxes.reducers, store._reducers))

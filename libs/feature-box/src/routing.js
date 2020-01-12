@@ -1,6 +1,6 @@
 import React from 'react'
 import { fn } from '@z1/lib-state-box'
-export { NOT_FOUND } from 'redux-first-router'
+import { NOT_FOUND } from 'redux-first-router'
 
 // main
 export const routing = fn(t => ({

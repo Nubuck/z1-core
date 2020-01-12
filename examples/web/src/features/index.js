@@ -8,4 +8,4 @@ import landing from './landing'
 const ctx = { ui: {} }
 
 // main
-export default zbx.combine([landing(ctx)])
+export const features = zbx.combine([landing(ctx)])

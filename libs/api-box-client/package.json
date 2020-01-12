@@ -17,7 +17,7 @@
   "dependencies": {
     "@z1/lib-api-box-client-core": "^0.3.1",
     "localforage": "^1.7.3",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "0.4.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

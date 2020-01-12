@@ -36,7 +36,7 @@ export const api = task(t => (ctx = {}) => {
       ),
       transports: [new Winston.transports.Console()],
     })
-    api.configure(FeathersLogger(logger))
+    api.configure(FeathersLogger())
 
     // Enable Cors, security, compression, favicon and body parsing
     if (t.not(namespace)) {

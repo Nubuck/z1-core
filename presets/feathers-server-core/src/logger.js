@@ -12,43 +12,43 @@ export const Logger = logger => {
       {
         _logger: logger,
 
-        log() {
+        log(...args) {
           if (this._logger && typeof this._logger.log === 'function') {
-            return this._logger.log.apply(this._logger, arguments)
+            return this._logger.log.apply(this._logger, args)
           }
 
-          return console.log('LOG: ', arguments)
+          return console.log('LOG: ', ...args)
         },
 
-        info() {
+        info(...args) {
           if (this._logger && typeof this._logger.info === 'function') {
-            return this._logger.info.apply(this._logger, arguments)
+            return this._logger.info.apply(this._logger, args)
           }
 
-          return console.info('INFO: ', arguments)
+          return console.info('INFO: ', ...args)
         },
 
-        warn() {
+        warn(...args) {
           if (this._logger && typeof this._logger.warn === 'function') {
-            return this._logger.warn.apply(this._logger, arguments)
+            return this._logger.warn.apply(this._logger, args)
           }
 
-          return console.warn('WARNING: ', arguments)
+          return console.warn('WARNING: ', ...args)
         },
 
-        error() {
+        error(...args) {
           if (this._logger && typeof this._logger.error === 'function') {
-            return this._logger.error.apply(this._logger, arguments)
+            return this._logger.error.apply(this._logger, args)
           }
-          return console.error('ERROR: ', arguments)
+          return console.error('ERROR: ', ...args)
         },
 
-        debug() {
+        debug(...args) {
           if (this._logger && typeof this._logger.debug === 'function') {
-            return this._logger.debug.apply(this._logger, arguments)
+            return this._logger.debug.apply(this._logger, ['debug', ...args])
           }
 
-          return console.error('DEBUG: ', arguments)
+          return console.error('DEBUG: ', ...args)
         },
       },
       app

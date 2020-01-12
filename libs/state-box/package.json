@@ -17,14 +17,17 @@
   },
   "dependencies": {
     "@z1/lib-state-box-core": "^0.3.1",
-    "redux-logger": "^3.0.6",
-    "redux": "^4.0.4"
+    "redux-logger": "^3.0.6"
+  },
+  "peerDependencies": {
+    "redux": "*"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",
     "neutrino": "^9.0.0",
     "webpack": "^4",
-    "webpack-cli": "^3"
+    "webpack-cli": "^3",
+    "redux": "^4.0.4"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

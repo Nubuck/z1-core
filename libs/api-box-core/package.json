@@ -21,7 +21,7 @@
     "express-history-api-fallback": "^2.2.1",
     "uuid": "^3.2.1",
     "rxjs": "^6.5.3",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "0.4.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

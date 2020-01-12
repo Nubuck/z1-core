@@ -17,17 +17,20 @@
   },
   "dependencies": {
     "@z1/preset-task": "^0.3.1",
-    "source-map-support": "^0.5.16",
+    "source-map-support": "0.4.3",
     "redux-logic": "^2.1.1",
     "redux-toolbelt": "^2.2.6",
-    "rxjs": "^6.5.3",
-    "redux": "^4.0.4"
+    "rxjs": "^6.5.3"
+  },
+  "peerDependencies": {
+    "redux": "*"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",
     "neutrino": "^9.0.0",
     "webpack": "^4",
-    "webpack-cli": "^3"
+    "webpack-cli": "^3",
+    "redux": "^4.0.4"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

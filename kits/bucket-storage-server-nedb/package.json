@@ -17,7 +17,7 @@
   "dependencies": {
     "@z1/kit-bucket-storage-server-core": "^0.3.1",
     "@z1/lib-feature-box-server-nedb": "^0.3.1",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "0.4.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

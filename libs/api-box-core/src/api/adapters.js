@@ -70,14 +70,17 @@ export const adapters = task(t => ctx => {
           create(serviceId, factory, hooksEvents) {
             const mode = t.isType(serviceId, 'Array') ? 'adapter' : 'manual'
             const dbTools = app.get(toolsName)
+  
             if (t.eq(mode, 'adapter')) {
               const [adapterName, serviceName] = serviceId
               // const adapter = dbTools.get(adapterName)
-              dbTools.services.add(adapterName, serviceName, {
-                name: serviceName,
-                factory,
-                hooksEvents,
-              })
+              if (t.not(t.isNil(serviceName))) {
+                dbTools.services.add(adapterName, serviceName, {
+                  name: serviceName,
+                  factory,
+                  hooksEvents,
+                })
+              }
             } else {
               app.configure(() => {
                 const service = factory(app)

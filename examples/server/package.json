@@ -16,7 +16,9 @@
     "@z1/kit-account-server-nedb": "^0.3.1",
     "@z1/kit-bucket-storage-server": "^0.3.1",
     "@z1/kit-bucket-storage-server-nedb": "^0.3.1",
-    "source-map-support": "0.4.3"
+    "source-map-support": "0.4.3",
+    "core-js": "^3.6.3",
+    "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
     "@neutrinojs/node": "^9.0.0",

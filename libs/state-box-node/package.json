@@ -18,7 +18,9 @@
   "dependencies": {
     "@z1/lib-state-box-core": "^0.3.1",
     "source-map-support": "0.4.3",
-    "redux-node-logger": "^0.1.0"
+    "redux-node-logger": "^0.1.0",
+    "core-js": "^3.6.3",
+    "regenerator-runtime": "^0.13.3"
   },
   "peerDependencies": {
     "redux": "*"

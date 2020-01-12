@@ -9,7 +9,7 @@ import { SERVICES, PATHS } from './context'
 
 // main
 export const api = task(
-  (t, a) => ({ models, apiBox, serviceFactory }) =>
+  (t, a) => ({ adapter, models, apiBox, serviceFactory }) =>
     apiBox.create('bucketStorage', {
       models,
       services(s, { auth, common, data }) {
@@ -20,7 +20,7 @@ export const api = task(
           return ctx
         }
         // registry
-        s(SERVICES.REGISTRY, serviceFactory, {
+        s([adapter, SERVICES.REGISTRY], serviceFactory, {
           hooks: {
             before: {
               all: [auth.authenticate('jwt')],
@@ -53,8 +53,9 @@ export const api = task(
                   })
                 )
               }
-              return null
+            
             }
+            return null
           },
           {
             hooks: {
@@ -209,6 +210,7 @@ export const api = task(
               })
               .catch(contentError => next(contentError))
           })
+          return null
         })
       },
     })

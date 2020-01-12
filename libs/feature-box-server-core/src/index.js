@@ -1,5 +1,5 @@
 import { task as Fn } from '@z1/preset-task'
-
+import { Fs } from '@z1/preset-tools'
 // main
 export const featureBox = Fn(t => ({
   create(rawName, factory, initial = {}) {
@@ -42,4 +42,5 @@ export const featureBox = Fn(t => ({
 
 export const task = Fn
 export const fn = Fn
+export const fs = Fs
 export default featureBox

@@ -19,7 +19,9 @@
     "react-hot-loader": "^4.12.18",
     "react-redux": "6.0.1",
     "redux": "^4.0.4",
-    "source-map-support": "0.4.3"
+    "source-map-support": "0.4.3",
+    "core-js": "^3.6.3",
+    "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
     "@z1/lib-ui-box-tailwind": "^0.3.1",

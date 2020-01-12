@@ -20,7 +20,9 @@
     "@feathersjs/feathers": "^4.4.3",
     "@feathersjs/socketio-client": "^4.4.3",
     "source-map-support": "0.4.3",
-    "socket.io-client": "2.3.0"
+    "socket.io-client": "2.3.0",
+    "core-js": "^3.6.3",
+    "regenerator-runtime": "^0.13.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

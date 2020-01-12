@@ -20,7 +20,9 @@
     "redux-first-router": "^2.1.5",
     "redux-first-router-link": "^2.1.1",
     "redux-first-router-restore-scroll": "^1.2.2",
-    "source-map-support": "0.4.3"
+    "source-map-support": "0.4.3",
+    "core-js": "^3.6.3",
+    "regenerator-runtime": "^0.13.3"
   },
   "peerDependencies": {
     "react": "*",

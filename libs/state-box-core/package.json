@@ -20,7 +20,9 @@
     "source-map-support": "0.4.3",
     "redux-logic": "^2.1.1",
     "redux-toolbelt": "^2.2.6",
-    "rxjs": "^6.5.3"
+    "rxjs": "^6.5.3",
+    "core-js": "^3.6.3",
+    "regenerator-runtime": "^0.13.3"
   },
   "peerDependencies": {
     "redux": "*"

@@ -8,10 +8,7 @@ module.exports = {
   use: [
     library({
       name: '@z1/lib-state-box-core',
-      target: 'web',
-      targets: {
-        browsers: ['safari >= 6'],
-      },
+      target: 'node',
     }),
   ],
 };

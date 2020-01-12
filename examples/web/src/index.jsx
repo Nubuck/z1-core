@@ -1,24 +1,21 @@
-import './index.css'
-import React from 'react'
-import ReactDom from 'react-dom'
-import { Provider } from 'react-redux'
-import zbx from '@z1/lib-feature-box'
-import api from '@z1/lib-api-box-client'
-console.log('step 1')
 // hot code
 import App from './App'
-import { features } from './features'
-console.log('step 2', features)
+import features from './features'
+import './index.css'
+// deps
+import React from 'react'
+import ReactDom from 'react-dom'
+import zbx from '@z1/lib-feature-box'
+import api from '@z1/lib-api-box-client'
 // configure
+const development = process.env.NODE_ENV === 'development'
 const store = zbx.store.create({
   boxes: features.state,
   context: {
-    // api: api(
-    //   process.env.NODE_ENV === 'development' ? 'http://localhost:3035' : '/'
-    // ),
+    api: api(development ? 'http://localhost:3035' : '/'),
   },
+  logging: development,
 })
-console.log('step 3', store.getState())
 // reload state
 if (module.hot) {
   module.hot.accept(['./features', './App'], () => {
@@ -27,8 +24,8 @@ if (module.hot) {
 }
 // run
 ReactDom.render(
-  <Provider store={store}>
+  <zbx.ui.Provider store={store}>
     <App routing={features.routing} />
-  </Provider>,
+  </zbx.ui.Provider>,
   document.getElementById('root')
 )

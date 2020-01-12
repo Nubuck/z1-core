@@ -1,10 +1,11 @@
 import { fn } from '@z1/lib-state-box'
 import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import { Provider, connect } from 'react-redux'
 import { NavLink, default as Link } from 'redux-first-router-link'
 
 // main
 export const ui = fn(t => ({
+  Provider,
   connect(selector, mutators = undefined) {
     return connect(
       selector,

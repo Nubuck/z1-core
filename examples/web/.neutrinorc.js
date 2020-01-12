@@ -7,15 +7,29 @@ module.exports = {
   },
   use: [
     copy({
-      patterns: [{
-        context: 'src/static',
-        from: '**/*',
-        to: 'static',
-      }],
-
+      patterns: [
+        {
+          context: 'src/static',
+          from: '**/*',
+          to: 'static',
+        },
+      ],
     }),
     reactWeb({
       publicPath: '/',
+      style: {
+        loaders: [
+          {
+            loader: 'postcss-loader',
+            useId: 'postcss',
+            options: {
+              config: {
+                path: __dirname,
+              },
+            },
+          },
+        ],
+      },
       html: {
         title: 'Z1 Examples',
         template: require.resolve('./src/index.ejs'),

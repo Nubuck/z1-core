@@ -1,5 +1,5 @@
 import { stateBoxCore, fn as Fn } from '@z1/lib-state-box-core'
-import { createLogger } from 'redux-logger'
+import logger from 'redux-logger'
 
 // outs
 export const stateBox = Fn(t =>
@@ -7,7 +7,7 @@ export const stateBox = Fn(t =>
     store: t.merge(stateBoxCore.store, {
       create(props) {
         return stateBoxCore.store.create(
-          t.merge(props, { logger: createLogger() })
+          t.merge(props, { logger })
         )
       },
     }),

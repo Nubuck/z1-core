@@ -8,8 +8,5 @@
   ],
   "hoist": false,
   "useWorkspaces": false,
-  "npmClient": "yarn",
-  "npmClientArgs": [
-    "--no-lockfile"
-  ]
+  "npmClient": "yarn"
 }

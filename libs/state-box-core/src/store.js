@@ -17,7 +17,7 @@ const create = fn(
     enhance,
     initial,
     logger,
-    disableLogging,
+    logging,
   }) => {
     const nextBoxes = t.isType(boxes, 'Object') ? boxes : combine(boxes)
     const effects = createLogicMiddleware(nextBoxes.effects, context || {})
@@ -27,10 +27,8 @@ const create = fn(
       effects,
       afterware || [],
     ])
-    if (t.and(logger, t.eq(process.env.NODE_ENV, 'development'))) {
-      if (t.not(disableLogging)) {
-        nextMiddleware.push(logger)
-      }
+    if (t.and(logger, t.eq(logging, true))) {
+      nextMiddleware.push(logger)
     }
     const appliedMiddleware = applyMiddleware(...nextMiddleware)
     const storeArgs = t.isType(enhance, 'Function')

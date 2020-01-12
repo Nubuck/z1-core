@@ -13,7 +13,6 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
         const config = dbTools.dbConfig('nedb')
         Fs.dir(config || adapterName)
         const adapter = dbTools.get(adapterName)
-        console.log('adapter', adapter)
         const define = (name, opts = {}) => {
           const model = new Nedb(
             t.merge(
@@ -25,7 +24,6 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
               opts
             )
           )
-          console.log('Model', config, model)
           dbTools.models.add(adapterName, name, model)
         }
         // register models
@@ -37,7 +35,6 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
         // register services
         const nextModels = dbTools.models.get(adapterName)
         const serviceModelProps = (factoryObj = {}) => {
-          console.log('Factory Obj', Nedb, nextModels, factoryObj)
           const modelName = t.pathOr(null, ['modelName'], factoryObj)
           if (t.isNil(modelName)) {
             return null

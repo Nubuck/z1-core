@@ -4,7 +4,16 @@ import { fn } from '@z1/lib-feature-box'
 import { types } from '../types'
 
 // main
-const routeFromAction = fn(t => (boxName, action) => {
+export const viewActionParam = fn(t => (actions, action) => {
+  return t.match({
+    [actions.routeHome]: 'view',
+    [actions.routeView]: 'view',
+    [actions.routeViewDetail]: 'detail',
+    [actions.routeViewMore]: 'more',
+  })(action.type)
+})
+
+export const routeFromAction = fn(t => (boxName, action) => {
   const params = {
     view: t.pathOr('home', ['payload', 'view'], action),
     detail: t.pathOr(null, ['payload', 'detail'], action),
@@ -25,6 +34,29 @@ const routeFromAction = fn(t => (boxName, action) => {
     },
     params
   )
+})
+
+export const findViewKey = fn(t => (boxName, action, viewKeys) => {
+  const route = routeFromAction(boxName, action)
+  const viewByKey = t.find(viewKey => t.eq(viewKey.key, route.key), viewKeys)
+  if (t.not(t.isNil(viewByKey))) {
+    return viewByKey
+  } else {
+    const paramType = viewActionParam(actions, action)
+    const view = t.find(
+      viewKey =>
+        t.and(
+          t.eq(viewKey.name, route[paramType]),
+          t.eq(viewKey.param, paramType)
+        ),
+      viewKeys
+    )
+    if (t.not(t.isNil(view))) {
+      return view
+    } else {
+      return null
+    }
+  }
 })
 
 const routeEnter = fn(t => (boxName, props) => (state, action) => {
@@ -52,7 +84,7 @@ const routeEnter = fn(t => (boxName, props) => (state, action) => {
   //     })
 })
 
-const routeExist = fn(t => (boxName, views) => (state, action) => {
+const routeExit = fn(t => (boxName, views) => (state, action) => {
   const route = routeFromAction(boxName, action)
 })
 

@@ -90,7 +90,7 @@ export const adapters = task(t => ctx => {
             }
             return null
           },
-          wire(serviceName, hooksEvents) {
+          wire(serviceName, hooksEvents = {}) {
             const service = app.service(serviceName)
             if (t.and(hooksEvents, service)) {
               if (ctx.hookSignature(hooksEvents)) {
@@ -120,7 +120,7 @@ export const adapters = task(t => ctx => {
       })
       // load adapters
       t.forEach(adapterFactory => {
-        adapter = adapterFactory(app)
+        const adapter = adapterFactory(app)
         app.get('dbTools').set(adapter.name, adapter)
       }, t.pathOr([], ['adapters'], ctx))
     },

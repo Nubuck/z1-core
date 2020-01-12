@@ -19,13 +19,7 @@ import { channel } from './channel'
 export const api = task(t => (ctx = {}) => {
   const Adapters = adapters(ctx)
   const Auth = auth(ctx)
-  return function({
-    namespace,
-    boxes,
-    middleware,
-    hooks,
-    channels,
-  }) {
+  return function({ namespace, boxes, middleware, hooks, channels }) {
     const nextBoxes = t.isType(boxes, 'Object') ? boxes : ctx.combine(boxes)
 
     // Create feathers app with Express engine
@@ -34,15 +28,15 @@ export const api = task(t => (ctx = {}) => {
     // Load app FeathersConfig
     api.configure(FeathersConfig())
 
-    // const logger = Winston.createLogger({
-    //   level: t.eq(process.env.NODE_ENV, 'development') ? 'debug' : 'info',
-    //   format: Winston.format.combine(
-    //     Winston.format.splat(),
-    //     Winston.format.simple()
-    //   ),
-    //   transports: [new Winston.transports.Console()],
-    // })
-    api.configure(FeathersLogger(Winston))
+    const logger = Winston.createLogger({
+      level: t.eq(process.env.NODE_ENV, 'development') ? 'debug' : 'info',
+      format: Winston.format.combine(
+        Winston.format.splat(),
+        Winston.format.simple()
+      ),
+      transports: [new Winston.transports.Console()],
+    })
+    api.configure(FeathersLogger(logger))
 
     // Enable Cors, security, compression, favicon and body parsing
     if (t.not(namespace)) {
@@ -107,9 +101,7 @@ export const api = task(t => (ctx = {}) => {
       }, adapterKeys)
 
       // lifecycle onSetup
-      t.forEach(action => {
-        action('onSetup', api)
-      }, nextBoxes.lifecycle || [])
+      nextBoxes.lifecycle('onSetup')(api)
 
       return result
     }
@@ -141,7 +133,7 @@ export const api = task(t => (ctx = {}) => {
 
     // Configure a middleware for 404s and the error handler
     api.use(FeathersExpress.notFound())
-    api.use(FeathersExpress.errorHandler({ logger: Winston }))
+    api.use(FeathersExpress.errorHandler({ logger }))
     // api.use(FeathersExpress.errorHandler())
 
     // Attach global hooks

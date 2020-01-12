@@ -28,7 +28,7 @@ export const combine = task(t => ctx => {
       },
       boxes
     )
-    const partialBoxes = t.pick(['models', 'services', 'channels'], nextboxes)
+    const partialBoxes = t.pick(['models', 'services', 'channels'], nextBoxes)
     return t.merge(partialBoxes, {
       lifecycle: key => app => {
         t.forEach(action => {

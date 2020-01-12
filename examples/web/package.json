@@ -5,8 +5,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "parcel build src/index.html --experimental-scope-hoisting",
-    "start": "parcel serve src/index.html"
+    "start": "webpack-dev-server --mode development",
+    "build": "webpack --mode production"
   },
   "dependencies": {
     "@z1/lib-api-box-client": "^0.3.1",
@@ -21,7 +21,15 @@
     "redux": "^4.0.4"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.4",
-    "@z1/lib-ui-box-tailwind": "^0.3.1"
+    "@z1/lib-ui-box-tailwind": "^0.3.1",
+    "@neutrinojs/react": "^9.0.0",
+    "@neutrinojs/copy": "^9.0.0",
+    "autoprefixer": "^9.6.0",
+    "neutrino": "^9.0.0",
+    "precss": "^4.0.0",
+    "tailwindcss": "^1.0.4",
+    "webpack": "^4",
+    "webpack-cli": "^3",
+    "webpack-dev-server": "^3"
   }
 }

@@ -4,14 +4,14 @@ import { withNedbAdapter } from '@z1/lib-api-box-nedb'
 import { withSequelizeAdapter } from '@z1/lib-api-box-sql'
 
 // main
-const apiBox = Fn(t =>
+export const apiBox = Fn(t =>
   t.pipe(withNedbAdapter, withSequelizeAdapter, apiBoxCore)()
 )
 export const featureBox = Fn(t =>
   t.mergeAll([
     core,
     { api: t.pick(['create', 'combine', 'configure'], apiBox) },
-    t.pick(['server', 'app', apiBox]),
+    t.pick(['server', 'app'], apiBox),
   ])
 )
 export const task = Fn

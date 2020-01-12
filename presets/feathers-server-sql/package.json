@@ -2,17 +2,17 @@
   "name": "@z1/preset-feathers-server-sql",
   "version": "0.3.1",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/feathers-server-sql",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "parcel build --target node src/index.js",
+    "build": "webpack --mode production",
     "prepublish": "yarn run build"
-  },
-  "devDependencies": {
-    "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
     "feathers-knex": "^7.1.0",
@@ -24,7 +24,14 @@
     "sqlite3": "^4.1.1",
     "pg": "^7.14.0",
     "pg-hstore": "^2.3.3",
-    "tedious": "^6.6.2"
+    "tedious": "^6.6.2",
+    "source-map-support": "^0.5.16"
+  },
+  "devDependencies": {
+    "@neutrinojs/library": "^9.0.0",
+    "neutrino": "^9.0.0",
+    "webpack": "^4",
+    "webpack-cli": "^3"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

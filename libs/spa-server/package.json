@@ -2,14 +2,16 @@
   "name": "@z1/lib-spa-server",
   "version": "0.3.1",
   "main": "dist/index.js",
-  "bin": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/spa-server",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "parcel build --target node src/index.js",
+    "build": "webpack --mode production",
     "prepublish": "yarn run build"
   },
   "dependencies": {
@@ -20,10 +22,14 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-history-api-fallback": "^2.2.1",
-    "helmet": "^3.21.2"
+    "helmet": "^3.21.2",
+    "source-map-support": "^0.5.16"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.4"
+    "@neutrinojs/library": "^9.0.0",
+    "neutrino": "^9.0.0",
+    "webpack": "^4",
+    "webpack-cli": "^3"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

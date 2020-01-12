@@ -1,3 +1,4 @@
+import './index.css'
 import React from 'react'
 import ReactDom from 'react-dom'
 import zbx from '@z1/lib-feature-box'

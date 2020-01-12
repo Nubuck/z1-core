@@ -1,9 +1,12 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
+import zbx from '@z1/lib-feature-box'
 
 // main
-const App = ({ routing }) => {
-  return <div />
-}
+const App = zbx.ui.connect(zbx.ui.query(['location']))(
+  ({ location, routing }) => {
+    return <div>{zbx.routing.render(location.type, routing)}</div>
+  }
+)
 
 export default hot(module)(App)

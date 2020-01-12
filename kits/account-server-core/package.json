@@ -2,21 +2,28 @@
   "name": "@z1/kit-account-server-core",
   "version": "0.3.1",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/account-server-core",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "parcel build --target node src/index.js",
+    "build": "webpack --mode production",
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "feathers-authentication-management": "^2.0.1"
+    "feathers-authentication-management": "^2.0.1",
+    "@z1/lib-feature-box-server-core": "^0.3.1",
+    "source-map-support": "^0.5.16"
   },
   "devDependencies": {
-    "@z1/lib-feature-box-server-core": "^0.3.1",
-    "parcel-bundler": "^1.12.4"
+    "@neutrinojs/library": "^9.0.0",
+    "neutrino": "^9.0.0",
+    "webpack": "^4",
+    "webpack-cli": "^3"
   },
   "gitHead": "cc1c8958cfa0184c996d799385e7cf94f0094d94"
 }

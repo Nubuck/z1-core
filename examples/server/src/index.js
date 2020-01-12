@@ -14,7 +14,7 @@ let app = zbx.app.create(
     siteFolder: 'site',
   },
   () =>
-    app.api.log(
+    app.api.debug(
       `App Server started on http://${app.api.get('host')}:${app.api.get(
         'port'
       )}`

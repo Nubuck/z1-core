@@ -5,7 +5,6 @@ import {
   Compression,
 } from '@z1/preset-feathers-server-core'
 import { Fs } from '@z1/preset-tools'
-import { createServer } from 'http'
 import Fallback from 'express-history-api-fallback'
 
 // main

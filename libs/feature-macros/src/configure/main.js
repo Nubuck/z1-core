@@ -1,10 +1,13 @@
-import { fn } from '@z1/lib-feature-box'
+import zbx from '@z1/lib-feature-box'
 
 // ctx
 import { types } from '../types'
 
+// parts
+import { viewActionParam, routeFromAction, findViewKey } from './muts'
+
 // main
-export const configure = fn((t, a, rx) => (boxName, props = {}) => {
+export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
   const path = t.pathOr('/', ['path'], props)
   const defaultRoute = { authenticate: false }
   const routes = t.pathOr(
@@ -17,11 +20,14 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
     ['routes'],
     props
   )
-  const viewMacros = t.pathOr({}, ['state'], props)
+  const viewMacros = t.pathOr(null, ['state', 'views'], props)
+  const macroCtx = t.pick(
+    ['viewKeys', 'params'],
+    t.pathOr({}, ['state'], props)
+  )
   if (t.isNil(viewMacros)) {
     return {}
   }
-  const viewMacroKeys = t.keys(viewMacros)
   return {
     initial: {
       status: 'init',
@@ -127,8 +133,18 @@ export const configure = fn((t, a, rx) => (boxName, props = {}) => {
             actions.routeViewDetail,
             actions.routeViewMore,
           ],
-          ({ getState, action, redirect }, allow, reject) => {
-            allow(action)
+          ({ action, redirect }, allow, reject) => {
+            const viewKey = findViewKey(boxName, action, macroCtx.viewKeys)
+            if (t.not(t.isNil(viewKey))) {
+              allow(action)
+            } else {
+              reject(
+                redirect({
+                  type: zbx.routing.notFound,
+                  payload: {},
+                })
+              )
+            }
           }
         ),
       ]

@@ -1,31 +1,31 @@
 import { task as Fn } from '@z1/preset-task'
 
 // main
-export const featureBox = Fn(f => ({
+export const featureBox = Fn(t => ({
   create(rawName, factory, initial = {}) {
     const name = t.to.camelCase(rawName)
     return (props = {}) =>
       t.merge(
         { name },
-        factory(f.mergeDeepRight(initial, t.merge({ name }, props) || {}))
+        factory(t.mergeDeepRight(initial, t.merge({ name }, props) || {}))
       )
   },
   combine(features = []) {
-    return f.reduce(
+    return t.reduce(
       (combined, feature) => {
         return {
-          api: f.notType(f.path(['api'], feature), 'Array')
+          api: t.notType(t.path(['api'], feature), 'Array')
             ? combined.api
-            : f.concat(combined.api, f.path(['api'], feature)),
-          hooks: f.notType(f.path(['hooks'], feature), 'Object')
+            : t.concat(combined.api, t.path(['api'], feature)),
+          hooks: t.notType(t.path(['hooks'], feature), 'Object')
             ? combined.hooks
-            : f.merge(combined.hooks, {
-                [feature.name || 'common']: f.path(['hooks'], feature),
+            : t.merge(combined.hooks, {
+                [feature.name || 'common']: t.path(['hooks'], feature),
               }),
-          parts: f.notType(f.path(['parts'], feature), 'Object')
+          parts: t.notType(t.path(['parts'], feature), 'Object')
             ? combined.parts
-            : f.merge(combined.parts, {
-                [feature.name || 'common']: f.path(['parts'], feature),
+            : t.merge(combined.parts, {
+                [feature.name || 'common']: t.path(['parts'], feature),
               }),
         }
       },

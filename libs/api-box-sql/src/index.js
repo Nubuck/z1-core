@@ -109,9 +109,7 @@ export const withSequelizeAdapter = Fn(t => (ctx = {}) => {
         adapter.client
           .sync(syncOptions)
           .then(() => {
-            t.forEach(action => {
-              action('onSync', app)
-            }, boxes.lifecycle || [])
+            boxes.lifecycle('onSync')(app)
           })
           .catch(error => {
             app.error('FAILED TO SYNC DB', error)
@@ -212,9 +210,7 @@ export const withKnexAdapter = Fn(t => (ctx = {}) => {
         // adapter.client
         //   .sync(syncOptions)
         //   .then(() => {
-        t.forEach(action => {
-          action('onSync', app)
-        }, boxes.lifecycle || [])
+        boxes.lifecycle('onSync')(app)
         // })
         // .catch(error => {
         //   app.error('FAILED TO SYNC DB', error)

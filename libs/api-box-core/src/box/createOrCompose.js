@@ -111,7 +111,7 @@ const compose = task(t => ctx => {
   }
 })
 
-export const createOrCompose = fn(t => ctx => {
+export const createOrCompose = task(t => ctx => {
   const Create = create(ctx)
   const Compose = compose(t.merge(ctx, { create: Create }))
   return (rawName, boxOrBoxes) => {

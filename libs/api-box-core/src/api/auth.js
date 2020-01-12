@@ -6,7 +6,7 @@ import {
 } from '@z1/preset-feathers-server-core'
 
 // main
-export const auth = task(t => ctx => app => lifecycle => {
+export const auth = task(t => ctx =>  lifecycle => app =>{
   const authentication = new FeathersAuth.AuthenticationService(app)
   authentication.register('jwt', new FeathersAuth.JWTStrategy())
   authentication.register('local', new FeathersAuthLocal.LocalStrategy())

@@ -7,14 +7,20 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "parcel build --target node src/index.js",
-    "start": "parcel watch --target node src/index.js"
-  },
-  "devDependencies": {
-    "parcel-bundler": "^1.12.4"
+    "start": "webpack --watch --mode development",
+    "build": "webpack --mode production"
   },
   "dependencies": {
     "@z1/lib-feature-box-server": "^0.3.1",
-    "@z1/kit-account-server": "^0.3.1"
+    "@z1/kit-account-server": "^0.3.1",
+    "@z1/kit-account-server-nedb": "^0.3.1",
+    "@z1/kit-bucket-storage-server": "^0.3.1",
+    "@z1/kit-bucket-storage-server-nedb": "^0.3.1"
+  },
+  "devDependencies": {
+    "@neutrinojs/node": "^9.0.0",
+    "neutrino": "^9.0.0",
+    "webpack": "^4",
+    "webpack-cli": "^3"
   }
 }

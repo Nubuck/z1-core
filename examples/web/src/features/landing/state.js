@@ -1,20 +1,20 @@
 import zbx from '@z1/lib-feature-box'
 
 // main
-export const state = zbx.state.create('landing', [
+export const state = ctx => zbx.state.create('landing', [
   {
     intial: {},
-    mutations(m) {
-      return []
-    },
+    // mutations(m) {
+    //   return []
+    // },
     routes(r) {
-      return []
+      return [r('/', 'routeHome', state => state)]
     },
-    guards(g, { actions, mutators }) {
-      return []
-    },
-    effects(fx, { actions, mutators }) {
-      return []
-    },
+    // guards(g, { actions, mutators }) {
+    //   return []
+    // },
+    // effects(fx, { actions, mutators }) {
+    //   return []
+    // },
   },
 ])

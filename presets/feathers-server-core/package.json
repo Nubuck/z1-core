@@ -2,17 +2,17 @@
   "name": "@z1/preset-feathers-server-core",
   "version": "0.3.1",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/feathers-server-core",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "parcel build --target node src/index.js",
+    "build": "webpack --mode production",
     "prepublish": "yarn run build"
-  },
-  "devDependencies": {
-    "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
     "@feathersjs/authentication": "^4.4.3",
@@ -31,7 +31,14 @@
     "serve-favicon": "^2.5.0",
     "socket.io": "^2.3.0",
     "uberproto": "^2.0.4",
+    "source-map-support": "^0.5.16",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@neutrinojs/library": "^9.0.0",
+    "neutrino": "^9.0.0",
+    "webpack": "^4",
+    "webpack-cli": "^3"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

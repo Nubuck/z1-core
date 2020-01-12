@@ -1,17 +1,21 @@
 import zbx from '@z1/lib-feature-box'
 
+// parts
+import { state } from './state'
+import { route } from './route'
+
 // main
 export const feature = zbx.create(
-  'account',
+  'landing',
   ctx => {
     return {
-      state: [],
+      state: [state],
       ui: {},
       parts: {},
       routing: [
         {
-          action: [],
-          ui: null,
+          action: zbx.routing.actions(state),
+          ui: route({ ui: ctx.ui, mutators: state.mutators }),
         },
       ],
     }

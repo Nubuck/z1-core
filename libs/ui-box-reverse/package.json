@@ -2,20 +2,27 @@
   "name": "@z1/lib-ui-box-reverse",
   "version": "0.3.1",
   "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/ui-box-reverse",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "build": "parcel build --target node src/index.js",
+    "build": "webpack --mode production",
     "prepublish": "yarn run build"
   },
-  "devDependencies": {
-    "parcel-bundler": "^1.12.4"
-  },
   "dependencies": {
-    "@z1/preset-task": "^0.3.1"
+    "@z1/preset-task": "^0.3.1",
+    "source-map-support": "^0.5.16"
+  },
+  "devDependencies": {
+    "@neutrinojs/library": "^9.0.0",
+    "neutrino": "^9.0.0",
+    "webpack": "^4",
+    "webpack-cli": "^3"
   },
   "gitHead": "cc1c8958cfa0184c996d799385e7cf94f0094d94"
 }

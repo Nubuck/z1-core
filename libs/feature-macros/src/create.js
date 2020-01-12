@@ -9,7 +9,13 @@ export const create = fn(t => (name, { state, ui, render }) => {
     : t.eq(t.len(name), 2)
     ? 'detail'
     : 'more'
+
   return {
+    name: t.match({
+      view: `${t.to.camelCase(name)}`,
+      viewList: `${t.to.camelCase(t.head(name))}`,
+      _: t.to.camelCase(t.last(name)),
+    })(param),
     key: t.match({
       view: `${t.to.camelCase(name)}`,
       viewList: `${t.to.camelCase(t.head(name))}`,

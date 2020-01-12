@@ -1,24 +1,24 @@
 // core
 import feathers from '@feathersjs/feathers'
-import express from '@feathersjs/express'
+import * as express from '@feathersjs/express'
 import socketIO from '@feathersjs/socketio'
 import errors from '@feathersjs/errors'
 import config from '@feathersjs/configuration'
 
 // auth
-import auth from '@feathersjs/authentication'
-import authLocal from '@feathersjs/authentication-local'
-import authO from '@feathersjs/authentication-oauth'
+import * as auth from '@feathersjs/authentication'
+import * as authLocal from '@feathersjs/authentication-local'
+import * as authO from '@feathersjs/authentication-oauth'
 
 // eco-system + plus
 import { Logger } from './logger'
 import commonHooks from 'feathers-hooks-common'
-import authHooks from 'feathers-authentication-hooks'
+import * as authHooks from 'feathers-authentication-hooks'
 
 // other
 import cors from 'cors'
 import compression from 'compression'
-import winston from 'winston'
+import * as winston from 'winston'
 
 //exports
 export const Feathers = feathers

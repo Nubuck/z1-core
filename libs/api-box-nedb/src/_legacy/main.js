@@ -56,9 +56,7 @@ export const combineApiBoxes = task(t =>
       }, boxes.models)
     },
     onSetup(app, boxes) {
-      t.forEach(action => {
-        action('onSync', app)
-      }, boxes.lifecycle)
+      boxes.lifecycle('onSync')(app)
     },
     getModels(app) {
       return app.get('nedbModels')

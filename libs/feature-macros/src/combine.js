@@ -12,20 +12,24 @@ export const combine = fn(t => (rawViews = []) => {
     viewKeys,
     params,
     state(ctx = {}) {
-      return t.mergeAll([
-        { viewKeys, params },
-        {
-          views: t.mergeAll(
-            t.map(view => {
-              return {
-                [view.key]: view.state(
-                  t.merge(ctx, { params, viewKeys, key: view.key })
-                ),
-              }
-            }, views)
-          ),
-        },
-      ])
+      const nextViews = t.mergeAll(
+        t.map(view => {
+          return {
+            [view.key]: view.state(
+              t.merge(ctx, { params, viewKeys, key: view.key })
+            ),
+          }
+        }, views)
+      )
+
+      return {
+        _shouldSub: t.anyOf(
+          t.map(([_, viewMacro]) => viewMacro._shouldSub, t.to.pairs(nextViews))
+        ),
+        viewKeys,
+        params,
+        views: nextViews,
+      }
     },
     ui(ctx = {}) {
       return t.mergeAll(

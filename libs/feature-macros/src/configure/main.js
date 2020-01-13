@@ -25,7 +25,7 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
   )
   const viewMacros = t.pathOr(null, ['state', 'views'], props)
   const macroCtx = t.pick(
-    ['viewKeys', 'params'],
+    ['viewKeys', 'params', '_shouldSub'],
     t.pathOr({}, ['state'], props)
   )
   if (t.isNil(viewMacros)) {
@@ -186,6 +186,32 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
             },
           ])
         }),
+        m('sub', (state, action) => {
+          const nextView = t.pathOr(null, ['payload', 'view'], action)
+          if (t.isNil(nextView)) {
+            return state
+          }
+          return t.merge(state, {
+            views: t.merge(state.views, {
+              [nextView]: t.merge(state.views[nextView], {
+                subbed: true,
+              }),
+            }),
+          })
+        }),
+        m('unsub', (state, action) => {
+          const nextView = t.pathOr(null, ['payload', 'view'], action)
+          if (t.isNil(nextView)) {
+            return state
+          }
+          return t.merge(state, {
+            views: t.merge(state.views, {
+              [nextView]: t.merge(state.views[nextView], {
+                subbed: false,
+              }),
+            }),
+          })
+        }),
         m(
           ['formChange', 'formTransmit', 'formTransmitComplete'],
           (state, action) => {
@@ -194,12 +220,6 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
           }
         ),
         m('modalChange', (state, action) => {
-          return state
-        }),
-        m('sub', (state, action) => {
-          return state
-        }),
-        m('unsub', (state, action) => {
           return state
         }),
       ]
@@ -239,7 +259,7 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
         actions
       )
       const routeActionTypes = t.values(routeActions)
-      return [
+      const nextFx = [
         // routes enter / data load
         fx(
           [
@@ -301,21 +321,15 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
             done()
           }
         ),
-        // form transmit
-        fx([actions.formTransmit], async (context, dispatch, done) => {
-          done()
-        }),
         // routes exit
         fx(
-          [t.globrex('*/ROUTING/*').regex],
+          [t.globrex('*/ROUTING/*').regex, zbx.routing.notFound],
           async ({ getState, action }, dispatch, done) => {
             const state = getState()
             const prev = state.location.prev
             const boxState = state[boxName]
             if (t.not(t.includes(prev.type, routeActionTypes))) {
               done()
-              // } else if (t.eq(boxState.path, action.meta.location.pathname)) {
-              //   done()
             } else {
               const routing = routingFromAction(prev, {
                 pathname: ['pathname'],
@@ -340,11 +354,77 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
             }
           }
         ),
-        // subscribe
-        // fx([], (context, dispatch, done) => {
-        //   done()
-        // }),
+        // form transmit
+        fx([actions.formTransmit], async (context, dispatch, done) => {
+          done()
+        }),
       ]
+      return t.neq(macroCtx._shouldSub, true)
+        ? nextFx
+        : t.concat(nextFx, [
+            fx(
+              [actions.routeExit, actions.dataLoadComplete],
+              ({ getState, action }, dispatch, done) => {
+                const state = getState()
+                const boxState = state[boxName]
+                const mode = t.eq(action.type, actions.routeExit)
+                  ? 'unsub'
+                  : 'sub'
+                const activeView = t.eq(mode, 'unsub')
+                  ? t.pathOr(null, ['payload', 'active', 'view'], action)
+                  : t.pathOr(null, ['active', 'view'], boxState)
+                if (t.isNil(activeView)) {
+                  done()
+                } else {
+                  const activeMacro = viewMacros[activeView]
+                  const activeState = t.path(['views', activeView], boxState)
+                  if (
+                    t.allOf([
+                      t.eq(activeMacro._shouldSub, false),
+                      t.eq(activeState.subbed, false),
+                    ])
+                  ) {
+                    done()
+                  } else if (
+                    t.allOf([
+                      t.eq(action.type, actions.dataLoadComplete),
+                      t.eq(activeState.reEnter, true),
+                      t.eq(activeState.subbed, true),
+                    ])
+                  ) {
+                    done()
+                  } else {
+                    dispatch(
+                      mutators[mode]({
+                        view: activeView,
+                      })
+                    )
+                    done()
+                  }
+                }
+              }
+            ),
+            fx(
+              actions.sub,
+              context => {
+                const activeView = t.pathOr(
+                  null,
+                  ['action', 'payload', 'view'],
+                  context
+                )
+                if (t.isNil(activeView)) {
+                  return null
+                }
+                const activeMacro = viewMacros[activeView]
+                return activeMacro.subscribe(context, { actions, mutators })
+              },
+              {
+                cancelType: actions.unsub,
+                warnTimeout: 0,
+                latest: true,
+              }
+            ),
+          ])
     },
   }
 })

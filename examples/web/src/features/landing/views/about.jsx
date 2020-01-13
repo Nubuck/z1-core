@@ -22,6 +22,9 @@ export const about = zbx.fn((t, a) =>
             error,
           }
         },
+        subscribe(context) {
+          return null
+        },
       }
     },
     ui(ctx) {

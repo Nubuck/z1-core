@@ -22,7 +22,8 @@ export const about = zbx.fn((t, a) =>
             error,
           }
         },
-        subscribe(context) {
+        subscribe(context, box) {
+          console.log('ABOUT SUB RUN', box.name, box.view)
           return null
         },
       }

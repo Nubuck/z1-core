@@ -51,9 +51,9 @@ export const create = fn(t => (name, { state, ui, render }) => {
           const modalHandle = t.pathOr(() => null, ['modal'], nextState)
           return modalHandle(props)
         },
-        subscribe(props) {
+        subscribe(context, box) {
           const subscribeHandle = t.pathOr(() => null, ['subscribe'], nextState)
-          return subscribeHandle(props)
+          return subscribeHandle(context, box)
         },
         async load(props) {
           const loadHandle = t.pathOr(null, ['load'], nextState)

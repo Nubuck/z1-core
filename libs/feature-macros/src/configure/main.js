@@ -424,6 +424,7 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
                   actions,
                   mutators,
                   view: activeView,
+                  name: boxName,
                 })
               },
               {

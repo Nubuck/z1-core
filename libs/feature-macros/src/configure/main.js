@@ -186,7 +186,7 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
             },
           ])
         }),
-        m('sub', (state, action) => {
+        m(['sub', 'unsub'], (state, action) => {
           const nextView = t.pathOr(null, ['payload', 'view'], action)
           if (t.isNil(nextView)) {
             return state
@@ -194,24 +194,16 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
           return t.merge(state, {
             views: t.merge(state.views, {
               [nextView]: t.merge(state.views[nextView], {
-                subbed: true,
+                subbed: t.pathOr(
+                  state.views[nextView].subbed,
+                  ['payload', 'subbed'],
+                  action
+                ),
               }),
             }),
           })
         }),
-        m('unsub', (state, action) => {
-          const nextView = t.pathOr(null, ['payload', 'view'], action)
-          if (t.isNil(nextView)) {
-            return state
-          }
-          return t.merge(state, {
-            views: t.merge(state.views, {
-              [nextView]: t.merge(state.views[nextView], {
-                subbed: false,
-              }),
-            }),
-          })
-        }),
+
         m(
           ['formChange', 'formTransmit', 'formTransmitComplete'],
           (state, action) => {
@@ -397,6 +389,7 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
                     dispatch(
                       mutators[mode]({
                         view: activeView,
+                        subbed: t.eq(mode, 'sub'),
                       })
                     )
                     done()

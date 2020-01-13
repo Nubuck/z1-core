@@ -8,13 +8,13 @@ import ReactDom from 'react-dom'
 import zbx from '@z1/lib-feature-box'
 import api from '@z1/lib-api-box-client'
 // configure
-const development = process.env.NODE_ENV === 'development'
+const dev = process.env.NODE_ENV === 'development'
 const store = zbx.store.create({
   boxes: features.state,
   context: {
-    api: api(development ? 'http://localhost:3035' : '/'),
+    // api: api(dev ? 'http://localhost:3035' : '/'),
   },
-  logging: development,
+  logging: dev,
 })
 // reload state
 if (module.hot) {

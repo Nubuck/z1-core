@@ -13,32 +13,42 @@ export const viewActionParam = fn(t => (actions, action) => {
   })(action.type)
 })
 
-export const routeFromAction = fn(t => (boxName, action) => {
+export const routingFromAction = fn(t => action => {
   const params = {
     view: t.pathOr('home', ['payload', 'view'], action),
     detail: t.pathOr(null, ['payload', 'detail'], action),
     more: t.pathOr(null, ['payload', 'more'], action),
   }
-  return t.merge(
+  return t.mergeAll([
     {
-      action: action.type.replace(`${boxName}/`, ''),
-      key: t.tags.oneLineTrim`
-      ${t.mapIndexed(
-        ([_, value], index) =>
-          `${t.isNil(value) ? '' : t.to.camelCase(key)}${
-            t.or(t.isNil(value), t.eq(2, index)) ? '' : '_'
-          }`,
-        t.to.pairs(params)
-      )}
-      `,
+      route: {
+        path: t.pathOr(
+          null,
+          ['meta', 'location', 'current', 'pathname'],
+          action
+        ),
+        action: t.pathOr(null, ['meta', 'location', 'current', 'type'], action),
+        key: t.tags.oneLineTrim`
+          ${t.tags.oneLineInlineLists`
+            ${t.mapIndexed(
+              ([_, value], index) =>
+                `${t.isNil(value) ? '' : t.to.camelCase(value)}${
+                  t.or(t.isNil(value), t.eq(2, index)) ? '' : '_'
+                }`,
+              t.to.pairs(params)
+            )}`}`,
+      },
     },
-    params
-  )
+    { params },
+  ])
 })
 
-export const findViewKey = fn(t => (boxName, action, viewKeys) => {
-  const route = routeFromAction(boxName, action)
-  const viewByKey = t.find(viewKey => t.eq(viewKey.key, route.key), viewKeys)
+export const findViewKey = fn(t => (actions, action, viewKeys) => {
+  const routing = routingFromAction(action)
+  const viewByKey = t.find(
+    viewKey => t.eq(viewKey.key, routing.route.key),
+    viewKeys
+  )
   if (t.not(t.isNil(viewByKey))) {
     return viewByKey
   } else {
@@ -46,7 +56,7 @@ export const findViewKey = fn(t => (boxName, action, viewKeys) => {
     const view = t.find(
       viewKey =>
         t.and(
-          t.eq(viewKey.name, route[paramType]),
+          t.eq(viewKey.name, routing.params[paramType]),
           t.eq(viewKey.param, paramType)
         ),
       viewKeys
@@ -58,38 +68,3 @@ export const findViewKey = fn(t => (boxName, action, viewKeys) => {
     }
   }
 })
-
-const routeEnter = fn(t => (boxName, props) => (state, action) => {
-  const route = routeFromAction(boxName, action)
-  // const viewState = t.merge(t.pathOr({}, ['state'], props), { _: null })
-
-  // const view = t.pathOr(null, ['payload', 'view'], action)
-  // const matchedViewState = t.match(viewState)(t.to.camelCase(view))
-  // if (t.isNil(matchedViewState)) {
-  //   return state
-  // }
-  // const nextViewState = matchedViewState.data({
-  //   event: types.event.routeEnter,
-  //   status: null,
-  //   error: null,
-  //   viewData: {},
-  //   nextData: {},
-  // })
-  // return t.isNil(nextState)
-  //   ? state
-  //   : t.merge(state, {
-  //       views: t.merge(state.views, {
-  //         [view]: { data: nextViewState },
-  //       }),
-  //     })
-})
-
-const routeExit = fn(t => (boxName, views) => (state, action) => {
-  const route = routeFromAction(boxName, action)
-})
-
-const viewData = fn(t => (boxName, views) => (state, action) => {})
-
-const formData = fn(t => (boxName, views) => (state, action) => {})
-
-const modalData = fn(t => (boxName, views) => (state, action) => {})

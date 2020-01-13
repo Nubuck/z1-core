@@ -4,7 +4,7 @@ import zbx from '@z1/lib-feature-box'
 import { types } from '../types'
 
 // parts
-import { viewActionParam, routeFromAction, findViewKey } from './muts'
+import { viewActionParam, routingFromAction, findViewKey } from './muts'
 
 // main
 export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
@@ -35,11 +35,6 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
         path: null,
         action: null,
         key: null,
-        prev: {
-          path: null,
-          action: null,
-          key: null,
-        },
       },
       params: {
         view: null,
@@ -124,7 +119,7 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
         }),
       ]
     },
-    guards(g, { actions, mutators }) {
+    guards(g, { actions }) {
       return [
         g(
           [
@@ -134,7 +129,7 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
             actions.routeViewMore,
           ],
           ({ action, redirect }, allow, reject) => {
-            const viewKey = findViewKey(boxName, action, macroCtx.viewKeys)
+            const viewKey = findViewKey(actions, action, macroCtx.viewKeys)
             if (t.not(t.isNil(viewKey))) {
               allow(action)
             } else {

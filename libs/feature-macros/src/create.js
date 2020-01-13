@@ -20,12 +20,15 @@ export const create = fn(t => (name, { state, ui, render }) => {
       view: `${t.to.camelCase(name)}`,
       viewList: `${t.to.camelCase(t.head(name))}`,
       _: t.tags.oneLineTrim`
-      ${t.mapIndexed(
-        (key, index) =>
-          `${t.to.camelCase(key)}${t.eq(t.len(name) - 1, index) ? '' : '_'}`,
-        name
-      )}
-      `,
+        ${t.tags.oneLineInlineLists`
+          ${t.mapIndexed(
+            (key, index) =>
+              `${t.to.camelCase(key)}${
+                t.eq(t.len(name) - 1, index) ? '' : '_'
+              }`,
+            name
+          )}`}
+        `,
     })(param),
     param: t.eq(param, 'viewList') ? 'view' : param,
     state(ctx) {

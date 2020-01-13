@@ -15,13 +15,15 @@ export const combine = fn(t => (rawViews = []) => {
       return t.mergeAll([
         { viewKeys, params },
         {
-          views: t.map(view => {
-            return {
-              [view.key]: view.state(
-                t.merge(ctx, { params, viewKeys, key: view.key })
-              ),
-            }
-          }, views),
+          views: t.mergeAll(
+            t.map(view => {
+              return {
+                [view.key]: view.state(
+                  t.merge(ctx, { params, viewKeys, key: view.key })
+                ),
+              }
+            }, views)
+          ),
         },
       ])
     },

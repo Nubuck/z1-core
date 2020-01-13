@@ -21,7 +21,6 @@ export const combine = fn(t => (rawViews = []) => {
           }
         }, views)
       )
-
       return {
         _shouldSub: t.anyOf(
           t.map(([_, viewMacro]) => viewMacro._shouldSub, t.to.pairs(nextViews))

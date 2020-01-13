@@ -415,8 +415,16 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
                 if (t.isNil(activeView)) {
                   return null
                 }
-                const activeMacro = viewMacros[activeView]
-                return activeMacro.subscribe(context, { actions, mutators })
+                if (
+                  t.isNil(t.pathOr(null, [activeView, 'subscribe'], viewMacros))
+                ) {
+                  return null
+                }
+                return viewMacros[activeView].subscribe(context, {
+                  actions,
+                  mutators,
+                  view: activeView,
+                })
               },
               {
                 cancelType: actions.unsub,

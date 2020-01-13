@@ -187,15 +187,15 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
           ])
         }),
         m(['sub', 'unsub'], (state, action) => {
-          const nextView = t.pathOr(null, ['payload', 'view'], action)
-          if (t.isNil(nextView)) {
+          const activeView = t.pathOr(null, ['payload', 'view'], action)
+          if (t.isNil(activeView)) {
             return state
           }
           return t.merge(state, {
             views: t.merge(state.views, {
-              [nextView]: t.merge(state.views[nextView], {
+              [activeView]: t.merge(state.views[activeView], {
                 subbed: t.pathOr(
-                  state.views[nextView].subbed,
+                  state.views[activeView].subbed,
                   ['payload', 'subbed'],
                   action
                 ),
@@ -207,8 +207,64 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
         m(
           ['formChange', 'formTransmit', 'formTransmitComplete'],
           (state, action) => {
-            // payload: form: string, data: obj
-            return state
+            const event = t.to.paramCase(action.type.replace(`${boxName}/`, ''))
+            const activeMacro = viewMacros[state.active.view]
+            const activeState = state.views[state.active.view]
+            const activeCtx = t.mergeAll([
+              activeState,
+              {
+                event,
+                status: t.eq(event, types.event.formChange)
+                  ? activeState.status
+                  : t.eq(event, types.event.formTransmit)
+                  ? types.status.loading
+                  : types.status.ready,
+              },
+              t.pick(['route', 'params'], state),
+              { next: action.payload },
+            ])
+            if (t.eq(event, types.event.formChange)) {
+              const nextForm = activeMacro.form(activeCtx)
+              if (t.isNil(nextForm)) {
+                return state
+              }
+              return t.merge(state, {
+                views: t.merge(state.views, {
+                  [state.active.view]: t.merge(state.views[state.active.view], {
+                    form: nextForm,
+                  }),
+                }),
+              })
+            }
+            const nextData = activeMacro.data(activeCtx)
+            const nextForm = activeMacro.form(
+              t.isNil(nextData) ? activeCtx : t.merge(activeCtx, nextData)
+            )
+            const nextModal = activeMacro.modal(
+              t.and(t.isNil(nextData), t.isNil(nextForm))
+                ? activeCtx
+                : t.mergeAll([
+                    activeCtx,
+                    t.isNil(nextData) ? {} : nextData,
+                    t.isNil(nextForm) ? {} : { form: nextForm },
+                  ])
+            )
+            return t.mergeAll([
+              state,
+              {
+                views: t.merge(state.views, {
+                  [state.active.view]: t.omit(
+                    ['event', 'next', 'route', 'params'],
+                    t.mergeAll([
+                      activeCtx,
+                      t.isNil(nextData) ? {} : nextData,
+                      t.isNil(nextForm) ? {} : { form: nextForm },
+                      t.isNil(nextModal) ? {} : { modal: nextModal },
+                    ])
+                  ),
+                }),
+              },
+            ])
           }
         ),
         m('modalChange', (state, action) => {
@@ -351,6 +407,7 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
           done()
         }),
       ]
+      // yield
       return t.neq(macroCtx._shouldSub, true)
         ? nextFx
         : t.concat(nextFx, [

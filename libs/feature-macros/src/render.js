@@ -7,8 +7,8 @@ export const render = fn(
     if (t.isNil(Views)) {
       return null
     }
-    const data = t.pathOr({}, ['views', state.viewKey], state)
-    const View = Views[state.viewKey]
+    const data = t.pathOr({}, ['views', state.active.view], state)
+    const View = Views[state.active.view]
     return t.isNil(View)
       ? t.has('notFound')(Views)
         ? React.createElement(Views.notFound, { state: data, mutations })

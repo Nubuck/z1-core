@@ -6,29 +6,31 @@ import views from './views'
 
 // main
 const name = 'landing'
-export const state = zbx.state.create(name, [
-  mx.routeView.configure(name, {
-    state: views.state(),
-    routes: {
-      home: {},
-      view: {},
-      detail: {},
-      more: {},
-    },
-  }),
-  // {
-  //   intial: {},
-  //   // mutations(m) {
-  //   //   return []
-  //   // },
-  //   routes(r) {
-  //     return [r('/', 'routeHome', state => state)]
-  //   },
-  //   // guards(g, { actions, mutators }) {
-  //   //   return []
-  //   // },
-  //   // effects(fx, { actions, mutators }) {
-  //   //   return []
-  //   // },
-  // },
-])
+export const state = zbx.fn(t =>
+  zbx.state.create(name, [
+    mx.routeView.configure(name, {
+      state: views.state(),
+      routes: {
+        home: {},
+        view: {},
+        detail: {},
+        more: {},
+      },
+    }),
+    // {
+    //   intial: {},
+    //   // mutations(m) {
+    //   //   return []
+    //   // },
+    //   routes(r) {
+    //     return [r('/', 'routeHome', state => state)]
+    //   },
+    //   // guards(g, { actions, mutators }) {
+    //   //   return []
+    //   // },
+    //   // effects(fx, { actions, mutators }) {
+    //   //   return []
+    //   // },
+    // },
+  ])
+)

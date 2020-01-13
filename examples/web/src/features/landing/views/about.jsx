@@ -3,21 +3,21 @@ import zbx from '@z1/lib-feature-box'
 import mx from '@z1/lib-feature-macros'
 
 // main
-export const home = zbx.fn((t, a) =>
-  mx.routeView.create('home', {
+export const about = zbx.fn((t, a) =>
+  mx.routeView.create('about', {
     state(ctx) {
       return {
         initial: {
           data: {
-            content: [],
+            events: [],
           },
         },
         data({ event, status, error, data, next }) {
-          console.log('HOME VIEW DATA', event, next)
+          console.log('ABOUT VIEW DATA', event, next)
           return {
             status,
             data: t.merge(data, {
-              content: t.concat(data.content, [event]),
+              events: t.concat(data.events, [event]),
             }),
             error,
           }
@@ -28,9 +28,9 @@ export const home = zbx.fn((t, a) =>
       return ({ state, mutations }) => {
         return (
           <div>
-            <h1>Home view</h1>
+            <h1>About view</h1>
             <div>
-              <zbx.ui.Link to="/about">About</zbx.ui.Link>
+              <zbx.ui.Link to="/">Home</zbx.ui.Link>
             </div>
           </div>
         )

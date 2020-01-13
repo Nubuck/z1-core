@@ -32,8 +32,14 @@ export const routingFromAction = fn(t => action => {
           ${t.tags.oneLineInlineLists`
             ${t.mapIndexed(
               ([_, value], index) =>
-                `${t.isNil(value) ? '' : t.to.camelCase(value)}${
-                  t.or(t.isNil(value), t.eq(2, index)) ? '' : '_'
+                `${
+                  t.anyOf([t.isNil(value), t.eq(0, index)])
+                    ? t.isNil(value)
+                      ? ''
+                      : t.to.camelCase(value)
+                    : t.isNil(value)
+                    ? ''
+                    : `_${t.to.camelCase(value)}`
                 }`,
               t.to.pairs(params)
             )}`}`,
@@ -43,8 +49,7 @@ export const routingFromAction = fn(t => action => {
   ])
 })
 
-export const findViewKey = fn(t => (actions, action, viewKeys) => {
-  const routing = routingFromAction(action)
+export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
   const viewByKey = t.find(
     viewKey => t.eq(viewKey.key, routing.route.key),
     viewKeys
@@ -52,7 +57,6 @@ export const findViewKey = fn(t => (actions, action, viewKeys) => {
   if (t.not(t.isNil(viewByKey))) {
     return viewByKey
   } else {
-    const paramType = viewActionParam(actions, action)
     const view = t.find(
       viewKey =>
         t.and(
@@ -68,3 +72,54 @@ export const findViewKey = fn(t => (actions, action, viewKeys) => {
     }
   }
 })
+
+export const onRouteEnter = fn(
+  t => (viewMacros, paramType, viewKeys) => (state, action) => {
+    const routing = routingFromAction(action)
+    const viewKey = findViewKey(paramType, routing, viewKeys)
+    const activeMacro = viewMacros[viewKey.key]
+    const activeState = state.views[viewKey.key]
+    const activeCtx = t.mergeAll([
+      activeState,
+      {
+        event: types.event.routeEnter,
+        status: t.neq(activeState.status, types.status.init)
+          ? types.status.ready
+          : types.status.waiting,
+      },
+      routing,
+      { next: null },
+    ])
+    const nextData = activeMacro.data(activeCtx)
+    const nextForm = activeMacro.form(
+      t.isNil(nextData) ? activeCtx : t.merge(activeCtx, nextData)
+    )
+    const nextModal = activeMacro.modal(
+      t.and(t.isNil(nextData), t.isNil(nextForm))
+        ? activeCtx
+        : t.mergeAll([
+            activeCtx,
+            t.isNil(nextData) ? {} : nextData,
+            t.isNil(nextForm) ? {} : { form: nextForm },
+          ])
+    )
+    return t.mergeAll([
+      state,
+      { status: 'active', active: { param: viewKey.param, view: viewKey.key } },
+      routing,
+      {
+        views: t.merge(state.views, {
+          [routing.route.key]: t.omit(
+            ['event', 'next', 'route', 'params'],
+            t.mergeAll([
+              activeCtx,
+              t.isNil(nextData) ? {} : nextData,
+              t.isNil(nextForm) ? {} : { form: nextForm },
+              t.isNil(nextModal) ? {} : { modal: nextModal },
+            ])
+          ),
+        }),
+      },
+    ])
+  }
+)

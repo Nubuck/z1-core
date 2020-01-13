@@ -12,7 +12,7 @@ const dev = process.env.NODE_ENV === 'development'
 const store = zbx.store.create({
   boxes: features.state,
   context: {
-    // api: api(dev ? 'http://localhost:3035' : '/'),
+    api: api(dev ? 'http://localhost:3035' : '/'),
   },
   logging: dev,
 })

@@ -1,10 +1,13 @@
 import zbx from '@z1/lib-feature-box'
 
-// ctx
-import { types } from '../types'
-
 // parts
-import { viewActionParam, routingFromAction, findViewKey } from './muts'
+import { types } from '../types'
+import {
+  onRouteEnter,
+  viewActionParam,
+  routingFromAction,
+  findViewKey,
+} from './muts'
 
 // main
 export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
@@ -57,41 +60,30 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
       }, viewMacros),
     },
     routes(r) {
+      const safePath = t.eq(path, '/') ? path : `${path.replace('/', '')}/`
       return [
         r(
-          path,
+          safePath,
           'routeHome',
-          (state, action) => {
-            // home viewState
-            return state
-          },
+          onRouteEnter(viewMacros, 'view', macroCtx.viewKeys),
           routes.home || defaultRoute
         ),
         r(
-          `${path}/:view`,
+          `${safePath}:view`,
           'routeView',
-          (state, action) => {
-            // :view viewState
-            return state
-          },
+          onRouteEnter(viewMacros, 'view', macroCtx.viewKeys),
           routes.view || defaultRoute
         ),
         r(
-          `${path}/:view/:detail`,
+          `${safePath}:view/:detail`,
           'routeViewDetail',
-          (state, action) => {
-            // :detail or :view viewState
-            return state
-          },
+          onRouteEnter(viewMacros, 'detail', macroCtx.viewKeys),
           routes.detail || defaultRoute
         ),
         r(
-          `${path}/:view/:detail/:more`,
+          `${safePath}:view/:detail/:more`,
           'routeViewMore',
-          (state, action) => {
-            // :more or :detail or :view viewState
-            return state
-          },
+          onRouteEnter(viewMacros, 'more', macroCtx.viewKeys),
           routes.more || defaultRoute
         ),
       ]
@@ -102,7 +94,52 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
           return state
         }),
         m(['dataChange', 'dataLoad', 'dataLoadComplete'], (state, action) => {
-          return state
+          const event = t.to.paramCase(action.type.replace(`${boxName}/`, ''))
+          const activeMacro = viewMacros[state.active.view]
+          const activeState = state.views[state.active.view]
+          const nextStatus = t.pathOr(
+            activeState.status,
+            ['payload', 'status'],
+            action
+          )
+          const activeCtx = t.mergeAll([
+            activeState,
+            {
+              event,
+              status: nextStatus,
+            },
+            t.pick(['route', 'params'], state),
+            { next: action.payload },
+          ])
+          const nextData = activeMacro.data(activeCtx)
+          const nextForm = activeMacro.form(
+            t.isNil(nextData) ? activeCtx : t.merge(activeCtx, nextData)
+          )
+          const nextModal = activeMacro.modal(
+            t.and(t.isNil(nextData), t.isNil(nextForm))
+              ? activeCtx
+              : t.mergeAll([
+                  activeCtx,
+                  t.isNil(nextData) ? {} : nextData,
+                  t.isNil(nextForm) ? {} : { form: nextForm },
+                ])
+          )
+          return t.mergeAll([
+            state,
+            {
+              views: t.merge(state.views, {
+                [state.active.view]: t.omit(
+                  ['event', 'next', 'route', 'params'],
+                  t.mergeAll([
+                    activeCtx,
+                    t.isNil(nextData) ? {} : nextData,
+                    t.isNil(nextForm) ? {} : { form: nextForm },
+                    t.isNil(nextModal) ? {} : { modal: nextModal },
+                  ])
+                ),
+              }),
+            },
+          ])
         }),
         m(
           ['formChange', 'formTransmit', 'formTransmitComplete'],
@@ -129,7 +166,11 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
             actions.routeViewMore,
           ],
           ({ action, redirect }, allow, reject) => {
-            const viewKey = findViewKey(actions, action, macroCtx.viewKeys)
+            const viewKey = findViewKey(
+              viewActionParam(actions, action),
+              routingFromAction(action),
+              macroCtx.viewKeys
+            )
             if (t.not(t.isNil(viewKey))) {
               allow(action)
             } else {
@@ -155,23 +196,71 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
             actions.routeViewMore,
             actions.dataLoad,
           ],
-          async (ctx, dispatch, done) => {
+          async (context, dispatch, done) => {
+            const boxState = t.path([boxName], context.getState())
+            const activeState = t.path(
+              ['views', boxState.active.view],
+              boxState
+            )
+            const activeMacro = viewMacros[boxState.active.view]
+            const [loadError, loadResult] = await a.of(
+              activeMacro.load(
+                t.mergeAll([
+                  context,
+                  activeState,
+                  {
+                    next: t.neq(context.action.type, actions.dataLoad)
+                      ? null
+                      : context.action.payload,
+                  },
+                ])
+              )
+            )
+            if (loadError) {
+              dispatch(
+                mutators.dataLoadComplete({
+                  error: loadError,
+                  data: null,
+                  status: types.status.ready,
+                })
+              )
+            } else if (t.isNil(loadResult)) {
+              dispatch(
+                mutators.dataLoadComplete({
+                  error: null,
+                  data: null,
+                  status: types.status.ready,
+                })
+              )
+            } else {
+              dispatch(
+                mutators.dataLoadComplete(
+                  t.merge(
+                    {
+                      error: null,
+                      status: types.status.ready,
+                    },
+                    loadResult
+                  )
+                )
+              )
+            }
             done()
           }
         ),
         // form transmit
-        fx([actions.formTransmit], async (ctx, dispatch, done) => {
+        fx([actions.formTransmit], async (context, dispatch, done) => {
           done()
         }),
         // routes exit
         // t.globrex(`!(${boxName})*/ROUTING/*`, { extended: true }).regex
-        fx([t.globrex('*/ROUTING/*').regex], async (ctx, dispatch, done) => {
+        fx([t.globrex('*/ROUTING/*').regex], async (context, dispatch, done) => {
           done()
         }),
         // subscribe
-        fx([], (ctx, dispatch, done) => {
-          done()
-        }),
+        // fx([], (context, dispatch, done) => {
+        //   done()
+        // }),
       ]
     },
   }

@@ -13,22 +13,25 @@ export const viewActionParam = fn(t => (actions, action) => {
   })(action.type)
 })
 
-export const routingFromAction = fn(t => action => {
-  const params = {
-    view: t.pathOr('home', ['payload', 'view'], action),
-    detail: t.pathOr(null, ['payload', 'detail'], action),
-    more: t.pathOr(null, ['payload', 'more'], action),
-  }
-  return t.mergeAll([
-    {
-      route: {
-        path: t.pathOr(
-          null,
-          ['meta', 'location', 'current', 'pathname'],
-          action
-        ),
-        action: t.pathOr(null, ['meta', 'location', 'current', 'type'], action),
-        key: t.tags.oneLineTrim`
+export const routingFromAction = fn(
+  t => (
+    action,
+    routePaths = {
+      pathname: ['meta', 'location', 'current', 'pathname'],
+      type: ['meta', 'location', 'current', 'type'],
+    }
+  ) => {
+    const params = {
+      view: t.pathOr('home', ['payload', 'view'], action),
+      detail: t.pathOr(null, ['payload', 'detail'], action),
+      more: t.pathOr(null, ['payload', 'more'], action),
+    }
+    return t.mergeAll([
+      {
+        route: {
+          path: t.pathOr(null, routePaths.pathname, action),
+          action: t.pathOr(null, routePaths.type, action),
+          key: t.tags.oneLineTrim`
           ${t.tags.oneLineInlineLists`
             ${t.mapIndexed(
               ([_, value], index) =>
@@ -43,11 +46,12 @@ export const routingFromAction = fn(t => action => {
                 }`,
               t.to.pairs(params)
             )}`}`,
+        },
       },
-    },
-    { params },
-  ])
-})
+      { params },
+    ])
+  }
+)
 
 export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
   const viewByKey = t.find(
@@ -89,6 +93,7 @@ export const onRouteEnter = fn(
       },
       routing,
       { next: null },
+      { reEnter: t.eq(state.route.path, routing.route.path) },
     ])
     const nextData = activeMacro.data(activeCtx)
     const nextForm = activeMacro.form(
@@ -116,6 +121,7 @@ export const onRouteEnter = fn(
               t.isNil(nextData) ? {} : nextData,
               t.isNil(nextForm) ? {} : { form: nextForm },
               t.isNil(nextModal) ? {} : { modal: nextModal },
+              
             ])
           ),
         }),

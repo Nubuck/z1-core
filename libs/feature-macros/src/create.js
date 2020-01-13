@@ -34,6 +34,7 @@ export const create = fn(t => (name, { state, ui, render }) => {
     state(ctx) {
       const nextState = t.isType(state, 'function') ? state(ctx) : state
       return {
+        _shouldSub: t.has('subscribe')(nextState),
         initial: t.merge(
           { subbed: false },
           t.pathOr({ data: {}, form: {}, modal: {} }, ['initial'], nextState)

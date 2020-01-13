@@ -30,7 +30,8 @@ export const home = zbx.fn((t, a) =>
           <div>
             <h1>Home view</h1>
             <div>
-              <zbx.ui.Link to="/pages/about">About</zbx.ui.Link>
+              <zbx.ui.Link to="/pages/about">About</zbx.ui.Link><br/>
+              <zbx.ui.Link to="/">Home</zbx.ui.Link>
             </div>
           </div>
         )

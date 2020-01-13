@@ -11,7 +11,7 @@ import {
 
 // main
 export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
-  const path = t.pathOr('/', ['path'], props)
+  const path = t.pathOr(t.to.paramCase(boxName), ['path'], props)
   const defaultRoute = { authenticate: false }
   const routes = t.pathOr(
     {
@@ -51,6 +51,7 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
       views: t.mapObjIndexed(macro => {
         return {
           status: types.status.init,
+          reEnter: false,
           subbed: false,
           error: null,
           data: t.pathOr({}, ['initial', 'data'], macro),
@@ -91,7 +92,51 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
     mutations(m) {
       return [
         m(['routeExit'], (state, action) => {
-          return state
+          const activeExit = t.pathOr(null, ['payload', 'active'], action)
+          const exitStatus = t.pathOr(null, ['payload', 'status'], action)
+          if (t.isNil(activeExit)) {
+            return t.merge(state, { status: exitStatus })
+          }
+          const activeMacro = viewMacros[activeExit.view]
+          const activeState = state.views[activeExit.view]
+          const activeCtx = t.mergeAll([
+            activeState,
+            {
+              event: types.event.routeExit,
+            },
+            t.pick(['route', 'params'], action.payload),
+            { next: null },
+          ])
+          const nextData = activeMacro.data(activeCtx)
+          const nextForm = activeMacro.form(
+            t.isNil(nextData) ? activeCtx : t.merge(activeCtx, nextData)
+          )
+          const nextModal = activeMacro.modal(
+            t.and(t.isNil(nextData), t.isNil(nextForm))
+              ? activeCtx
+              : t.mergeAll([
+                  activeCtx,
+                  t.isNil(nextData) ? {} : nextData,
+                  t.isNil(nextForm) ? {} : { form: nextForm },
+                ])
+          )
+          return t.mergeAll([
+            state,
+            {
+              status: exitStatus,
+              views: t.merge(state.views, {
+                [activeExit.view]: t.omit(
+                  ['event', 'next', 'route', 'params'],
+                  t.mergeAll([
+                    activeCtx,
+                    t.isNil(nextData) ? {} : nextData,
+                    t.isNil(nextForm) ? {} : { form: nextForm },
+                    t.isNil(nextModal) ? {} : { modal: nextModal },
+                  ])
+                ),
+              }),
+            },
+          ])
         }),
         m(['dataChange', 'dataLoad', 'dataLoadComplete'], (state, action) => {
           const event = t.to.paramCase(action.type.replace(`${boxName}/`, ''))
@@ -151,7 +196,10 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
         m('modalChange', (state, action) => {
           return state
         }),
-        m(['sub', 'unsub'], (state, action) => {
+        m('sub', (state, action) => {
+          return state
+        }),
+        m('unsub', (state, action) => {
           return state
         }),
       ]
@@ -258,7 +306,6 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
           done()
         }),
         // routes exit
-        // t.globrex(`!(${boxName})*/ROUTING/*`, { extended: true }).regex
         fx(
           [t.globrex('*/ROUTING/*').regex],
           async ({ getState, action }, dispatch, done) => {
@@ -266,14 +313,28 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
             const prev = state.location.prev
             const boxState = state[boxName]
             if (t.not(t.includes(prev.type, routeActionTypes))) {
-              console.log('route exit 1')
               done()
+              // } else if (t.eq(boxState.path, action.meta.location.pathname)) {
+              //   done()
             } else {
-              console.log(
-                'route exit 2',
-                boxState.route,
-                t.pick(['pathname', 'type', 'payload'], state.location),
-                prev
+              const routing = routingFromAction(prev, {
+                pathname: ['pathname'],
+                type: ['type'],
+              })
+              const paramType = viewActionParam(actions, prev)
+              const viewKey = findViewKey(paramType, routing, macroCtx.viewKeys)
+              dispatch(
+                mutators.routeExit(
+                  t.mergeAll([
+                    {
+                      status: t.includes(state.location.type, routeActionTypes)
+                        ? 'active'
+                        : 'inactive',
+                      active: { param: viewKey.param, view: viewKey.key },
+                    },
+                    routing,
+                  ])
+                )
               )
               done()
             }

@@ -7,7 +7,7 @@ import {
   viewActionParam,
   routingFromAction,
   findViewKey,
-} from './muts'
+} from './parts'
 
 // main
 export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
@@ -60,7 +60,7 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
       }, viewMacros),
     },
     routes(r) {
-      const safePath = t.eq(path, '/') ? path : `${path.replace('/', '')}/`
+      const safePath = t.eq(path, '/') ? path : `/${path.replace(/\//g, '')}`
       return [
         r(
           safePath,
@@ -69,19 +69,19 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
           routes.home || defaultRoute
         ),
         r(
-          `${safePath}:view`,
+          `${safePath}/:view`,
           'routeView',
           onRouteEnter(viewMacros, 'view', macroCtx.viewKeys),
           routes.view || defaultRoute
         ),
         r(
-          `${safePath}:view/:detail`,
+          `${safePath}/:view/:detail`,
           'routeViewDetail',
           onRouteEnter(viewMacros, 'detail', macroCtx.viewKeys),
           routes.detail || defaultRoute
         ),
         r(
-          `${safePath}:view/:detail/:more`,
+          `${safePath}/:view/:detail/:more`,
           'routeViewMore',
           onRouteEnter(viewMacros, 'more', macroCtx.viewKeys),
           routes.more || defaultRoute
@@ -186,6 +186,11 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
       ]
     },
     effects(fx, { actions, mutators }) {
+      const routeActions = t.pick(
+        ['routeHome', 'routeView', 'routeViewDetail', 'routeViewMore'],
+        actions
+      )
+      const routeActionTypes = t.values(routeActions)
       return [
         // routes enter / data load
         fx(
@@ -254,9 +259,26 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
         }),
         // routes exit
         // t.globrex(`!(${boxName})*/ROUTING/*`, { extended: true }).regex
-        fx([t.globrex('*/ROUTING/*').regex], async (context, dispatch, done) => {
-          done()
-        }),
+        fx(
+          [t.globrex('*/ROUTING/*').regex],
+          async ({ getState, action }, dispatch, done) => {
+            const state = getState()
+            const prev = state.location.prev
+            const boxState = state[boxName]
+            if (t.not(t.includes(prev.type, routeActionTypes))) {
+              console.log('route exit 1')
+              done()
+            } else {
+              console.log(
+                'route exit 2',
+                boxState.route,
+                t.pick(['pathname', 'type', 'payload'], state.location),
+                prev
+              )
+              done()
+            }
+          }
+        ),
         // subscribe
         // fx([], (context, dispatch, done) => {
         //   done()

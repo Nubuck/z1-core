@@ -15,3 +15,17 @@ export const route = ctx => {
     <div>{mx.routeView.render(Views, landing, mutations)}</div>
   ))
 }
+
+export const LandingRoute = () => (
+  <div>
+    <h1>Home</h1>
+    <zbx.ui.Link to="/pages">pages</zbx.ui.Link>
+  </div>
+)
+
+export const NotFoundRoute = () => (
+  <div>
+    <h1>404 Not Found</h1>
+    <zbx.ui.Link to="/">Home</zbx.ui.Link>
+  </div>
+)

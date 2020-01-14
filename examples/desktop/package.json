@@ -1,5 +1,5 @@
 {
-  "name": "robot-app-agent",
+  "name": "example-app-desktop",
   "version": "0.3.1",
   "license": "MIT",
   "scripts": {
@@ -12,8 +12,8 @@
     "renderer": null
   },
   "dependencies": {
-    "robot-js":"https://github.com/p120ph37/robot-js.git#prebuilt",
-    "screenshot-desktop": "^1.10.0",
+    "@z1/lib-api-box-client-node": "^0.3.1",
+    "@z1/lib-state-box-node": "^0.3.1",
     "systeminformation": "^4.19.1",
     "source-map-support": "^0.5.12",
     "core-js": "^3.6.3",

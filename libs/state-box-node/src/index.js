@@ -11,9 +11,9 @@ export const stateBox = Fn(t =>
         )
       },
     }),
+    fn: Fn,
   })
 )
 export const fn = Fn
 export const task = Fn
 export default stateBox
-

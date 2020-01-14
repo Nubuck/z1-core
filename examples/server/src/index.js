@@ -1,11 +1,11 @@
-import zbx from '@z1/lib-feature-box-server'
+import z from '@z1/lib-feature-box-server'
 import features from './features'
 
 process.on('unhandledRejection', (reason, p) =>
   console.log('Unhandled Rejection at: Promise ', p, reason)
 )
 
-let app = zbx.app.create(
+let app = z.app.create(
   {
     boxes: features.api,
     apiPath: 'api',
@@ -21,6 +21,6 @@ let app = zbx.app.create(
 
 if (module.hot) {
   module.hot.accept(['./features'], () => {
-    app = zbx.app.reload(app, { boxes: features.api })
+    app = z.app.reload(app, { boxes: features.api })
   })
 }

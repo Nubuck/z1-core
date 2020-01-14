@@ -1,4 +1,4 @@
-import zbx from '@z1/lib-feature-box-server'
+import z from '@z1/lib-feature-box-server'
 
 // kits
 // import account from '@z1/kit-account-server'
@@ -10,4 +10,4 @@ import bucketStorage from '@z1/kit-bucket-storage-server-nedb'
 const ctx = {}
 
 // exports
-export const features = zbx.combine([account(ctx), bucketStorage(ctx)])
+export const features = z.combine([account(ctx), bucketStorage(ctx)])

@@ -1,11 +1,11 @@
 import { hot } from 'react-hot-loader'
 import React from 'react'
-import zbx from '@z1/lib-feature-box'
+import z from '@z1/lib-feature-box'
 
 // main
-const App = zbx.ui.connect(zbx.ui.query(['location']))(
+const App = z.ui.connect(z.ui.query(['location']))(
   ({ location, routing }) => {
-    return <div>{zbx.routing.render(location.type, routing)}</div>
+    return <div>{z.routing.render(location.type, routing)}</div>
   }
 )
 

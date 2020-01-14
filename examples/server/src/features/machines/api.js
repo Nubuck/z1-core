@@ -1,6 +1,6 @@
-import zbx from '@z1/lib-feature-box-server'
+import z from '@z1/lib-feature-box-server'
 
-export const api = zbx.api.create('machines', [
+export const api = z.api.create('machines', [
   {
     models(m) {
       m(['nedb', 'machines'])

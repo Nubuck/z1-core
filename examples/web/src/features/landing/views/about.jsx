@@ -1,9 +1,9 @@
 import React from 'react'
-import zbx from '@z1/lib-feature-box'
+import z from '@z1/lib-feature-box'
 import mx from '@z1/lib-feature-macros'
 
 // main
-export const about = zbx.fn((t, a) =>
+export const about = z.fn((t, a) =>
   mx.routeView.create('about', {
     state(ctx) {
       return {
@@ -34,11 +34,11 @@ export const about = zbx.fn((t, a) =>
           <div>
             <h1>About view</h1>
             <div>
-              <zbx.ui.Link to="/pages">Home</zbx.ui.Link>
+              <z.ui.Link to="/pages">Home</z.ui.Link>
               <br />
-              <zbx.ui.Link to="/pages/about">Reload</zbx.ui.Link>
+              <z.ui.Link to="/pages/about">Reload</z.ui.Link>
               <br />
-              <zbx.ui.Link to="/about">Throw 404</zbx.ui.Link>
+              <z.ui.Link to="/about">Throw 404</z.ui.Link>
             </div>
           </div>
         )

@@ -1,4 +1,4 @@
-import zbx from '@z1/lib-feature-box'
+import z from '@z1/lib-feature-box'
 import mx from '@z1/lib-feature-macros'
 
 // parts
@@ -6,8 +6,8 @@ import views from './views'
 
 // main
 const name = 'landing'
-export const state = zbx.fn(t =>
-  zbx.state.create(name, [
+export const state = z.fn(t =>
+  z.state.create(name, [
     {
       routes(r) {
         return [r('/', 'routeLanding', state => state)]

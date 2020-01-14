@@ -1,7 +1,7 @@
-import zbx from '@z1/lib-feature-box'
+import z from '@z1/lib-feature-box'
 
 // main
-export const feature = zbx.create(
+export const feature = z.create(
   'account',
   ctx => {
     return {

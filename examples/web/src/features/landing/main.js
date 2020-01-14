@@ -1,11 +1,11 @@
-import zbx from '@z1/lib-feature-box'
+import z from '@z1/lib-feature-box'
 
 // parts
 import { state } from './state'
 import { route, LandingRoute, NotFoundRoute } from './route'
 
 // main
-export const feature = zbx.create(
+export const feature = z.create(
   'landing',
   ctx => {
     return {

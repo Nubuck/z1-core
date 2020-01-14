@@ -11,7 +11,7 @@ import {
 } from './parts'
 
 // main
-export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
+export const configure = zbx.fn((t, a) => (boxName, props = {}) => {
   const path = t.pathOr(t.to.paramCase(boxName), ['path'], props)
   const defaultRoute = { authenticate: false }
   const routes = t.pathOr(
@@ -308,35 +308,21 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
                 ])
               )
             )
-            if (loadError) {
-              dispatch(
-                mutators.dataLoadComplete({
-                  error: loadError,
-                  data: null,
-                  status: types.status.ready,
-                })
+            dispatch(
+              mutators.dataLoadComplete(
+                t.not(t.isNil(loadError))
+                  ? { error: loadError, next: null, status: types.status.ready }
+                  : t.isNil(loadResult)
+                  ? { error: null, next: null, status: types.status.ready }
+                  : t.merge(
+                      {
+                        error: null,
+                        status: types.status.ready,
+                      },
+                      loadResult
+                    )
               )
-            } else if (t.isNil(loadResult)) {
-              dispatch(
-                mutators.dataLoadComplete({
-                  error: null,
-                  data: null,
-                  status: types.status.ready,
-                })
-              )
-            } else {
-              dispatch(
-                mutators.dataLoadComplete(
-                  t.merge(
-                    {
-                      error: null,
-                      status: types.status.ready,
-                    },
-                    loadResult
-                  )
-                )
-              )
-            }
+            )
             done()
           }
         ),
@@ -375,6 +361,39 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
         ),
         // form transmit
         fx([actions.formTransmit], async (context, dispatch, done) => {
+          const boxState = t.path([boxName], context.getState())
+          const activeState = t.path(['views', boxState.active.view], boxState)
+          const activeMacro = viewMacros[boxState.active.view]
+          const [transmitError, transmitResult] = await a.of(
+            activeMacro.transmit(
+              t.mergeAll([
+                context,
+                activeState,
+                {
+                  next: context.action.payload,
+                },
+              ])
+            )
+          )
+          dispatch(
+            mutators.formTransmitComplete(
+              t.not(t.isNil(transmitError))
+                ? {
+                    error: transmitError,
+                    next: null,
+                    status: types.status.ready,
+                  }
+                : t.isNil(transmitResult)
+                ? { error: null, next: null, status: types.status.ready }
+                : t.merge(
+                    {
+                      error: null,
+                      status: types.status.ready,
+                    },
+                    transmitResult
+                  )
+            )
+          )
           done()
         }),
       ]

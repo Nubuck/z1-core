@@ -1,0 +1,26 @@
+{
+  "name": "example-app-agent",
+  "version": "0.3.1",
+  "license": "MIT",
+  "scripts": {
+    "dev": "electron-webpack dev",
+    "compile": "electron-webpack",
+    "dist": "yarn compile && electron-builder",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+  },
+  "electronWebpack": {
+    "renderer": null
+  },
+  "dependencies": {
+    "robot-js":"https://github.com/p120ph37/robot-js.git#prebuilt",
+    "source-map-support": "^0.5.12",
+    "core-js": "^3.6.3",
+    "regenerator-runtime": "^0.13.3"
+  },
+  "devDependencies": {
+    "electron": "5.0.6",
+    "electron-builder": "^21.0.11",
+    "electron-webpack": "^2.7.4",
+    "webpack": "~4.35.3"
+  }
+}

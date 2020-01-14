@@ -119,18 +119,6 @@ export const onRouteEnter = fn(
       { next: null },
       { reEnter: t.eq(state.route.path, routing.route.path) },
     ])
-    // const nextData = activeMacro.data(activeCtx)
-    // const nextForm = activeMacro.form(
-    //   t.isNil(nextData) ? activeCtx : t.merge(activeCtx, nextData)
-    // )
-    // const safeForm = t.isNil(nextForm)
-    //   ? {}
-    //   : { form: t.merge(activeState.form, nextForm) }
-    // const nextModal = activeMacro.modal(
-    //   t.and(t.isNil(nextData), t.isNil(nextForm))
-    //     ? activeCtx
-    //     : t.mergeAll([activeCtx, t.isNil(nextData) ? {} : nextData, safeForm])
-    // )
     const nextActiveState = nextViewState(activeMacro, activeCtx)
     return t.mergeAll([
       state,
@@ -139,15 +127,6 @@ export const onRouteEnter = fn(
       {
         views: t.merge(state.views, {
           [routing.route.key]: nextActiveState,
-          // [routing.route.key]: t.omit(
-          //   ['event', 'next', 'route', 'params'],
-          //   t.mergeAll([
-          //     activeCtx,
-          //     t.isNil(nextData) ? {} : nextData,
-          //     safeForm,
-          //     t.isNil(nextModal) ? {} : { modal: nextModal },
-          //   ])
-          // ),
         }),
       },
     ])

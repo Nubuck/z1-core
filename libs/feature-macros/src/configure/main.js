@@ -115,22 +115,6 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
             t.pick(['route', 'params'], action.payload),
             { next: null },
           ])
-          // const nextData = activeMacro.data(activeCtx)
-          // const nextForm = activeMacro.form(
-          //   t.isNil(nextData) ? activeCtx : t.merge(activeCtx, nextData)
-          // )
-          // const safeForm = t.isNil(nextForm)
-          //   ? {}
-          //   : { form: t.merge(activeState.form, nextForm) }
-          // const nextModal = activeMacro.modal(
-          //   t.and(t.isNil(nextData), t.isNil(nextForm))
-          //     ? activeCtx
-          //     : t.mergeAll([
-          //         activeCtx,
-          //         t.isNil(nextData) ? {} : nextData,
-          //         safeForm,
-          //       ])
-          // )
           const nextActiveState = nextViewState(activeMacro, activeCtx)
           return t.mergeAll([
             state,
@@ -138,15 +122,6 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
               status: exitStatus,
               views: t.merge(state.views, {
                 [activeExit.view]: nextActiveState,
-                // [activeExit.view]: t.omit(
-                //   ['event', 'next', 'route', 'params'],
-                //   t.mergeAll([
-                //     activeCtx,
-                //     t.isNil(nextData) ? {} : nextData,
-                //     safeForm,
-                //     t.isNil(nextModal) ? {} : { modal: nextModal },
-                //   ])
-                // ),
               }),
             },
           ])
@@ -169,37 +144,13 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
             t.pick(['route', 'params'], state),
             { next: action.payload },
           ])
-          // const nextData = activeMacro.data(activeCtx)
-          // const nextForm = activeMacro.form(
-          //   t.isNil(nextData) ? activeCtx : t.merge(activeCtx, nextData)
-          // )
-          // const safeForm = t.isNil(nextForm)
-          //   ? {}
-          //   : { form: t.merge(activeState.form, nextForm) }
-          // const nextModal = activeMacro.modal(
-          //   t.and(t.isNil(nextData), t.isNil(nextForm))
-          //     ? activeCtx
-          //     : t.mergeAll([
-          //         activeCtx,
-          //         t.isNil(nextData) ? {} : nextData,
-          //         safeForm,
-          //       ])
-          // )
+
           const nextActiveState = nextViewState(activeMacro, activeCtx)
           return t.mergeAll([
             state,
             {
               views: t.merge(state.views, {
                 [state.active.view]: nextActiveState,
-                // [state.active.view]: t.omit(
-                //   ['event', 'next', 'route', 'params'],
-                //   t.mergeAll([
-                //     activeCtx,
-                //     t.isNil(nextData) ? {} : nextData,
-                //     safeForm,
-                //     t.isNil(nextModal) ? {} : { modal: nextModal },
-                //   ])
-                // ),
               }),
             },
           ])
@@ -253,37 +204,12 @@ export const configure = zbx.fn((t, a, rx) => (boxName, props = {}) => {
                 }),
               })
             }
-            // const nextData = activeMacro.data(activeCtx)
-            // const nextForm = activeMacro.form(
-            //   t.isNil(nextData) ? activeCtx : t.merge(activeCtx, nextData)
-            // )
-            // const safeForm = t.isNil(nextForm)
-            //   ? {}
-            //   : { form: t.merge(activeState.form, nextForm) }
-            // const nextModal = activeMacro.modal(
-            //   t.and(t.isNil(nextData), t.isNil(nextForm))
-            //     ? activeCtx
-            //     : t.mergeAll([
-            //         activeCtx,
-            //         t.isNil(nextData) ? {} : nextData,
-            //         safeForm,
-            //       ])
-            // )
             const nextActiveState = nextViewState(activeMacro, activeCtx)
             return t.mergeAll([
               state,
               {
                 views: t.merge(state.views, {
                   [state.active.view]: nextActiveState,
-                  // [state.active.view]: t.omit(
-                  //   ['event', 'next', 'route', 'params'],
-                  //   t.mergeAll([
-                  //     activeCtx,
-                  //     t.isNil(nextData) ? {} : nextData,
-                  //     safeForm,
-                  //     t.isNil(nextModal) ? {} : { modal: nextModal },
-                  //   ])
-                  // ),
                 }),
               },
             ])

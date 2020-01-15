@@ -1,7 +1,5 @@
-import z from '@z1/lib-feature-box-server-core'
-
 // main
-export const api = z.fn(t => ctx =>
+export const api = ctx =>
   ctx.apiBox.create('machineAccount', [
     {
       models: ctx.models,
@@ -30,4 +28,3 @@ export const api = z.fn(t => ctx =>
       },
     },
   ])
-)

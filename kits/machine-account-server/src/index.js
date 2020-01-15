@@ -4,7 +4,7 @@ import machineAccountCore from '@z1/kit-machine-account-server-core'
 // main
 export default () =>
   machineAccountCore({
-    adapter: 'nedb',
+    adapter: 'sequelize',
     apiBox,
     models(m) {
       m(['sequelize', 'machine'], (define, T) =>

@@ -1,11 +1,9 @@
-import { featureBox } from '@z1/lib-feature-box-server'
-import bucketStorageFeatureCore from '@z1/kit-bucket-storage-server-core'
+import bucketStorageCore from '@z1/kit-bucket-storage-server-core'
 
 // main
-export default () =>
-  bucketStorageFeatureCore({
+export default z =>
+  bucketStorageCore(z, {
     adapter: 'sequelize',
-    apiBox: featureBox.api,
     models(m) {
       m(['sequelize', 'bucket_registry'], (define, T) =>
         define({

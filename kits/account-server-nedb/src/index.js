@@ -1,11 +1,9 @@
-import apiBox from '@z1/lib-api-box-nedb'
-import accountFeatureCore from '@z1/kit-account-server-core'
+import accountCore from '@z1/kit-account-server-core'
 
 // main
-export default () =>
-  accountFeatureCore({
+export default z =>
+  accountCore(z, {
     adapter: 'nedb',
-    apiBox,
     models(m) {
       m(['nedb', 'users'])
     },

@@ -1,11 +1,9 @@
-import { apiBox } from '@z1/lib-feature-box-server'
-import accountFeatureCore from '@z1/kit-account-server-core'
+import accountCore from '@z1/kit-account-server-core'
 
 // main
-export default () =>
-  accountFeatureCore({
+export default z =>
+  accountCore(z, {
     adapter: 'sequelize',
-    apiBox,
     models(m) {
       m(['sequelize', 'users'], (define, T) =>
         define({

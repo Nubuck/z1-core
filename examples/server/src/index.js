@@ -15,7 +15,7 @@ let app = z.app.create(
     app.api.log(
       `App Server started on http://${app.api.get('host')}:${app.api.get(
         'port'
-      )}`
+      )}/api`
     )
 )
 

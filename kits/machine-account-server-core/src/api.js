@@ -1,27 +1,25 @@
 // main
-export const api = ctx =>
-  ctx.apiBox.create('machineAccount', [
+export const api = (z, props) =>
+  z.featureBox.api.create('machineAccount', [
     {
-      models: ctx.models,
+      models: props.models,
       services(s, h) {
-        s([ctx.adapter, 'machines'], ctx.serviceFactory.machines, {
-          hooks: {},
-          events: {},
-        })
-        s([ctx.adapter, 'machine-users'], ctx.serviceFactory.machineUsers, {
-          hooks: {},
-          events: {},
-        })
+        s([props.adapter, 'machines'], props.serviceFactory.machines, {})
         s(
-          [ctx.adapter, 'machine-account'],
-          app => {
-            return null
-          },
-          {
-            hooks: {},
-            events: {},
-          }
+          [props.adapter, 'machine-users'],
+          props.serviceFactory.machineUsers,
+          {}
         )
+        // s(
+        //   [props.adapter, 'machine-account'],
+        //   app => {
+        //     return null
+        //   },
+        //   {
+        //     hooks: {},
+        //     events: {},
+        //   }
+        // )
       },
       lifecycle: {
         authConfig(app) {},

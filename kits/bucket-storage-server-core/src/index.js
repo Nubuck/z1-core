@@ -1,19 +1,18 @@
-import { featureBox } from '@z1/lib-feature-box-server-core'
 import { api } from './api'
 
-export default featureBox.create(
-  'bucketStorage',
-  props => {
-    return {
-      api: [api(props)],
-      hooks: {},
-      parts: {},
+export default (z, props) =>
+  z.featureBox.create(
+    'bucketStorage',
+    p => {
+      return {
+        api: [api(z, p)],
+        hooks: {},
+        parts: {},
+      }
+    },
+    {
+      adapter: 'nedb',
+      models: null,
+      serviceFactory: () => ({}),
     }
-  },
-  {
-    adapter: 'nedb',
-    models: null,
-    apiBox: { create: () => null },
-    serviceFactory: () => ({}),
-  }
-)
+  )(props)

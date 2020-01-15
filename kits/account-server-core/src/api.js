@@ -1,14 +1,14 @@
 import AuthManagement from 'feathers-authentication-management'
 
-// tasks
-import { isAction } from './tasks'
-
 // main
-export const api = ({ adapter, models, apiBox, serviceFactory }) =>
-  apiBox.create('account', {
-    models,
+export const api = (z, props) => {
+  const isAction = z.featureBox.fn(t => (actions = []) => hook =>
+    t.not(t.isNil(t.find(action => t.eq(action, hook.data.action), actions)))
+  )
+  return z.featureBox.api.create('account', {
+    models: props.models,
     services(s, { auth, common, data }) {
-      s([adapter, 'users'], serviceFactory, {
+      s([props.adapter, 'users'], props.serviceFactory, {
         hooks: {
           before: {
             find: [
@@ -111,12 +111,5 @@ export const api = ({ adapter, models, apiBox, serviceFactory }) =>
         }
       )
     },
-    // channels(app) {
-    //   console.log('CONFIGURE BOX CHANNEL')
-    // },
-    // lifecycle:{
-    //   authConfig(app){
-    //
-    //   }
-    // }
   })
+}

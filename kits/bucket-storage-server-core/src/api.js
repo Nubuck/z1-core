@@ -1,4 +1,3 @@
-import { task, fs } from '@z1/lib-feature-box-server-core'
 import FeathersBlogService from 'feathers-blob'
 import FsBlobStore from 'fs-blob-store'
 import Dauria from 'dauria'
@@ -8,10 +7,10 @@ import Multer from 'multer'
 import { SERVICES, PATHS } from './context'
 
 // main
-export const api = task(
-  (t, a) => ({ adapter, models, apiBox, serviceFactory }) =>
-    apiBox.create('bucketStorage', {
-      models,
+export const api = (z, props) =>
+  z.featureBox.fn((t, a) =>
+    z.featureBox.api.create('bucketStorage', {
+      models: props.models,
       services(s, { auth, common, data }) {
         const stripUri = ctx => {
           if (t.has('result')(ctx)) {
@@ -20,7 +19,7 @@ export const api = task(
           return ctx
         }
         // registry
-        s([adapter, SERVICES.REGISTRY], serviceFactory, {
+        s([props.adapter, SERVICES.REGISTRY], props.serviceFactory, {
           hooks: {
             before: {
               all: [auth.authenticate('jwt')],
@@ -38,7 +37,7 @@ export const api = task(
               const engine = t.prop('engine', storage)
               const bucket = t.prop('bucket', storage)
               const Model = t.eq(engine, 'fs')
-                ? FsBlobStore(fs.path(bucket))
+                ? FsBlobStore(z.featureBox.fs.path(bucket))
                 : null
               if (Model) {
                 app.use(
@@ -53,7 +52,6 @@ export const api = task(
                   })
                 )
               }
-            
             }
             return null
           },
@@ -214,4 +212,4 @@ export const api = task(
         })
       },
     })
-)
+  )

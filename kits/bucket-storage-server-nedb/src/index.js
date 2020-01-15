@@ -1,11 +1,9 @@
-import apiBox from '@z1/lib-api-box-nedb'
 import bucketStorageCore from '@z1/kit-bucket-storage-server-core'
 
 // main
-export default () =>
-  bucketStorageCore({
+export default z =>
+  bucketStorageCore(z, {
     adapter: 'nedb',
-    apiBox,
     models(m) {
       m(['nedb', 'bucket_registry'])
     },

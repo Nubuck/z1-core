@@ -38,6 +38,7 @@ export const featureBox = Fn(t => ({
     )
   },
   fn: Fn,
+  fs: Fs,
 }))
 
 export const task = Fn

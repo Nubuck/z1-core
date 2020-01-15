@@ -1,5 +1,5 @@
-export const strategy => ctx => {
-  return class MachineStategy extends ctx.FeathersAuth.AuthenticationBaseStrategy {
+export const strategy => z => {
+  return class MachineStategy extends z.FeathersAuth.AuthenticationBaseStrategy {
     async authenticate(authentication, params) {
       return {
         machine: null,

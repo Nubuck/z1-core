@@ -1,11 +1,9 @@
-import apiBox from '@z1/lib-api-box-sql'
 import machineAccountCore from '@z1/kit-machine-account-server-core'
 
 // main
-export default () =>
-  machineAccountCore({
+export default z =>
+  machineAccountCore(z, {
     adapter: 'sequelize',
-    apiBox,
     models(m) {
       m(['sequelize', 'machine'], (define, T) =>
         define({

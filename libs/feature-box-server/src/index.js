@@ -17,5 +17,9 @@ export const featureBox = Fn(t =>
 export const task = Fn
 export const fn = Fn
 export const fs = Fs
-export { FeathersErrors } from '@z1/lib-api-box-core'
+export {
+  FeathersErrors,
+  FeathersAuth,
+  FeathersOAuth,
+} from '@z1/lib-api-box-core'
 export default featureBox

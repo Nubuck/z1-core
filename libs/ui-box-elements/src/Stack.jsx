@@ -73,6 +73,12 @@ const renderStack = fn(t => (direction, props) => {
   )
 })
 
+export class Stack extends React.Component {
+  render() {
+    return renderStack(this.props.direction, this.props)
+  }
+}
+
 export class VStack extends React.Component {
   render() {
     return renderStack('vertical', this.props)

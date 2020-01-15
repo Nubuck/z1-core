@@ -6,7 +6,8 @@ export default featureBox.create(
   props => {
     return {
       api: [api(props)],
-      tasks: {},
+      hooks: {},
+      parts: {},
     }
   },
   {

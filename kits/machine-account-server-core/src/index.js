@@ -1,15 +1,19 @@
-import { createKit } from '@z1/lib-feature-box-server-core'
+import { featureBox } from '@z1/lib-feature-box-server-core'
+import { api } from './api'
 
-import { machineAccountApi } from './main'
-import { machineAuthHooks } from './parts'
-
-// exports
-export default createKit({ models: null, createApiBox: null }, props => {
-  return {
-    name: 'machineAccount',
-    api: [machineAccountApi(props)],
-    hooks: {
-      authHooks: machineAuthHooks,
-    },
+export default featureBox.create(
+  'machineAccount',
+  props => {
+    return {
+      api: [api(props)],
+      hooks: {},
+      parts: {},
+    }
+  },
+  {
+    adapter: 'nedb',
+    models: null,
+    apiBox: { create: () => null },
+    serviceFactory: () => ({}),
   }
-})
+)

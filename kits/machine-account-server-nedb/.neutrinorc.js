@@ -7,7 +7,7 @@ module.exports = {
   },
   use: [
     library({
-      name: '@z1/lib-api-box-core',
+      name: '@z1/kit-machine-account-server-nedb',
       target: 'node',
     }),
   ],

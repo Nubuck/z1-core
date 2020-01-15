@@ -1,12 +1,17 @@
-import { createApiBox, FeathersErrors } from '@z1/lib-feature-box-server-nedb'
-import machineAccountFeatureCore from '@z1/kit-machine-account-server-core'
+import apiBox from '@z1/lib-api-box-nedb'
+import machineAccountCore from '@z1/kit-machine-account-server-core'
 
 // main
 export default () =>
-  machineAccountFeatureCore({
-    createApiBox,
+  machineAccountCore({
+    adapter: 'nedb',
+    apiBox,
     models(m) {
-      return [m('machines')]
+      m(['nedb', 'machine'])
+      m(['nedb', 'machine_user'])
     },
-    FeathersErrors,
+    serviceFactory: {
+      machines: { modelName: 'machine' },
+      machineUsers: { modelName: 'machine_user' },
+    },
   })

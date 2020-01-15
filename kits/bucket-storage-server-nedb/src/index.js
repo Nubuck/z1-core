@@ -1,11 +1,11 @@
-import { featureBox } from '@z1/lib-feature-box-server-nedb'
-import bucketStorageFeatureCore from '@z1/kit-bucket-storage-server-core'
+import apiBox from '@z1/lib-api-box-nedb'
+import bucketStorageCore from '@z1/kit-bucket-storage-server-core'
 
 // main
 export default () =>
-  bucketStorageFeatureCore({
+  bucketStorageCore({
     adapter: 'nedb',
-    apiBox: featureBox.api,
+    apiBox,
     models(m) {
       m(['nedb', 'bucket_registry'])
     },

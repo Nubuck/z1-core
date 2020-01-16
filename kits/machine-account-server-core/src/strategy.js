@@ -5,7 +5,9 @@ export function strategy(z) {
   AuthenticationBaseStrategy.prototype.authenticate = z.featureBox.fn(
     (t, a) =>
       async function authenticate(auth, params) {
+        console.log('AUTH CONFIG', this.name, auth, params)
         return {
+          authentication: { strategy: this.name },
           machine: null,
           user: null,
         }

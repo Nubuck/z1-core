@@ -18,10 +18,10 @@ const appState = z.fn((t, a) =>
       effects(fx, { actions, mutators }) {
         return [
           fx([actions.boot], async (ctx, dispatch, done) => {
-            const [agentErr, agent] = await a.of(ctx.machine({ role: 'agent' }))
-            const payload = t.isNil(agentErr)
-              ? { agent, error: null }
-              : { agent: null, error: agentErr }
+            // const [agentErr, agent] = await a.of(ctx.machine({ role: 'agent' }))
+            // const payload = t.isNil(agentErr)
+            //   ? { agent, error: null }
+            //   : { agent: null, error: agentErr }
             const [authErr, authResult] = await a.of(
               ctx.api.authenticate({
                 strategy: 'machine',
@@ -30,7 +30,7 @@ const appState = z.fn((t, a) =>
               })
             )
             console.log('AUTH RESULT', authErr, authResult)
-            dispatch(mutators.bootComplete(payload))
+            dispatch(mutators.bootComplete({}))
             done()
           }),
         ]

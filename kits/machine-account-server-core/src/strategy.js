@@ -1,12 +1,15 @@
-export const strategy = z =>
-  z.featureBox.fn(
+export function strategy(z) {
+  let { AuthenticationBaseStrategy } = z.FeathersAuth
+  // Webpack compiler butchers classes defined in functions.
+  // Classes as a top level API is cringe AF and results in hacks like this.
+  AuthenticationBaseStrategy.prototype.authenticate = z.featureBox.fn(
     (t, a) =>
-      class MachineStategy extends z.FeathersAuth.AuthenticationBaseStrategy {
-        async authenticate(authentication, params) {
-          return {
-            machine: null,
-            user: null,
-          }
+      async function authenticate(auth, params) {
+        return {
+          machine: null,
+          user: null,
         }
       }
   )
+  return { MachineStrategy: AuthenticationBaseStrategy }
+}

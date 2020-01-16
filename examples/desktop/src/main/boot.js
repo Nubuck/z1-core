@@ -7,7 +7,7 @@ import { state } from './state'
 
 // main
 export const boot = async () => {
-  const client = await api('http://localhost:3035/api')
+  const client = await api('http://localhost:3035')
   const store = z.store.create({
     boxes: state,
     context: {

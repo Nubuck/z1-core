@@ -22,6 +22,14 @@ const appState = z.fn((t, a) =>
             const payload = t.isNil(agentErr)
               ? { agent, error: null }
               : { agent: null, error: agentErr }
+            const [authErr, authResult] = await a.of(
+              ctx.api.authenticate({
+                strategy: 'machine',
+                machine: {},
+                user: {},
+              })
+            )
+            console.log('AUTH RESULT', authErr, authResult)
             dispatch(mutators.bootComplete(payload))
             done()
           }),

@@ -1,3 +1,5 @@
+import { strategy } from './strategy'
+
 // main
 export const api = (z, props) =>
   z.featureBox.api.create('machineAccount', [
@@ -22,7 +24,10 @@ export const api = (z, props) =>
         // )
       },
       lifecycle: {
-        authConfig(app) {},
+        authConfig(app) {
+          const { MachineStrategy } = strategy(z)
+          app.get('authenticationService').register('machine', new MachineStrategy())
+        },
       },
     },
   ])

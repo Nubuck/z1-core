@@ -20,28 +20,25 @@ const create = task(t => ctx => {
   }
 })
 
-const compose = task(t => ctx => {
-  const hasKey = (matchKey, keyList) =>
-    t.gt(
-      t.findIndex(key => t.eq(matchKey, key), keyList),
-      -1
-    )
-  const mergeLifecycle = (collection, source) => {
-    const srcKeys = t.keys(source)
-    const existingKeys = t.filter(
-      colKey => hasKey(colKey, srcKeys),
-      t.keys(collection)
-    )
-    const nextKeys = t.filter(srcKey => hasKey(srcKey, existingKeys), srcKeys)
-    return t.mergeAll([
-      t.mapObjIndexed(
-        (val, key) =>
-          hasKey(key, existingKeys) ? t.concat(val || [], [source[key]]) : val,
-        collection
-      ),
-      t.fromPairs(t.map(nxKey => [nxKey, [source[nxKey]]], nextKeys)),
-    ])
+const mergeLifecycle = task(t => (collection, part) => {
+  const partKeys = t.keys(part)
+  if (t.isZeroLen(partKeys)) {
+    return collection
   }
+  return t.reduce(
+    (col, key) => {
+      return t.merge(col, {
+        [key]: t.has(key)(col)
+          ? t.concat(col[key] || [], [part[key]])
+          : [part[key]],
+      })
+    },
+    collection,
+    partKeys
+  )
+})
+
+const compose = task(t => ctx => {
   return (props, parts) => {
     const combinedParts = t.reduce(
       (collection, part) => {
@@ -69,16 +66,6 @@ const compose = task(t => ctx => {
       parts || []
     )
 
-    const lifecycle = t.mapObjIndexed(val => {
-      return a => {
-        t.forEach(action => {
-          if (t.isType(action, 'Function')) {
-            action(a)
-          }
-        }, val || [])
-      }
-    }, combinedParts.lifecycle || [])
-
     return ctx.create(
       t.merge(props, {
         models(m) {
@@ -105,7 +92,22 @@ const compose = task(t => ctx => {
             )
           )
         },
-        lifecycle,
+        lifecycle: t.isZeroLen(t.keys(combinedParts.lifecycle))
+          ? undefined
+          : t.fromPairs(
+              t.map(([key, actionList]) => {
+                return [
+                  key,
+                  app => {
+                    t.forEach(action => {
+                      if (t.isType(action, 'Function')) {
+                        action(app)
+                      }
+                    }, actionList || [])
+                  },
+                ]
+              }, t.to.pairs(combinedParts.lifecycle))
+            ),
       })
     )
   }

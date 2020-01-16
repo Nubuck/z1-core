@@ -28,7 +28,7 @@ export const machine = z.fn(t => async ({ role }) => {
     manufacturer: systemInfo.manufacturer,
     model: systemInfo.model,
   }
-  const machineId = await hashCtx(machCtx)
+  const machineHashId = await hashCtx(machCtx)
   const cpuInfo = await sysInfo.cpu()
   const timeInfo = await sysInfo.time()
   const hardwareCtx = {
@@ -51,12 +51,14 @@ export const machine = z.fn(t => async ({ role }) => {
     username: t.to.lowerCase(os.userInfo().username),
     role,
   }
-  const userId = await hashCtx(userCtx)
-  return t.mergeAll([
-    { machineId },
-    machCtx,
-    hardwareCtx,
-    osCtx,
-    { user: t.merge(userCtx, { userId }) },
-  ])
+  const hashId = await hashCtx(userCtx)
+  return {
+    machine: t.mergeAll([
+      machCtx,
+      hardwareCtx,
+      osCtx,
+      { hashId: machineHashId },
+    ]),
+    user: t.merge(t.omit(['hardwareuuid'], userCtx), { machineHashId, hashId }),
+  }
 })

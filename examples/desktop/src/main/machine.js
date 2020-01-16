@@ -24,7 +24,6 @@ export const machine = z.fn(t => async ({ role }) => {
   const machCtx = {
     hardwareuuid: systemInfo.uuid,
     serialnumber: systemInfo.serial,
-    sku: systemInfo.sku,
     manufacturer: systemInfo.manufacturer,
     model: systemInfo.model,
   }

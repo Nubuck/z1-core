@@ -32,7 +32,7 @@ export function strategy(z) {
         }
         const user = t.head(userResult.data)
         const [machineError, machine] = await a.of(
-          this.app.service('machine-users').get(user.machineId)
+          this.app.service('machines').get(user.machineId)
         )
         if (machineError) {
           throw new z.FeathersErrors.Unprocessable(machineError.message)

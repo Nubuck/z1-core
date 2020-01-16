@@ -1,10 +1,10 @@
-import z from '@z1/lib-state-box-node'
+import { task } from '@z1/preset-task'
 import os from 'os'
 import sysInfo from 'systeminformation'
 import hasha from 'hasha'
 
 // parts
-const hashCtx = z.fn(t => async ctx => {
+const hashCtx = task(t => async ctx => {
   const hashVals = t.values(ctx)
   const hashData = t.tags.oneLineInlineLists`
     ${t.mapIndexed(
@@ -19,7 +19,7 @@ const hashCtx = z.fn(t => async ctx => {
 })
 
 // main
-export const machine = z.fn(t => async ({ role }) => {
+export const machine = task(t => async ({ role }) => {
   const systemInfo = await sysInfo.system()
   const machCtx = {
     hardwareuuid: systemInfo.uuid,

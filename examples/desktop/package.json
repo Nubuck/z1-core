@@ -14,8 +14,7 @@
   "dependencies": {
     "@z1/lib-api-box-client-node": "^0.3.1",
     "@z1/lib-state-box-node": "^0.3.1",
-    "hasha": "^5.1.0",
-    "systeminformation": "^4.19.1",
+    "@z1/kit-machine-account-node": "^0.3.1",
     "source-map-support": "^0.5.12",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3"

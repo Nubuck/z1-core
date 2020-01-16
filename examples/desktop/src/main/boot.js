@@ -1,8 +1,8 @@
 import z from '@z1/lib-state-box-node'
 import api from '@z1/lib-api-box-client-node'
+import ma from '@z1/kit-machine-account-node'
 
 // parts
-import { machine } from './machine'
 import { state } from './state'
 
 // main
@@ -12,7 +12,7 @@ export const boot = async () => {
     boxes: state,
     context: {
       api: client,
-      machine,
+      machine: ma.machine,
     },
     logging: process.env.NODE_ENV === 'development',
   })

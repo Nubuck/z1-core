@@ -53,6 +53,8 @@ export const routingFromAction = fn(
   }
 )
 
+
+// TODO: user param combo to iterate views
 export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
   const viewByKey = t.find(
     viewKey => t.eq(viewKey.key, routing.route.key),

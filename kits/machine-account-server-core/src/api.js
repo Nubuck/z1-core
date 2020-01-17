@@ -121,7 +121,7 @@ export const api = (z, props) =>
                     }
                   }
                   // user exists
-                  const nextUser = t.head(userResult)
+                  const nextUser = t.head(userResult.data)
                   return {
                     machine: nextMachine,
                     user: nextUser,

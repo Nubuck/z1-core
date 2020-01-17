@@ -34,18 +34,15 @@ export const routingFromAction = fn(
           key: t.tags.oneLineInlineLists`
             ${t.mapIndexed(
               ([_, value], index) =>
-                `${
-                  t.anyOf([t.isNil(value), t.eq(0, index)])
-                    ? t.isNil(value)
-                      ? ''
-                      : t.to.camelCase(value)
-                    : t.isNil(value)
+                t.anyOf([t.isNil(value), t.eq(0, index)])
+                  ? t.isNil(value)
                     ? ''
-                    : `_${t.to.camelCase(value)}`
-                }`,
+                    : t.to.camelCase(value)
+                  : t.isNil(value)
+                  ? ''
+                  : `_${t.to.camelCase(value)}`,
               t.to.pairs(params)
             )}`.replace(/\s/g, ''),
-
         },
       },
       { params },
@@ -62,20 +59,26 @@ export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
   if (t.not(t.isNil(viewByKey))) {
     return viewByKey
   } else {
-    // const paramKey = t.match({
-    //   view: 'view',
-    //   viewList: 'view',
-    //   detail: 'view_detail',
-    //   more: 'view_detail_more',
-    // })(paramType)
-    const view = t.find(
-      viewKey =>
-        t.and(
-          t.eq(viewKey.name, routing.params[paramType]),
-          t.eq(viewKey.paramKey, paramKey)
-        ),
-      viewKeys
-    )
+    const searchKeys = t.match({
+      _: ['view'],
+      more: ['view', 'detail'],
+    })(paramType)
+    const routingKey = t.tags.onLineInlineLists`${t.mapIndexed(
+      (key, index) =>
+        t.eq(0, index)
+          ? t.to.camelCase(routing.params[key])
+          : `_${t.to.camelCase(routing.params[key])}`,
+      t.keys(searchKeys)
+    )}`
+    const view = t.find(viewKey => t.eq(viewKey.key, routingKey), viewKeys)
+    // const view = t.find(
+    //   viewKey =>
+    //     t.and(
+    //       t.eq(viewKey.name, routing.params[paramType]),
+    //       t.eq(viewKey.param, paramType)
+    //     ),
+    //   viewKeys
+    // )
     if (t.not(t.isNil(view))) {
       return view
     } else {

@@ -23,7 +23,9 @@ const appState = z.fn((t, a) =>
       effects(fx, { actions, mutators }) {
         return [
           fx([actions.boot], async (ctx, dispatch, done) => {
-            const [agentErr, agent] = await a.of(ctx.machine({ role: 'agent' }))
+            const [agentErr, agent] = await a.of(
+              ctx.machine.account({ role: 'agent' })
+            )
             if (agentErr) {
               dispatch(mutators.bootComplete({ agent: null, error: agentErr }))
             } else {
@@ -55,8 +57,17 @@ const appState = z.fn((t, a) =>
               done()
             } else {
               const agent = t.pathOr({}, ['app', 'agent'], state)
+              const [systemErr, systemResult] = await a.of(
+                ctx.machine.system(agent.machine)
+              )
               const [accountErr, account] = await a.of(
-                ctx.api.service('machine-account').create(agent)
+                ctx.api
+                  .service('machine-account')
+                  .create(
+                    t.isNil(systemErr)
+                      ? { machine: systemResult, user: agent.user }
+                      : agent
+                  )
               )
               if (accountErr) {
                 dispatch(

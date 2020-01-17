@@ -7,11 +7,13 @@ export const api = (z, props) =>
       {
         models: props.models,
         services(s, h) {
+          // disbale create methods on model services to direct 
+          // through machine-account service
           s([props.adapter, 'machines'], props.serviceFactory.machines, {
             hooks: {
               before: {
-                // all: [h.common.disallow('external')],
                 all: [h.auth.authenticate('jwt')],
+                create: [h.common.disallow('external')],
               },
             },
           })
@@ -21,8 +23,8 @@ export const api = (z, props) =>
             {
               hooks: {
                 before: {
-                  // all: [h.common.disallow('external')],
                   all: [h.auth.authenticate('jwt')],
+                  create: [h.common.disallow('external')],
                 },
               },
             }

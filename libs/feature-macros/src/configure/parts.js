@@ -31,8 +31,7 @@ export const routingFromAction = fn(
         route: {
           path: t.pathOr(null, routePaths.pathname, action),
           action: t.pathOr(null, routePaths.type, action),
-          key: t.tags.oneLineTrim`
-          ${t.tags.oneLineInlineLists`
+          key: t.tags.oneLineInlineLists`
             ${t.mapIndexed(
               ([_, value], index) =>
                 `${
@@ -45,14 +44,14 @@ export const routingFromAction = fn(
                     : `_${t.to.camelCase(value)}`
                 }`,
               t.to.pairs(params)
-            )}`}`,
+            )}`.replace(/\s/g, ''),
+
         },
       },
       { params },
     ])
   }
 )
-
 
 // TODO: user param combo to iterate views
 export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
@@ -63,11 +62,17 @@ export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
   if (t.not(t.isNil(viewByKey))) {
     return viewByKey
   } else {
+    // const paramKey = t.match({
+    //   view: 'view',
+    //   viewList: 'view',
+    //   detail: 'view_detail',
+    //   more: 'view_detail_more',
+    // })(paramType)
     const view = t.find(
       viewKey =>
         t.and(
           t.eq(viewKey.name, routing.params[paramType]),
-          t.eq(viewKey.param, paramType)
+          t.eq(viewKey.paramKey, paramKey)
         ),
       viewKeys
     )

@@ -19,18 +19,22 @@ export const create = fn(t => (name, { state, ui, render }) => {
     key: t.match({
       view: `${t.to.camelCase(name)}`,
       viewList: `${t.to.camelCase(t.head(name))}`,
-      _: t.tags.oneLineTrim`
-        ${t.tags.oneLineInlineLists`
+      _: ${t.tags.oneLineInlineLists`
           ${t.mapIndexed(
             (key, index) =>
               `${t.to.camelCase(key)}${
                 t.eq(t.len(name) - 1, index) ? '' : '_'
               }`,
             name
-          )}`}
-        `,
+          )}`.replace(/\s/g, ''),
     })(param),
     param: t.eq(param, 'viewList') ? 'view' : param,
+    // paramKey: t.match({
+    //   view:'view',
+    //   viewList:'view',
+    //   detail: 'view_detail',
+    //   more: 'view_detail_more'
+    // })(param),
     state(ctx) {
       const nextState = t.isType(state, 'function') ? state(ctx) : state
       return {

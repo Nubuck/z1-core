@@ -137,8 +137,10 @@ const field = fn(t => (nameOrProps, propsOrChildren, otherChildren) => {
 })
 
 const form = fn(t => factory => {
-  const result = factory(field, keys)
-  return result
+  const formSchema = factory(field, keys)
+  // TODO:
+  // const result = formSchema({ schema: {}, uiSchema: {}, required: [] }, true)
+  return formSchema
 })
 
 const demo = form((f, k) =>

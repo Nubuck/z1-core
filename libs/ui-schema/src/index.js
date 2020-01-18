@@ -72,24 +72,7 @@ const field = fn(t => (nameOrProps, propsOrChildren, otherChildren) => {
   const children = t.eq(name, 'root') ? propsOrChildren : otherChildren
   const fieldKey = t.to.camelCase(name)
   const nextProps = t.omit(['ui', 'required'], props)
-  // const next = {
-  //   key: fieldKey,
-  //   props: nextProps,
-  //   ui: t.pathOr({}, ['ui'], props),
-  //   required: t.pathOr(false, ['required'], props),
-  //   children,
-  // children: t.allOf([
-  //   t.includes(nextProps.type, ['object', 'array']),
-  //   t.notZeroLen(children),
-  // ])
-  //   ? t.mergeAll(children)
-  //   : undefined,
-  // }
-  // return t.eq(name, 'root')
-  //   ? next
-  //   : {
-  //       [fieldKey]: next,
-  //     }
+  const nextRequired = t.pathOr(false, ['required'], props)
   if (t.neq(name, 'root')) {
     if (t.includes(nextProps.type, ['object', 'array'])) {
       const childKey = t.match({
@@ -99,23 +82,33 @@ const field = fn(t => (nameOrProps, propsOrChildren, otherChildren) => {
       return ctx => {
         const next = t.reduce(
           (cx, ff) => ff(cx),
-          { props: {}, ui: {}, required: [] },
+          { props: {}, ui: t.pathOr({}, ['ui'], props), required: [] },
           children || []
         )
+        const itemKey = t.eq(childKey, 'items')
+          ? t.head(t.keys(next.props))
+          : ''
         return {
           props: t.merge(t.pathOr({}, ['props'], ctx), {
-            required: next.required,
-            [fieldKey]: t.merge(nextProps, { [childKey]: next.props }),
+            [fieldKey]: t.merge(nextProps, {
+              required: next.required,
+              [childKey]: t.eq(childKey, 'items')
+                ? t.pathOr({}, [itemKey], next.props)
+                : next.props,
+            }),
           }),
           ui: t.merge(t.pathOr({}, ['ui'], ctx), {
-            [fieldKey]: t.merge(t.pathOr({}, ['ui'], props), next.ui),
+            [fieldKey]: t.eq(childKey, 'items')
+              ? { items: t.pathOr({}, [itemKey], next.ui) }
+              : next.ui,
           }),
-          required: t.pathOr([], ['required'], ctx),
+          required: t.eq(nextRequired, true)
+            ? t.concat(t.pathOr([], ['required'], ctx), [fieldKey])
+            : t.pathOr([], ['required'], ctx),
         }
       }
     }
     return ctx => {
-      const nextRequired = t.pathOr(false, ['required'], props)
       return {
         props: t.merge(t.pathOr({}, ['props'], ctx), {
           [fieldKey]: nextProps,
@@ -131,7 +124,7 @@ const field = fn(t => (nameOrProps, propsOrChildren, otherChildren) => {
   }
   const next = t.reduce(
     (ctx, ff) => ff(ctx),
-    { props: {}, ui: {}, required: [] },
+    { props: {}, ui: t.pathOr({}, ['ui'], props), required: [] },
     children || []
   )
   return {
@@ -139,7 +132,7 @@ const field = fn(t => (nameOrProps, propsOrChildren, otherChildren) => {
       required: next.required,
       [keys.prop.props]: next.props,
     }),
-    uiSchema: t.merge(t.pathOr({}, ['ui'], props), next.ui),
+    uiSchema: next.ui,
   }
 })
 
@@ -182,7 +175,43 @@ const demo = form((f, k) =>
         },
       }),
     ]),
+    f('basicList', { type: k.array }, [
+      f('itemName', {
+        type: k.string,
+        title: 'Item Name',
+        required: true,
+        ui: {
+          [k.ui.placeholder]: 'Item name',
+          [k.ui.disabled]: false,
+          [k.ui.css]: 'item-box',
+        },
+      }),
+    ]),
+    f('objList', { type: k.array }, [
+      f('obj', { type: k.object }, [
+        f('objName', {
+          type: k.string,
+          title: 'Object Name',
+          required: true,
+          ui: {
+            [k.ui.placeholder]: 'Object name',
+            [k.ui.disabled]: false,
+            [k.ui.css]: 'item-box',
+          },
+        }),
+      ]),
+    ]),
   ])
 )
 
-console.log('DEMO FORM', demo.schema, demo.uiSchema)
+const print = fn(t => () => {
+  console.log('DEMO SCHEMA', t.omit(['properties'], demo.schema))
+  t.forEach(key => {
+    console.log('SCHEMA PROP', key, demo.schema.properties[key])
+  }, t.keys(demo.schema.properties))
+  t.forEach(key => {
+    console.log('UI SCHEMA PROP', key, demo.uiSchema[key])
+  }, t.keys(demo.uiSchema))
+})
+
+print()

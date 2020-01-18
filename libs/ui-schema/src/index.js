@@ -208,6 +208,16 @@ const print = fn(t => () => {
   console.log('DEMO SCHEMA', t.omit(['properties'], demo.schema))
   t.forEach(key => {
     console.log('SCHEMA PROP', key, demo.schema.properties[key])
+    const itemProps = t.pathOr(
+      null,
+      ['schema', 'properties', key, 'items', 'properties'],
+      demo
+    )
+    if (t.not(t.isNil(itemProps))) {
+      t.forEach(itemKey => {
+        console.log('ITEM PROP', itemKey, itemProps[itemKey])
+      }, t.keys(itemProps))
+    }
   }, t.keys(demo.schema.properties))
   t.forEach(key => {
     console.log('UI SCHEMA PROP', key, demo.uiSchema[key])

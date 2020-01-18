@@ -72,34 +72,74 @@ const field = fn(t => (nameOrProps, propsOrChildren, otherChildren) => {
   const children = t.eq(name, 'root') ? propsOrChildren : otherChildren
   const fieldKey = t.to.camelCase(name)
   const nextProps = t.omit(['ui', 'required'], props)
-  const next = {
-    key: fieldKey,
-    props: nextProps,
-    ui: t.pathOr({}, ['ui'], props),
-    required: t.pathOr(false, ['required'], props),
-    // children,
-    children: t.allOf([
-      t.includes(nextProps.type, ['object', 'array']),
-      t.notZeroLen(children),
-    ])
-      ? t.mergeAll(children)
-      : undefined,
-  }
-  return t.eq(name, 'root')
-    ? next
-    : {
-        [fieldKey]: next,
+  // const next = {
+  //   key: fieldKey,
+  //   props: nextProps,
+  //   ui: t.pathOr({}, ['ui'], props),
+  //   required: t.pathOr(false, ['required'], props),
+  //   children,
+  // children: t.allOf([
+  //   t.includes(nextProps.type, ['object', 'array']),
+  //   t.notZeroLen(children),
+  // ])
+  //   ? t.mergeAll(children)
+  //   : undefined,
+  // }
+  // return t.eq(name, 'root')
+  //   ? next
+  //   : {
+  //       [fieldKey]: next,
+  //     }
+  if (t.neq(name, 'root')) {
+    if (t.includes(nextProps.type, ['object', 'array'])) {
+      const childKey = t.match({
+        object: 'properties',
+        array: 'items',
+      })(nextProps.type)
+      return ctx => {
+        const next = t.reduce(
+          (cx, ff) => ff(cx),
+          { props: {}, ui: {}, required: [] },
+          children || []
+        )
+        return {
+          props: t.merge(t.pathOr({}, ['props'], ctx), {
+            required: next.required,
+            [fieldKey]: t.merge(nextProps, { [childKey]: next.props }),
+          }),
+          ui: t.merge(t.pathOr({}, ['ui'], ctx), {
+            [fieldKey]: t.merge(t.pathOr({}, ['ui'], props), next.ui),
+          }),
+          required: t.pathOr([], ['required'], ctx),
+        }
       }
-})
-
-// const toSchema = fn(t =>
-//   t.trampoline(function render(def) {
-//   })
-// )
-
-const toSchema = fn(t => function render(def, ui, required) {
-  if (t.eq(def.key, 'root')) {
-    
+    }
+    return ctx => {
+      const nextRequired = t.pathOr(false, ['required'], props)
+      return {
+        props: t.merge(t.pathOr({}, ['props'], ctx), {
+          [fieldKey]: nextProps,
+        }),
+        ui: t.merge(t.pathOr({}, ['ui'], ctx), {
+          [fieldKey]: t.pathOr({}, ['ui'], props),
+        }),
+        required: t.eq(nextRequired, true)
+          ? t.concat(t.pathOr([], ['required'], ctx), [fieldKey])
+          : t.pathOr([], ['required'], ctx),
+      }
+    }
+  }
+  const next = t.reduce(
+    (ctx, ff) => ff(ctx),
+    { props: {}, ui: {}, required: [] },
+    children || []
+  )
+  return {
+    schema: t.merge(nextProps, {
+      required: next.required,
+      [keys.prop.props]: next.props,
+    }),
+    uiSchema: t.merge(t.pathOr({}, ['ui'], props), next.ui),
   }
 })
 
@@ -145,4 +185,4 @@ const demo = form((f, k) =>
   ])
 )
 
-console.log('DEMO FORM', demo, demo.children)
+console.log('DEMO FORM', demo.schema, demo.uiSchema)

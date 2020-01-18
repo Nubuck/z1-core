@@ -8,10 +8,10 @@ module.exports = {
   use: [
     library({
       name: '@z1/lib-ui-schema',
-      target: 'web',
-      targets: {
-        browsers: ['safari >= 6'],
-      },
+      target: 'node',
+      // targets: {
+      //   browsers: ['safari >= 6'],
+      // },
     }),
   ],
 };

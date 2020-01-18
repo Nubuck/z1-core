@@ -12,6 +12,7 @@
   },
   "scripts": {
     "build": "webpack --mode production",
+    "start": "node dist/index.js",
     "prepublish": "yarn run build"
   },
   "dependencies": {

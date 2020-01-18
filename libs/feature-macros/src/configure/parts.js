@@ -31,7 +31,10 @@ export const routingFromAction = fn(
         route: {
           path: t.pathOr(null, routePaths.pathname, action),
           action: t.pathOr(null, routePaths.type, action),
-          key: t.tags.oneLineInlineLists`
+          key: t.replace(
+            /\s/g,
+            '',
+            t.tags.oneLineInlineLists`
             ${t.mapIndexed(
               ([_, value], index) =>
                 t.anyOf([t.isNil(value), t.eq(0, index)])
@@ -42,7 +45,8 @@ export const routingFromAction = fn(
                   ? ''
                   : `_${t.to.camelCase(value)}`,
               t.to.pairs(params)
-            )}`.replace(/\s/g, ''),
+            )}`
+          ),
         },
       },
       { params },
@@ -63,22 +67,18 @@ export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
       _: ['view'],
       more: ['view', 'detail'],
     })(paramType)
-    const routingKey = t.tags.onLineInlineLists`${t.mapIndexed(
-      (key, index) =>
-        t.eq(0, index)
-          ? t.to.camelCase(routing.params[key])
-          : `_${t.to.camelCase(routing.params[key])}`,
-      t.keys(searchKeys)
-    )}`
+    const routingKey = t.replace(
+      /\s/g,
+      '',
+      t.tags.oneLineInlineLists`${t.mapIndexed(
+        (search, index) =>
+          t.eq(0, index)
+            ? t.to.camelCase(t.pathOr('', ['params', search], routing))
+            : `_${t.to.camelCase(t.pathOr('', ['params', search], routing))}`,
+        searchKeys
+      )}`
+    )
     const view = t.find(viewKey => t.eq(viewKey.key, routingKey), viewKeys)
-    // const view = t.find(
-    //   viewKey =>
-    //     t.and(
-    //       t.eq(viewKey.name, routing.params[paramType]),
-    //       t.eq(viewKey.param, paramType)
-    //     ),
-    //   viewKeys
-    // )
     if (t.not(t.isNil(view))) {
       return view
     } else {
@@ -136,7 +136,7 @@ export const onRouteEnter = fn(
       routing,
       {
         views: t.merge(state.views, {
-          [routing.route.key]: nextActiveState,
+          [viewKey.key]: nextActiveState,
         }),
       },
     ])

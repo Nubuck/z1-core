@@ -28,15 +28,19 @@ export const createMutationFactory = fn(
         reducers: {},
       },
       t.map(type => {
-        const nextType = `${type}`.replace(`${name}/`, '')
+        const nextType = t.replace(`${name}/`, '', `${type}`)
         const namespaces = t.split('/', nextType)
         const actionType = t.last(namespaces)
         const mutatorAction = t.eq(t.len(namespaces), 1)
           ? t.to.constantCase(actionType)
-          : t.tags.oneLineInlineLists`${t.concat(
-              t.take(t.len(namespaces) - 1, namespaces),
-              [t.to.constantCase(actionType)]
-            )}`.replace(' ', '/')
+          : t.replace(
+              /\s/g,
+              '/',
+              t.tags.oneLineInlineLists`${t.concat(
+                t.take(t.len(namespaces) - 1, namespaces),
+                [t.to.constantCase(actionType)]
+              )}`
+            )
         return {
           action: t.to.camelCase(actionType),
           mutator: createAction(mutatorAction),

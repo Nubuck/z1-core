@@ -52,6 +52,7 @@ import propEq from 'ramda/es/propEq'
 import range from 'ramda/es/range'
 import reduce from 'ramda/es/reduce'
 import repeat from 'ramda/es/repeat'
+import replace from 'ramda/es/replace'
 import sum from 'ramda/es/sum'
 import sort from 'ramda/es/sort'
 import sortBy from 'ramda/es/sortBy'
@@ -227,6 +228,7 @@ export const TASK = {
   range,
   reduce,
   repeat,
+  replace,
   sort,
   sortBy,
   sortWith,

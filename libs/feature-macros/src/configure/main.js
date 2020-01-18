@@ -69,7 +69,9 @@ export const configure = zbx.fn((t, a) => (boxName, props = {}) => {
       }, viewMacros),
     },
     routes(r) {
-      const safePath = t.eq(path, '/') ? path : `/${path.replace(/\//g, '')}`
+      const safePath = t.eq(path, '/')
+        ? path
+        : `/${t.replace(/\//g, '', path || '')}`
       return [
         r(
           safePath,
@@ -127,7 +129,9 @@ export const configure = zbx.fn((t, a) => (boxName, props = {}) => {
           ])
         }),
         m(['dataChange', 'dataLoad', 'dataLoadComplete'], (state, action) => {
-          const event = t.to.paramCase(action.type.replace(`${boxName}/`, ''))
+          const event = t.to.paramCase(
+            t.replace(`${boxName}/`, '', action.type)
+          )
           const activeMacro = viewMacros[state.active.view]
           const activeState = state.views[state.active.view]
           const nextStatus = t.pathOr(
@@ -175,7 +179,9 @@ export const configure = zbx.fn((t, a) => (boxName, props = {}) => {
         m(
           ['formChange', 'formTransmit', 'formTransmitComplete'],
           (state, action) => {
-            const event = t.to.paramCase(action.type.replace(`${boxName}/`, ''))
+            const event = t.to.paramCase(
+              t.replace(`${boxName}/`, '', action.type)
+            )
             const activeMacro = viewMacros[state.active.view]
             const activeState = state.views[state.active.view]
             const activeCtx = t.mergeAll([

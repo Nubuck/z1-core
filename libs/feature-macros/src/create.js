@@ -9,25 +9,27 @@ export const create = fn(t => (name, { state, ui, render }) => {
     : t.eq(t.len(name), 2)
     ? 'detail'
     : 'more'
-
+  const nextName = t.includes(param, ['viewList', 'detail', 'more'])
+    ? t.last(name)
+    : name
   return {
-    name: t.match({
-      view: `${t.to.camelCase(name)}`,
-      viewList: `${t.to.camelCase(t.head(name))}`,
-      _: t.to.camelCase(t.last(name)),
-    })(param),
-    key: t.match({
-      view: `${t.to.camelCase(name)}`,
-      viewList: `${t.to.camelCase(t.head(name))}`,
-      _: ${t.tags.oneLineInlineLists`
+    name: t.to.camelCase(nextName),
+    key: t.or(t.eq(param, 'detail'), t.eq(param, 'more'))
+      ? t.replace(
+          /\s/g,
+          '',
+          t.tags.oneLineInlineLists`
           ${t.mapIndexed(
             (key, index) =>
               `${t.to.camelCase(key)}${
                 t.eq(t.len(name) - 1, index) ? '' : '_'
               }`,
             name
-          )}`.replace(/\s/g, ''),
-    })(param),
+          )}`
+        )
+      : t.eq(param, 'viewList')
+      ? t.last(name)
+      : name,
     param: t.eq(param, 'viewList') ? 'view' : param,
     state(ctx) {
       const nextState = t.isType(state, 'function') ? state(ctx) : state

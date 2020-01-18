@@ -43,7 +43,7 @@ const macroCssProp = task(
       return t.not(t.eq(trueKey, undefined))
         ? t.eq(result, trueKey)
           ? true
-          : result.replace(`-${trueKey}`, '')
+          : t.replace(`-${trueKey}`, '', result)
         : t.not(t.eq(valSwap, undefined))
         ? t.eq(result, valSwap.match)
           ? valSwap.value
@@ -59,7 +59,7 @@ const macroCssProp = task(
             [item.prefix]: t.not(t.eq(trueKey, undefined))
               ? t.eq(result, trueKey)
                 ? true
-                : result.replace(`-${trueKey}`, '')
+                : t.replace(`-${trueKey}`, '', result)
               : t.not(t.eq(valSwap, undefined))
               ? t.eq(result, valSwap.match)
                 ? valSwap.value

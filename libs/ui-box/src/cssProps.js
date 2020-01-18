@@ -108,9 +108,10 @@ export const cssProps = task(t => ({
     if (t.isType(v, 'Boolean')) {
       return t.not(v) ? '' : 'antialiased'
     }
-    return `${v}-antialiased`.replace(
+    return t.replace(
       '-antialiased-antialiased',
-      '-antialiased'
+      '-antialiased',
+      `${v}-antialiased`
     )
   },
   fontStyle: v => skipNull(v, t.eq(v, 'normal') ? 'non-italic' : v),

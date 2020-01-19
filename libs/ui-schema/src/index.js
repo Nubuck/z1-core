@@ -67,7 +67,9 @@ const keys = {
 }
 
 const none = 'none'
-
+const renderChildren = fn(t => (ctx, parent, children) => {
+  return t.reduce((cx, ff) => ff(cx, parent), ctx, children || [])
+})
 const field = fn(
   t => (
     nameOrProps,
@@ -87,15 +89,65 @@ const field = fn(
     const fieldProps = t.omit(['ui', 'required'], props)
     // yield
     return (ctx, parent) => {
+      const xProps = t.pathOr({}, ['props'], ctx)
+      const xUi = t.pathOr({}, ['ui'], ctx)
+      const xRequired = t.pathOr([], ['required'], ctx)
       const renderField = t.match({
         object: () => {
-          return {}
+          const next = renderChildren(
+            { props: {}, ui, required: [] },
+            'object',
+            children
+          )
+          return {
+            props: t.merge(xProps, {
+              [fieldKey]: t.merge(fieldProps, {
+                required: next.required,
+                properties: next.props,
+              }),
+            }),
+            ui: t.merge(xUi, {
+              [fieldKey]: next.ui,
+            }),
+            required: t.eq(required, true)
+              ? t.concat(xRequired, [fieldKey])
+              : xRequired,
+          }
         },
         array: () => {
-          return {}
+          const next = renderChildren(
+            { props: {}, ui, required: [] },
+            'array',
+            children
+          )
+          const fieldMode = ''
+          return {
+            props: t.merge(xProps, {
+              [fieldKey]: t.merge(fieldProps, {
+                required: next.required,
+                items: next.props,
+              }),
+            }),
+            ui: t.merge(xUi, {
+              [fieldKey]: { items: next.ui },
+            }),
+            required: t.eq(required, true)
+              ? t.concat(xRequired, [fieldKey])
+              : xRequired,
+          }
         },
         _: () => {
-          return {}
+          return {
+            props: t.merge(xProps, {
+              [fieldKey]: fieldProps,
+            }),
+            ui: t.merge(xUi, {
+              [fieldKey]: ui,
+            }),
+            required: t.eq(required, true)
+              ? t.concat(xRequired, [fieldKey])
+              : xRequired,
+          }
         },
       })(fieldType)
 

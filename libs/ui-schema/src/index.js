@@ -70,7 +70,14 @@ const none = 'none'
 const renderChildren = fn(t => (ctx, parent, children) => {
   return t.reduce((cx, ff) => ff(cx, parent), ctx, children || [])
 })
-const field = fn(
+const isFixedItemList = fn(t => (children, additional) => {
+  return t.allOf([
+    t.gte(t.isType(children, 'array') ? t.len(children) : 0, 1),
+    t.or(t.isType(additional, 'object'), t.isType(additional, 'array')),
+  ])
+})
+
+const createField = fn(
   t => (
     nameOrProps,
     propsOrChildren,
@@ -85,29 +92,43 @@ const field = fn(
     const required = t.pathOr(false, ['required'], props)
     // next
     const fieldKey = t.to.camelCase(name)
-    const fieldType = t.pathOr('string', ['type'], props)
+    const baseType = t.pathOr('string', ['type'], props)
+    const fieldType = t.eq(baseType, 'array')
+      ? isFixedItemList(children, additional)
+        ? 'fixedArray'
+        : baseType
+      : baseType
     const fieldProps = t.omit(['ui', 'required'], props)
     // yield
     return (ctx, parent) => {
-      const xProps = t.pathOr({}, ['props'], ctx)
-      const xUi = t.pathOr({}, ['ui'], ctx)
+      const xProps = t.pathOr(
+        t.eq(parent, 'fixedArray') ? [] : {},
+        ['props'],
+        ctx
+      )
+      const xUi = t.pathOr(t.eq(parent, 'fixedArray') ? [] : {}, ['ui'], ctx)
       const xRequired = t.pathOr([], ['required'], ctx)
+      // current field
       const renderField = t.match({
-        object: () => {
-          const next = renderChildren(
-            { props: {}, ui, required: [] },
-            'object',
+        fixedArray: () => {
+          const nextChildren = renderChildren(
+            { props: [], ui: [] },
+            'fixedArray',
             children
           )
+          const nextAdditional = renderChildren(
+            { props: {}, ui: {} },
+            'additionalItems',
+            additional
+          )
           return {
-            props: t.merge(xProps, {
-              [fieldKey]: t.merge(fieldProps, {
-                required: next.required,
-                properties: next.props,
-              }),
+            props: t.merge(fieldProps, {
+              items: nextChildren.props,
+              additionalItems: nextAdditional.props,
             }),
-            ui: t.merge(xUi, {
-              [fieldKey]: next.ui,
+            ui: t.merge(ui, {
+              items: nextChildren.ui,
+              additionalItems: nextAdditional.ui,
             }),
             required: t.eq(required, true)
               ? t.concat(xRequired, [fieldKey])
@@ -115,22 +136,33 @@ const field = fn(
           }
         },
         array: () => {
-          const next = renderChildren(
-            { props: {}, ui, required: [] },
+          const nextChildren = renderChildren(
+            { props: {}, ui },
             'array',
             children
           )
-          const fieldMode = ''
           return {
-            props: t.merge(xProps, {
-              [fieldKey]: t.merge(fieldProps, {
-                required: next.required,
-                items: next.props,
-              }),
+            props: t.merge(fieldProps, {
+              items: nextChildren.props,
             }),
-            ui: t.merge(xUi, {
-              [fieldKey]: { items: next.ui },
+            ui: t.merge(ui, { items: nextChildren.ui }),
+            required: t.eq(required, true)
+              ? t.concat(xRequired, [fieldKey])
+              : xRequired,
+          }
+        },
+        object: () => {
+          const nextChildren = renderChildren(
+            { props: {}, ui, required: [] },
+            'object',
+            children
+          )
+          return {
+            props: t.merge(fieldProps, {
+              required: nextChildren.required,
+              properties: nextChildren.props,
             }),
+            ui: t.merge(ui, nextChildren.ui),
             required: t.eq(required, true)
               ? t.concat(xRequired, [fieldKey])
               : xRequired,
@@ -138,103 +170,106 @@ const field = fn(
         },
         _: () => {
           return {
-            props: t.merge(xProps, {
-              [fieldKey]: fieldProps,
-            }),
-            ui: t.merge(xUi, {
-              [fieldKey]: ui,
-            }),
+            props: fieldProps,
+            ui,
             required: t.eq(required, true)
               ? t.concat(xRequired, [fieldKey])
               : xRequired,
           }
         },
-      })(fieldType)
-
+      })
+      // parent field
       const nextSchema = t.match({
         root: () => {
-          return {}
+          if (t.not(t.includes(fieldType, ['object', 'array']))) {
+            return {
+              schema: t.merge(fieldProps, { required }),
+              uiSchema: ui,
+            }
+          }
+
+          if (t.eq(fieldType, 'fixedArray')) {
+            const nextChildren = renderChildren(
+              { props: [], ui, required: [] },
+              fieldType,
+              children
+            )
+            const nextAdditional = renderChildren(
+              { props: {}, ui, required: [] },
+              'additionalItems',
+              additional
+            )
+            return {
+              schema: t.merge(fieldProps, {
+                required: nextChildren.required,
+                items: nextChildren.props,
+                additionalItems: nextAdditional.props,
+              }),
+              uiSchema: t.mergeAll([ui, next.ui, nextAdditional.ui]),
+            }
+          }
+          const next = renderChildren(
+            { props: {}, ui, required: [] },
+            fieldType,
+            children
+          )
+          const childKey = t.eq(fieldType, 'array')
+            ? keys.field.items
+            : keys.field.props
+          return {
+            schema: t.merge(fieldProps, {
+              required: next.required,
+              [childKey]: next.props,
+            }),
+            uiSchema: t.merge(ui, next.ui),
+          }
         },
         object: () => {
-          return {}
+          const next = renderField(fieldType)()
+          return {
+            props: t.merge(xProps, {
+              [fieldKey]: next.props,
+            }),
+            ui: t.merge(xUi, {
+              [fieldKey]: next.ui,
+            }),
+            required: next.required,
+          }
         },
         array: () => {
-          return {}
+          const next = renderField(fieldType)()
+          return {
+            props: t.merge(xProps, next.props),
+            ui: t.merge(xUi, next.ui),
+          }
+        },
+        fixedArray: () => {
+          const next = renderField(fieldType)()
+          return {
+            props: t.concat(xProps, [next.props]),
+            ui: t.concat(xUi, [next.ui]),
+          }
+        },
+        additionalItems: () => {
+          const next = renderField(fieldType)()
+          return {
+            props: next.props,
+            ui: next.ui,
+          }
         },
       })(parent)
-
+      // result
       return t.isType(nextSchema, 'function') ? nextSchema() : ctx
     }
-
-    // if (t.neq(name, none)) {
-    //   if (t.includes(nextProps.type, ['object', 'array'])) {
-    //     const childKey = t.match({
-    //       object: 'properties',
-    //       array: 'items',
-    //     })(nextProps.type)
-    //     return ctx => {
-    //       const next = t.reduce(
-    //         (cx, ff) => ff(cx),
-    //         { props: {}, ui: t.pathOr({}, ['ui'], props), required: [] },
-    //         children || []
-    //       )
-    //       const itemKey = t.eq(childKey, 'items')
-    //         ? t.head(t.keys(next.props))
-    //         : ''
-    //       return {
-    //         props: t.merge(t.pathOr({}, ['props'], ctx), {
-    //           [fieldKey]: t.merge(nextProps, {
-    //             required: next.required,
-    //             [childKey]: t.eq(childKey, 'items')
-    //               ? t.pathOr({}, [itemKey], next.props)
-    //               : next.props,
-    //           }),
-    //         }),
-    //         ui: t.merge(t.pathOr({}, ['ui'], ctx), {
-    //           [fieldKey]: t.eq(childKey, 'items')
-    //             ? { items: t.pathOr({}, [itemKey], next.ui) }
-    //             : next.ui,
-    //         }),
-    //         required: t.eq(nextRequired, true)
-    //           ? t.concat(t.pathOr([], ['required'], ctx), [fieldKey])
-    //           : t.pathOr([], ['required'], ctx),
-    //       }
-    //     }
-    //   }
-    //   return ctx => {
-    //     return {
-    //       props: t.merge(t.pathOr({}, ['props'], ctx), {
-    //         [fieldKey]: nextProps,
-    //       }),
-    //       ui: t.merge(t.pathOr({}, ['ui'], ctx), {
-    //         [fieldKey]: t.pathOr({}, ['ui'], props),
-    //       }),
-    //       required: t.eq(nextRequired, true)
-    //         ? t.concat(t.pathOr([], ['required'], ctx), [fieldKey])
-    //         : t.pathOr([], ['required'], ctx),
-    //     }
-    //   }
-    // }
-    // const next = t.reduce(
-    //   (ctx, ff) => ff(ctx),
-    //   { props: {}, ui: t.pathOr({}, ['ui'], props), required: [] },
-    //   children || []
-    // )
-    // return {
-    //   schema: t.merge(nextProps, {
-    //     required: next.required,
-    //     [keys.prop.props]: next.props,
-    //   }),
-    //   uiSchema: next.ui,
-    // }
   }
 )
 
 const form = fn(t => factory => {
-  const formSchema = factory(field, keys)
-  // TODO:
-  // const result = formSchema({ schema: {}, uiSchema: {}, required: [] }, 'root')
-  return formSchema
+  const formSchema = factory(createField, keys)
+  const nextSchema = t.isType(formSchema, 'array')
+    ? t.head(formSchema)
+    : formSchema
+  return nextSchema({}, 'root')
 })
 
 const demo = form((f, k) =>
@@ -272,7 +307,7 @@ const demo = form((f, k) =>
       }),
     ]),
     f('basicList', { type: k.array }, [
-      f('itemName', {
+      f({
         type: k.string,
         title: 'Item Name',
         required: true,
@@ -284,7 +319,7 @@ const demo = form((f, k) =>
       }),
     ]),
     f('objList', { type: k.array }, [
-      f('obj', { type: k.object }, [
+      f({ type: k.object }, [
         f('objName', {
           type: k.string,
           title: 'Object Name',
@@ -297,6 +332,44 @@ const demo = form((f, k) =>
         }),
       ]),
     ]),
+    f(
+      'fixedList',
+      { type: k.array },
+      [
+        f({
+          type: k.string,
+          title: 'Item Name',
+          required: true,
+          ui: {
+            [k.ui.placeholder]: 'Item name',
+            [k.ui.disabled]: false,
+            [k.ui.css]: 'fixed-item-name',
+          },
+        }),
+        f({
+          type: k.string,
+          title: 'Item Type',
+          required: true,
+          ui: {
+            [k.ui.placeholder]: 'Item type',
+            [k.ui.disabled]: false,
+            [k.ui.css]: 'fixed-item-type',
+          },
+        }),
+      ],
+      [
+        f({
+          type: k.string,
+          title: 'Additional Type',
+          required: true,
+          ui: {
+            [k.ui.placeholder]: 'Item type',
+            [k.ui.disabled]: false,
+            [k.ui.css]: 'fixed-additional-type',
+          },
+        }),
+      ]
+    ),
   ])
 )
 

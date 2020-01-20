@@ -7,28 +7,39 @@ const renderBox = fn(t => props => {
   const box = t.pathOr(null, ['box'], props)
   const next = t.pathOr(null, ['next'], props)
   const stretch = t.pathOr(null, ['stretch'], props)
-  return React.createElement(
-    Element,
-    t.merge(t.omit(['as', 'box', 'className', 'stretch', 'next'], props), {
-      className: t.and(t.and(t.isNil(box), t.isNil(stretch)), t.isNil(next))
-        ? t.pathOr('', ['className'], props)
-        : uiBox
-            .create(box || {})
-            .next(
-              t.isNil(stretch)
-                ? {}
-                : {
-                    alignSelf: 'stretch',
-                    flex: 'auto',
-                  }
-            )
-            .next({
-              className: t.pathOr(box.className || '', ['className'], props),
-            })
-            .next(next || {})
-            .toCss(),
-    })
+  const uiProps = t.pick(uiBox.keys, props)
+  const nextProps = t.omit(
+    t.uniq(t.concat(['as', 'box', 'className', 'stretch', 'next'], uiBox.keys)),
+    props
   )
+  const className = t.allOf([
+    t.isNil(box),
+    t.isNil(stretch),
+    t.isNil(next),
+    t.isZeroLen(t.keys(uiProps)),
+  ])
+    ? t.pathOr('', ['className'], props)
+    : uiBox
+        .create(box || {})
+        .next(
+          t.isNil(stretch)
+            ? {}
+            : {
+                alignSelf: 'stretch',
+                flex: 'auto',
+              }
+        )
+        .next({
+          className: t.pathOr(
+            t.pathOr('', ['className'], box || {}),
+            ['className'],
+            props
+          ),
+        })
+        .next(t.omit(['className'], uiProps || {}))
+        .next(next || {})
+        .toCss()
+  return React.createElement(Element, t.merge(nextProps, { className }))
 })
 
 export class Box extends React.Component {

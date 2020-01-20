@@ -7,8 +7,8 @@ import { Box } from './Box'
 // main
 const renderIcon = fn(t => props => {
   const as = t.pathOr('i', ['as'], props)
-  const prefix = t.pathOr('fa', ['prefix'], props)
-  const iconPrefix = t.pathOr('fa', ['iconPrefix'], props)
+  const prefix = t.pathOr('la', ['prefix'], props)
+  const iconPrefix = t.pathOr('la', ['iconPrefix'], props)
   const icon = t.pathOr('', ['name'], props)
   const fontSize = t.pathOr(null, ['size'], props)
   const color = t.pathOr(null, ['color'], props)

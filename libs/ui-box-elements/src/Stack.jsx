@@ -57,7 +57,7 @@ const renderStack = fn(t => (direction, props) => {
 
   return React.createElement(
     Box,
-    t.merge(t.omit(['box', 'x', 'y'], props), {
+    t.merge(t.omit(['box', 'x', 'y', 'direction'], props), {
       box: t.mergeAll([
         {
           display: 'flex',

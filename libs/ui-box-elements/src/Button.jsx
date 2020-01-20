@@ -18,6 +18,11 @@ const renderButton = fn(t => props => {
   const fontFamily = t.pathOr(null, ['family'], props)
   const fontSize = t.pathOr(null, ['fontSize'], props)
   const proportion = t.getMatch(size)({
+    xs: {
+      padding: { x: 2, y: 2 },
+      fontSize: fontSize || 'xs',
+      fontWeight: fontWeight || 'normal',
+    },
     sm: {
       padding: { x: 2, y: 2 },
       fontSize: fontSize || 'sm',

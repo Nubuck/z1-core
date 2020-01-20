@@ -34,7 +34,7 @@ export const ui = fn(t => ({
           : t.map(queryKey => {
               return {
                 from: queryKey,
-                to: query[queryMapping],
+                to: query[queryKey],
               }
             }, t.keys(query))
       }, queryMapping)

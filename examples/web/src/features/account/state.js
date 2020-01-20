@@ -12,6 +12,9 @@ export const state = z.fn((t, a) =>
       },
       mutations(m) {
         return [
+          m('connection', (state, action) => {
+            return t.merge(state, { connected: action.payload })
+          }),
           m('authenticate', (state, action) => {
             return state
           }),
@@ -20,9 +23,6 @@ export const state = z.fn((t, a) =>
           }),
         ]
       },
-      // routes(r) {
-      //   return []
-      // },
       guards(g, { actions, mutators }) {
         return [
           g(
@@ -40,12 +40,12 @@ export const state = z.fn((t, a) =>
           }),
         ]
       },
-      onInit({ api }) {
+      onInit({ api, dispatch, mutators }) {
         api.io.on('connect', () => {
-          console.log('API CONNECT')
+          dispatch(mutators.connection(true))
         })
         api.io.on('disconnect', () => {
-          console.log('API DISCONNECT')
+          dispatch(mutators.connection(false))
         })
       },
     },

@@ -7,3 +7,11 @@
 body {
   @apply bg-gray-900 text-white;
 }
+
+/* JSON Schema Form classes */
+.object-template {
+  & .object-property-expand {
+  }
+}
+.config-error {
+}

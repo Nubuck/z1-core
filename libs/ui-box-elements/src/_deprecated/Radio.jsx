@@ -2,7 +2,7 @@ import React from 'react'
 import { fn } from '@z1/lib-ui-box'
 
 // elements
-import { Box } from './Box'
+import { Box } from '../Box'
 
 // main
 const renderRadio = fn(t => props => {

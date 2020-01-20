@@ -42,7 +42,7 @@ export const LandingRoute = () => (
     </el.Box>
     {/* <el.Spinner size="lg" /> */}
     <el.Match
-      value="landing"
+      value="landisdng"
       render={{
         _() {
           console.log('NOT EVALUED')

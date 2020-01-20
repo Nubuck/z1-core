@@ -11,15 +11,11 @@ const renderIcon = fn(t => props => {
   const iconPrefix = t.pathOr('la', ['iconPrefix'], props)
   const icon = t.pathOr('', ['name'], props)
   const fontSize = t.pathOr(null, ['size'], props)
-  const color = t.pathOr(null, ['color'], props)
   const className = t.pathOr(null, ['className'], props)
   return React.createElement(
     Box,
     t.merge(
-      t.omit(
-        ['as', 'prefix', 'className', 'name', 'size', 'color', 'box'],
-        props
-      ),
+      t.omit(['as', 'prefix', 'className', 'name', 'size', 'box'], props),
       {
         as,
         className: `${prefix} ${iconPrefix}-${icon}${
@@ -28,7 +24,6 @@ const renderIcon = fn(t => props => {
         box: t.merge(
           {
             fontSize,
-            color,
           },
           t.pathOr({}, ['box'], props)
         ),

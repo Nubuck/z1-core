@@ -5,6 +5,12 @@ import { fn } from '@z1/lib-ui-box'
 import { Box } from './Box'
 
 // main
+const matchX = fn(t =>
+  t.match({ left: 'start', center: 'center', right: 'end' })
+)
+const matchY = fn(t =>
+  t.match({ top: 'start', center: 'center', bottom: 'end' })
+)
 const renderStack = fn(t => (direction, props) => {
   const stackProps = {
     flexDirection: t.eq(direction, 'vertical') ? 'col' : 'row',
@@ -16,35 +22,19 @@ const renderStack = fn(t => (direction, props) => {
     : t.eq(direction, 'vertical')
     ? {
         flex: 'auto',
-        alignItems: t.getMatch(alignX)({
-          left: 'start',
-          center: 'center',
-          right: 'end',
-        }),
+        alignItems: matchX(alignX),
       }
     : {
-        justifyContent: t.getMatch(alignX)({
-          left: 'start',
-          center: 'center',
-          right: 'end',
-        }),
+        justifyContent: matchX(alignX),
       }
   const justifyProps = t.isNil(alignY)
     ? {}
     : t.eq(direction, 'vertical')
     ? {
-        justifyContent: t.getMatch(alignY)({
-          top: 'start',
-          center: 'center',
-          bottom: 'end',
-        }),
+        justifyContent: matchY(alignY),
       }
     : {
-        alignItems: t.getMatch(alignY)({
-          top: 'start',
-          center: 'center',
-          bottom: 'end',
-        }),
+        alignItems: matchY(alignY),
       }
   const stretch = t.pathOr(null, ['stretch'], props)
   const stretchProps = t.isNil(stretch)
@@ -54,7 +44,6 @@ const renderStack = fn(t => (direction, props) => {
         height: 'full',
       }
     : {}
-
   return React.createElement(
     Box,
     t.merge(t.omit(['box', 'x', 'y', 'direction'], props), {

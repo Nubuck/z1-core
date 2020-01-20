@@ -2,17 +2,20 @@ import React from 'react'
 import { fn } from '@z1/lib-ui-box'
 
 // elements
-import { Box } from './Box'
+import { Box } from '../Box'
 
 // main
-const renderTextArea = fn(t => props => {
-  const as = t.pathOr('textarea', ['as'], props)
+const renderSelect = fn(t => props => {
+  const as = t.pathOr('select', ['as'], props)
+  const multiple = t.pathOr(null, ['multiple'], props)
   const className = t.pathOr(null, ['className'], props)
   return React.createElement(
     Box,
     t.merge(t.omit(['as', 'className', 'box'], props), {
       as,
-      className: `form-textarea${t.isNil(className) ? '' : ` ${className}`}`,
+      className: `${t.isNil(multiple) ? 'form-select' : 'form-multiselect'}${
+        t.isNil(className) ? '' : ` ${className}`
+      }`,
       box: t.merge(
         {
           display: 'block',
@@ -24,8 +27,8 @@ const renderTextArea = fn(t => props => {
   )
 })
 
-export class TextArea extends React.Component {
+export class Select extends React.Component {
   render() {
-    return renderTextArea(this.props)
+    return renderSelect(this.props)
   }
 }

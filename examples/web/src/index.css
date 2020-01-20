@@ -9,6 +9,16 @@ body {
 }
 
 /* JSON Schema Form classes */
+.rjsf {
+}
+
+/* elements */
+
+/* widgets */
+
+/* fields */
+.unsupported-field {
+}
 .object-template {
   & .object-property-expand {
   }

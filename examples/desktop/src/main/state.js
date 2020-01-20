@@ -94,8 +94,14 @@ const appState = z.fn((t, a) =>
           }),
         ]
       },
-      onInit({ dispatch, mutators }) {
+      onInit({ dispatch, mutators, api }) {
         dispatch(mutators.boot({}))
+        api.io.on('connect', () => {
+          console.log('API CONNECT')
+        })
+        api.io.on('disconnect', () => {
+          console.log('API DISCONNECT')
+        })
       },
     },
   ])

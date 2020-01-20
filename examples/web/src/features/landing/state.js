@@ -39,7 +39,6 @@ import views from './views'
 //       required: true,
 //       format: k.format.email,
 //       ui: {
-//         [k.ui.widget]: k.widget.email,
 //         [k.ui.placeholder]: 'Please enter your email address',
 //         [k.ui.disabled]: false,
 //         [k.ui.options]: {},

@@ -11,6 +11,8 @@ import views from './views'
 //   n('/about', { title: 'about' }, [
 //     n('~/team', { title: 'about team' }, [
 //       n('~/developers', { title: 'about developers' }),
+//       n('~/sales', { title: 'about sales' }),
+//       n('~/management', { title: 'about management' }),
 //     ]),
 //     n('~/partners', { title: 'about partners' }),
 //   ]),

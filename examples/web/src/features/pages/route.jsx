@@ -9,10 +9,10 @@ import views from './views'
 export const route = ctx => {
   const Views = views.ui(ctx.ui)
   return z.ui.connect(
-    z.ui.query(['landing']),
+    z.ui.query(['pages']),
     ctx.mutators
-  )(({ landing, mutations }) => (
-    <div>{mx.routeView.render(Views, landing, mutations)}</div>
+  )(({ pages, mutations }) => (
+    <div>{mx.routeView.render(Views, pages, mutations)}</div>
   ))
 }
 

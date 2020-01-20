@@ -6,7 +6,7 @@ import { route, LandingRoute, NotFoundRoute } from './route'
 
 // main
 export const feature = z.create(
-  'landing',
+  'pages',
   ctx => {
     return {
       state: [state],

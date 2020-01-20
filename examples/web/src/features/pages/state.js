@@ -50,7 +50,7 @@ import views from './views'
 // )
 
 // main
-const name = 'landing'
+const name = 'pages'
 export const state = z.fn(t =>
   z.state.create(name, [
     {
@@ -64,10 +64,7 @@ export const state = z.fn(t =>
       routes: {
         home: {},
         view: {},
-        detail: {
-          authenticate: true,
-          allowRoles: ['admin'],
-        },
+        detail: {},
         more: {
           authenticate: true,
           allowRoles: ['admin'],

@@ -1,7 +1,11 @@
 import z from '@z1/lib-feature-box'
+import mx from '@z1/lib-feature-macros'
 
 // parts
-export const authStatus = {
+import views from './views'
+
+// types
+const authStatus = {
   init: 'init',
   waiting: 'auth-waiting',
   loading: 'auth-loading',
@@ -10,8 +14,9 @@ export const authStatus = {
 }
 
 // main
+const name = 'account'
 export const state = z.fn((t, a) =>
-  z.state.create('account', [
+  z.state.create(name, [
     {
       initial: {
         connected: false,
@@ -52,6 +57,7 @@ export const state = z.fn((t, a) =>
       },
       guards(g, { actions, mutators }) {
         return [
+          // protect routes
           g(
             [t.globrex('*/ROUTING/*').regex],
             async ({ getState, action, redirect }, allow, reject) => {
@@ -69,7 +75,7 @@ export const state = z.fn((t, a) =>
                 if (t.not(route)) {
                   allow(action)
                 } else if (
-                  t.and(t.not(route.authenticate), t.not(route.restrictToRoles))
+                  t.and(t.not(route.authenticate), t.not(route.allowRoles))
                 ) {
                   // skip if route is public
                   allow(action)
@@ -82,31 +88,25 @@ export const state = z.fn((t, a) =>
                     t.eq(authStatus.success, accountStatus)
                   )
                   // skip if route only requires authentication + account is valid
-                  if (t.and(t.not(route.restrictToRoles), authenticated)) {
+                  if (t.and(t.not(route.allowRoles), authenticated)) {
                     allow(action)
                   } else if (t.not(authenticated)) {
                     // reject invalid account -> redirect to login
-                    // reject(
-                    //   redirect(
-                    //     mutations.routeView({
-                    //       view: 'sign-in',
-                    //       redirectBackTo: t.omit(['meta'], action),
-                    //     })
-                    //   )
-                    // )
+                    reject(
+                      redirect(
+                        mutators.routeView({
+                          view: 'sign-in',
+                          redirectBackTo: t.omit(['meta'], action),
+                        })
+                      )
+                    )
                   } else {
                     // roles:
-                    const restrictToRoles = t.isType(
-                      route.restrictToRoles,
-                      'array'
-                    )
-                      ? route.restrictToRoles
-                      : [route.restrictToRoles]
+                    const allowRoles = t.isType(route.allowRoles, 'array')
+                      ? route.allowRoles
+                      : [route.allowRoles]
                     const hasRole = t.gt(
-                      t.findIndex(
-                        role => t.eq(role, user.role),
-                        restrictToRoles
-                      ),
+                      t.findIndex(role => t.eq(role, user.role), allowRoles),
                       -1
                     )
                     // skip if user in routes declared roles
@@ -114,17 +114,34 @@ export const state = z.fn((t, a) =>
                       allow(action)
                     } else {
                       // reject invalid role -> redirect 401
-                      // reject(
-                      //   redirect(
-                      //     mutations.routeView({
-                      //       view: '401',
-                      //       redirectBackTo: t.omit(['meta'], action),
-                      //     })
-                      //   )
-                      // )
+                      reject(
+                        redirect(
+                          mutators.routeView({
+                            view: 'unauthorized',
+                            redirectBackTo: t.omit(['meta'], action),
+                          })
+                        )
+                      )
                     }
                   }
                 }
+              }
+            }
+          ),
+          // prevent public account view access when authenticated
+          g(
+            [actions.routeView],
+            async ({ getState, action, redirect }, allow, reject) => {
+              const state = getState()
+              const status = t.path(['account', 'status'], state)
+              const user = t.path(['account', 'user'], state)
+              if (
+                t.and(t.not(t.isNil(user)), t.eq(authStatus.success, status))
+              ) {
+                const routesMap = t.path(['location', 'routesMap'], state)
+                reject(redirect(z.routing.parts.pathToAction('/', routesMap)))
+              } else {
+                allow(action)
               }
             }
           ),
@@ -158,7 +175,6 @@ export const state = z.fn((t, a) =>
               const [authError, authResult] = await a.of(
                 api.authentication.reAuthenticate()
               )
-              console.log('AUTH RESULT', authError, authResult)
               if (authError) {
                 dispatch(
                   mutators.authenticateComplete({
@@ -183,12 +199,24 @@ export const state = z.fn((t, a) =>
                   dispatch(mutators.redirectChange(null))
                   dispatch(redirect(redirectBackTo))
                 } else {
-                  dispatch(redirect('/'))
+                  const routesMap = t.path(['location', 'routesMap'], state)
+                  dispatch(
+                    redirect(z.routing.parts.pathToAction('/', routesMap))
+                  )
                 }
               }
               done()
             }
           ),
+          fx([actions.routeView], ({ action }, dispatch, done) => {
+            const redirectBackTo = t.path(['payload', 'redirectBackTo'], action)
+            if (t.isNil(redirectBackTo)) {
+              done()
+            } else {
+              dispatch(mutators.redirectChange(redirectBackTo))
+              done()
+            }
+          }),
         ]
       },
       onInit({ api, dispatch, mutators }) {
@@ -201,5 +229,9 @@ export const state = z.fn((t, a) =>
         })
       },
     },
+    mx.routeView.configure(name, {
+      path: 'account',
+      state: views.state({}),
+    }),
   ])
 )

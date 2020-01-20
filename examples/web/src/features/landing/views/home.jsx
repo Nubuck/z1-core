@@ -36,7 +36,9 @@ export const home = mx.fn((t, a) =>
             <div>
               <z.ui.Link to="/pages/about">About</z.ui.Link>
               <br />
-              <z.ui.Link to="/">Home</z.ui.Link>
+              <z.ui.Link to="/account/sign-in">Sign-in</z.ui.Link>
+              <br />
+              <z.ui.Link to="/account/sign-up">Sign-up</z.ui.Link>
             </div>
           </div>
         )

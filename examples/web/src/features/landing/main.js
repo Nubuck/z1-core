@@ -14,7 +14,7 @@ export const feature = z.create(
       parts: {},
       routing: [
         {
-          action: [z.routing.notFound],
+          action: [z.routing.actions.notFound],
           ui: NotFoundRoute,
         },
         {

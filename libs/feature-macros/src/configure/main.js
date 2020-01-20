@@ -1,4 +1,4 @@
-import zbx from '@z1/lib-feature-box'
+import z from '@z1/lib-feature-box'
 
 // parts
 import { types } from '../types'
@@ -11,7 +11,7 @@ import {
 } from './parts'
 
 // main
-export const configure = zbx.fn((t, a) => (boxName, props = {}) => {
+export const configure = z.fn((t, a) => (boxName, props = {}) => {
   const path = t.pathOr(t.to.paramCase(boxName), ['path'], props)
   const defaultRoute = { authenticate: false }
   const routes = t.pathOr(
@@ -269,7 +269,7 @@ export const configure = zbx.fn((t, a) => (boxName, props = {}) => {
             } else {
               reject(
                 redirect({
-                  type: zbx.routing.notFound,
+                  type: z.routing.actions.notFound,
                   payload: {},
                 })
               )
@@ -334,7 +334,7 @@ export const configure = zbx.fn((t, a) => (boxName, props = {}) => {
         ),
         // routes exit
         fx(
-          [t.globrex('*/ROUTING/*').regex, zbx.routing.notFound],
+          [t.globrex('*/ROUTING/*').regex, z.routing.actions.notFound],
           async ({ getState, action }, dispatch, done) => {
             const state = getState()
             const prev = state.location.prev

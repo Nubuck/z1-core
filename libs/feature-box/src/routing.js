@@ -1,6 +1,13 @@
 import React from 'react'
 import { fn } from '@z1/lib-state-box'
-import { NOT_FOUND } from 'redux-first-router'
+import {
+  NOT_FOUND,
+  ADD_ROUTES,
+  actionToPath,
+  pathToAction,
+  isLocationAction,
+  addRoutes,
+} from 'redux-first-router'
 
 // main
 export const routing = fn(t => ({
@@ -18,13 +25,24 @@ export const routing = fn(t => ({
         ),
       routing
     )
-    if (!matchedDef.ui) {
+    if (t.isNil(matchedDef.ui)) {
       return null
     }
     return React.createElement(matchedDef.ui, { key: actionType })
   },
-  notFound: NOT_FOUND,
-  actions(box) {
-    return t.keys(t.pathOr({}, ['routes'], box))
+  actions: {
+    notFound: NOT_FOUND,
+    addRoutes: ADD_ROUTES,
+  },
+  mutators: {
+    addRoutes,
+  },
+  parts: {
+    actionToPath,
+    pathToAction,
+    isLocationAction,
+    routeActions(box) {
+      return t.keys(t.pathOr({}, ['routes'], box))
+    },
   },
 }))

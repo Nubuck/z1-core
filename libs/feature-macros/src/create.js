@@ -13,7 +13,7 @@ export const create = fn(t => (name, { state, ui, render }) => {
     ? t.last(name)
     : name
   return {
-    name: t.to.camelCase(nextName),
+    name: nextName,
     key: t.or(t.eq(param, 'detail'), t.eq(param, 'more'))
       ? t.replace(
           /\s/g,
@@ -27,9 +27,7 @@ export const create = fn(t => (name, { state, ui, render }) => {
             name
           )}`
         )
-      : t.eq(param, 'viewList')
-      ? t.last(name)
-      : name,
+      : t.to.camelCase(nextName),
     param: t.eq(param, 'viewList') ? 'view' : param,
     state(ctx) {
       const nextState = t.isType(state, 'function') ? state(ctx) : state

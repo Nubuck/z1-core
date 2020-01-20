@@ -64,8 +64,14 @@ export const state = z.fn(t =>
       routes: {
         home: {},
         view: {},
-        detail: {},
-        more: {},
+        detail: {
+          authenticate: true,
+          allowRoles: ['admin'],
+        },
+        more: {
+          authenticate: true,
+          allowRoles: ['admin'],
+        },
       },
     }),
   ])

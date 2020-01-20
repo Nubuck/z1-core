@@ -1,12 +1,12 @@
 import z from '@z1/lib-feature-box'
 import mx from '@z1/lib-feature-macros'
-import uix from '@z1/lib-ui-schema'
+import umx from '@z1/lib-ui-schema'
 
 // parts
 import views from './views'
 
 // schema
-// const landingNav = uix.nav.create(n => [
+// const landingNav = umx.nav.create(n => [
 //   n('/', { title: 'home' }),
 //   n('/about', { title: 'about' }, [
 //     n('~/team', { title: 'about team' }, [
@@ -22,8 +22,8 @@ import views from './views'
 //     n('~/map', { title: 'find us' }),
 //   ]),
 // ])
-// const foundMap = uix.nav.find('/contact/map', landingNav)
-// const contactForm = uix.form.create((f, k) =>
+// const foundMap = umx.nav.find('/contact/map', landingNav)
+// const contactForm = umx.form.create((f, k) =>
 //   f({ type: k.object }, [
 //     f('name', {
 //       type: k.string,
@@ -60,7 +60,7 @@ export const state = z.fn(t =>
     },
     mx.routeView.configure(name, {
       path: 'pages',
-      state: views.state(),
+      state: views.state(umx),
       routes: {
         home: {},
         view: {},

@@ -34,6 +34,9 @@ const matchShape = fn(t =>
     circle(props) {
       return {}
     },
+    square(props) {
+      return {}
+    },
     _(props) {
       return {}
     },
@@ -44,10 +47,13 @@ const matchFill = fn(t => (fill = '') =>
     outline(props) {
       return {}
     },
-    outlineGhost(props) {
+    solid(props) {
       return {}
     },
-    ghostprops() {
+    ghostOutline(props) {
+      return {}
+    },
+    ghostSolid(props) {
       return {}
     },
     _(props) {},
@@ -57,32 +63,32 @@ const matchSize = fn(t =>
   t.match({
     xs(props) {
       return {
-        padding: 1,
+        padding: { y: 1, x: 2 },
         fontSize: 'sm',
       }
     },
     sm(props) {
       return {
-        padding: 1,
+        padding: { y: 1, x: 2 },
         fontSize: 'md',
       }
     },
     lg(props) {
       return {
-        padding: 3,
-        fontSize: 'lg',
+        padding: { y: 3, x: 3 },
+        fontSize: 'xl',
       }
     },
     xl(props) {
       return {
-        padding: 3,
-        fontSize: 'xl',
+        padding: { y: 3, x: 4 },
+        fontSize: '2xl',
       }
     },
     _(props) {
       return {
-        padding: 2,
-        fontSize: 'md',
+        padding: { y: 2, x: 3 },
+        fontSize: 'lg',
       }
     },
   })
@@ -121,6 +127,8 @@ const renderButton = fn(t => props => {
       position: 'relative',
       display: 'inline-flex',
       cursor: loading ? 'wait' : disabled ? 'not-allowed' : 'pointer',
+      bgColor: ['blue-500'],
+      opacity: disabled ? 50 : 100,
     },
     content: {
       position: 'relative',
@@ -156,30 +164,34 @@ const renderButton = fn(t => props => {
                 t.mergeAll([
                   { key: 'icon' },
                   {
-                    box: t.merge(
-                      {
-                        fontSize: iconSize(size),
-                      },
-                      t.omit(['box'], slots.icon)
-                    ),
+                    box: t.mergeAll([
+                      iconSize(size),
+                      t.pathOr({}, ['box'], slots.icon),
+                    ]),
                   },
-                  slots.icon,
+                  t.omit(['box'], slots.icon),
                 ])
               ),
             ]
           : [],
-        t.has('text')(slots)
+        t.has('label')(slots)
           ? [
               React.createElement(
                 Box,
-                t.merge(t.omit(['value', 'children'], slots.text), {
-                  key: 'text',
+                t.merge(t.omit(['text', 'children', 'box'], slots.label), {
+                  key: 'label',
+                  box: t.mergeAll([
+                    {
+                      margin: t.has('icon')(slots) ? { x: 1 } : null,
+                    },
+                    t.pathOr({}, ['box'], slots.icon),
+                  ]),
                   children: [
                     React.createElement('span', {
-                      key: 'text-value',
-                      children: [
-                        `${slots.text.value || slots.text.children || ''}`,
-                      ],
+                      key: 'label-text',
+                      children: t.isNil(slots.label.text)
+                        ? slots.label.children || []
+                        : [`${slots.label.text || ''}`],
                     }),
                   ],
                 })

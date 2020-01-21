@@ -18,7 +18,8 @@ export const routingFromAction = fn(
     action,
     routePaths = {
       pathname: ['meta', 'location', 'current', 'pathname'],
-      type: ['meta', 'location', 'current', 'type'],
+      // type: ['meta', 'location', 'current', 'type'],
+      type: ['type'],
     }
   ) => {
     const params = {

@@ -74,7 +74,7 @@ export const state = z.fn((t, a) =>
               if (t.isNil(route)) {
                 allow(ctx.action)
               } else if (
-                t.and(t.isNil(route.authenticate), t.isNil(route.allowRoles))
+                t.and(t.not(route.authenticate), t.isNil(route.allowRoles))
               ) {
                 // skip if route is public
                 allow(ctx.action)

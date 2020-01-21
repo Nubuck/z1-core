@@ -342,7 +342,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
             if (t.not(t.includes(prev.type, routeActionTypes))) {
               done()
             } else {
-              const routing = routingFromAction(prev, {
+              const routing = routingFromAction(prev || {}, {
                 pathname: ['pathname'],
                 type: ['type'],
               })

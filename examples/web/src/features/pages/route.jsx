@@ -71,6 +71,23 @@ export const LandingRoute = () => (
       )}
     />
     <el.Button
+      size="xs"
+      slots={{ icon: { name: 'user' }, text: { value: 'Slot Button' } }}
+    />
+    <el.Button
+      size="sm"
+      slots={{ icon: { name: 'user' }, text: { value: 'Slot Button' } }}
+    />
+    <el.Button
+      size="md"
+      slots={{ icon: { name: 'user' }, text: { value: 'Slot Button' } }}
+    />
+    <el.Button
+      size="lg"
+      slots={{ icon: { name: 'user' }, text: { value: 'Slot Button' } }}
+    />
+    <el.Button
+      size="xl"
       slots={{ icon: { name: 'user' }, text: { value: 'Slot Button' } }}
     />
   </el.VStack>

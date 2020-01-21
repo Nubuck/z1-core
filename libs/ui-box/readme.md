@@ -1,18 +1,9 @@
 # Z1 Lib UI Box
 
 
-[Tailwind css](https://tailwindcss.com/) is the best™ functional css framework out.
-The functional css approach is the best™ because who really wants to deal with writing
-that css, scss or esoteric runtime generated css-in-js noise, let alone performing the mystical ritual
-of configuring the packing for any pre or post processing magic needed to ship anything?
-
-Not me.
-
-That said functional css is also not the best™ when you end up with a monsterously long line of classNames to style an element. Terrible to read and edit at volume.
-
-This library offers a solution to managing and mutating functional css classNames in a way that's comfortably functional and css-in-js'esque, across any platform free of any runtime DOM concerns.
-
-Ui Box essentially takes a plain object input representing the root [classNames](https://nerdcave.com/tailwind-cheat-sheet) of [Tailwind css](https://tailwindcss.com/) and returns a chained object with a method to mutate the object or render the box state to a monsterously long string of classNames, so you don't have to.
+[Tailwind css](https://tailwindcss.com/) is the best fit for the Z1 system, as it allows styling to be schema and data driven.
+However managing functional css class name strings is complex and labour intensive at scale.
+UI Box manages Tailwind class name mutations with a familiar css-in-js interface for ergonmic development.
 
 ## Usage
 
@@ -42,11 +33,11 @@ import ubx, { toCss } from '@z1/lib-ui-box'
 
 ```TypeScript
 interface UiBox = {
+  create: (box: CssProps) => UiBox;
   next: (box: CssProps) => UiBox;
   toBox: () => CssProps;
   toCss: () => string;
 }
-declare function uiBox(box: CssProps): UiBox {}
 declare function toCss(box: CssProps): string {}
 ```
 
@@ -56,7 +47,7 @@ declare function toCss(box: CssProps): string {}
 
 import { toCss, uiBox } from '@z1/lib-ui-box-tailwind'
 
-const baseElement = uiBox({
+const baseElement = uiBox.create({
   display: 'flex',
   flexDirection: ['col', { md: 'row' }],
   alignItems: 'center',
@@ -74,7 +65,7 @@ const baseElement = uiBox({
   className: 'element',
 })
 const defaultClassNames = baseElement.toCss()
-// defaultClassNames === 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-blue-500 hover:border-transparent hover:bg-blue-500 text-blue-500 hover:text-white element'
+// outputs: 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-blue-500 hover:border-transparent hover:bg-blue-500 text-blue-500 hover:text-white element'
 
 const warningClassNames = baseElement
   .next({
@@ -84,7 +75,7 @@ const warningClassNames = baseElement
     className: 'warning',
   })
   .toCss()
-// warningClassNames === 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-orange-500 hover:border-transparent hover:bg-orange-500 text-orange-500 hover:text-white warning'
+// outputs: 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-orange-500 hover:border-transparent hover:bg-orange-500 text-orange-500 hover:text-white warning'
 
 const dangerElement = baseElement.next({
   borderColor: ['red-500', { hover: 'transparent' }],
@@ -115,7 +106,7 @@ const infoClassNames = successElement
     className: 'info',
   })
   .toCss()
-// infoClassNames === 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-teal-500 hover:border-transparent hover:bg-teal-500 text-teal-500 hover:text-white info font-medium'
+// outputs: 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-teal-500 hover:border-transparent hover:bg-teal-500 text-teal-500 hover:text-white info font-medium'
 
 const fontProps = {
   fontWeight: 'bolder',
@@ -130,14 +121,14 @@ const noticeClassNames = dangerElement
   })
   .next(fontProps)
   .toCss()
-// noticeClassNames === 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-yellow-500 bg-yellow-500 text-gray-900 notice font-bolder text-xl md:text-2xl'
+// outputs: 'flex flex-col md:flex-row items-center border rounded-tl-sm rounded-br-sm md:rounded-tl-lg md:rounded-br-lg border-yellow-500 bg-yellow-500 text-gray-900 notice font-bolder text-xl md:text-2xl'
 
 // Shorthand render
 const classNames = toCss({
   display: ['block', { sm: 'inline-block' }],
   borderColor: 'blue-500'
 })
-// classNames === 'block border-blue-500 sm:inline-block'
+// outputs: 'block border-blue-500 sm:inline-block'
 
 ```
 
@@ -238,6 +229,7 @@ type BorderStyle = 'solid'
   | 'none'
   | null
 type BorderWidthRange = boolean
+  | 1
   | 0
   | 2
   | 4
@@ -252,6 +244,7 @@ type BorderWidth = BorderWidthRange | BorderWidthSides
 type RadiusRange = boolean
   | 'none'
   | 'sm'
+  | 'md'
   | 'lg'
   | 'full'
   | null

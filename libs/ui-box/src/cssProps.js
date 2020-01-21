@@ -74,7 +74,7 @@ export const cssProps = task(t => ({
     if (t.isType(v, 'Null')) {
       return ''
     }
-    if (t.isType(v, 'Boolean')) {
+    if (t.or(t.isType(v, 'Boolean'), t.eq(v, 'md'))) {
       return t.not(v) ? '' : 'rounded'
     }
     if (t.isType(v, 'String')) {

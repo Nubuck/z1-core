@@ -5,7 +5,7 @@ import mx from '@z1/lib-feature-macros'
 // main
 export const signIn = mx.fn((t, a) =>
   mx.routeView.create('sign-in', {
-    state(ctx) {
+    state() {
       return {
         initial: {
           data: {},
@@ -21,7 +21,7 @@ export const signIn = mx.fn((t, a) =>
       }
     },
     ui(ctx) {
-      return ({ state, mutations }) => {
+      return props => {
         return (
           <div>
             <h1>Sign-in view</h1>

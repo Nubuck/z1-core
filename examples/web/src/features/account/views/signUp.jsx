@@ -5,7 +5,7 @@ import mx from '@z1/lib-feature-macros'
 // main
 export const signUp = mx.fn((t, a) =>
   mx.routeView.create('sign-up', {
-    state(ctx) {
+    state() {
       return {
         initial: {
           data: {},

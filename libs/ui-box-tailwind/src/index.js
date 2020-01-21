@@ -442,34 +442,34 @@ export const tailwindConfig = fn(t => (props = {}) => {
         },
         spinner: theme => ({
           default: {
-            color: '#dae1e7', // color you want to make the spinner
-            size: '1em', // size of the spinner (used for both width and height)
+            color: 'currentColor', // color you want to make the spinner
+            size: '1rem', // size of the spinner (used for both width and height)
             border: '2px', // border-width of the spinner (shouldn't be bigger than half the spinner's size)
-            speed: '500ms', // the speed at which the spinner should rotate
+            speed: '600ms', // the speed at which the spinner should rotate
           },
           sm: {
-            color: '#dae1e7',
-            size: '2.5em',
+            color: 'currentColor',
+            size: '2rem',
             border: '2px',
-            speed: '500ms',
+            speed: '600ms',
           },
           md: {
-            color: '#dae1e7',
-            size: '3em',
+            color: 'currentColor',
+            size: '3rem',
             border: '3px',
-            speed: '500ms',
+            speed: '600ms',
           },
           lg: {
-            color: '#dae1e7',
-            size: '6em',
+            color: 'currentColor',
+            size: '6rem',
             border: '4px',
-            speed: '500ms',
+            speed: '600ms',
           },
           xl: {
-            color: '#dae1e7',
-            size: '12em',
+            color: 'currentColor',
+            size: '12rem',
             border: '6px',
-            speed: '500ms',
+            speed: '600ms',
           },
         }),
       },
@@ -552,3 +552,4 @@ export const tailwindConfig = fn(t => (props = {}) => {
     props
   )
 })
+export const tailwindTheme = defaultTheme

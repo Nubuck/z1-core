@@ -42,16 +42,26 @@ export const cssProps = task(t => ({
       return t.not(v) ? '' : 'border'
     }
     if (t.isType(v, 'Number')) {
+      if (t.eq(v, 1)) {
+        return 'border'
+      }
       return `border-${v}`
     }
     if (t.isType(v, 'String')) {
+      if (t.eq(v, '1')) {
+        return 'border'
+      }
       return `border-${t.head(v)}`
     }
     if (t.isType(v, 'Object')) {
       return t.tags.oneLineInlineLists`
       ${t.map(([key, value]) => {
-        return t.isType(value, 'Boolean')
-          ? t.not(value)
+        return t.anyOf([
+          t.isType(value, 'Boolean'),
+          t.eq(value, 1),
+          t.eq(value, '1'),
+        ])
+          ? t.and(t.isType(value, 'Boolean'), t.not(value))
             ? ''
             : `border-${t.head(key)}`
           : `border-${t.head(key)}-${value}`

@@ -3,8 +3,8 @@ import z from '@z1/lib-feature-box'
 import mx from '@z1/lib-feature-macros'
 
 // main
-export const unauthorized = mx.fn((t, a) =>
-  mx.routeView.create('unauthorized', {
+export const notAuthorized = mx.fn((t, a) =>
+  mx.routeView.create('not-authorized', {
     state(ctx) {
       return {
         initial: {

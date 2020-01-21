@@ -55,107 +55,107 @@ export const state = z.fn((t, a) =>
           }),
         ]
       },
-      guards(g, { actions, mutators }) {
+      guards(g, box) {
         return [
           // protect routes
-          g(
-            [t.globrex('*/ROUTING/*').regex],
-            async ({ getState, action, redirect }, allow, reject) => {
-              // location:
-              const state = getState()
-              const routesMap = t.path(['location', 'routesMap'], state)
-              const routeMeta = t.path(['meta', 'location', 'current'], action)
-              // skip if location invalid
-              if (t.or(t.not(routesMap), t.not(routeMeta))) {
-                allow(action)
+          g([t.globrex('*/ROUTING/*').regex], async (ctx, allow, reject) => {
+            const state = ctx.getState()
+            const routesMap = t.path(['location', 'routesMap'], state)
+            const routeMeta = t.path(
+              ['meta', 'location', 'current'],
+              ctx.action
+            )
+            // skip if location invalid
+            if (t.or(t.isNil(routesMap), t.isNil(routeMeta))) {
+              allow(ctx.action)
+            } else {
+              const route = t.path([ctx.action.type], routesMap)
+              // skip if route invalid
+              if (t.isNil(route)) {
+                allow(ctx.action)
+              } else if (
+                t.and(t.isNil(route.authenticate), t.isNil(route.allowRoles))
+              ) {
+                // skip if route is public
+                allow(ctx.action)
               } else {
-                // route:
-                const route = t.path([action.type], routesMap)
-                // skip if route invalid
-                if (t.not(route)) {
-                  allow(action)
-                } else if (
-                  t.and(t.not(route.authenticate), t.not(route.allowRoles))
-                ) {
-                  // skip if route is public
-                  allow(action)
-                } else {
-                  // account:
-                  const accountStatus = t.path(['account', 'status'], state)
-                  const user = t.path(['account', 'user'], state)
-                  const authenticated = t.and(
-                    t.not(t.isNil(user)),
-                    t.eq(authStatus.success, accountStatus)
+                const authenticated = t.and(
+                  t.not(t.isNil(t.path(['account', 'user'], state))),
+                  t.eq(authStatus.success, t.path(['account', 'status'], state))
+                )
+                // skip if route only requires authentication + account is valid
+                if (t.and(t.isNil(route.allowRoles), authenticated)) {
+                  allow(ctx.action)
+                } else if (t.not(authenticated)) {
+                  // reject invalid account -> redirect to login
+                  reject(
+                    ctx.redirect(
+                      box.mutators.routeView({
+                        view: 'sign-in',
+                        redirectBackTo: t.omit(['meta'], ctx.action),
+                      })
+                    )
                   )
-                  // skip if route only requires authentication + account is valid
-                  if (t.and(t.not(route.allowRoles), authenticated)) {
-                    allow(action)
-                  } else if (t.not(authenticated)) {
-                    // reject invalid account -> redirect to login
+                } else {
+                  const allowRoles = t.isType(route.allowRoles, 'array')
+                    ? route.allowRoles
+                    : [route.allowRoles]
+                  // skip if user in routes declared roles
+                  if (
+                    t.includes(
+                      t.path(['account', 'user', 'role'], state),
+                      allowRoles
+                    )
+                  ) {
+                    allow(ctx.action)
+                  } else {
+                    // reject invalid role -> redirect 401
                     reject(
-                      redirect(
-                        mutators.routeView({
-                          view: 'sign-in',
-                          redirectBackTo: t.omit(['meta'], action),
+                      ctx.redirect(
+                        box.mutators.routeView({
+                          view: 'not-authorized',
+                          redirectBackTo: t.omit(['meta'], ctx.action),
                         })
                       )
                     )
-                  } else {
-                    // roles:
-                    const allowRoles = t.isType(route.allowRoles, 'array')
-                      ? route.allowRoles
-                      : [route.allowRoles]
-                    const hasRole = t.gt(
-                      t.findIndex(role => t.eq(role, user.role), allowRoles),
-                      -1
-                    )
-                    // skip if user in routes declared roles
-                    if (hasRole) {
-                      allow(action)
-                    } else {
-                      // reject invalid role -> redirect 401
-                      reject(
-                        redirect(
-                          mutators.routeView({
-                            view: 'unauthorized',
-                            redirectBackTo: t.omit(['meta'], action),
-                          })
-                        )
-                      )
-                    }
                   }
                 }
               }
             }
-          ),
+            // end logic
+          }),
           // prevent public account view access when authenticated
-          g(
-            [actions.routeView],
-            async ({ getState, action, redirect }, allow, reject) => {
-              const state = getState()
-              const status = t.path(['account', 'status'], state)
-              const user = t.path(['account', 'user'], state)
-              if (
-                t.and(t.not(t.isNil(user)), t.eq(authStatus.success, status))
-              ) {
-                const routesMap = t.path(['location', 'routesMap'], state)
-                reject(redirect(z.routing.parts.pathToAction('/', routesMap)))
-              } else {
-                allow(action)
-              }
+          g([box.actions.routeView], async (ctx, allow, reject) => {
+            const state = ctx.getState()
+            if (
+              t.and(
+                t.isNil(t.path(['account', 'user'], state)),
+                t.neq(authStatus.success, t.path(['account', 'status'], state))
+              )
+            ) {
+              allow(ctx.action)
+            } else {
+              reject(
+                ctx.redirect(
+                  z.routing.parts.pathToAction(
+                    '/',
+                    t.path(['location', 'routesMap'], state)
+                  )
+                )
+              )
             }
-          ),
+          }),
         ]
       },
-      effects(fx, { actions, mutators }) {
+      effects(fx, box) {
         return [
           fx(
-            [actions.boot, actions.connection],
-            ({ getState }, dispatch, done) => {
-              const account = t.path(['account'], getState())
+            [box.actions.boot, box.actions.connection],
+            (ctx, dispatch, done) => {
+              const account = t.path(['account'], ctx.getState())
               if (
                 t.or(
-                  t.eq(account.connected, false),
+                  t.not(account.connected),
                   t.and(
                     t.eq(account.status, authStatus.success),
                     t.eq(account.connected, true)
@@ -164,68 +164,70 @@ export const state = z.fn((t, a) =>
               ) {
                 done()
               } else {
-                dispatch(mutators.authenticate())
+                dispatch(box.mutators.authenticate())
                 done()
               }
             }
           ),
-          fx(
-            [actions.authenticate],
-            async ({ getState, api, redirect }, dispatch, done) => {
-              const [authError, authResult] = await a.of(
-                api.authentication.reAuthenticate()
+          fx([box.actions.authenticate], async (ctx, dispatch, done) => {
+            const [authError, authResult] = await a.of(
+              ctx.api.authentication.reAuthenticate()
+            )
+            if (authError) {
+              dispatch(
+                box.mutators.authenticateComplete({
+                  status: authStatus.fail,
+                  user: null,
+                  error: authError,
+                })
               )
-              if (authError) {
-                dispatch(
-                  mutators.authenticateComplete({
-                    status: authStatus.fail,
-                    user: null,
-                    error: authError,
-                  })
-                )
-              } else {
-                dispatch(
-                  mutators.authenticateComplete({
-                    status: authStatus.success,
-                    user: authResult,
-                    error: null,
-                  })
-                )
-                const redirectBackTo = t.path(
-                  ['account', 'redirectBackTo'],
-                  getState()
-                )
-                if (t.not(t.isNil(redirectBackTo))) {
-                  dispatch(mutators.redirectChange(null))
-                  dispatch(redirect(redirectBackTo))
-                } else {
-                  const routesMap = t.path(['location', 'routesMap'], state)
-                  dispatch(
-                    redirect(z.routing.parts.pathToAction('/', routesMap))
-                  )
-                }
-              }
               done()
+            } else {
+              dispatch(
+                box.mutators.authenticateComplete({
+                  status: authStatus.success,
+                  user: authResult,
+                  error: null,
+                })
+              )
+              const redirectBackTo = t.path(
+                ['account', 'redirectBackTo'],
+                ctx.getState()
+              )
+              if (t.isNil(redirectBackTo)) {
+                const routesMap = t.path(['location', 'routesMap'], state)
+                dispatch(
+                  ctx.redirect(z.routing.parts.pathToAction('/', routesMap))
+                )
+                done()
+              } else {
+                dispatch(box.mutators.redirectChange(null))
+                dispatch(ctx.redirect(redirectBackTo))
+                done()
+              }
             }
-          ),
-          fx([actions.routeView], ({ action }, dispatch, done) => {
-            const redirectBackTo = t.path(['payload', 'redirectBackTo'], action)
+          }),
+          fx([box.actions.routeView], (ctx, dispatch, done) => {
+            const redirectBackTo = t.path(
+              ['payload', 'redirectBackTo'],
+              ctx.action
+            )
             if (t.isNil(redirectBackTo)) {
               done()
             } else {
-              dispatch(mutators.redirectChange(redirectBackTo))
+              dispatch(box.mutators.redirectChange(redirectBackTo))
               done()
             }
           }),
         ]
       },
-      onInit({ api, dispatch, mutators }) {
-        dispatch(mutators.boot())
-        api.io.on('connect', () => {
-          dispatch(mutators.connection(true))
+      onInit(ctx) {
+        ctx.dispatch(ctx.mutators.boot())
+        ctx.api.io.on('connect', () => {
+          ctx.dispatch(ctx.mutators.connection(true))
         })
-        api.io.on('disconnect', () => {
-          dispatch(mutators.connection(false))
+        ctx.api.io.on('disconnect', () => {
+          ctx.dispatch(ctx.mutators.connection(false))
         })
       },
     },

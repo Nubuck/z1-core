@@ -53,6 +53,26 @@ export const LandingRoute = () => (
         },
       }}
     />
+    <el.When
+      is={true}
+      render={() => (
+        <div>
+          <el.Icon name="user" /> Safe when
+        </div>
+      )}
+    />
+    <el.MapIndexed
+      items={['default', 'sm', 'md', 'lg', 'xl']}
+      render={(size, index) => (
+        <React.Fragment key={`item_${index}`}>
+          {/* <el.Spinner size={size} color='yellow' /> */}
+          <br />
+        </React.Fragment>
+      )}
+    />
+    <el.Button
+      slots={{ icon: { name: 'user' }, text: { value: 'Slot Button' } }}
+    />
   </el.VStack>
 )
 

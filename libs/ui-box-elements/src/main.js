@@ -1,5 +1,5 @@
 export * from './Box'
-// export * from './Button'
+export * from './Button'
 export * from './Col'
 export * from './Icon'
 export * from './MapIndexed'

@@ -3,7 +3,7 @@ import mx from '@z1/lib-feature-macros'
 // parts
 import { signIn } from './signIn'
 import { signUp } from './signUp'
-import { unauthorized } from './unauthorized'
+import { notAuthorized } from './not-authorized'
 
 // main
-export const views = mx.routeView.combine([unauthorized, signIn, signUp])
+export const views = mx.routeView.combine([notAuthorized, signIn, signUp])

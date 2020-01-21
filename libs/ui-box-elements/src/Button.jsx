@@ -7,6 +7,25 @@ import { Spinner } from './Spinner'
 import { Icon } from './Icon'
 
 // main
+const iconSize = fn(t =>
+  t.match({
+    xs: {
+      fontSize: 'md',
+    },
+    sm: {
+      fontSize: 'lg',
+    },
+    lg: {
+      fontSize: '2xl',
+    },
+    xl: {
+      fontSize: '3xl',
+    },
+    _: {
+      fontSize: 'xl',
+    },
+  })
+)
 const matchShape = fn(t =>
   t.match({
     pill(props) {
@@ -131,7 +150,23 @@ const renderButton = fn(t => props => {
     ? props.children
     : t.concat(
         t.has('icon')(slots)
-          ? [React.createElement(Icon, t.merge({ key: 'icon' }, slots.icon))]
+          ? [
+              React.createElement(
+                Icon,
+                t.mergeAll([
+                  { key: 'icon' },
+                  {
+                    box: t.merge(
+                      {
+                        fontSize: iconSize(size),
+                      },
+                      t.omit(['box'], slots.icon)
+                    ),
+                  },
+                  slots.icon,
+                ])
+              ),
+            ]
           : [],
         t.has('text')(slots)
           ? [

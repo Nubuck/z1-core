@@ -70,31 +70,15 @@ export const LandingRoute = () => (
         </React.Fragment>
       )}
     />
-    <el.Button
-      size="xs"
-      slots={{ icon: { name: 'user' }, label: { text: 'Slot Button' } }}
-    />{' '}
+    <el.Button size="xs" icon={{ name: 'user' }} label={{ text: 'Button' }} />
     <br />
-    <el.Button
-      size="sm"
-      slots={{ icon: { name: 'user' }, label: { text: 'Slot Button' } }}
-    />{' '}
+    <el.Button size="sm" icon={{ name: 'user' }} label={{ text: 'Button' }} />
     <br />
-    <el.Button
-      size="md"
-      slots={{ icon: { name: 'user' }, label: { text: 'Slot Button' } }}
-    />{' '}
+    <el.Button size="md" icon={{ name: 'user' }} label={{ text: 'Button' }} />
     <br />
-    <el.Button
-      disabled
-      size="lg"
-      slots={{ icon: { name: 'user' }, label: { text: 'Slot Button' } }}
-    />{' '}
+    <el.Button size="lg" icon={{ name: 'user' }} label={{ text: 'Button' }} />
     <br />
-    <el.Button
-      size="xl"
-      slots={{ icon: { name: 'user' }, label: { text: 'Slot Button' } }}
-    />
+    <el.Button size="xl" icon={{ name: 'user' }} label={{ text: 'Button' }} />
   </el.VStack>
 )
 

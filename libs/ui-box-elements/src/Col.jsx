@@ -13,7 +13,7 @@ const colWidth = fn(t => width =>
 const renderCol = fn(t => props =>
   React.createElement(
     VStack,
-    t.merge(t.omit(['box'], props), {
+    t.merge(t.omit(['box', 'xs', 'sm', 'md', 'lg', 'xl'], props), {
       box: t.merge(
         {
           flex: 'none',

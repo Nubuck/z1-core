@@ -1,0 +1,67 @@
+/* spinner */
+.spinner-white {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.white');
+  }
+}
+.spinner-gray {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.gray.500');
+  }
+}
+.spinner-red {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.red.500');
+  }
+}
+.spinner-orange {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.orange.500');
+  }
+}
+.spinner-yellow {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.yellow.500');
+  }
+}
+.spinner-green {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.green.500');
+  }
+}
+.spinner-teal {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.teal.500');
+  }
+}
+.spinner-blue {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.blue.500');
+  }
+}
+.spinner-indigo {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.indigo.500');
+  }
+}
+.spinner-purple {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.purple.500');
+  }
+}
+.spinner-pink {
+  @extend .spinner;
+  &:after {
+    color: theme('colors.pink.500');
+  }
+}

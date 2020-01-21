@@ -9,21 +9,18 @@ import { Icon } from './Icon'
 // main
 const iconSize = fn(t =>
   t.match({
-    xs: {
-      fontSize: 'md',
-    },
-    sm: {
-      fontSize: 'lg',
-    },
-    lg: {
-      fontSize: '2xl',
-    },
-    xl: {
-      fontSize: '3xl',
-    },
-    _: {
-      fontSize: 'xl',
-    },
+    xs: 'md',
+    sm: 'lg',
+    lg: '2xl',
+    xl: '3xl',
+    _: 'xl',
+  })
+)
+const spinnerSize = fn(t =>
+  t.match({
+    lg: 'sm',
+    xl: 'sm',
+    _: 'default',
   })
 )
 const matchShape = fn(t =>
@@ -42,6 +39,12 @@ const matchShape = fn(t =>
     },
   })
 )
+const xc = {
+  bg: [null, { hover: 'blue-500' }],
+  border: null,
+  content: ['blue-500', { hover: 'white' }],
+  spinner: 'blue',
+}
 const matchFill = fn(t => (fill = '') =>
   t.match({
     outline(props) {
@@ -97,15 +100,16 @@ const renderButton = fn(t => props => {
   const nextProps = t.omit(
     [
       'as',
+      'box',
+      'next',
       'size',
       'shape',
       'fill',
       'colors',
       'loading',
-      'slots',
+      'icon',
+      'label',
       'children',
-      'box',
-      'next',
     ],
     props
   )
@@ -113,7 +117,7 @@ const renderButton = fn(t => props => {
   const box = t.pathOr({}, ['box'], props)
   const next = t.pathOr({}, ['next'], props)
   // appearance
-  const size = t.pathOr('md', ['size'], props)
+  const size = t.pathOr('default', ['size'], props)
   const shape = t.pathOr('normal', ['shape'], props)
   const fill = t.pathOr('solid', ['fill'], props)
   const colors = t.pathOr(null, ['colors'], props)
@@ -121,14 +125,19 @@ const renderButton = fn(t => props => {
   const loading = t.pathOr(false, ['loading'], props)
   const disabled = t.pathOr(false, ['disabled'], props)
   // elements
-  const slots = t.pathOr(null, ['slots'], props)
+  const icon = t.pathOr(null, ['icon'], props)
+  const label = t.pathOr(null, ['label'], props)
+  // boxes
   const layout = {
     container: {
       position: 'relative',
       display: 'inline-flex',
+      overflow: 'hidden',
+      outline: 'none',
       cursor: loading ? 'wait' : disabled ? 'not-allowed' : 'pointer',
-      bgColor: ['blue-500'],
-      opacity: disabled ? 50 : 100,
+      opacity: t.and(disabled, t.not(loading)) ? 50 : 100,
+      bgColor: xc.bg,
+      borderColor: xc.border,
     },
     content: {
       position: 'relative',
@@ -138,8 +147,9 @@ const renderButton = fn(t => props => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      opacity: loading ? 0 : 100,
+      opacity: t.not(loading) ? 100 : 0,
       visible: t.not(loading),
+      color: xc.content,
     },
     spinner: {
       position: 'absolute',
@@ -154,50 +164,44 @@ const renderButton = fn(t => props => {
       visible: loading,
     },
   }
-  const nextChildren = t.isNil(slots)
+  const nextChildren = t.and(t.isNil(icon), t.isNil(label))
     ? props.children
     : t.concat(
-        t.has('icon')(slots)
-          ? [
+        t.isNil(icon)
+          ? []
+          : [
               React.createElement(
                 Icon,
                 t.mergeAll([
-                  { key: 'icon' },
-                  {
-                    box: t.mergeAll([
-                      iconSize(size),
-                      t.pathOr({}, ['box'], slots.icon),
-                    ]),
-                  },
-                  t.omit(['box'], slots.icon),
+                  { key: 'icon', size: iconSize(size) },
+                  t.omit(['size'], icon),
                 ])
               ),
-            ]
-          : [],
-        t.has('label')(slots)
-          ? [
+            ],
+        t.isNil(label)
+          ? []
+          : [
               React.createElement(
                 Box,
-                t.merge(t.omit(['text', 'children', 'box'], slots.label), {
+                t.merge(t.omit(['text', 'children', 'box'], label), {
                   key: 'label',
                   box: t.mergeAll([
                     {
-                      margin: t.has('icon')(slots) ? { x: 1 } : null,
+                      margin: t.isNil(icon) ? null : { x: 1 },
                     },
-                    t.pathOr({}, ['box'], slots.icon),
+                    t.pathOr({}, ['box'], icon),
                   ]),
                   children: [
                     React.createElement('span', {
                       key: 'label-text',
-                      children: t.isNil(slots.label.text)
-                        ? slots.label.children || []
-                        : [`${slots.label.text || ''}`],
+                      children: t.isNil(label.text)
+                        ? label.children || []
+                        : [label.text],
                     }),
                   ],
                 })
               ),
             ]
-          : []
       )
   return React.createElement(
     Box,
@@ -213,7 +217,10 @@ const renderButton = fn(t => props => {
         children: nextChildren,
       }),
       React.createElement(Box, { key: 'spinner-box', box: layout.spinner }, [
-        React.createElement(Spinner, { key: 'spinner', size: 'default' }),
+        React.createElement(Spinner, {
+          key: 'spinner',
+          size: spinnerSize(size),
+        }),
       ]),
     ]
   )

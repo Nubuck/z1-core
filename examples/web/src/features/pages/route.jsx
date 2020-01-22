@@ -85,7 +85,7 @@ export const LandingRoute = () => (
       shape="circle"
       icon="user"
       label="Button"
-      colors={{ on: 'blue-500' }}
+      colors={{ on: 'blue-500', off: 'yellow-500' }}
     />
     <br />
     <el.Button
@@ -94,7 +94,10 @@ export const LandingRoute = () => (
       shape="pill"
       icon="user"
       label="Button"
-      colors={{ off: 'blue-500', on: 'yellow-500' }}
+      colors={{
+        off: 'blue-500',
+        on: { bg: 'yellow-500', content: 'gray-900' },
+      }}
     />
     <br />
     <el.Button
@@ -125,9 +128,9 @@ export const LandingRoute = () => (
       shape="pill"
       icon={{ name: 'user', color: 'yellow-500' }}
       label={{ text: 'Button', color: 'pink-500' }}
-      color="pink-500"
+      color="green-500"
     >
-       children
+      children
     </el.Button>
   </el.VStack>
 )

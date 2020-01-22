@@ -174,28 +174,30 @@ const buttonColor = fn(t => (fill, active, colors, color) => {
       off: {
         bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
         borderColor: colorByKey('off', 'border', colors, color),
-        color: [
-          colorByKey('off', 'content', colors, color),
-          { hover: colorByKey('on', 'content', colors, 'white') },
-        ],
+        color: colorByKey('off', 'content', colors),
       },
       on: {
         bgColor: colorByKey('on', 'bg', colors, color),
         borderColor: colorByKey('on', 'border', colors, color),
-        color: colorByKey('on', 'content', colors, 'white'),
+        color: colorByKey(
+          'on',
+          'content',
+          colors,
+          colorByKey('off', 'content', colors)
+        ),
       },
     },
     solid: {
       off: {
         bgColor: colorByKey('off', 'bg', colors, color),
         borderColor: null,
-        color: colorByKey('off', 'content', colors, 'white'),
+        color: colorByKey('off', 'content', colors),
         shadow: [null, { hover: true }],
       },
       on: {
         bgColor: colorByKey('on', 'bg', colors, color),
         borderColor: null,
-        color: colorByKey('on', 'content', colors, 'white'),
+        color: colorByKey('on', 'content', colors),
       },
     },
     ghostOutline: {
@@ -218,14 +220,14 @@ const buttonColor = fn(t => (fill, active, colors, color) => {
         bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
         borderColor: null,
         color: [
-          colorByKey('off', 'content', colors, color),
-          { hover: colorByKey('on', 'content', colors, 'white') },
+          colorByKey('off', 'content', colors),
+          { hover: colorByKey('on', 'content', colors) },
         ],
       },
       on: {
         bgColor: colorByKey('on', 'bg', colors, color),
         borderColor: null,
-        color: colorByKey('on', 'content', colors, 'white'),
+        color: colorByKey('on', 'content', colors),
       },
     },
   })(fill)[active ? 'on' : 'off']

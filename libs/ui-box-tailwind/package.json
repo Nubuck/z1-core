@@ -19,6 +19,7 @@
     "@tailwindcss/custom-forms": "^0.1.4",
     "tailwindcss": "^1.0.4",
     "tailwindcss-spinner": "^1.0.0",
+    "tailwindcss-transitions": "^2.1.0",
     "source-map-support": "0.4.3",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3"

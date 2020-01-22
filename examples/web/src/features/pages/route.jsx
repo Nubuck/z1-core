@@ -76,7 +76,7 @@ export const LandingRoute = () => (
       shape="circle"
       icon="user"
       label="Button"
-      colors="blue-500"
+      color="blue-500"
     />
     <br />
     <el.Button
@@ -90,8 +90,8 @@ export const LandingRoute = () => (
     <br />
     <el.Button
       size="md"
-      fill="ghost-outline"
-      shape="normal"
+      fill="ghost-solid"
+      shape="pill"
       icon="user"
       label="Button"
       colors={{ off: 'blue-500', on: 'yellow-500' }}

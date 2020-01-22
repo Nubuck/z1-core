@@ -43,7 +43,7 @@ const fills = fn(t => fill =>
     ghostSolid: {
       borderWidth: null,
     },
-  })(t.to.camelCase(fill))
+  })(fill)
 )
 const fillColors = {
   ghost: {
@@ -107,91 +107,128 @@ const fillColors = {
     },
   },
 }
+
+const colorByKey = fn(t => (mode, key, colors, color) => {
+  const foundColor = t.pathOr(null, [mode, key], colors || {})
+  if (t.not(t.isNil(foundColor))) {
+    return foundColor
+  }
+  const modeColor = t.pathOr(null, [mode], colors || {})
+  if (t.isType(modeColor, 'string')) {
+    return modeColor
+  }
+  if (t.isType(color, 'string')) {
+    return color
+  }
+  return null
+})
+
+const colorsToBox = fn(t => colors => {
+  return {
+    on: {
+      bgColor: colorByKey('on', 'bg', colors),
+      borderColor: colorByKey('on', 'border', colors),
+      color: colorByKey('on', 'content', colors),
+    },
+    off: {
+      bgColor: colorByKey('off', 'bg', colors),
+      borderColor: colorByKey('off', 'border', colors),
+      color: colorByKey('off', 'content', colors),
+    },
+  }
+})
+
 const buttonColor = fn(t => (fill, active, colors, color) => {
   if (t.and(t.isNil(colors), t.isNil(color))) {
     return {}
   }
   console.log('BUTTON COLOR', fill, active, colors, color)
-  const shortColor = t.isNil(colors)
-    ? color
-    : t.isType(colors, 'string')
-    ? colors
-    : null
-  const colorMap = {
-    on: t.not(t.isNil(shortColor))
-      ? shortColor
-      : t.pathOr(null, ['on'], colors || {}),
-    off: t.not(t.isNil(shortColor))
-      ? shortColor
-      : t.pathOr(null, ['off'], colors || {}),
-  }
   return t.match({
-    _: {
-      on: {},
-      off: {},
-    },
+    _: t.isType(colors, 'object')
+      ? colorsToBox(colors)
+      : {
+          on: {
+            bgColor: null,
+            borderColor: null,
+            color: null,
+          },
+          off: {
+            bgColor: null,
+            borderColor: null,
+            color: null,
+          },
+        },
     ghost: {
       off: {
         bgColor: null,
         borderColor: null,
-        color: [null, { hover: 'blue-500' }],
+        color: [null, { hover: colorByKey('on', 'content', colors, color) }],
       },
       on: {
         bgColor: null,
         borderColor: null,
-        color: 'blue-500',
+        color: colorByKey('on', 'content', colors, color),
       },
     },
     outline: {
       off: {
-        bgColor: [null, { hover: 'blue-500' }],
-        borderColor: 'blue-500',
-        color: ['blue-500', { hover: 'white' }],
+        bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
+        borderColor: colorByKey('off', 'border', colors, color),
+        color: [
+          colorByKey('off', 'content', colors, color),
+          { hover: colorByKey('on', 'content', colors, 'white') },
+        ],
       },
       on: {
-        bgColor: 'blue-500',
-        borderColor: 'blue-500',
-        color: 'white',
+        bgColor: colorByKey('on', 'bg', colors, color),
+        borderColor: colorByKey('on', 'border', colors, color),
+        color: colorByKey('on', 'content', colors, 'white'),
       },
     },
     solid: {
       off: {
-        bgColor: 'blue-500',
+        bgColor: colorByKey('off', 'bg', colors, color),
         borderColor: null,
-        color: 'white',
+        color: colorByKey('off', 'content', colors, 'white'),
         shadow: [null, { hover: true }],
       },
       on: {
-        bgColor: 'blue-500',
+        bgColor: colorByKey('on', 'bg', colors, color),
         borderColor: null,
-        color: 'white',
+        color: colorByKey('on', 'content', colors, 'white'),
       },
     },
     ghostOutline: {
       off: {
         bgColor: null,
-        borderColor: ['transparent', { hover: 'blue-500' }],
-        color: 'blue-500',
+        borderColor: [
+          'transparent',
+          { hover: colorByKey('on', 'border', colors, color) },
+        ],
+        color: [null, { hover: colorByKey('on', 'content', colors, color) }],
       },
       on: {
         bgColor: null,
-        borderColor: 'blue-500',
-        color: 'blue-500',
+        borderColor: colorByKey('on', 'border', colors, color),
+        color: colorByKey('on', 'content', colors, color),
       },
     },
     ghostSolid: {
       off: {
-        bgColor: [null, { hover: 'blue-500' }],
+        bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
         borderColor: null,
-        color: ['blue-500', { hover: 'white' }],
+        color: [
+          colorByKey('off', 'content', colors, color),
+          { hover: colorByKey('on', 'content', colors, 'white') },
+        ],
       },
       on: {
-        bgColor: 'blue-500',
+        bgColor: colorByKey('on', 'bg', colors, color),
         borderColor: null,
-        color: 'white',
+        color: colorByKey('on', 'content', colors, 'white'),
       },
     },
-  })(t.to.camelCase(fill))[active ? 'on' : 'off']
+  })(fill)[active ? 'on' : 'off']
 })
 
 // size
@@ -335,6 +372,7 @@ const renderButton = fn(t => props => {
       'children',
       'style',
       'className',
+      'transition',
     ],
     props
   )
@@ -344,9 +382,10 @@ const renderButton = fn(t => props => {
   // appearance
   const size = t.pathOr('default', ['size'], props)
   const shape = t.pathOr('normal', ['shape'], props)
-  const fill = t.pathOr('ghost', ['fill'], props)
+  const fill = t.to.camelCase(t.pathOr('ghost', ['fill'], props))
   const style = t.pathOr({}, ['style'], props)
   const className = t.pathOr('', ['className'], props)
+  const transition = t.pathOr('transition-all', ['transition'], props)
   const isCircle = t.eq(shape, 'circle')
   // brand
   const colors = t.pathOr(null, ['colors'], props)
@@ -413,7 +452,7 @@ const renderButton = fn(t => props => {
       next: b => b.next(box).next(next),
       className: `${
         t.isZeroLen(className) ? '' : `${className} `
-      }${shape} ${fill}`,
+      }${transition} ${shape} ${fill}`,
       style: isCircle ? t.merge(circleSize(size), style) : style,
     }),
     [

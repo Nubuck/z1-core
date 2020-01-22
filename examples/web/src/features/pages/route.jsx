@@ -72,8 +72,8 @@ export const LandingRoute = () => (
     />
     <el.Button
       size="xs"
-      fill="outline"
-      shape="normal"
+      fill="ghost-solid"
+      shape="circle"
       icon="user"
       label="Button"
       colors="blue-500"
@@ -82,7 +82,7 @@ export const LandingRoute = () => (
     <el.Button
       size="sm"
       fill="outline"
-      shape="normal"
+      shape="circle"
       icon="user"
       label="Button"
       colors={{ on: 'blue-500' }}
@@ -90,7 +90,7 @@ export const LandingRoute = () => (
     <br />
     <el.Button
       size="md"
-      fill="outline"
+      fill="ghost-outline"
       shape="normal"
       icon="user"
       label="Button"
@@ -98,6 +98,8 @@ export const LandingRoute = () => (
     />
     <br />
     <el.Button
+      as={z.ui.Link}
+      to="/pages"
       size="lg"
       fill="outline"
       shape="normal"
@@ -105,28 +107,27 @@ export const LandingRoute = () => (
       label={{ text: 'Button' }}
       colors={{
         off: {
-          bg: null,
+          bg: 'blue-500',
           border: 'blue-500',
-          content: 'green-500',
+          content: 'white',
         },
         on: {
-          bg: 'blue-500',
-          border: 'yellow-500',
-          content: 'yellow-500',
+          bg: 'blue-700',
+          border: 'blue-700',
+          content: 'white',
         },
       }}
     />
     <br />
     <el.Button
-      loading
       size="xl"
       fill="outline"
-      shape="normal"
-      icon="user"
-      label="Button"
+      shape="pill"
+      icon={{ name: 'user', color: 'yellow-500' }}
+      label={{ text: 'Button', color: 'pink-500' }}
       color="pink-500"
     >
-      derp
+       children
     </el.Button>
   </el.VStack>
 )

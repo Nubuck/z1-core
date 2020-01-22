@@ -1,7 +1,7 @@
 import fn from '@z1/preset-task'
 
 // parts
-import { isFixedItemList, parentSchema } from './parts'
+import { isFixedItemList, fieldSchema } from './parts'
 
 // main
 export const field = fn(
@@ -36,7 +36,7 @@ export const field = fn(
       )
       const xUi = t.pathOr(t.eq(parent, 'fixedArray') ? [] : {}, ['ui'], ctx)
       const xRequired = t.pathOr([], ['required'], ctx)
-      return parentSchema(parent)({
+      return fieldSchema(parent)({
         name,
         fieldKey,
         fieldType,

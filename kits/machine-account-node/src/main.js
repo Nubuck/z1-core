@@ -6,7 +6,10 @@ import hasha from 'hasha'
 // parts
 const hashCtx = task(t => async ctx => {
   const hashVals = t.values(ctx)
-  const hashData = t.tags.oneLineInlineLists`
+  const hashData = t.replace(
+    /\s/g,
+    '',
+    t.tags.oneLineInlineLists`
     ${t.mapIndexed(
       (val, index) =>
         `${t.to.constantCase(val)}${
@@ -14,12 +17,13 @@ const hashCtx = task(t => async ctx => {
         }`,
       hashVals
     )}
-  `.replace(/\s/g, '')
+  `
+  )
   return await hasha(hashData, { algorithm: 'sha1' })
 })
 
 // main
-const accoount = task(t => async ({ role, system }) => {
+const account = task(t => async ({ role, system }) => {
   const systemInfo = await sysInfo.system()
   const machCtx = {
     hardwareuuid: systemInfo.uuid,

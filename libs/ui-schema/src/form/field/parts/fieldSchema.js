@@ -1,76 +1,87 @@
 import fn from '@z1/preset-task'
 
 // parts
+import { keys } from './keys'
 import { renderChildren } from './common'
+import { renderField } from './renderField'
 
 // main
 export const fieldSchema = fn(t =>
   t.match({
-    fixedArray(ctx) {
-      const nextChildren = renderChildren(
-        { props: [], ui: [] },
-        'fixedArray',
-        ctx.children
-      )
-      const nextAdditional = renderChildren(
-        { props: {}, ui: {} },
-        'additionalItems',
-        ctx.additional
-      )
-      return {
-        props: t.merge(ctx.fieldProps, {
-          items: nextChildren.props,
-          additionalItems: nextAdditional.props,
-        }),
-        ui: t.merge(ctx.ui, {
-          items: nextChildren.ui,
-          additionalItems: nextAdditional.ui,
-        }),
-        required: t.eq(ctx.required, true)
-          ? t.concat(ctx.xRequired, [ctx.fieldKey])
-          : ctx.xRequired,
+    root(ctx) {
+      if (t.not(t.includes(ctx.fieldType, ['object', 'array']))) {
+        return {
+          schema: t.merge(ctx.fieldProps, { required: ctx.required }),
+          uiSchema: ctx.ui,
+        }
       }
-    },
-    array(ctx) {
-      const nextChildren = renderChildren(
-        { props: {}, ui: ctx.ui },
-        'array',
+      if (t.eq(ctx.fieldType, 'fixedArray')) {
+        const nextChildren = renderChildren(
+          { props: [], ui: [], required: [] },
+          ctx.fieldType,
+          ctx.children
+        )
+        const nextAdditional = renderChildren(
+          { props: {}, ui: {}, required: [] },
+          'additionalItems',
+          ctx.additional
+        )
+        return {
+          schema: t.merge(ctx.fieldProps, {
+            required: nextChildren.required,
+            items: nextChildren.props,
+            additionalItems: nextAdditional.props,
+          }),
+          uiSchema: t.mergeAll([ctx.ui, next.ui, nextAdditional.ui]),
+        }
+      }
+      const next = renderChildren(
+        { props: {}, ui: {}, required: [] },
+        ctx.fieldType,
         ctx.children
       )
+      const childKey = t.eq(ctx.fieldType, 'array')
+        ? keys.field.items
+        : keys.field.props
       return {
-        props: t.merge(ctx.fieldProps, {
-          items: nextChildren.props,
+        schema: t.merge(ctx.fieldProps, {
+          required: next.required,
+          [childKey]: next.props,
         }),
-        ui: t.merge(ctx.ui, { items: nextChildren.ui }),
-        required: t.eq(ctx.required, true)
-          ? t.concat(ctx.xRequired, [ctx.fieldKey])
-          : ctx.xRequired,
+        uiSchema: t.merge(ctx.ui, next.ui),
       }
     },
     object(ctx) {
-      const nextChildren = renderChildren(
-        { props: {}, ui: ctx.ui, required: [] },
-        'object',
-        ctx.children
-      )
+      const next = renderField(ctx.fieldType)(ctx)
       return {
-        props: t.merge(ctx.fieldProps, {
-          required: nextChildren.required,
-          properties: nextChildren.props,
+        props: t.merge(ctx.xProps, {
+          [ctx.fieldKey]: next.props,
         }),
-        ui: t.merge(ctx.ui, nextChildren.ui),
-        required: t.eq(ctx.required, true)
-          ? t.concat(ctx.xRequired, [ctx.fieldKey])
-          : ctx.xRequired,
+        ui: t.merge(ctx.xUi, {
+          [ctx.fieldKey]: next.ui,
+        }),
+        required: next.required,
       }
     },
-    _(ctx) {
+    array(ctx) {
+      const next = renderField(ctx.fieldType)(ctx)
       return {
-        props: ctx.fieldProps,
-        ui: ctx.ui,
-        required: t.eq(ctx.required, true)
-          ? t.concat(ctx.xRequired, [ctx.fieldKey])
-          : ctx.xRequired,
+        props: t.merge(ctx.xProps, next.props),
+        ui: t.merge(ctx.xUi, next.ui),
+      }
+    },
+    fixedArray(ctx) {
+      const next = renderField(ctx.fieldType)(ctx)
+      return {
+        props: t.concat(ctx.xProps, [next.props]),
+        ui: t.concat(ctx.xUi, [next.ui]),
+      }
+    },
+    additionalItems(ctx) {
+      const next = renderField(ctx.fieldType)(ctx)
+      return {
+        props: next.props,
+        ui: next.ui,
       }
     },
   })

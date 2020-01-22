@@ -25,7 +25,7 @@ const shapes = fn(t =>
     },
   })
 )
-const fills = fn(t =>
+const fills = fn(t => fill =>
   t.match({
     _: {},
     ghost: {
@@ -43,7 +43,7 @@ const fills = fn(t =>
     ghostSolid: {
       borderWidth: null,
     },
-  })
+  })(t.to.camelCase(fill))
 )
 const fillColors = {
   ghost: {
@@ -107,8 +107,91 @@ const fillColors = {
     },
   },
 }
-const buttonColor = fn(t => (shape, active, colors) => {
-  return active ? {} : {}
+const buttonColor = fn(t => (fill, active, colors, color) => {
+  if (t.and(t.isNil(colors), t.isNil(color))) {
+    return {}
+  }
+  console.log('BUTTON COLOR', fill, active, colors, color)
+  const shortColor = t.isNil(colors)
+    ? color
+    : t.isType(colors, 'string')
+    ? colors
+    : null
+  const colorMap = {
+    on: t.not(t.isNil(shortColor))
+      ? shortColor
+      : t.pathOr(null, ['on'], colors || {}),
+    off: t.not(t.isNil(shortColor))
+      ? shortColor
+      : t.pathOr(null, ['off'], colors || {}),
+  }
+  return t.match({
+    _: {
+      on: {},
+      off: {},
+    },
+    ghost: {
+      off: {
+        bgColor: null,
+        borderColor: null,
+        color: [null, { hover: 'blue-500' }],
+      },
+      on: {
+        bgColor: null,
+        borderColor: null,
+        color: 'blue-500',
+      },
+    },
+    outline: {
+      off: {
+        bgColor: [null, { hover: 'blue-500' }],
+        borderColor: 'blue-500',
+        color: ['blue-500', { hover: 'white' }],
+      },
+      on: {
+        bgColor: 'blue-500',
+        borderColor: 'blue-500',
+        color: 'white',
+      },
+    },
+    solid: {
+      off: {
+        bgColor: 'blue-500',
+        borderColor: null,
+        color: 'white',
+        shadow: [null, { hover: true }],
+      },
+      on: {
+        bgColor: 'blue-500',
+        borderColor: null,
+        color: 'white',
+      },
+    },
+    ghostOutline: {
+      off: {
+        bgColor: null,
+        borderColor: ['transparent', { hover: 'blue-500' }],
+        color: 'blue-500',
+      },
+      on: {
+        bgColor: null,
+        borderColor: 'blue-500',
+        color: 'blue-500',
+      },
+    },
+    ghostSolid: {
+      off: {
+        bgColor: [null, { hover: 'blue-500' }],
+        borderColor: null,
+        color: ['blue-500', { hover: 'white' }],
+      },
+      on: {
+        bgColor: 'blue-500',
+        borderColor: null,
+        color: 'white',
+      },
+    },
+  })(t.to.camelCase(fill))[active ? 'on' : 'off']
 })
 
 // size
@@ -266,10 +349,8 @@ const renderButton = fn(t => props => {
   const className = t.pathOr('', ['className'], props)
   const isCircle = t.eq(shape, 'circle')
   // brand
-  const colors = t.pathOr({}, ['colors'], props)
+  const colors = t.pathOr(null, ['colors'], props)
   const color = t.pathOr(null, ['color'], props)
-  const off = t.pathOr(null, ['off'], colors)
-  const on = t.pathOr(null, ['on'], colors)
   // status
   const loading = t.pathOr(false, ['loading'], props)
   const disabled = t.pathOr(false, ['disabled'], props)
@@ -327,6 +408,7 @@ const renderButton = fn(t => props => {
         buttonSize(size),
         shapes(shape),
         fills(fill),
+        buttonColor(fill, t.or(loading, disabled), colors, color),
       ]),
       next: b => b.next(box).next(next),
       className: `${

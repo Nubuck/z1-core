@@ -73,6 +73,7 @@ export const LandingRoute = () => (
     <el.Button
       size="xs"
       fill="outline"
+      shape="normal"
       icon="user"
       label="Button"
     />
@@ -80,6 +81,7 @@ export const LandingRoute = () => (
     <el.Button
       size="sm"
       fill="outline"
+      shape="normal"
       icon="user"
       label="Button"
     />
@@ -87,6 +89,7 @@ export const LandingRoute = () => (
     <el.Button
       size="md"
       fill="outline"
+      shape="normal"
       icon="user"
       label="Button"
     />
@@ -94,6 +97,7 @@ export const LandingRoute = () => (
     <el.Button
       size="lg"
       fill="outline"
+      shape="normal"
       icon="user"
       label="Button"
     />
@@ -101,6 +105,7 @@ export const LandingRoute = () => (
     <el.Button
       size="xl"
       fill="outline"
+      shape="normal"
       icon={{ name: 'user' }}
       label={{ text: 'Button' }}
     >

@@ -169,9 +169,8 @@ const buttonSize = fn(t =>
       fontSize: '2xl',
     },
     xl: {
-      padding: { y: 3, x: 4 },
+      padding: { y: 4, x: 4 },
       fontSize: '3xl',
-      fontWeight: 'medium',
     },
   })
 )
@@ -209,13 +208,26 @@ const elBox = {
   },
 }
 
-const iconElement = fn(t => (size, nextIcon) =>
+const renderIcon = fn(t => (size, icon) =>
   React.createElement(
     Icon,
-    t.mergeAll([
-      { key: 'icon', size: iconSize(size) },
-      t.omit(['size'], nextIcon),
-    ])
+    t.mergeAll([{ key: 'icon', size: iconSize(size) }, t.omit(['size'], icon)])
+  )
+)
+
+const renderLabel = fn(t => (isCircle, noIcon, label) =>
+  React.createElement(
+    Box,
+    t.merge(t.omit(['text', 'children', 'box'], label), {
+      key: 'label',
+      box: t.mergeAll([
+        {
+          margin: isCircle ? 0 : noIcon ? { right: 1 } : { x: 1 },
+        },
+        t.pathOr({}, ['box'], label),
+      ]),
+    }),
+    t.isNil(label.text) ? label.children || null : label.text
   )
 )
 
@@ -250,6 +262,7 @@ const renderButton = fn(t => props => {
   const fill = t.pathOr('ghost', ['fill'], props)
   const style = t.pathOr({}, ['style'], props)
   const className = t.pathOr('', ['className'], props)
+  const isCircle = t.eq(shape, 'circle')
   // status
   const loading = t.pathOr(false, ['loading'], props)
   const disabled = t.pathOr(false, ['disabled'], props)
@@ -265,7 +278,7 @@ const renderButton = fn(t => props => {
     content: t.merge(elBox.content, {
       opacity: t.not(loading) ? 100 : 0,
       visible: t.not(loading),
-      flexDirection: t.eq(shape, 'circle') ? 'col' : 'row',
+      flexDirection: isCircle ? 'col' : 'row',
     }),
     spinner: t.merge(elBox.spinner, {
       opacity: loading ? 100 : 0,
@@ -286,37 +299,17 @@ const renderButton = fn(t => props => {
     : t.isType(label, 'string')
     ? { text: label }
     : label
-  const nextChildren = t.eq(shape, 'circle')
-    ? t.and(t.isNil(nextIcon), t.isNil(nextLabel))
+  const noIcon = t.isNil(nextLabel)
+  const noLabel = t.isNil(icon)
+  const nextChildren = isCircle
+    ? t.and(noIcon, noLabel)
       ? []
-      : t.isNil(nextIcon)
-      ? [t.head(`${nextLabel.text}`)]
-      : [iconElement(size, nextIcon)]
+      : noIcon
+      ? [renderLabel(isCircle, noIcon, { text: t.head(`${nextLabel.text}`) })]
+      : [renderIcon(size, nextIcon)]
     : t.concat(
-        t.isNil(nextIcon) ? [] : [iconElement(size, nextIcon)],
-        t.isNil(nextLabel)
-          ? []
-          : [
-              React.createElement(
-                Box,
-                t.merge(t.omit(['text', 'children', 'box'], nextLabel), {
-                  key: 'label',
-                  box: t.mergeAll([
-                    {
-                      margin: t.eq(shape, 'circle')
-                        ? 0
-                        : t.isNil(nextIcon)
-                        ? { right: 1 }
-                        : { x: 1 },
-                    },
-                    t.pathOr({}, ['box'], nextLabel),
-                  ]),
-                }),
-                t.isNil(nextLabel.text)
-                  ? nextLabel.children || null
-                  : nextLabel.text
-              ),
-            ]
+        noIcon ? [] : [renderIcon(size, nextIcon)],
+        noLabel ? [] : [renderLabel(isCircle, noIcon, nextLabel)]
       )
   return React.createElement(
     Box,
@@ -332,17 +325,23 @@ const renderButton = fn(t => props => {
       className: `${
         t.isZeroLen(className) ? '' : `${className} `
       }${shape} ${fill}`,
-      style: t.eq(shape, 'circle') ? t.merge(circleSize(size), style) : style,
+      style: isCircle ? t.merge(circleSize(size), style) : style,
     }),
     [
       React.createElement(Box, {
         key: 'content',
-        box: layout.content,
+        box: t.merge(
+          layout.content,
+          isCircle ? {} : noLabel ? {} : { padding: { right: 1 } }
+        ),
         children: t.concat(
           nextChildren,
-          t.isZeroLen(nextChildren) ? [props.children] : []
+          t.allOf([isCircle, noIcon, noLabel])
+            ? [props.children]
+            : isCircle
+            ? []
+            : [props.children]
         ),
-        // style: t.eq(shape, 'circle') ? circleSize(size) : {},
       }),
       React.createElement(Box, { key: 'spinner-box', box: layout.spinner }, [
         React.createElement(Spinner, {

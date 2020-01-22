@@ -45,68 +45,6 @@ const fills = fn(t => fill =>
     },
   })(fill)
 )
-const fillColors = {
-  ghost: {
-    off: {
-      bg: null,
-      border: null,
-      content: 'blue-500',
-    },
-    on: {
-      bg: null,
-      border: null,
-      content: 'pink-500',
-    },
-  },
-  outline: {
-    off: {
-      bg: null,
-      border: 'blue-500',
-      content: 'blue-500',
-    },
-    on: {
-      bg: 'blue-500',
-      border: 'blue-500',
-      content: 'white',
-    },
-  },
-  solid: {
-    off: {
-      bg: 'blue-500',
-      border: null,
-      content: 'white',
-    },
-    on: {
-      bg: 'blue-400',
-      border: null,
-      content: 'blue-900',
-    },
-  },
-  ghostOutline: {
-    off: {
-      bg: null,
-      border: null,
-      content: 'blue-500',
-    },
-    on: {
-      bg: null,
-      border: 'blue-500',
-      content: 'blue-500',
-    },
-  },
-  ghostSolid: {
-    off: {
-      bg: null,
-      border: null,
-      content: 'blue-500',
-    },
-    on: {
-      bg: 'blue-500',
-      border: null,
-      content: 'white',
-    },
-  },
-}
 
 const colorByKey = fn(t => (mode, key, colors, color) => {
   const foundColor = t.pathOr(null, [mode, key], colors || {})

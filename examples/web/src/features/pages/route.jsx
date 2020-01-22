@@ -76,7 +76,7 @@ export const LandingRoute = () => (
       shape="normal"
       icon="user"
       label="Button"
-      colors={'blue-500'}
+      colors="blue-500"
     />
     <br />
     <el.Button
@@ -101,14 +101,14 @@ export const LandingRoute = () => (
       size="lg"
       fill="outline"
       shape="normal"
-      icon="user"
-      label="Button"
+      icon={{ name: 'user' }}
+      label={{ text: 'Button' }}
       colors={{
         off: {
           border: 'blue-500',
           content: 'green-500',
         },
-        on: { bg: 'blue-500', border: 'blue-500', content: 'yellow-500' },
+        on: { bg: 'blue-500', border: 'yellow-500', content: 'yellow-500' },
       }}
     />
     <br />
@@ -116,9 +116,9 @@ export const LandingRoute = () => (
       size="xl"
       fill="outline"
       shape="normal"
-      icon={{ name: 'user' }}
-      label={{ text: 'Button' }}
-      colors="pink-500"
+      icon="user"
+      label="Button"
+      color="pink-500"
     >
       derp
     </el.Button>

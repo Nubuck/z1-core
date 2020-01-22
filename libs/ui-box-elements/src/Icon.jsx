@@ -6,7 +6,7 @@ import { Box } from './Box'
 
 // main
 const renderIcon = fn(t => props => {
-  const as = t.pathOr('i', ['as'], props)
+  const el = t.pathOr('i', ['as'], props)
   const prefix = t.pathOr('la', ['prefix'], props)
   const iconPrefix = t.pathOr('la', ['iconPrefix'], props)
   const icon = t.pathOr('', ['name'], props)
@@ -17,7 +17,7 @@ const renderIcon = fn(t => props => {
     t.merge(
       t.omit(['as', 'prefix', 'className', 'name', 'size', 'box'], props),
       {
-        as,
+        as: el,
         className: `${prefix} ${iconPrefix}-${icon}${
           t.isNil(className) ? '' : ` ${className}`
         }`,

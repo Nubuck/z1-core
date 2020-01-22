@@ -381,7 +381,7 @@ const renderButton = fn(t => props => {
     ],
     props
   )
-  const as = t.pathOr('button', ['as'], props)
+  const el = t.pathOr('button', ['as'], props)
   const box = t.pathOr({}, ['box'], props)
   const next = t.pathOr({}, ['next'], props)
   // appearance
@@ -446,7 +446,7 @@ const renderButton = fn(t => props => {
   return React.createElement(
     Box,
     t.merge(nextProps, {
-      as,
+      as: el,
       box: t.mergeAll([
         layout.container,
         buttonSize(size),

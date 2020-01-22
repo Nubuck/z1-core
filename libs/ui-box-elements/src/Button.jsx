@@ -173,7 +173,10 @@ const buttonColor = fn(t => (fill, active, colors, color) => {
     outline: {
       off: {
         bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
-        borderColor: colorByKey('off', 'border', colors, color),
+        borderColor: [
+          colorByKey('off', 'border', colors, color),
+          { hover: colorByKey('on', 'border', colors, color) },
+        ],
         color: colorByKey('off', 'content', colors),
       },
       on: {

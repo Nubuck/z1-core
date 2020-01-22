@@ -6,7 +6,7 @@ import { Box } from './Box'
 import { Spinner } from './Spinner'
 import { Icon } from './Icon'
 
-// thinks
+// appearance
 const shapes = fn(t =>
   t.match({
     _: {},
@@ -108,7 +108,7 @@ const fillColors = {
   },
 }
 
-// main
+// size
 const iconSize = fn(t =>
   t.match({
     _: '2xl',
@@ -149,7 +149,6 @@ const circleSize = fn(t =>
     },
   })
 )
-
 const buttonSize = fn(t =>
   t.match({
     _: {
@@ -175,7 +174,8 @@ const buttonSize = fn(t =>
   })
 )
 
-const elBox = {
+// box
+const buttonBox = {
   container: {
     position: 'relative',
     display: 'flex',
@@ -208,13 +208,13 @@ const elBox = {
   },
 }
 
+// elements
 const renderIcon = fn(t => (size, icon) =>
   React.createElement(
     Icon,
     t.mergeAll([{ key: 'icon', size: iconSize(size) }, t.omit(['size'], icon)])
   )
 )
-
 const renderLabel = fn(t => (isCircle, noIcon, label) =>
   React.createElement(
     Box,
@@ -231,6 +231,7 @@ const renderLabel = fn(t => (isCircle, noIcon, label) =>
   )
 )
 
+// main
 const renderButton = fn(t => props => {
   const nextProps = t.omit(
     [
@@ -272,23 +273,22 @@ const renderButton = fn(t => props => {
   // boxes
   const layout = {
     container: t.mergeAll([
-      elBox.container,
+      buttonBox.container,
       {
         cursor: loading ? 'wait' : disabled ? 'not-allowed' : 'pointer',
         opacity: t.and(disabled, t.not(loading)) ? 50 : 100,
       },
     ]),
-    content: t.merge(elBox.content, {
+    content: t.merge(buttonBox.content, {
       opacity: t.not(loading) ? 100 : 0,
       visible: t.not(loading),
       flexDirection: isCircle ? 'col' : 'row',
     }),
-    spinner: t.merge(elBox.spinner, {
+    spinner: t.merge(buttonBox.spinner, {
       opacity: loading ? 100 : 0,
       visible: loading,
     }),
   }
-
   // elements
   const icon = t.pathOr(null, ['icon'], props)
   const label = t.pathOr(null, ['label'], props)
@@ -314,6 +314,7 @@ const renderButton = fn(t => props => {
         noIcon ? [] : [renderIcon(size, nextIcon)],
         noLabel ? [] : [renderLabel(isCircle, noIcon, nextLabel)]
       )
+  // yield
   return React.createElement(
     Box,
     t.merge(nextProps, {
@@ -353,6 +354,7 @@ const renderButton = fn(t => props => {
         React.createElement(Spinner, {
           key: 'spinner',
           size: spinnerSize(size),
+          color: 'white',
         }),
       ]),
     ]
@@ -365,37 +367,3 @@ export class Button extends React.Component {
   }
 }
 Button.displayName = 'Button'
-// const matchShape = fn(t =>
-//   t.match({
-//     pill(props) {
-//       return {}
-//     },
-//     circle(props) {
-//       return {}
-//     },
-//     square(props) {
-//       return {}
-//     },
-//     _(props) {
-//       return {}
-//     },
-//   })
-// )
-
-// const matchFill = fn(t => (fill = '') =>
-//   t.match({
-//     outline(props) {
-//       return {}
-//     },
-//     solid(props) {
-//       return {}
-//     },
-//     ghostOutline(props) {
-//       return {}
-//     },
-//     ghostSolid(props) {
-//       return {}
-//     },
-//     _(props) {},
-//   })(t.to.camelCase(fill))
-// )

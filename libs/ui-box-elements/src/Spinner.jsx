@@ -38,9 +38,9 @@ const renderSpinner = fn(t => props => {
   return React.createElement(
     Box,
     t.merge(t.omit(['className', 'size', 'color', 'box'], props), {
-      className: `spinner ${
+      className: `spinner${
         t.eq(size, 'default') ? '' : ` spinner-${size}`
-      } ${`spinner-${color}`} ${t.isNil(className) ? '' : ` ${className}`}`,
+      } ${`spinner-${color}`}${t.isNil(className) ? '' : ` ${className}`}`,
       box: t.merge(
         {
           display: 'block',

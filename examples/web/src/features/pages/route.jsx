@@ -113,6 +113,7 @@ export const LandingRoute = () => (
     />
     <br />
     <el.Button
+    loading
       size="xl"
       fill="outline"
       shape="normal"

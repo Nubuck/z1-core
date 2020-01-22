@@ -241,6 +241,7 @@ const renderButton = fn(t => props => {
       'shape',
       'fill',
       'colors',
+      'color',
       'loading',
       'icon',
       'label',
@@ -255,14 +256,16 @@ const renderButton = fn(t => props => {
   const next = t.pathOr({}, ['next'], props)
   // appearance
   const size = t.pathOr('default', ['size'], props)
-  const colors = t.pathOr({}, ['colors'], props)
-  const off = t.pathOr(null, ['off'], colors)
-  const on = t.pathOr(null, ['on'], colors)
   const shape = t.pathOr('normal', ['shape'], props)
   const fill = t.pathOr('ghost', ['fill'], props)
   const style = t.pathOr({}, ['style'], props)
   const className = t.pathOr('', ['className'], props)
   const isCircle = t.eq(shape, 'circle')
+  // brand
+  const colors = t.pathOr({}, ['colors'], props)
+  const color = t.pathOr(null, ['color'], props)
+  const off = t.pathOr(null, ['off'], colors)
+  const on = t.pathOr(null, ['on'], colors)
   // status
   const loading = t.pathOr(false, ['loading'], props)
   const disabled = t.pathOr(false, ['disabled'], props)
@@ -328,21 +331,24 @@ const renderButton = fn(t => props => {
       style: isCircle ? t.merge(circleSize(size), style) : style,
     }),
     [
-      React.createElement(Box, {
-        key: 'content',
-        box: t.merge(
-          layout.content,
-          isCircle ? {} : noLabel ? {} : { padding: { right: 1 } }
-        ),
-        children: t.concat(
+      React.createElement(
+        Box,
+        {
+          key: 'content',
+          box: t.merge(
+            layout.content,
+            isCircle ? {} : noLabel ? {} : { padding: { right: 1 } }
+          ),
+        },
+        t.concat(
           nextChildren,
           t.allOf([isCircle, noIcon, noLabel])
             ? [props.children]
             : isCircle
             ? []
             : [props.children]
-        ),
-      }),
+        )
+      ),
       React.createElement(Box, { key: 'spinner-box', box: layout.spinner }, [
         React.createElement(Spinner, {
           key: 'spinner',

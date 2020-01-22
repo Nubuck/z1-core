@@ -105,15 +105,20 @@ export const LandingRoute = () => (
       label={{ text: 'Button' }}
       colors={{
         off: {
+          bg: null,
           border: 'blue-500',
           content: 'green-500',
         },
-        on: { bg: 'blue-500', border: 'yellow-500', content: 'yellow-500' },
+        on: {
+          bg: 'blue-500',
+          border: 'yellow-500',
+          content: 'yellow-500',
+        },
       }}
     />
     <br />
     <el.Button
-    loading
+      loading
       size="xl"
       fill="outline"
       shape="normal"

@@ -107,6 +107,9 @@ const fillColors = {
     },
   },
 }
+const buttonColor = fn(t => (shape, active, colors) => {
+  return active ? {} : {}
+})
 
 // size
 const iconSize = fn(t =>

@@ -47,3 +47,4 @@ export class Box extends React.Component {
     return renderBox(this.props)
   }
 }
+Box.displayName = 'Box'

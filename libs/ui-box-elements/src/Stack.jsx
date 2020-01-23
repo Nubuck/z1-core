@@ -67,15 +67,18 @@ export class Stack extends React.Component {
     return renderStack(this.props.direction, this.props)
   }
 }
+Stack.displayName = 'Stack'
 
 export class VStack extends React.Component {
   render() {
     return renderStack('vertical', this.props)
   }
 }
+VStack.displayName = 'VStack'
 
 export class HStack extends React.Component {
   render() {
     return renderStack('horizontal', this.props)
   }
 }
+HStack.displayName = 'HStack'

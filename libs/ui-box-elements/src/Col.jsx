@@ -38,3 +38,4 @@ export class Col extends React.Component {
     return renderCol(this.props)
   }
 }
+Col.displayName = 'Col'

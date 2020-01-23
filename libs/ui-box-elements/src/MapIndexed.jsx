@@ -21,3 +21,4 @@ export class MapIndexed extends React.Component {
     return renderMapIndexed(this.props)
   }
 }
+MapIndexed.displayName = 'MapIndexed'

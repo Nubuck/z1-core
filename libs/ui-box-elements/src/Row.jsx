@@ -19,3 +19,4 @@ export class Row extends React.Component {
     return renderRow(this.props)
   }
 }
+Row.displayName = 'Row'

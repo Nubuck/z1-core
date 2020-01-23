@@ -57,3 +57,4 @@ export class Spinner extends React.Component {
     return renderSpinner(this.props)
   }
 }
+Spinner.displayName = 'Spinner'

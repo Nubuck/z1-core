@@ -40,3 +40,4 @@ export class Icon extends React.Component {
     return renderIcon(this.props)
   }
 }
+Icon.displayName = 'Icon'

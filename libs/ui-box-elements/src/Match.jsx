@@ -29,3 +29,4 @@ export class Match extends React.Component {
     return renderMatch(this.props)
   }
 }
+Match.displayName = 'Match'

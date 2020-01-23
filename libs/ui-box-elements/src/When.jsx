@@ -19,3 +19,4 @@ export class When extends React.Component {
     return renderWhen(this.props)
   }
 }
+When.displayName = 'When'

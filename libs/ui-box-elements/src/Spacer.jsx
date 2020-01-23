@@ -19,3 +19,4 @@ export class Spacer extends React.Component {
     return renderSpacer(this.props)
   }
 }
+Spacer.displayName = 'Spacer'

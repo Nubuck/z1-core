@@ -46,7 +46,13 @@ const colorByKey = fn(t => (mode, key, colors, color) => {
     return foundColor
   }
   const modeColor = t.pathOr(null, [mode], colors || {})
-  if (t.isType(modeColor, 'string')) {
+  if (
+    t.allOf([
+      t.isType(modeColor, 'string'),
+      t.not(t.includes('solid', mode)),
+      t.not(t.eq(key, 'content')),
+    ])
+  ) {
     return modeColor
   }
   if (t.isType(color, 'string')) {
@@ -131,14 +137,14 @@ const renderColor = fn(t => (fill, colors, color) =>
             borderColor: 'transparent',
             color: [
               colorByKey('off', 'content', colors),
-              { hover: colorByKey('on', 'content', colors) },
+              { hover: colorByKey('on', 'content', colors, 'white') },
             ],
             shadow: [null, { hover: true }],
           }
         : {
             bgColor: colorByKey('on', 'bg', colors, color),
             borderColor: 'transparent',
-            color: colorByKey('on', 'content', colors),
+            color: colorByKey('on', 'content', colors, 'white'),
           },
     ghostOutline: mode =>
       t.eq(mode, 'off')
@@ -164,14 +170,14 @@ const renderColor = fn(t => (fill, colors, color) =>
             bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
             borderColor: 'transparent',
             color: [
-              colorByKey('off', 'content', colors),
-              { hover: colorByKey('on', 'content', colors) },
+              colorByKey('off', 'content', colors, color),
+              { hover: colorByKey('on', 'content', colors, 'white') },
             ],
           }
         : {
             bgColor: colorByKey('on', 'bg', colors, color),
             borderColor: 'transparent',
-            color: colorByKey('on', 'content', colors),
+            color: colorByKey('on', 'content', colors, 'white'),
           },
   })(fill)
 )
@@ -194,7 +200,7 @@ const iconSize = fn(t =>
     xs: 'xl',
     sm: '2xl',
     lg: '4xl',
-    xl: '5xl',
+    xl: '4xl',
   })
 )
 const spinnerSize = fn(t =>
@@ -211,8 +217,8 @@ const circleSize = fn(t =>
       height: '2.5rem',
     },
     xs: {
-      width: '1.95rem',
-      height: '1.95rem',
+      width: '2rem',
+      height: '2rem',
     },
     sm: {
       width: '2.3rem',
@@ -231,7 +237,7 @@ const circleSize = fn(t =>
 const buttonSpacing = fn(t =>
   t.match({
     _: {
-      padding: { y: 2, x: 3 },
+      padding: { y: 1, x: 2 },
       fontSize: 'lg',
     },
     xs: {
@@ -243,11 +249,11 @@ const buttonSpacing = fn(t =>
       fontSize: 'md',
     },
     lg: {
-      padding: { y: 3, x: 3 },
+      padding: { y: 2, x: 3 },
       fontSize: '2xl',
     },
     xl: {
-      padding: { y: 4, x: 4 },
+      padding: { y: 3, x: 3 },
       fontSize: '3xl',
     },
   })

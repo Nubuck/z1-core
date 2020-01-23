@@ -15,137 +15,204 @@ export const route = ctx => {
   )(props => mx.routeView.render(Views, props.state, props.mutations))
 }
 
-export const LandingRoute = () => (
-  <el.VStack
-    as="section"
-    x="center"
-    y="center"
-    box={{
-      position: 'relative',
-      flex: 1,
-      width: 'full',
-      minHeight: 'screen',
-      overflowY: 'auto',
-      overflowX: 'hidden',
-      zIndex: 0,
-    }}
-  >
-    <el.Box as="h1" box={{ fontSize: 'lg', fontWeight: 'medium' }}>
-      Home
-    </el.Box>
-    <el.Box
-      as={z.ui.Link}
-      to="/pages"
-      color={['yellow-500', { hover: 'green-500' }]}
-    >
-      pages
-    </el.Box>
-    {/* <el.Spinner size="lg" /> */}
-    <el.Match
-      value="landisdng"
-      render={{
-        _() {
-          console.log('NOT EVALUED')
-          return <div>no match</div>
-        },
-        landing() {
-          return <div>match</div>
-        },
-      }}
-    />
-    <el.When
-      is={true}
-      render={() => (
-        <div>
-          <el.Icon name="user" /> Safe when
-        </div>
-      )}
-    />
-    <el.MapIndexed
-      items={['default', 'sm', 'md', 'lg', 'xl']}
-      render={(size, index) => (
-        <React.Fragment key={`item_${index}`}>
-          {/* <el.Spinner size={size} color='yellow' /> */}
-          <br />
-        </React.Fragment>
-      )}
-    />
-    <el.Button
-      size="xs"
-      fill="outline"
-      shape="circle"
-      icon="gear"
-      label="Button"
-      color="blue-500"
-    />
-    <br />
-    <el.Button
-      size="sm"
-      fill="ghost-solid"
-      shape="circle"
-      icon="gear"
-      label="Button"
-      colors={{
-        off: 'yellow-500',
-        on: { bg: 'blue-500', border: 'blue-500', content: 'white' },
-      }}
-    />
-    <br />
-    <el.Button
-      size="md"
-      fill="ghost-solid"
-      shape="pill"
-      icon="user"
-      label="Button"
-      colors={{
-        off: 'blue-500',
-        on: { bg: 'yellow-500', content: 'gray-900' },
-      }}
-    />
-    <br />
-    <el.Button
-      size="md"
-      fill="ghost-outline"
-      shape="pill"
-      icon="user"
-      label="Button"
-      colors={{ off: 'orange-500', on: 'yellow-500' }}
-    />
-    <br />
-    <el.Button
-      as={z.ui.Link}
-      to="/pages"
-      size="lg"
-      fill="outline"
-      shape="normal"
-      icon={{ name: 'user' }}
-      label={{ text: 'Pages' }}
-      colors={{
-        off: 'blue-500',
-        on: {
-          bg: 'blue-700',
-          border: 'blue-700',
-          content: 'white',
-        },
-      }}
-    />
-    <br />
-    <el.Button
-      size="xl"
-      fill="solid"
-      shape="square"
-      icon={{ name: 'user' }}
-      label={{ text: 'Button' }}
-      colors={{
-        off: { bg: 'blue-500', content: 'gray-900' },
-        on: { bg: 'blue-700', content: 'white' },
+export const LandingRoute = () => {
+  const loading = false
+  const disabled = false
+  const size = 'sm'
+  return (
+    <el.VStack
+      as="section"
+      x="center"
+      y="center"
+      box={{
+        position: 'relative',
+        flex: 1,
+        width: 'full',
+        minHeight: 'screen',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        zIndex: 0,
       }}
     >
-      children
-    </el.Button>
-  </el.VStack>
-)
+      <el.Box as="h1" box={{ fontSize: '2xl', fontWeight: 'medium' }}>
+        Home
+      </el.Box>
+      <el.Box
+        as={z.ui.Link}
+        to="/pages"
+        color={['yellow-500', { hover: 'green-500' }]}
+      >
+        pages
+      </el.Box>
+      <el.Row x="center" y="center">
+        <el.MapIndexed
+          items={[
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'pink-500',
+              fill: 'outline',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'pink-500',
+              shape: 'square',
+              fill: 'outline',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'pink-500',
+              shape: 'pill',
+              fill: 'outline',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'pink-500',
+              shape: 'circle',
+              fill: 'outline',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'teal-500',
+              fill: 'ghost-outline',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'teal-500',
+              shape: 'square',
+              fill: 'ghost-outline',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'teal-500',
+              shape: 'pill',
+              fill: 'ghost-outline',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'teal-500',
+              shape: 'circle',
+              fill: 'ghost-outline',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              colors: { off: 'blue-500', on: 'blue-600' },
+              fill: 'solid',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              colors: { off: 'blue-500', on: 'blue-600' },
+              shape: 'square',
+              fill: 'solid',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              colors: { off: 'blue-500', on: 'blue-600' },
+              shape: 'pill',
+              fill: 'solid',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              colors: { off: 'blue-500', on: 'blue-600' },
+              shape: 'circle',
+              fill: 'solid',
+            },
 
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'purple-500',
+              fill: 'ghost-solid',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'purple-500',
+              shape: 'square',
+              fill: 'ghost-solid',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'purple-500',
+              shape: 'pill',
+              fill: 'ghost-solid',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size,
+              color: 'purple-500',
+              shape: 'circle',
+              fill: 'ghost-solid',
+            },
+          ]}
+          render={(btn, index) => (
+            <el.Button key={index} box={{ margin: 2 }} {...btn} />
+          )}
+        />
+      </el.Row>
+    </el.VStack>
+  )
+}
 export const NotFoundRoute = () => (
   <el.VStack
     as="section"

@@ -25,46 +25,37 @@ const shapes = fn(t =>
     },
   })
 )
-const fills = fn(t => fill =>
+const fills = fn(t =>
   t.match({
-    _: {},
-    ghost: {
-      borderWidth: null,
+    _: {
+      borderWidth: 2,
+      borderColor: 'transparent',
     },
     outline: {
       borderWidth: 2,
     },
-    solid: {
-      borderWidth: null,
-    },
     ghostOutline: {
       borderWidth: 2,
     },
-    ghostSolid: {
-      borderWidth: null,
-    },
-  })(fill)
+  })
 )
 
 const colorByKey = fn(t => (mode, key, colors, color) => {
   const foundColor = t.pathOr(null, [mode, key], colors || {})
   if (t.not(t.isNil(foundColor))) {
-    console.log('FOUND COLOR', foundColor)
     return foundColor
   }
   const modeColor = t.pathOr(null, [mode], colors || {})
   if (t.isType(modeColor, 'string')) {
-    console.log('FOUND COLOR', modeColor)
     return modeColor
   }
   if (t.isType(color, 'string')) {
-    console.log('COLOR', color)
     return color
   }
   return null
 })
 
-const colorsToBox = fn(t => colors => {
+const colorsToBox = colors => {
   return {
     on: {
       bgColor: colorByKey('on', 'bg', colors),
@@ -77,113 +68,138 @@ const colorsToBox = fn(t => colors => {
       color: colorByKey('off', 'content', colors),
     },
   }
-})
+}
+
+const renderColor = fn(t => (fill, colors, color) =>
+  t.match({
+    _: mode =>
+      t.isType(colors, 'object')
+        ? colorsToBox(colors)[mode]
+        : {
+            bgColor: null,
+            borderColor: 'transparent',
+            color: null,
+          },
+
+    ghost: mode =>
+      t.eq(mode, 'off')
+        ? {
+            bgColor: null,
+            borderColor: 'transparent',
+            color: [
+              null,
+              { hover: colorByKey('on', 'content', colors, color) },
+            ],
+          }
+        : {
+            bgColor: null,
+            borderColor: 'transparent',
+            color: colorByKey('on', 'content', colors, color),
+          },
+    outline: mode =>
+      t.eq(mode, 'off')
+        ? {
+            bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
+            borderColor: [
+              colorByKey('off', 'border', colors, color),
+              { hover: colorByKey('on', 'border', colors, color) },
+            ],
+            color: [
+              colorByKey('off', 'content', colors, color),
+              {
+                hover: colorByKey(
+                  'on',
+                  'content',
+                  colors,
+                  colorByKey('off', 'content', colors, 'white')
+                ),
+              },
+            ],
+          }
+        : {
+            bgColor: colorByKey('on', 'bg', colors, color),
+            borderColor: colorByKey('on', 'border', colors, color),
+            color: colorByKey(
+              'on',
+              'content',
+              colors,
+              'white'
+            ),
+          },
+    solid: mode =>
+      t.eq(mode, 'off')
+        ? {
+            bgColor: [
+              colorByKey('off', 'bg', colors, color),
+              { hover: colorByKey('on', 'bg', colors, color) },
+            ],
+            borderColor: 'transparent',
+            color: [
+              colorByKey('off', 'content', colors),
+              { hover: colorByKey('on', 'content', colors) },
+            ],
+            shadow: [null, { hover: true }],
+          }
+        : {
+            bgColor: colorByKey('on', 'bg', colors, color),
+            borderColor: 'transparent',
+            color: colorByKey('on', 'content', colors),
+          },
+    ghostOutline: mode =>
+      t.eq(mode, 'off')
+        ? {
+            bgColor: null,
+            borderColor: [
+              'transparent',
+              { hover: colorByKey('on', 'border', colors, color) },
+            ],
+            color: [
+              colorByKey('off', 'content', colors, color),
+              { hover: colorByKey('on', 'content', colors, color) },
+            ],
+          }
+        : {
+            bgColor: null,
+            borderColor: colorByKey('on', 'border', colors, color),
+            color: colorByKey('on', 'content', colors, color),
+          },
+    ghostSolid: mode =>
+      t.eq(mode, 'off')
+        ? {
+            bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
+            borderColor: 'transparent',
+            color: [
+              colorByKey('off', 'content', colors),
+              { hover: colorByKey('on', 'content', colors) },
+            ],
+          }
+        : {
+            bgColor: colorByKey('on', 'bg', colors, color),
+            borderColor: 'transparent',
+            color: colorByKey('on', 'content', colors),
+          },
+  })(fill)
+)
 
 const buttonColor = fn(t => (fill, active, colors, color) => {
   if (t.and(t.isNil(colors), t.isNil(color))) {
     return {}
   }
-  return t.match({
-    _: t.isType(colors, 'object')
-      ? colorsToBox(colors)
-      : {
-          on: {
-            bgColor: null,
-            borderColor: null,
-            color: null,
-          },
-          off: {
-            bgColor: null,
-            borderColor: null,
-            color: null,
-          },
-        },
-    ghost: {
-      off: {
-        bgColor: null,
-        borderColor: null,
-        color: [null, { hover: colorByKey('on', 'content', colors, color) }],
-      },
-      on: {
-        bgColor: null,
-        borderColor: null,
-        color: colorByKey('on', 'content', colors, color),
-      },
-    },
-    outline: {
-      off: {
-        bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
-        borderColor: [
-          colorByKey('off', 'border', colors, color),
-          { hover: colorByKey('on', 'border', colors, color) },
-        ],
-        color: colorByKey('off', 'content', colors),
-      },
-      on: {
-        bgColor: colorByKey('on', 'bg', colors, color),
-        borderColor: colorByKey('on', 'border', colors, color),
-        color: colorByKey(
-          'on',
-          'content',
-          colors,
-          colorByKey('off', 'content', colors)
-        ),
-      },
-    },
-    solid: {
-      off: {
-        bgColor: colorByKey('off', 'bg', colors, color),
-        borderColor: null,
-        color: colorByKey('off', 'content', colors),
-        shadow: [null, { hover: true }],
-      },
-      on: {
-        bgColor: colorByKey('on', 'bg', colors, color),
-        borderColor: null,
-        color: colorByKey('on', 'content', colors),
-      },
-    },
-    ghostOutline: {
-      off: {
-        bgColor: null,
-        borderColor: [
-          'transparent',
-          { hover: colorByKey('on', 'border', colors, color) },
-        ],
-        color: [null, { hover: colorByKey('on', 'content', colors, color) }],
-      },
-      on: {
-        bgColor: null,
-        borderColor: colorByKey('on', 'border', colors, color),
-        color: colorByKey('on', 'content', colors, color),
-      },
-    },
-    ghostSolid: {
-      off: {
-        bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
-        borderColor: null,
-        color: [
-          colorByKey('off', 'content', colors),
-          { hover: colorByKey('on', 'content', colors) },
-        ],
-      },
-      on: {
-        bgColor: colorByKey('on', 'bg', colors, color),
-        borderColor: null,
-        color: colorByKey('on', 'content', colors),
-      },
-    },
-  })(fill)[active ? 'on' : 'off']
+  const render = renderColor(fill, colors, color)
+  if (t.isType(render, 'function')) {
+    return render(active ? 'on' : 'off')
+  }
+  return {}
 })
 
 // size
 const iconSize = fn(t =>
   t.match({
-    _: '2xl',
-    xs: 'lg',
-    sm: 'xl',
-    lg: '3xl',
-    xl: '4xl',
+    _: '3xl',
+    xs: 'xl',
+    sm: '2xl',
+    lg: '4xl',
+    xl: '5xl',
   })
 )
 const spinnerSize = fn(t =>
@@ -204,8 +220,8 @@ const circleSize = fn(t =>
       height: '1.95rem',
     },
     sm: {
-      width: '2.2rem',
-      height: '2.2rem',
+      width: '2.3rem',
+      height: '2.3rem',
     },
     lg: {
       width: '2.9rem',

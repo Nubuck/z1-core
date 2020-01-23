@@ -72,20 +72,23 @@ export const LandingRoute = () => (
     />
     <el.Button
       size="xs"
-      fill="ghost-solid"
+      fill="outline"
       shape="circle"
-      icon="user"
+      icon="gear"
       label="Button"
       color="blue-500"
     />
     <br />
     <el.Button
       size="sm"
-      fill="outline"
+      fill="ghost-solid"
       shape="circle"
-      icon="user"
+      icon="gear"
       label="Button"
-      colors={{ on: 'blue-500', off: 'yellow-500' }}
+      colors={{
+        off: 'yellow-500',
+        on: { bg: 'blue-500', border: 'blue-500', content: 'white' },
+      }}
     />
     <br />
     <el.Button
@@ -101,19 +104,24 @@ export const LandingRoute = () => (
     />
     <br />
     <el.Button
+      size="md"
+      fill="ghost-outline"
+      shape="pill"
+      icon="user"
+      label="Button"
+      colors={{ off: 'orange-500', on: 'yellow-500' }}
+    />
+    <br />
+    <el.Button
       as={z.ui.Link}
       to="/pages"
       size="lg"
       fill="outline"
       shape="normal"
       icon={{ name: 'user' }}
-      label={{ text: 'Button' }}
+      label={{ text: 'Pages' }}
       colors={{
-        off: {
-          bg: 'blue-500',
-          border: 'blue-500',
-          content: 'white',
-        },
+        off: 'blue-500',
         on: {
           bg: 'blue-700',
           border: 'blue-700',
@@ -124,11 +132,14 @@ export const LandingRoute = () => (
     <br />
     <el.Button
       size="xl"
-      fill="outline"
-      shape="pill"
-      icon={{ name: 'user', color: 'yellow-500' }}
-      label={{ text: 'Button', color: 'pink-500' }}
-      color="green-500"
+      fill="solid"
+      shape="square"
+      icon={{ name: 'user' }}
+      label={{ text: 'Button' }}
+      colors={{
+        off: { bg: 'blue-500', content: 'gray-900' },
+        on: { bg: 'blue-700', content: 'white' },
+      }}
     >
       children
     </el.Button>

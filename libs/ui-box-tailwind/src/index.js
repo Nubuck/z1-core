@@ -485,10 +485,10 @@ export const tailwindConfig = fn(t => (props = {}) => {
         },
         transitionDuration: {
           // defaults to these values
-          default: '300ms',
+          default: '250ms',
           '0': '0ms',
           '100': '100ms',
-          '250': '300ms',
+          '250': '250ms',
           '500': '500ms',
           '750': '750ms',
           '1000': '1000ms',

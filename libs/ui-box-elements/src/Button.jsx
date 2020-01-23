@@ -411,7 +411,7 @@ const renderButton = fn(t => props => {
         t.isZeroLen(className) ? '' : `${className} `
       }${transition} ${shape} ${fill}`,
       style: isCircle ? t.merge(circleSize(size), style) : style,
-      disabled: loading || disabled,
+      disabled: loading ? true : disabled,
     }),
     [
       React.createElement(

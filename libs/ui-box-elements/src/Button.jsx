@@ -119,12 +119,7 @@ const renderColor = fn(t => (fill, colors, color) =>
         : {
             bgColor: colorByKey('on', 'bg', colors, color),
             borderColor: colorByKey('on', 'border', colors, color),
-            color: colorByKey(
-              'on',
-              'content',
-              colors,
-              'white'
-            ),
+            color: colorByKey('on', 'content', colors, 'white'),
           },
     solid: mode =>
       t.eq(mode, 'off')
@@ -328,6 +323,7 @@ const renderButton = fn(t => props => {
       'colors',
       'color',
       'loading',
+      'disabled',
       'icon',
       'label',
       'children',
@@ -415,6 +411,7 @@ const renderButton = fn(t => props => {
         t.isZeroLen(className) ? '' : `${className} `
       }${transition} ${shape} ${fill}`,
       style: isCircle ? t.merge(circleSize(size), style) : style,
+      disabled: loading || disabled,
     }),
     [
       React.createElement(

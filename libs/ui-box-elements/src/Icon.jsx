@@ -15,7 +15,10 @@ const renderIcon = fn(t => props => {
   return React.createElement(
     Box,
     t.merge(
-      t.omit(['as', 'prefix', 'className', 'name', 'size', 'box'], props),
+      t.omit(
+        ['as', 'prefix', 'iconPrefix', 'className', 'name', 'size', 'box'],
+        props
+      ),
       {
         as: el,
         className: `${prefix} ${iconPrefix}-${icon}${

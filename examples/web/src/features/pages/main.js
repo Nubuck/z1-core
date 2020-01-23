@@ -2,7 +2,7 @@ import z from '@z1/lib-feature-box'
 
 // parts
 import { state } from './state'
-import { route, LandingRoute, NotFoundRoute } from './route'
+import { route, landingRoute, notFoundRoute } from './route'
 
 // main
 export const feature = z.create(
@@ -15,11 +15,11 @@ export const feature = z.create(
       routing: [
         {
           action: [z.routing.actions.notFound],
-          ui: NotFoundRoute,
+          ui: notFoundRoute(ctx.ui),
         },
         {
           action: [state.actions.routeLanding],
-          ui: LandingRoute,
+          ui: landingRoute(ctx.ui),
         },
         {
           action: [

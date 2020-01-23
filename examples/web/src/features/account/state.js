@@ -170,41 +170,45 @@ export const state = z.fn((t, a) =>
             }
           ),
           fx([box.actions.authenticate], async (ctx, dispatch, done) => {
-            const [authError, authResult] = await a.of(
-              ctx.api.authentication.reAuthenticate()
-            )
-            if (authError) {
-              dispatch(
-                box.mutators.authenticateComplete({
-                  status: authStatus.fail,
-                  user: null,
-                  error: authError,
-                })
+            try {
+              const [authError, authResult] = await a.of(
+                ctx.api.authentication.reAuthenticate()
               )
-              done()
-            } else {
-              dispatch(
-                box.mutators.authenticateComplete({
-                  status: authStatus.success,
-                  user: authResult,
-                  error: null,
-                })
-              )
-              const redirectBackTo = t.path(
-                ['account', 'redirectBackTo'],
-                ctx.getState()
-              )
-              if (t.isNil(redirectBackTo)) {
-                const routesMap = t.path(['location', 'routesMap'], state)
+              if (authError) {
                 dispatch(
-                  ctx.redirect(z.routing.parts.pathToAction('/', routesMap))
+                  box.mutators.authenticateComplete({
+                    status: authStatus.fail,
+                    user: null,
+                    error: authError,
+                  })
                 )
                 done()
               } else {
-                dispatch(box.mutators.redirectChange(null))
-                dispatch(ctx.redirect(redirectBackTo))
-                done()
+                dispatch(
+                  box.mutators.authenticateComplete({
+                    status: authStatus.success,
+                    user: authResult,
+                    error: null,
+                  })
+                )
+                const redirectBackTo = t.path(
+                  ['account', 'redirectBackTo'],
+                  ctx.getState()
+                )
+                if (t.isNil(redirectBackTo)) {
+                  const routesMap = t.path(['location', 'routesMap'], state)
+                  dispatch(
+                    ctx.redirect(z.routing.parts.pathToAction('/', routesMap))
+                  )
+                  done()
+                } else {
+                  dispatch(box.mutators.redirectChange(null))
+                  dispatch(ctx.redirect(redirectBackTo))
+                  done()
+                }
               }
+            } catch (e) {
+              done()
             }
           }),
           fx([box.actions.routeView], (ctx, dispatch, done) => {

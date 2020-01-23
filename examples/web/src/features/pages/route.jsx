@@ -1,7 +1,6 @@
 import React from 'react'
 import z from '@z1/lib-feature-box'
 import mx from '@z1/lib-feature-macros'
-import el from '@z1/lib-ui-box-elements'
 
 //parts
 import views from './views'
@@ -10,42 +9,29 @@ import views from './views'
 export const route = ctx => {
   const Views = views.ui(ctx.ui)
   return z.ui.connect(
-    z.ui.query([{ pages: 'state' }]),
+    { pages: 'state' },
     ctx.mutators
   )(props => mx.routeView.render(Views, props.state, props.mutations))
 }
 
-export const LandingRoute = () => {
+export const landingRoute = ctx => () => {
   const loading = false
   const disabled = false
   const size = 'sm'
   return (
-    <el.VStack
-      as="section"
-      x="center"
-      y="center"
-      box={{
-        position: 'relative',
-        flex: 1,
-        width: 'full',
-        minHeight: 'screen',
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        zIndex: 0,
-      }}
-    >
-      <el.Box as="h1" box={{ fontSize: '2xl', fontWeight: 'medium' }}>
+    <ctx.Page key='landing'>
+      <ctx.Box as="h1" box={{ fontSize: '2xl', fontWeight: 'medium' }}>
         Home
-      </el.Box>
-      <el.Box
+      </ctx.Box>
+      <ctx.Box
         as={z.ui.Link}
         to="/pages"
         color={['yellow-500', { hover: 'green-500' }]}
       >
         pages
-      </el.Box>
-      <el.Row x="center" y="center">
-        <el.MapIndexed
+      </ctx.Box>
+      <ctx.Row x="center" y="center">
+        <ctx.MapIndexed
           items={[
             {
               loading,
@@ -206,15 +192,15 @@ export const LandingRoute = () => {
             },
           ]}
           render={(btn, index) => (
-            <el.Button key={index} box={{ margin: 2 }} {...btn} />
+            <ctx.Button key={index} box={{ margin: 2 }} {...btn} />
           )}
         />
-      </el.Row>
-    </el.VStack>
+      </ctx.Row>
+    </ctx.Page>
   )
 }
-export const NotFoundRoute = () => (
-  <el.VStack
+export const notFoundRoute = ctx => () => (
+  <ctx.VStack
     as="section"
     x="center"
     y="center"
@@ -228,15 +214,15 @@ export const NotFoundRoute = () => (
       zIndex: 0,
     }}
   >
-    <el.Box as="h1" box={{ fontSize: 'lg', fontWeight: 'medium' }}>
+    <ctx.Box as="h1" box={{ fontSize: 'lg', fontWeight: 'medium' }}>
       404 Not Found
-    </el.Box>
-    <el.Box
+    </ctx.Box>
+    <ctx.Box
       as={z.ui.Link}
       to="/"
       color={['yellow-500', { hover: 'green-500' }]}
     >
       home
-    </el.Box>
-  </el.VStack>
+    </ctx.Box>
+  </ctx.VStack>
 )

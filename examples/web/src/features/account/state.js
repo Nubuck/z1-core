@@ -226,6 +226,7 @@ export const state = z.fn((t, a) =>
         ]
       },
       onInit(ctx) {
+        console.log('Account init')
         ctx.dispatch(ctx.mutators.boot())
         ctx.api.io.on('connect', () => {
           ctx.dispatch(ctx.mutators.connection(true))
@@ -233,6 +234,9 @@ export const state = z.fn((t, a) =>
         ctx.api.io.on('disconnect', () => {
           ctx.dispatch(ctx.mutators.connection(false))
         })
+      },
+      afterInit() {
+        console.log('Account after')
       },
     },
     mx.routeView.configure(name, {

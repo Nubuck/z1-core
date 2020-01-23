@@ -57,6 +57,9 @@ export const state = z.fn(t =>
       routes(r) {
         return [r('/', 'routeLanding', state => state)]
       },
+      onInit(){
+        console.log('Pages init')
+      }
     },
     mx.routeView.configure(name, {
       path: 'pages',

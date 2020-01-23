@@ -8,9 +8,12 @@ export const combine = fn(t => (boxes = [], combineWith = () => ({})) => {
         {
           reducers: t.merge(nextBoxes.reducers, { [box.name]: box.reducer }),
           effects: t.concat(nextBoxes.effects, box.effects),
-          onInit: t.not(box.onInit)
+          onInit: t.isNil(box.onInit)
             ? nextBoxes.onInit
             : t.concat(nextBoxes.onInit, [box.onInit]),
+          afterInit: t.isNil(box.afterInit)
+            ? nextBoxes.afterInit
+            : t.concat(nextBoxes.afterInit, [box.afterInit]),
         },
         combineWith(nextBoxes, box)
       )
@@ -19,6 +22,7 @@ export const combine = fn(t => (boxes = [], combineWith = () => ({})) => {
       reducers: {},
       effects: [],
       onInit: [],
+      afterInit: [],
     },
     boxes
   )

@@ -52,6 +52,11 @@ const create = fn(
         onInit(ctx)
       }
     }, nextBoxes.onInit)
+    t.forEach(afterInit => {
+      if (t.isType(afterInit, 'Function')) {
+        afterInit(ctx)
+      }
+    }, nextBoxes.afterInit)
     return store
   }
 )

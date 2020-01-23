@@ -6,7 +6,7 @@ import { createMutationFactory, createEffectFactory } from './parts'
 
 // main
 const create = fn(
-  t => ({ name, initial, mutations, guards, effects, onInit }) => {
+  t => ({ name, initial, mutations, guards, effects, onInit, afterInit }) => {
     const nextHandles = t.reduce(
       (handles, mutation) => {
         return {
@@ -39,6 +39,7 @@ const create = fn(
     const fx = t.not(effects)
       ? []
       : effects(createEffectFactory('fx'), effectContext)
+
     return {
       name,
       actions: nextHandles.actions,
@@ -51,6 +52,19 @@ const create = fn(
         ? undefined
         : ctx => {
             onInit(
+              t.merge(ctx, {
+                name,
+                actions: nextHandles.actions,
+                mutators: nextHandles.mutators,
+                // for back compat
+                mutations: nextHandles.mutators,
+              })
+            )
+          },
+      afterInit: t.not(afterInit)
+        ? undefined
+        : ctx => {
+            afterInit(
               t.merge(ctx, {
                 name,
                 actions: nextHandles.actions,
@@ -84,6 +98,9 @@ const compose = fn(t => (props, parts, composeWith, createWith) => {
           onInit: t.not(t.has('onInit')(part))
             ? collection.onInit
             : t.concat(collection.onInit, [part.onInit]),
+          afterInit: t.not(t.has('afterInit')(part))
+            ? collection.afterInit
+            : t.concat(collection.afterInit, [part.afterInit]),
         },
         composeWith(collection, part)
       )
@@ -94,6 +111,7 @@ const compose = fn(t => (props, parts, composeWith, createWith) => {
       guards: [],
       effects: [],
       onInit: [],
+      afterInit: [],
     },
     parts || []
   )
@@ -121,6 +139,9 @@ const compose = fn(t => (props, parts, composeWith, createWith) => {
         },
         onInit(ctx) {
           t.forEach(onInit => onInit(ctx), nextParts.onInit || [])
+        },
+        afterInit(ctx) {
+          t.forEach(afterInit => afterInit(ctx), nextParts.afterInit || [])
         },
       },
     ])

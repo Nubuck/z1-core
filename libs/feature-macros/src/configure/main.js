@@ -338,7 +338,6 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
           async ({ getState, action }, dispatch, done) => {
             const state = getState()
             const prev = state.location.prev
-            const boxState = state[boxName]
             if (t.not(t.includes(prev.type, routeActionTypes))) {
               done()
             } else {

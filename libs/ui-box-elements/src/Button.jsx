@@ -49,13 +49,16 @@ const fills = fn(t => fill =>
 const colorByKey = fn(t => (mode, key, colors, color) => {
   const foundColor = t.pathOr(null, [mode, key], colors || {})
   if (t.not(t.isNil(foundColor))) {
+    console.log('FOUND COLOR', foundColor)
     return foundColor
   }
   const modeColor = t.pathOr(null, [mode], colors || {})
   if (t.isType(modeColor, 'string')) {
+    console.log('FOUND COLOR', modeColor)
     return modeColor
   }
   if (t.isType(color, 'string')) {
+    console.log('COLOR', color)
     return color
   }
   return null
@@ -80,7 +83,6 @@ const buttonColor = fn(t => (fill, active, colors, color) => {
   if (t.and(t.isNil(colors), t.isNil(color))) {
     return {}
   }
-  console.log('BUTTON COLOR', fill, active, colors, color)
   return t.match({
     _: t.isType(colors, 'object')
       ? colorsToBox(colors)
@@ -215,7 +217,7 @@ const circleSize = fn(t =>
     },
   })
 )
-const buttonSize = fn(t =>
+const buttonSpacing = fn(t =>
   t.match({
     _: {
       padding: { y: 2, x: 3 },
@@ -387,7 +389,7 @@ const renderButton = fn(t => props => {
       as: el,
       box: t.mergeAll([
         layout.container,
-        buttonSize(size),
+        buttonSpacing(size),
         shapes(shape),
         fills(fill),
         buttonColor(fill, t.or(loading, disabled), colors, color),

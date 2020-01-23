@@ -11,11 +11,11 @@ export const field = fn(
     childrenOrAdditional,
     otherAdditional
   ) => {
-    const none = 'none'
-    const name = t.isType(nameOrProps, 'string') ? nameOrProps : none
-    const props = t.eq(name, none) ? nameOrProps : propsOrChildren
-    const children = t.eq(name, none) ? propsOrChildren : childrenOrAdditional
-    const additional = t.eq(name, none) ? childrenOrAdditional : otherAdditional
+    const name = t.isType(nameOrProps, 'string') ? nameOrProps : 'none'
+    const noName = t.eq(name, 'none') 
+    const props = noName ? nameOrProps : propsOrChildren
+    const children = noName ? propsOrChildren : childrenOrAdditional
+    const additional = noName ? childrenOrAdditional : otherAdditional
     const ui = t.pathOr({}, ['ui'], props)
     const required = t.pathOr(false, ['required'], props)
     // next

@@ -2,7 +2,7 @@ import React from 'react'
 import { fn } from '@z1/lib-ui-box'
 
 // elements
-import { Box } from './Box'
+import { renderBox } from './Box'
 import { Spinner } from './Spinner'
 import { Icon } from './Icon'
 
@@ -300,24 +300,24 @@ const renderIcon = fn(t => (size, icon) =>
     t.mergeAll([{ key: 'icon', size: iconSize(size) }, t.omit(['size'], icon)])
   )
 )
-const renderLabel = fn(t => (isCircle, noIcon, label) =>
-  React.createElement(
-    Box,
-    t.merge(t.omit(['text', 'children', 'box'], label), {
+const Label = fn(t => ({ isCircle, noIcon, text, children, ...props }) =>
+  renderBox(
+    t.merge(t.omit(['text', 'children', 'box'], props), {
       key: 'label',
       box: t.mergeAll([
         {
           margin: isCircle ? 0 : noIcon ? { right: 1 } : { x: 1 },
         },
-        t.pathOr({}, ['box'], label),
+        t.pathOr({}, ['box'], props),
       ]),
-    }),
-    t.isNil(label.text) ? label.children || null : label.text
+      children: t.isNil(text) ? children || null : text,
+    })
   )
 )
+Label.displayName = 'Label'
 
 // main
-const renderButton = fn(t => props => {
+export const renderButton = fn(t => props => {
   const nextProps = t.omit(
     [
       'as',
@@ -404,18 +404,32 @@ const renderButton = fn(t => props => {
       ? []
       : noIcon
       ? [
-          renderLabel(isCircle, noIcon, {
+          React.createElement(Label, {
+            isCircle,
+            noIcon,
             text: t.to.constantCase(t.head(`${nextLabel.text || ''}`)),
           }),
         ]
       : [renderIcon(size, nextIcon)]
     : t.concat(
         noIcon ? [] : [renderIcon(size, nextIcon)],
-        noLabel ? [] : [renderLabel(isCircle, noIcon, nextLabel)]
+        noLabel
+          ? []
+          : [
+              React.createElement(
+                Label,
+                t.merge(
+                  {
+                    isCircle,
+                    noIcon,
+                  },
+                  nextLabel
+                )
+              ),
+            ]
       )
   // yield
-  return React.createElement(
-    Box,
+  return renderBox(
     t.merge(nextProps, {
       as: el,
       box: t.mergeAll([
@@ -436,34 +450,35 @@ const renderButton = fn(t => props => {
       }${transition} ${shape} ${fill}`,
       style: isCircle ? t.merge(circleSize(size), style) : style,
       disabled: loading ? true : disabled,
-    }),
-    [
-      React.createElement(
-        Box,
-        {
+      children: [
+        renderBox({
           key: 'content',
           box: t.merge(
             layout.content,
             isCircle ? {} : noLabel ? {} : { padding: { right: 1 } }
           ),
-        },
-        t.concat(
-          nextChildren,
-          t.allOf([isCircle, noIcon, noLabel])
-            ? [props.children]
-            : isCircle
-            ? []
-            : [props.children]
-        )
-      ),
-      React.createElement(Box, { key: 'spinner-box', box: layout.spinner }, [
-        React.createElement(Spinner, {
-          key: 'spinner',
-          size: spinnerSize(size),
-          color: 'white',
+          children: t.concat(
+            nextChildren,
+            t.allOf([isCircle, noIcon, noLabel])
+              ? [props.children]
+              : isCircle
+              ? []
+              : [props.children]
+          ),
         }),
-      ]),
-    ]
+        renderBox({
+          key: 'spinner-box',
+          box: layout.spinner,
+          children: [
+            React.createElement(Spinner, {
+              key: 'spinner',
+              size: spinnerSize(size),
+              color: 'white',
+            }),
+          ],
+        }),
+      ],
+    })
   )
 })
 

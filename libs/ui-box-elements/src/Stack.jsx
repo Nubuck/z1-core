@@ -2,7 +2,7 @@ import React from 'react'
 import { fn } from '@z1/lib-ui-box'
 
 // elements
-import { Box } from './Box'
+import { renderBox } from './Box'
 
 // main
 const matchX = fn(t =>
@@ -11,7 +11,7 @@ const matchX = fn(t =>
 const matchY = fn(t =>
   t.match({ top: 'start', center: 'center', bottom: 'end' })
 )
-const renderStack = fn(t => (direction, props) => {
+export const renderStack = fn(t => (direction, props) => {
   const stackProps = {
     flexDirection: t.eq(direction, 'vertical') ? 'col' : 'row',
   }
@@ -44,8 +44,7 @@ const renderStack = fn(t => (direction, props) => {
         height: 'full',
       }
     : {}
-  return React.createElement(
-    Box,
+  return renderBox(
     t.merge(t.omit(['box', 'x', 'y', 'direction'], props), {
       box: t.mergeAll([
         {

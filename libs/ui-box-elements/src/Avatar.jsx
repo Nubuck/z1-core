@@ -1,6 +1,8 @@
 import React from 'react'
-import z from '@z1/lib-feature-box'
-import { Button } from '@z1/lib-ui-box-elements'
+import { fn } from '@z1/lib-ui-box'
+
+// elements
+import { renderButton } from './Button'
 
 // main
 const baseProps = {
@@ -8,7 +10,7 @@ const baseProps = {
   shape: 'circle',
   fill: 'outline',
 }
-const circleSize = z.fn(t =>
+const circleSize = fn(t =>
   t.match({
     _: {
       width: '2.9rem',
@@ -32,7 +34,7 @@ const circleSize = z.fn(t =>
     },
   })
 )
-const renderAvatar = z.fn(t => props => {
+const renderAvatar = fn(t => props => {
   const src = t.pathOr(null, ['src'], props)
   const to = t.pathOr(null, ['to'], props)
   const onClick = t.pathOr(null, ['onClick'], props)
@@ -57,7 +59,7 @@ const renderAvatar = z.fn(t => props => {
           ]),
         },
   ])
-  return <Button {...nextProps} />
+  return renderButton(nextProps)
 })
 
 export class Avatar extends React.Component {

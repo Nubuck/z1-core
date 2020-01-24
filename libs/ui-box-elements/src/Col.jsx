@@ -2,7 +2,7 @@ import React from 'react'
 import { fn } from '@z1/lib-ui-box'
 
 // elements
-import { VStack } from './Stack'
+import { renderStack } from './Stack'
 
 // tasks
 const colWidth = fn(t => width =>
@@ -11,8 +11,8 @@ const colWidth = fn(t => width =>
 
 // main
 const renderCol = fn(t => props =>
-  React.createElement(
-    VStack,
+  renderStack(
+    'vertical',
     t.merge(t.omit(['box', 'xs', 'sm', 'md', 'lg', 'xl'], props), {
       box: t.merge(
         {

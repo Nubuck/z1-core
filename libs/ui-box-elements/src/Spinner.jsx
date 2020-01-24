@@ -2,7 +2,7 @@ import React from 'react'
 import { fn } from '@z1/lib-ui-box'
 
 // elements
-import { Box } from './Box'
+import { renderBox } from './Box'
 
 // main
 const matchSize = fn(t =>
@@ -35,8 +35,7 @@ const renderSpinner = fn(t => props => {
   const color = t.pathOr('white', ['color'], props)
   const className = t.pathOr(null, ['className'], props)
   const style = t.pathOr({}, ['style'], props)
-  return React.createElement(
-    Box,
+  return renderBox(
     t.merge(t.omit(['className', 'size', 'color', 'box'], props), {
       className: `spinner${
         t.eq(size, 'default') ? '' : ` spinner-${size}`

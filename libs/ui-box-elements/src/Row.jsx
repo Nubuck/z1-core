@@ -2,12 +2,12 @@ import React from 'react'
 import { fn } from '@z1/lib-ui-box'
 
 // elements
-import { HStack } from './Stack'
+import { renderStack } from './Stack'
 
 // main
 const renderRow = fn(t => props =>
-  React.createElement(
-    HStack,
+  renderStack(
+    'horizontal',
     t.merge(t.omit(['box'], props), {
       box: t.merge({ flexWrap: true }, t.pathOr({}, ['box'], props)),
     })

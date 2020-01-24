@@ -2,7 +2,7 @@ import React from 'react'
 import { uiBox, fn } from '@z1/lib-ui-box'
 
 // main
-const renderBox = fn(t => props => {
+export const renderBox = fn(t => props => {
   const Element = t.pathOr('div', ['as'], props)
   const box = t.pathOr(null, ['box'], props)
   const next = t.pathOr(null, ['next'], props)

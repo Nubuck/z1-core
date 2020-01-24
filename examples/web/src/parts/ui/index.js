@@ -2,7 +2,6 @@ import z from '@z1/lib-feature-box'
 import el from '@z1/lib-ui-box-elements'
 
 // elements
-import { Avatar } from './Avatar'
 import { Form } from './Form'
 import { IconLabel } from './IconLabel'
 import { ListItem } from './ListItem'
@@ -16,7 +15,6 @@ export const ui = {
   ...el,
   Link: z.ui.Link,
   NavLink: z.ui.NavLink,
-  Avatar,
   Form,
   IconLabel,
   ListItem,

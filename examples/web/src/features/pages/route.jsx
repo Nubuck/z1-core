@@ -15,7 +15,7 @@ export const route = ctx => {
 }
 
 export const landingRoute = ctx => () => {
-  const loading = false
+  const loading = true
   const disabled = false
   const size = 'md'
   return (

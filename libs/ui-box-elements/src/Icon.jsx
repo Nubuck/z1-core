@@ -2,7 +2,7 @@ import React from 'react'
 import { fn } from '@z1/lib-ui-box'
 
 // elements
-import { Box } from './Box'
+import { renderBox } from './Box'
 
 // main
 const renderIcon = fn(t => props => {
@@ -12,8 +12,7 @@ const renderIcon = fn(t => props => {
   const icon = t.pathOr('', ['name'], props)
   const fontSize = t.pathOr(null, ['size'], props)
   const className = t.pathOr(null, ['className'], props)
-  return React.createElement(
-    Box,
+  return renderBox(
     t.merge(
       t.omit(
         ['as', 'prefix', 'iconPrefix', 'className', 'name', 'size', 'box'],

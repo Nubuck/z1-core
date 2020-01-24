@@ -49,20 +49,21 @@ const renderText = z.fn(t => (props, baseProps = {}) => {
     </Box>
   )
 })
-const Left = z.fn(t => ({ children, ...props }) => {
+const Left = ({ children, ...props }) => {
   return (
     <Col x="center" justifyContent="between" {...props}>
       {children}
     </Col>
   )
-})
-const Right = z.fn(t => ({ children, ...props }) => {
+}
+const Right = ({ children, ...props }) => {
   return (
     <Col x="center" justifyContent="between" {...props}>
       {children}
     </Col>
   )
-})
+}
+
 // main
 const renderIconLabel = z.fn(t => props => {
   // icon col

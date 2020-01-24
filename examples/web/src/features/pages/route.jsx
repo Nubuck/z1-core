@@ -15,7 +15,7 @@ export const route = ctx => {
 }
 
 export const landingRoute = ctx => () => {
-  const loading = true
+  const loading = false
   const disabled = false
   const size = 'md'
   return (
@@ -192,7 +192,7 @@ export const landingRoute = ctx => () => {
             },
           ]}
           render={(btn, index) => (
-            <ctx.Button key={index} box={{ margin: 2 }} {...btn} />
+            <ctx.Button key={`btn${index}`} box={{ margin: 2 }} {...btn} />
           )}
         />
       </ctx.Row>
@@ -251,14 +251,11 @@ export const landingRoute = ctx => () => {
             },
           ]}
           render={(avatar, index) => (
-            <ctx.Avatar key={index} box={{ margin: 2 }} {...avatar} />
+            <ctx.Avatar key={`av${index}`} box={{ margin: 2 }} {...avatar} />
           )}
         />
       </ctx.Row>
-      <ctx.IconLabel
-        icon={{ name: 'gear', size: '2xl' }}
-        label={{ children: 'label', margin: { left: 2 } }}
-      />
+      <ctx.IconLabel icon="gear" caption="okay" label="text" info="info" />
     </ctx.Page>
   )
 }

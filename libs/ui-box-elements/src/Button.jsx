@@ -310,8 +310,8 @@ const Label = fn(t => ({ isCircle, noIcon, text, children, ...props }) =>
         },
         t.pathOr({}, ['box'], props),
       ]),
-      children: t.isNil(text) ? children || null : text,
-    })
+    }),
+    t.isNil(text) ? children || null : text
   )
 )
 Label.displayName = 'Label'
@@ -405,6 +405,7 @@ export const renderButton = fn(t => props => {
       : noIcon
       ? [
           React.createElement(Label, {
+            key: 'label',
             isCircle,
             noIcon,
             text: t.to.constantCase(t.head(`${nextLabel.text || ''}`)),
@@ -420,6 +421,7 @@ export const renderButton = fn(t => props => {
                 Label,
                 t.merge(
                   {
+                    key: 'label',
                     isCircle,
                     noIcon,
                   },
@@ -450,35 +452,52 @@ export const renderButton = fn(t => props => {
       }${transition} ${shape} ${fill}`,
       style: isCircle ? t.merge(circleSize(size), style) : style,
       disabled: loading ? true : disabled,
-      children: [
-        renderBox({
+    }),
+    [
+      renderBox(
+        {
           key: 'content',
           box: t.merge(
             layout.content,
             isCircle ? {} : noLabel ? {} : { padding: { right: 1 } }
           ),
-          children: t.concat(
-            nextChildren,
-            t.allOf([isCircle, noIcon, noLabel])
-              ? [props.children]
-              : isCircle
-              ? []
-              : [props.children]
-          ),
-        }),
-        renderBox({
+        },
+        t.concat(
+          nextChildren,
+          t.allOf([isCircle, noIcon, noLabel])
+            ? [props.children]
+            : isCircle
+            ? []
+            : [props.children]
+        )
+      ),
+      renderBox(
+        {
           key: 'spinner-box',
           box: layout.spinner,
-          children: [
-            React.createElement(Spinner, {
-              key: 'spinner',
-              size: spinnerSize(size),
-              color: 'white',
-            }),
-          ],
-        }),
-      ],
-    })
+        },
+        [
+          React.createElement(Spinner, {
+            key: 'spinner',
+            size: spinnerSize(size),
+            color: colorByKey(
+              'on',
+              'content',
+              colors,
+              t.or(
+                t.and(
+                  t.eq(fill, 'outline'),
+                  t.anyOf([loading, disabled, inactive])
+                ),
+                t.includes('solid', t.to.lowerCase(fill))
+              )
+                ? 'white'
+                : color || 'white'
+            ),
+          }),
+        ]
+      ),
+    ]
   )
 })
 

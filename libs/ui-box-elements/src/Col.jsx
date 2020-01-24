@@ -10,8 +10,12 @@ const colWidth = fn(t => width =>
 )
 
 // main
-const renderCol = fn(t => props =>
-  renderStack(
+const renderCol = fn(t => props => {
+  const sm = colWidth(t.pathOr(null, ['sm'], props))
+  const md = colWidth(t.pathOr(null, ['md'], props))
+  const lg = colWidth(t.pathOr(null, ['lg'], props))
+  const xl = colWidth(t.pathOr(null, ['xl'], props))
+  return renderStack(
     'vertical',
     t.merge(t.omit(['box', 'xs', 'sm', 'md', 'lg', 'xl'], props), {
       box: t.merge(
@@ -19,19 +23,19 @@ const renderCol = fn(t => props =>
           flex: 'none',
           width: [
             colWidth(t.pathOr(null, ['xs'], props)),
-            {
-              sm: colWidth(t.pathOr(null, ['sm'], props)),
-              md: colWidth(t.pathOr(null, ['md'], props)),
-              lg: colWidth(t.pathOr(null, ['lg'], props)),
-              xl: colWidth(t.pathOr(null, ['xl'], props)),
-            },
+            t.mergeAll([
+              t.isNil(sm) ? {} : { sm },
+              t.isNil(md) ? {} : { md },
+              t.isNil(lg) ? {} : { lg },
+              t.isNil(xl) ? {} : { xl },
+            ]),
           ],
         },
         t.pathOr({}, ['box'], props)
       ),
     })
   )
-)
+})
 
 export class Col extends React.Component {
   render() {

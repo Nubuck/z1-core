@@ -32,7 +32,8 @@ const matchSize = fn(t =>
 )
 const renderSpinner = fn(t => props => {
   const size = t.pathOr('default', ['size'], props)
-  const color = t.pathOr('white', ['color'], props)
+  const colorProp = t.pathOr('white', ['color'], props)
+  const color = t.head(t.split('-', colorProp))
   const className = t.pathOr(null, ['className'], props)
   const style = t.pathOr({}, ['style'], props)
   return renderBox(

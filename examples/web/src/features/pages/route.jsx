@@ -204,7 +204,7 @@ export const landingRoute = ctx => () => {
               disabled,
               // icon: 'gear',
               label: 'button',
-              size:'xs',
+              size: 'xs',
               // color: 'purple-500',
               fill: 'outline',
               src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
@@ -214,7 +214,7 @@ export const landingRoute = ctx => () => {
               disabled,
               // icon: 'gear',
               label: 'button',
-              size:'sm',
+              size: 'sm',
               // color: 'purple-500',
               fill: 'outline',
               src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
@@ -224,7 +224,7 @@ export const landingRoute = ctx => () => {
               disabled,
               // icon: 'gear',
               label: 'button',
-              size:'md',
+              size: 'md',
               // color: 'purple-500',
               fill: 'outline',
               src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
@@ -234,7 +234,7 @@ export const landingRoute = ctx => () => {
               disabled,
               // icon: 'gear',
               label: 'button',
-              size:'lg',
+              size: 'lg',
               // color: 'purple-500',
               fill: 'outline',
               src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
@@ -244,7 +244,7 @@ export const landingRoute = ctx => () => {
               disabled,
               icon: 'gear',
               label: 'button',
-              size:'xl',
+              size: 'xl',
               // color: 'purple-500',
               fill: 'outline',
               src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
@@ -255,6 +255,10 @@ export const landingRoute = ctx => () => {
           )}
         />
       </ctx.Row>
+      <ctx.IconLabel
+        icon={{ name: 'gear', size: '2xl' }}
+        label={{ children: 'label', margin: { left: 2 } }}
+      />
     </ctx.Page>
   )
 }

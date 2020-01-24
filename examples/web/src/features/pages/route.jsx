@@ -255,7 +255,11 @@ export const landingRoute = ctx => () => {
           )}
         />
       </ctx.Row>
-      <ctx.IconLabel icon="gear" caption="okay" label="text" info="info" />
+      <ctx.IconLabel
+        icon="gear"
+        label={{ text: 'text', fontSize: 'lg' }}
+        caption="online"
+      />
     </ctx.Page>
   )
 }

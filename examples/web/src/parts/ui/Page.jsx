@@ -3,7 +3,7 @@ import z from '@z1/lib-feature-box'
 import { VStack, Match, Spinner } from '@z1/lib-ui-box-elements'
 
 // main
-export const Page = z.fn(t => props => {
+const renderPage = z.fn(t => props => {
   const loading = t.pathOr(false, ['loading'], props)
   const center = t.pathOr(false, ['center'], props)
   const shouldCenter = loading ? true : center
@@ -41,4 +41,10 @@ export const Page = z.fn(t => props => {
     </VStack>
   )
 })
+
+export class Page extends React.Component {
+  render() {
+    return renderPage(this.props)
+  }
+}
 Page.displayName = 'Page'

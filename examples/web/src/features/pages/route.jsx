@@ -17,9 +17,9 @@ export const route = ctx => {
 export const landingRoute = ctx => () => {
   const loading = false
   const disabled = false
-  const size = 'sm'
+  const size = 'md'
   return (
-    <ctx.Page key='landing'>
+    <ctx.Page key="landing">
       <ctx.Box as="h1" box={{ fontSize: '2xl', fontWeight: 'medium' }}>
         Home
       </ctx.Box>
@@ -65,7 +65,7 @@ export const landingRoute = ctx => () => {
             {
               loading,
               disabled,
-              icon: 'gear',
+              // icon: 'gear',
               label: 'button',
               size,
               color: 'pink-500',
@@ -104,7 +104,7 @@ export const landingRoute = ctx => () => {
             {
               loading,
               disabled,
-              icon: 'gear',
+              // icon: 'gear',
               label: 'button',
               size,
               color: 'teal-500',
@@ -143,7 +143,7 @@ export const landingRoute = ctx => () => {
             {
               loading,
               disabled,
-              icon: 'gear',
+              // icon: 'gear',
               label: 'button',
               size,
               colors: { off: 'blue-500', on: 'blue-600' },
@@ -183,7 +183,7 @@ export const landingRoute = ctx => () => {
             {
               loading,
               disabled,
-              icon: 'gear',
+              // icon: 'gear',
               label: 'button',
               size,
               color: 'purple-500',
@@ -193,6 +193,65 @@ export const landingRoute = ctx => () => {
           ]}
           render={(btn, index) => (
             <ctx.Button key={index} box={{ margin: 2 }} {...btn} />
+          )}
+        />
+      </ctx.Row>
+      <ctx.Row x="center" y="center">
+        <ctx.MapIndexed
+          items={[
+            {
+              loading,
+              disabled,
+              // icon: 'gear',
+              label: 'button',
+              size:'xs',
+              // color: 'purple-500',
+              fill: 'outline',
+              src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
+            },
+            {
+              loading,
+              disabled,
+              // icon: 'gear',
+              label: 'button',
+              size:'sm',
+              // color: 'purple-500',
+              fill: 'outline',
+              src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
+            },
+            {
+              loading,
+              disabled,
+              // icon: 'gear',
+              label: 'button',
+              size:'md',
+              // color: 'purple-500',
+              fill: 'outline',
+              src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
+            },
+            {
+              loading,
+              disabled,
+              // icon: 'gear',
+              label: 'button',
+              size:'lg',
+              // color: 'purple-500',
+              fill: 'outline',
+              src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
+            },
+            {
+              loading,
+              disabled,
+              icon: 'gear',
+              label: 'button',
+              size:'xl',
+              // color: 'purple-500',
+              fill: 'outline',
+              src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
+            },
+          ]}
+          render={(avatar, index) => (
+            <ctx.Avatar key={index} box={{ margin: 2 }} {...avatar} />
           )}
         />
       </ctx.Row>

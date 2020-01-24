@@ -330,6 +330,7 @@ const renderButton = fn(t => props => {
       'color',
       'loading',
       'disabled',
+      'mode',
       'icon',
       'label',
       'children',
@@ -356,12 +357,20 @@ const renderButton = fn(t => props => {
   // status
   const loading = t.pathOr(false, ['loading'], props)
   const disabled = t.pathOr(false, ['disabled'], props)
+  const mode = t.pathOr('active', ['mode'], props)
+  const inactive = t.neq(mode, 'active')
   // boxes
   const layout = {
     container: t.mergeAll([
       buttonBox.container,
       {
-        cursor: loading ? 'wait' : disabled ? 'not-allowed' : 'pointer',
+        cursor: loading
+          ? 'wait'
+          : disabled
+          ? 'not-allowed'
+          : inactive
+          ? 'default'
+          : 'pointer',
         opacity: t.and(disabled, t.not(loading)) ? 50 : 100,
       },
     ]),
@@ -388,13 +397,17 @@ const renderButton = fn(t => props => {
     : t.isType(label, 'string')
     ? { text: label }
     : label
-  const noIcon = t.isNil(nextLabel)
-  const noLabel = t.isNil(icon)
+  const noIcon = t.isNil(nextIcon)
+  const noLabel = t.isNil(nextLabel)
   const nextChildren = isCircle
     ? t.and(noIcon, noLabel)
       ? []
       : noIcon
-      ? [renderLabel(isCircle, noIcon, { text: t.head(`${nextLabel.text}`) })]
+      ? [
+          renderLabel(isCircle, noIcon, {
+            text: t.to.constantCase(t.head(`${nextLabel.text || ''}`)),
+          }),
+        ]
       : [renderIcon(size, nextIcon)]
     : t.concat(
         noIcon ? [] : [renderIcon(size, nextIcon)],
@@ -410,7 +423,12 @@ const renderButton = fn(t => props => {
         buttonSpacing(size),
         shapes(shape),
         fills(fill),
-        buttonColor(fill, t.or(loading, disabled), colors, color),
+        buttonColor(
+          fill,
+          t.anyOf([loading, disabled, inactive]),
+          colors,
+          color
+        ),
       ]),
       next: b => b.next(box).next(next),
       className: `${

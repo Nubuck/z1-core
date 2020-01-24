@@ -18,9 +18,6 @@ const renderPage = z.fn(t => props => {
         position: 'relative',
         flex: 1,
         width: 'full',
-        minHeight: 'screen',
-        overflowY: 'auto',
-        overflowX: 'hidden',
         zIndex: 0,
       },
       next: b => b.next(box).next(next),
@@ -33,7 +30,7 @@ const renderPage = z.fn(t => props => {
         value={loading ? 'loading' : 'ready'}
         render={{
           loading: () => (
-            <Spinner size="lg" color={t.pathOr('white', ['center'], props)} />
+            <Spinner size="lg" color={t.pathOr('white', ['color'], props)} />
           ),
           ready: () => props.children,
         }}

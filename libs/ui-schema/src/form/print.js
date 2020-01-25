@@ -114,7 +114,7 @@ const print = fn(t => () => {
       ['schema', 'properties', key, 'items', 'properties'],
       demo
     )
-    if (t.not(t.isNil(itemProps))) {
+    if (t.notNil(itemProps)) {
       t.forEach(itemKey => {
         console.log('ITEM PROP', itemKey, itemProps[itemKey])
       }, t.keys(itemProps))

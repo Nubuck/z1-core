@@ -42,7 +42,7 @@ const fills = fn(t =>
 
 const colorByKey = fn(t => (mode, key, colors, color) => {
   const foundColor = t.pathOr(null, [mode, key], colors || {})
-  if (t.not(t.isNil(foundColor))) {
+  if (t.notNil(foundColor)) {
     return foundColor
   }
   const modeColor = t.pathOr(null, [mode], colors || {})

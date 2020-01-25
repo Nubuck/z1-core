@@ -27,7 +27,7 @@ export const findNavItem = fn(t =>
         : null
     }
     const item = t.path([pathKey], schema)
-    if (t.not(t.isNil(item))) {
+    if (t.notNil(item)) {
       return item
     }
     const nextSchema = t.mergeAll(

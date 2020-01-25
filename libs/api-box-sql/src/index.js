@@ -16,7 +16,7 @@ export const withSequelizeAdapter = Fn(t => (ctx = {}) => {
       associate: [],
       beforeSetup() {
         const sequelize = createDBConnection(app)
-        if (t.not(t.isNil(sequelize))) {
+        if (t.notNil(sequelize)) {
           const adapter = dbTools.get(adapterName)
           if (t.notZeroLen(t.keys(adapter.models || {}))) {
             const define = sequelize.define.bind(sequelize)
@@ -70,7 +70,7 @@ export const withSequelizeAdapter = Fn(t => (ctx = {}) => {
               const nextServiceName = app
                 .get('serviceTools')
                 .safeServiceName(serviceName)
-              if (t.not(t.isNil(serviceProps))) {
+              if (t.notNil(serviceProps)) {
                 app.use(
                   `/${nextServiceName}`,
                   FeathersSequelize(
@@ -94,7 +94,7 @@ export const withSequelizeAdapter = Fn(t => (ctx = {}) => {
       },
       onSetup(boxes) {
         const adapter = dbTools.get(adapterName)
-        if (t.not(t.isNil(adapter.client))) {
+        if (t.notNil(adapter.client)) {
           if (t.notZeroLen(t.keys(adapter.models || {}))) {
             t.forEach(associate => {
               if (t.isType(associate, 'Function')) {

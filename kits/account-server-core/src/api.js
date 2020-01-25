@@ -3,7 +3,7 @@ import AuthManagement from 'feathers-authentication-management'
 // main
 export const api = (z, props) => {
   const isAction = z.featureBox.fn(t => (actions = []) => hook =>
-    t.not(t.isNil(t.find(action => t.eq(action, hook.data.action), actions)))
+    t.notNil(t.find(action => t.eq(action, hook.data.action), actions))
   )
   return z.featureBox.api.create('account', {
     models: props.models,

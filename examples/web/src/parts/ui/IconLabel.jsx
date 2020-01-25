@@ -34,7 +34,7 @@ const renderText = z.fn(t => (props, baseProps = {}) => {
     return <Row {...defaultProps}>{props}</Row>
   }
   const text = t.pathOr(null, ['text'], props)
-  if (t.not(t.isNil(text))) {
+  if (t.notNil(text)) {
     const nextProps = t.omit(['text'], props)
     return (
       <Row {...defaultProps} {...nextProps}>
@@ -72,18 +72,18 @@ const renderIconLabel = z.fn(t => props => {
   const left = t.pathOr(null, ['left'], props)
   const icon = t.pathOr(null, ['icon'], props)
   const caption = t.pathOr(null, ['caption'], props)
-  const hasleft = t.not(t.isNil(left))
-  const hasIcon = t.not(t.isNil(icon))
-  const hasCaption = t.not(t.isNil(caption))
+  const hasleft = t.notNil(left)
+  const hasIcon = t.notNil(icon)
+  const hasCaption = t.notNil(caption)
   // right col
   const right = t.pathOr(null, ['right'], props)
   const label = t.pathOr(null, ['label'], props)
   const info = t.pathOr(null, ['info'], props)
   const children = t.pathOr(null, ['children'], props)
-  const hasRight = t.not(t.isNil(right))
-  const hasLabel = t.not(t.isNil(label))
-  const hasInfo = t.not(t.isNil(info))
-  const hasChildren = t.not(t.isNil(children))
+  const hasRight = t.notNil(right)
+  const hasLabel = t.notNil(label)
+  const hasInfo = t.notNil(info)
+  const hasChildren = t.notNil(children)
   // box
   const nextProps = t.omit(
     ['icon', 'caption', 'label', 'info', 'children'],

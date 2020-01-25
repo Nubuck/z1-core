@@ -60,7 +60,7 @@ export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
     viewKey => t.eq(viewKey.key, routing.route.key),
     viewKeys
   )
-  if (t.not(t.isNil(viewByKey))) {
+  if (t.notNil(viewByKey)) {
     return viewByKey
   } else {
     const searchKeys = t.match({
@@ -79,7 +79,7 @@ export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
       )}`
     )
     const view = t.find(viewKey => t.eq(viewKey.key, routingKey), viewKeys)
-    if (t.not(t.isNil(view))) {
+    if (t.notNil(view)) {
       return view
     } else {
       return null

@@ -264,7 +264,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
               routingFromAction(action),
               macroCtx.viewKeys
             )
-            if (t.not(t.isNil(viewKey))) {
+            if (t.notNil(viewKey)) {
               allow(action)
             } else {
               reject(
@@ -316,7 +316,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
             )
             dispatch(
               mutators.dataLoadComplete(
-                t.not(t.isNil(loadError))
+                t.notNil(loadError)
                   ? { error: loadError, next: null, status: types.status.ready }
                   : t.isNil(loadResult)
                   ? { error: null, next: null, status: types.status.ready }
@@ -382,7 +382,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
           )
           dispatch(
             mutators.formTransmitComplete(
-              t.not(t.isNil(transmitError))
+              t.notNil(transmitError)
                 ? {
                     error: transmitError,
                     next: null,

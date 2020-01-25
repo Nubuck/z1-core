@@ -80,7 +80,7 @@ export const state = z.fn((t, a) =>
                 allow(ctx.action)
               } else {
                 const authenticated = t.and(
-                  t.not(t.isNil(t.path(['account', 'user'], state))),
+                  t.notNil(t.path(['account', 'user'], state)),
                   t.eq(authStatus.success, t.path(['account', 'status'], state))
                 )
                 // skip if route only requires authentication + account is valid

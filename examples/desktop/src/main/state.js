@@ -52,7 +52,7 @@ const appState = z.fn((t, a) =>
               ['app', 'auth', 'accessToken'],
               state
             )
-            if (t.not(t.isNil(accessToken))) {
+            if (t.notNil(accessToken)) {
               dispatch(mutators.authComplete({ status: 'authenticated' }))
               done()
             } else {

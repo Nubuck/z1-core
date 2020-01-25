@@ -74,7 +74,7 @@ export const adapters = task(t => ctx => {
             if (t.eq(mode, 'adapter')) {
               const [adapterName, serviceName] = serviceId
               // const adapter = dbTools.get(adapterName)
-              if (t.not(t.isNil(serviceName))) {
+              if (t.notNil(serviceName)) {
                 dbTools.services.add(adapterName, serviceName, {
                   name: serviceName,
                   factory,
@@ -85,7 +85,7 @@ export const adapters = task(t => ctx => {
               app.configure(() => {
                 const service = factory(app)
                 const serviceName = ctx.safeServiceName(serviceId)
-                if (t.not(t.isNil(service))) {
+                if (t.notNil(service)) {
                   app.use(`/${serviceName}`, service)
                 }
                 dbTools.services.wire(serviceName, hooksEvents)

@@ -255,11 +255,15 @@ export const landingRoute = ctx => () => {
           )}
         />
       </ctx.Row>
-      <ctx.IconLabel
-        icon="gear"
-        label={{ text: 'text', fontSize: 'lg' }}
-        caption="online"
-      />
+      <ctx.IconLabel icon="gear" label={{ text: 'text', fontSize: 'lg' }} />
+      <ctx.Row x="center" y="center">
+        <ctx.MapIndexed
+          items={[]}
+          render={(item, index) => (
+            <ctx.ListItem key={`li${index}`} {...item} />
+          )}
+        />
+      </ctx.Row>
     </ctx.Page>
   )
 }

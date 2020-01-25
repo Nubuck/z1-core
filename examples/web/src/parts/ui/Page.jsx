@@ -5,8 +5,8 @@ import { VStack, Match, Spinner } from '@z1/lib-ui-box-elements'
 // main
 const renderPage = z.fn(t => props => {
   const loading = t.pathOr(false, ['loading'], props)
-  const center = t.pathOr(false, ['center'], props)
-  const shouldCenter = loading ? true : center
+  const centered = t.pathOr(false, ['centered'], props)
+  const shouldCenter = loading ? true : centered
   const box = t.pathOr({}, ['box'], props)
   const next = t.pathOr({}, ['next'], props)
   const pageProps = t.merge(
@@ -22,7 +22,7 @@ const renderPage = z.fn(t => props => {
       },
       next: b => b.next(box).next(next),
     },
-    t.omit(['children', 'loading', 'center', 'color', 'box', 'next'], props)
+    t.omit(['children', 'loading', 'centered', 'color', 'box', 'next'], props)
   )
   return (
     <VStack {...pageProps}>

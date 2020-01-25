@@ -56,6 +56,7 @@ const Left = ({ children, ...props }) => {
     </Col>
   )
 }
+Left.displayName = 'Left'
 const Right = ({ children, ...props }) => {
   return (
     <Col x="center" justifyContent="between" {...props}>
@@ -63,17 +64,18 @@ const Right = ({ children, ...props }) => {
     </Col>
   )
 }
+Right.displayName = 'Right'
 
 // main
 const renderIconLabel = z.fn(t => props => {
-  // icon col
+  // left col
   const left = t.pathOr(null, ['left'], props)
   const icon = t.pathOr(null, ['icon'], props)
   const caption = t.pathOr(null, ['caption'], props)
   const hasleft = t.not(t.isNil(left))
   const hasIcon = t.not(t.isNil(icon))
   const hasCaption = t.not(t.isNil(caption))
-  // label col
+  // right col
   const right = t.pathOr(null, ['right'], props)
   const label = t.pathOr(null, ['label'], props)
   const info = t.pathOr(null, ['info'], props)
@@ -118,6 +120,8 @@ const renderIconLabel = z.fn(t => props => {
           )
           if (isRenderProp(left)) {
             return left({
+              x: 'center',
+              justifyContent: 'between',
               children: nextChildren,
             })
           }
@@ -155,6 +159,8 @@ const renderIconLabel = z.fn(t => props => {
           )
           if (isRenderProp(right)) {
             return right({
+              x: 'center',
+              justifyContent: 'between',
               children: nextChildren,
             })
           }

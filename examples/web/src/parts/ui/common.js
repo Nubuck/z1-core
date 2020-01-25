@@ -1,8 +1,12 @@
-import z from '@z1/lib-feature-box'
 import React from 'react'
+import z from '@z1/lib-feature-box'
 import { Row } from '@z1/lib-ui-box-elements'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
 
 // main
+export const dateFn = dayjs
 export const isRenderProp = z.fn(t => prop =>
   t.isNil(prop) ? false : t.isType(prop, 'function')
 )
@@ -35,3 +39,12 @@ export const renderText = z.fn(t => (props, baseProps = {}) => {
     </Row>
   )
 })
+
+export const ColGeneral = ({ children, ...props }) => {
+  return (
+    <Col x="center" justifyContent="between" {...props}>
+      {children}
+    </Col>
+  )
+}
+ColGeneral.displayName = 'ColGeneral'

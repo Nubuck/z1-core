@@ -1,7 +1,7 @@
 import React from 'react'
 import z from '@z1/lib-feature-box'
 import { Row, Col, When, Icon } from '@z1/lib-ui-box-elements'
-import { isRenderProp, renderText } from './common'
+import { isRenderProp, renderText, ColGeneral } from './common'
 
 // elements
 const iconProps = {
@@ -18,25 +18,9 @@ const renderIcon = z.fn(t => (props, baseProps = {}) => {
   }
   return <Icon {...defaultProps} {...props} />
 })
-const ColLeft = ({ children, ...props }) => {
-  return (
-    <Col x="center" justifyContent="between" {...props}>
-      {children}
-    </Col>
-  )
-}
-ColLeft.displayName = 'ColLeft'
-const ColRight = ({ children, ...props }) => {
-  return (
-    <Col x="center" justifyContent="between" {...props}>
-      {children}
-    </Col>
-  )
-}
-ColRight.displayName = 'ColRight'
 
 // main
-const renderIconLabel = z.fn(t => props => {
+export const renderIconLabel = z.fn(t => props => {
   const cols = t.pathOr({}, ['cols'], props)
   // left col
   const left = t.pathOr(null, ['left'], cols)
@@ -98,7 +82,11 @@ const renderIconLabel = z.fn(t => props => {
             })
           }
           const nextProps = hasleft ? left : {}
-          return <ColLeft {...nextProps}>{nextChildren}</ColLeft>
+          return (
+            <ColGeneral key="col-left" {...nextProps}>
+              {nextChildren}
+            </ColGeneral>
+          )
         }}
       />
       <When
@@ -137,7 +125,11 @@ const renderIconLabel = z.fn(t => props => {
             })
           }
           const nextProps = hasRight ? right : {}
-          return <ColRight {...nextProps}>{nextChildren}</ColRight>
+          return (
+            <ColGeneral key="col-right" {...nextProps}>
+              {nextChildren}
+            </ColGeneral>
+          )
         }}
       />
     </Row>

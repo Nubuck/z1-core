@@ -1,6 +1,9 @@
 import z from '@z1/lib-feature-box'
 import el from '@z1/lib-ui-box-elements'
 
+// common
+import { dateFn } from './common'
+
 // elements
 import { Form } from './Form'
 import { IconLabel } from './IconLabel'
@@ -22,4 +25,5 @@ export const ui = {
   Modal,
   Page,
   VList,
+  dateFn,
 }

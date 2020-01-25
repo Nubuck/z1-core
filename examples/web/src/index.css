@@ -4,31 +4,13 @@
 
 @tailwind utilities;
 
-@import 'spinner.css';
+@import './elements.css';
 
 body {
   @apply bg-gray-900 text-white;
 }
 
-/* corrections */
-button:focus {
-  outline: none;
-}
-
-/* JSON Schema Form classes */
-.rjsf {
-}
-
-/* elements */
-
-/* widgets */
-
-/* fields */
-.unsupported-field {
-}
-.object-template {
-  & .object-property-expand {
-  }
-}
-.config-error {
+#root {
+  @apply fixed flex flex-col top-0 bottom-0 left-0 right-0 w-full min-h-screen p-0 h-0 overflow-x-hidden overflow-y-auto z-0;
+  @extend .scrollbar;
 }

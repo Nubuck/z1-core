@@ -1,3 +1,50 @@
+/* corrections */
+button,
+input,
+select,
+img,
+textarea {
+  &:focus {
+    outline: none;
+  }
+}
+
+/* scrollbars */
+.scrollbar-hide {
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
+
+.scrollbar {
+  scrollbar-color: #718096 #232a35;
+  scrollbar-width: auto;
+  &::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+    background-color: #232a35;
+    border-radius: 6px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #718096;
+    border-radius: 6px;
+    &:hover {
+      background-color: #a0aec0;
+    }
+  }
+  &.scrollbar-square {
+    &::-webkit-scrollbar {
+      border-radius: 0;
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 0;
+    }
+  }
+}
+
 /* spinner */
 .spinner-white {
   @extend .spinner;
@@ -64,4 +111,22 @@
   &:after {
     color: theme('colors.pink.500');
   }
+}
+
+/* JSON Schema Form classes */
+.rjsf {
+}
+
+/* elements */
+
+/* widgets */
+
+/* fields */
+.unsupported-field {
+}
+.object-template {
+  & .object-property-expand {
+  }
+}
+.config-error {
 }

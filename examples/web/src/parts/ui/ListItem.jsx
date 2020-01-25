@@ -9,26 +9,10 @@ import {
   Avatar,
   MapIndexed,
 } from '@z1/lib-ui-box-elements'
-import { isRenderProp } from './common'
-import { IconLabel } from './IconLabel'
+import { isRenderProp, ColGeneral } from './common'
+import { renderIconLabel } from './IconLabel'
 
 // elements
-const ColSelect = ({ children, ...props }) => {
-  return (
-    <Col x="center" y="center" {...props}>
-      {children}
-    </Col>
-  )
-}
-ColSelect.displayName = 'ColSelect'
-const ColGeneral = ({ children, ...props }) => {
-  return (
-    <Col x="center" justifyContent="between" {...props}>
-      {children}
-    </Col>
-  )
-}
-ColGeneral.displayName = 'ColGeneral'
 const avatarProps = {
   key: 'avatar',
   size: 'xl',
@@ -38,10 +22,11 @@ const renderAvatar = z.fn(t => (props, baseProps = {}) => {
   if (isRenderProp(props)) {
     return props(defaultProps)
   }
-  // if (t.isType(props, 'string')) {
-  //   return <Avatar {...defaultProps} name={props} />
-  // }
-  return <Avatar {...defaultProps} {...props} />
+  return (
+    <Row x="center" y="center" key="row-avatar">
+      <Avatar {...defaultProps} {...props} />
+    </Row>
+  )
 })
 const selectorProps = {
   key: 'selector',
@@ -57,6 +42,13 @@ const renderSelector = z.fn(t => (props, baseProps = {}) => {
   //   return <Button {...defaultProps} name={props} />
   // }
   return <Button {...defaultProps} {...props} />
+})
+const renderItemLabel = fn(t => (props, baseProps = {}) => {
+  const defaultProps = t.mergeDeepRight(selectorProps, baseProps)
+  if (isRenderProp(props)) {
+    return props(defaultProps)
+  }
+  return renderIconLabel(t.merge(defaultProps, props))
 })
 
 // main
@@ -85,7 +77,6 @@ const renderListItem = z.fn(t => props => {
   const hasColNested = t.notNil(colNested)
   // select col:
   const select = t.pathOr(null, ['select'], props)
-  const hasSelect = t.notNil(select)
   // avatar col:
   const avatar = t.pathOr(null, ['avatar'], props)
   const caption = t.pathOr(null, ['caption'], props)
@@ -109,8 +100,8 @@ const renderListItem = z.fn(t => props => {
   const children = t.pathOr(null, ['children'], props)
   const hasNested = t.notNil(nested)
   // colors: on / off / selected
-  const colors = t.pathOr(null, ['colors'], props)
-  const color = t.pathOr(null, ['color'], props)
+  // const colors = t.pathOr(null, ['colors'], props)
+  // const color = t.pathOr(null, ['color'], props)
   const nextProps = t.omit(
     [
       'selectable',
@@ -129,8 +120,8 @@ const renderListItem = z.fn(t => props => {
       'buttons',
       'nested',
       'children',
-      'colors',
-      'color',
+      // 'colors',
+      // 'color',
     ],
     props
   )
@@ -144,14 +135,33 @@ const renderListItem = z.fn(t => props => {
               <When
                 is={selectable}
                 render={() =>
-                  renderSelector(selector, { loading, disabled, selected })
+                  renderSelector(select, {
+                    loading,
+                    disabled,
+                    selected,
+                    onSelect,
+                  })
                 }
               />
             )
             if (isRenderProp(colSelect)) {
-              return colSelect({ children: nextChildren })
+              return colSelect({
+                children: nextChildren,
+                loading,
+                disabled,
+                selected,
+                onSelect,
+              })
             }
-            return <ColSelect key="col-select">{nextChildren}</ColSelect>
+            return (
+              <ColGeneral
+                key="col-select"
+                justifyContent="center"
+                {...colSelect}
+              >
+                {nextChildren}
+              </ColGeneral>
+            )
           }}
         />
         <When
@@ -161,40 +171,49 @@ const renderListItem = z.fn(t => props => {
               <React.Fragment>
                 <When
                   is={hasAvatar}
-                  render={() => (
-                    <Row x="center" y="center" key="row-avatar">
-                      {renderAvatar(avatar, { loading, disabled, selected })}
-                    </Row>
-                  )}
+                  render={() =>
+                    renderAvatar(avatar, { loading, disabled, selected, title })
+                  }
                 />
                 <When
                   is={hasCaption}
-                  render={() => <IconLabel key="caption" />}
+                  render={() => renderItemLabel(caption, { key: 'caption' })}
                 />
               </React.Fragment>
             )
             if (isRenderProp(colAvatar)) {
               return colAvatar({ children: nextChildren })
             }
-            return <ColGeneral key="col-avatar">{nextChildren}</ColGeneral>
+            return (
+              <ColGeneral key="col-avatar" {...colAvatar}>
+                {nextChildren}
+              </ColGeneral>
+            )
           }}
         />
         <When
-          is={t.anyOf([hasTitleCol, hasTitle, hasSubtitle])}
+          is={t.anyOf([hasColTitle, hasTitle, hasSubtitle])}
           render={() => {
             const nextChildren = (
               <React.Fragment>
-                <When is={hasTitle} render={() => <IconLabel key="title" />} />
+                <When
+                  is={hasTitle}
+                  render={() => renderItemLabel(title, { key: 'title' })}
+                />
                 <When
                   is={hasSubtitle}
-                  render={() => <IconLabel key="subtitle" />}
+                  render={() => renderItemLabel(subtitle, { key: 'subtitle' })}
                 />
               </React.Fragment>
             )
             if (isRenderProp(colTitle)) {
               return colTitle({ children: nextChildren })
             }
-            return <ColGeneral key="col-title">{nextChildren}</ColGeneral>
+            return (
+              <ColGeneral key="col-title" {...colTitle}>
+                {nextChildren}
+              </ColGeneral>
+            )
           }}
         />
         <When
@@ -209,7 +228,11 @@ const renderListItem = z.fn(t => props => {
             if (isRenderProp(colContent)) {
               return colContent({ children: nextChildren })
             }
-            return <Col key="col-content">{nextChildren}</Col>
+            return (
+              <Col key="col-content" {...colTitle}>
+                {nextChildren}
+              </Col>
+            )
           }}
         />
         <When
@@ -217,13 +240,16 @@ const renderListItem = z.fn(t => props => {
           render={() => {
             const nextChildren = (
               <React.Fragment>
-                <When is={hasStamp} render={() => <IconLabel key="stamp" />} />
+                <When
+                  is={hasStamp}
+                  render={() => renderItemLabel(stamp, { key: 'stamp' })}
+                />
                 <When
                   is={hasButtons}
                   render={() => (
                     <Row key="buttons">
                       <MapIndexed
-                        items={[]}
+                        items={buttons}
                         render={(button, index) => (
                           <Button key={`li-btn-${index}`} {...button} />
                         )}
@@ -236,7 +262,11 @@ const renderListItem = z.fn(t => props => {
             if (isRenderProp(colLast)) {
               return colLast({ children: nextChildren })
             }
-            return <ColGeneral key="col-last">{nextChildren}</ColGeneral>
+            return (
+              <ColGeneral key="col-last" {...colLast}>
+                {nextChildren}
+              </ColGeneral>
+            )
           }}
         />
       </Row>
@@ -253,7 +283,9 @@ const renderListItem = z.fn(t => props => {
           }
           return (
             <Row key="row-nested">
-              <Col key="col-nested">{nextChildren}</Col>
+              <Col key="col-nested" {...colNested}>
+                {nextChildren}
+              </Col>
             </Row>
           )
         }}

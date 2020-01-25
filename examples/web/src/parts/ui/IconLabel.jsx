@@ -1,7 +1,7 @@
 import React from 'react'
 import z from '@z1/lib-feature-box'
 import { Row, Col, When, Icon } from '@z1/lib-ui-box-elements'
-import { isRenderProp, renderText, ColGeneral } from './common'
+import { isRenderProp, renderText } from './common'
 
 // elements
 const iconProps = {
@@ -26,7 +26,6 @@ export const renderIconLabel = z.fn(t => props => {
   const left = t.pathOr(null, ['left'], cols)
   const icon = t.pathOr(null, ['icon'], props)
   const caption = t.pathOr(null, ['caption'], props)
-  const hasleft = t.notNil(left)
   const hasIcon = t.notNil(icon)
   const hasCaption = t.notNil(caption)
   // right col
@@ -34,7 +33,6 @@ export const renderIconLabel = z.fn(t => props => {
   const label = t.pathOr(null, ['label'], props)
   const info = t.pathOr(null, ['info'], props)
   const children = t.pathOr(null, ['children'], props)
-  const hasRight = t.notNil(right)
   const hasLabel = t.notNil(label)
   const hasInfo = t.notNil(info)
   const hasChildren = t.isNil(children)
@@ -81,11 +79,16 @@ export const renderIconLabel = z.fn(t => props => {
               children: nextChildren,
             })
           }
-          const nextProps = hasleft ? left : {}
+          const nextProps = t.notNil(left) ? left : {}
           return (
-            <ColGeneral key="col-left" {...nextProps}>
+            <Col
+              key="col-left"
+              x="center"
+              justifyContent="between"
+              {...nextProps}
+            >
               {nextChildren}
-            </ColGeneral>
+            </Col>
           )
         }}
       />
@@ -124,11 +127,16 @@ export const renderIconLabel = z.fn(t => props => {
               children: nextChildren,
             })
           }
-          const nextProps = hasRight ? right : {}
+          const nextProps = t.notNil(right) ? right : {}
           return (
-            <ColGeneral key="col-right" {...nextProps}>
+            <Col
+              key="col-right"
+              x="center"
+              justifyContent="between"
+              {...nextProps}
+            >
               {nextChildren}
-            </ColGeneral>
+            </Col>
           )
         }}
       />

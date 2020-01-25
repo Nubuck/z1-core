@@ -9,13 +9,13 @@ import {
   Avatar,
   MapIndexed,
 } from '@z1/lib-ui-box-elements'
-import { isRenderProp, ColGeneral } from './common'
+import { isRenderProp } from './common'
 import { renderIconLabel } from './IconLabel'
 
 // elements
 const avatarProps = {
   key: 'avatar',
-  size: 'xl',
+  size: 'lg',
 }
 const renderAvatar = z.fn(t => (props, baseProps = {}) => {
   const defaultProps = t.mergeDeepRight(avatarProps, baseProps)
@@ -43,7 +43,7 @@ const renderSelector = z.fn(t => (props, baseProps = {}) => {
   // }
   return <Button {...defaultProps} {...props} />
 })
-const renderItemLabel = fn(t => (props, baseProps = {}) => {
+const renderItemLabel = z.fn(t => (props, baseProps = {}) => {
   const defaultProps = t.mergeDeepRight(selectorProps, baseProps)
   if (isRenderProp(props)) {
     return props(defaultProps)
@@ -69,12 +69,6 @@ const renderListItem = z.fn(t => props => {
   const colContent = t.pathOr(null, ['content'], cols)
   const colLast = t.pathOr(null, ['last'], cols)
   const colNested = t.pathOr(null, ['nested'], cols)
-  const hasColSelect = t.notNil(colSelect)
-  const hasColAvatar = t.notNil(colAvatar)
-  const hasColTitle = t.notNil(colTitle)
-  const hasColContent = t.notNil(colContent)
-  const hasColLast = t.notNil(colLast)
-  const hasColNested = t.notNil(colNested)
   // select col:
   const select = t.pathOr(null, ['select'], props)
   // avatar col:
@@ -127,9 +121,9 @@ const renderListItem = z.fn(t => props => {
   )
   return (
     <Col {...nextProps}>
-      <Row key="row-main">
+      <Row key="row-main" y="center">
         <When
-          is={t.anyOf([hasColSelect, selectable])}
+          is={t.anyOf([t.notNil(colSelect), selectable])}
           render={() => {
             const nextChildren = (
               <When
@@ -144,6 +138,12 @@ const renderListItem = z.fn(t => props => {
                 }
               />
             )
+            const colProps = {
+              y: 'center',
+              x: 'center',
+              flex: 'init',
+              alignSelf: 'start',
+            }
             if (isRenderProp(colSelect)) {
               return colSelect({
                 children: nextChildren,
@@ -151,21 +151,18 @@ const renderListItem = z.fn(t => props => {
                 disabled,
                 selected,
                 onSelect,
+                ...colProps,
               })
             }
             return (
-              <ColGeneral
-                key="col-select"
-                justifyContent="center"
-                {...colSelect}
-              >
+              <Col key="col-select" {...colProps} {...colSelect}>
                 {nextChildren}
-              </ColGeneral>
+              </Col>
             )
           }}
         />
         <When
-          is={t.anyOf([hasColAvatar, hasAvatar, hasCaption])}
+          is={t.anyOf([t.notNil(colAvatar), hasAvatar, hasCaption])}
           render={() => {
             const nextChildren = (
               <React.Fragment>
@@ -181,18 +178,27 @@ const renderListItem = z.fn(t => props => {
                 />
               </React.Fragment>
             )
+            const colProps = {
+              x: 'left',
+              justifyContent: 'between',
+              flex: 'init',
+              alignSelf: 'start',
+            }
             if (isRenderProp(colAvatar)) {
-              return colAvatar({ children: nextChildren })
+              return colAvatar({
+                children: nextChildren,
+                ...colProps,
+              })
             }
             return (
-              <ColGeneral key="col-avatar" {...colAvatar}>
+              <Col key="col-avatar" {...colProps} {...colAvatar}>
                 {nextChildren}
-              </ColGeneral>
+              </Col>
             )
           }}
         />
         <When
-          is={t.anyOf([hasColTitle, hasTitle, hasSubtitle])}
+          is={t.anyOf([t.notNil(colTitle), hasTitle, hasSubtitle])}
           render={() => {
             const nextChildren = (
               <React.Fragment>
@@ -206,18 +212,27 @@ const renderListItem = z.fn(t => props => {
                 />
               </React.Fragment>
             )
+            const colProps = {
+              x: 'center',
+              justifyContent: 'between',
+              flex: 'init',
+              alignSelf: 'start',
+            }
             if (isRenderProp(colTitle)) {
-              return colTitle({ children: nextChildren })
+              return colTitle({
+                children: nextChildren,
+                ...colProps,
+              })
             }
             return (
-              <ColGeneral key="col-title" {...colTitle}>
+              <Col key="col-title" {...colProps} {...colTitle}>
                 {nextChildren}
-              </ColGeneral>
+              </Col>
             )
           }}
         />
         <When
-          is={t.anyOf([hasColContent, hasContent])}
+          is={t.anyOf([t.notNil(colContent), hasContent])}
           render={() => {
             const nextChildren = (
               <When
@@ -236,7 +251,7 @@ const renderListItem = z.fn(t => props => {
           }}
         />
         <When
-          is={t.anyOf([hasColLast, hasStamp, hasButtons])}
+          is={t.anyOf([t.notNil(colLast), hasStamp, hasButtons])}
           render={() => {
             const nextChildren = (
               <React.Fragment>
@@ -259,20 +274,29 @@ const renderListItem = z.fn(t => props => {
                 />
               </React.Fragment>
             )
+            const colProps = {
+              x: 'right',
+              justifyContent: 'between',
+              alignSelf: 'end',
+              flex: 'init',
+            }
             if (isRenderProp(colLast)) {
-              return colLast({ children: nextChildren })
+              return colLast({
+                children: nextChildren,
+                ...colProps,
+              })
             }
             return (
-              <ColGeneral key="col-last" {...colLast}>
+              <Col key="col-last" {...colProps} {...colLast}>
                 {nextChildren}
-              </ColGeneral>
+              </Col>
             )
           }}
         />
       </Row>
       <When
         is={t.anyOf([
-          hasColNested,
+          t.notNil(colNested),
           hasNested,
           t.isNil(children) ? false : t.gt(React.Children.count(children), 0),
         ])}

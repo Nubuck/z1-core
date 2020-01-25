@@ -39,12 +39,3 @@ export const renderText = z.fn(t => (props, baseProps = {}) => {
     </Row>
   )
 })
-
-export const ColGeneral = ({ children, ...props }) => {
-  return (
-    <Col x="center" justifyContent="between" {...props}>
-      {children}
-    </Col>
-  )
-}
-ColGeneral.displayName = 'ColGeneral'

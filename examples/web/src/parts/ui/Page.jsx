@@ -1,6 +1,7 @@
 import React from 'react'
 import z from '@z1/lib-feature-box'
 import { VStack, Match, Spinner } from '@z1/lib-ui-box-elements'
+import { isRenderProp } from './common'
 
 // main
 const renderPage = z.fn(t => props => {
@@ -27,9 +28,6 @@ const renderPage = z.fn(t => props => {
       props
     )
   )
-  const hasRender = t.isNil(props.render)
-    ? false
-    : t.isType(props.render, 'function')
   return (
     <VStack {...pageProps}>
       <Match
@@ -39,7 +37,7 @@ const renderPage = z.fn(t => props => {
             <Spinner size="lg" color={t.pathOr('white', ['color'], props)} />
           ),
           ready: () => {
-            return hasRender
+            return isRenderProp(props.render)
               ? props.render({ loading, centered })
               : props.children
           },

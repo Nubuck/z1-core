@@ -76,7 +76,7 @@ const renderIconLabel = z.fn(t => props => {
             <React.Fragment>
               <When
                 is={hasIcon}
-                render={() => renderIcon(icon, { key: 'caption' })}
+                render={() => renderIcon(icon, { key: 'icon' })}
               />
               <When
                 is={hasCaption}

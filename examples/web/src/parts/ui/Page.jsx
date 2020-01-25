@@ -22,8 +22,14 @@ const renderPage = z.fn(t => props => {
       },
       next: b => b.next(box).next(next),
     },
-    t.omit(['children', 'loading', 'centered', 'color', 'box', 'next'], props)
+    t.omit(
+      ['children', 'render', 'loading', 'centered', 'color', 'box', 'next'],
+      props
+    )
   )
+  const hasRender = t.isNil(props.render)
+    ? false
+    : t.isType(props.render, 'function')
   return (
     <VStack {...pageProps}>
       <Match
@@ -32,7 +38,11 @@ const renderPage = z.fn(t => props => {
           loading: () => (
             <Spinner size="lg" color={t.pathOr('white', ['color'], props)} />
           ),
-          ready: () => props.children,
+          ready: () => {
+            return hasRender
+              ? props.render({ loading, centered })
+              : props.children
+          },
         }}
       />
     </VStack>

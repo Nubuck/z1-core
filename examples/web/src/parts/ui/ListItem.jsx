@@ -61,10 +61,12 @@ const renderListItem = z.fn(t => props => {
       'title',
       'subtitle',
       'children',
+      'content',
       'stamp',
       'buttons',
       'colors',
       'color',
+      'nested',
     ],
     props
   )

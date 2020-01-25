@@ -6,265 +6,279 @@ import mx from '@z1/lib-feature-macros'
 import views from './views'
 
 // main
-export const route = ctx => {
-  const Views = views.ui(ctx.ui)
-  return z.ui.connect(
+export const route = ctx =>
+  z.ui.connect(
     { pages: 'state' },
     ctx.mutators
-  )(props => mx.routeView.render(Views, props.state, props.mutations))
-}
+  )(props =>
+    mx.routeView.render(views.ui(ctx.ui), props.state, props.mutations)
+  )
 
 export const landingRoute = ctx => () => {
   const loading = false
   const disabled = false
   const size = 'md'
   return (
-    <ctx.Page key="landing">
-      <ctx.Box as="h1" box={{ fontSize: '2xl', fontWeight: 'medium' }}>
-        Home
-      </ctx.Box>
-      <ctx.Box
-        as={z.ui.Link}
-        to="/pages"
-        color={['yellow-500', { hover: 'green-500' }]}
-      >
-        pages
-      </ctx.Box>
-      <ctx.Row x="center" y="center">
-        <ctx.MapIndexed
-          items={[
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              color: 'pink-500',
-              fill: 'outline',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              color: 'pink-500',
-              shape: 'square',
-              fill: 'outline',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              color: 'pink-500',
-              shape: 'pill',
-              fill: 'outline',
-            },
-            {
-              loading,
-              disabled,
-              // icon: 'gear',
-              label: 'button',
-              size,
-              color: 'pink-500',
-              shape: 'circle',
-              fill: 'outline',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              color: 'teal-500',
-              fill: 'ghost-outline',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              color: 'teal-500',
-              shape: 'square',
-              fill: 'ghost-outline',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              color: 'teal-500',
-              shape: 'pill',
-              fill: 'ghost-outline',
-            },
-            {
-              loading,
-              disabled,
-              // icon: 'gear',
-              label: 'button',
-              size,
-              color: 'teal-500',
-              shape: 'circle',
-              fill: 'ghost-outline',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              colors: { off: 'blue-500', on: 'blue-600' },
-              fill: 'solid',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              colors: { off: 'blue-500', on: 'blue-600' },
-              shape: 'square',
-              fill: 'solid',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              colors: { off: 'blue-500', on: 'blue-600' },
-              shape: 'pill',
-              fill: 'solid',
-            },
-            {
-              loading,
-              disabled,
-              // icon: 'gear',
-              label: 'button',
-              size,
-              colors: { off: 'blue-500', on: 'blue-600' },
-              shape: 'circle',
-              fill: 'solid',
-            },
+    <ctx.Page
+      key="landing"
+      render={() => (
+        <React.Fragment>
+          <ctx.Box as="h1" box={{ fontSize: '2xl', fontWeight: 'medium' }}>
+            Home
+          </ctx.Box>
+          <ctx.Box
+            as={z.ui.Link}
+            to="/pages"
+            color={['yellow-500', { hover: 'green-500' }]}
+          >
+            pages
+          </ctx.Box>
+          <ctx.Row x="center" y="center">
+            <ctx.MapIndexed
+              items={[
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'pink-500',
+                  fill: 'outline',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'pink-500',
+                  shape: 'square',
+                  fill: 'outline',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'pink-500',
+                  shape: 'pill',
+                  fill: 'outline',
+                },
+                {
+                  loading,
+                  disabled,
+                  // icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'pink-500',
+                  shape: 'circle',
+                  fill: 'outline',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'teal-500',
+                  fill: 'ghost-outline',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'teal-500',
+                  shape: 'square',
+                  fill: 'ghost-outline',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'teal-500',
+                  shape: 'pill',
+                  fill: 'ghost-outline',
+                },
+                {
+                  loading,
+                  disabled,
+                  // icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'teal-500',
+                  shape: 'circle',
+                  fill: 'ghost-outline',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  colors: { off: 'blue-500', on: 'blue-600' },
+                  fill: 'solid',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  colors: { off: 'blue-500', on: 'blue-600' },
+                  shape: 'square',
+                  fill: 'solid',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  colors: { off: 'blue-500', on: 'blue-600' },
+                  shape: 'pill',
+                  fill: 'solid',
+                },
+                {
+                  loading,
+                  disabled,
+                  // icon: 'gear',
+                  label: 'button',
+                  size,
+                  colors: { off: 'blue-500', on: 'blue-600' },
+                  shape: 'circle',
+                  fill: 'solid',
+                },
 
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              color: 'purple-500',
-              fill: 'ghost-solid',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              color: 'purple-500',
-              shape: 'square',
-              fill: 'ghost-solid',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size,
-              color: 'purple-500',
-              shape: 'pill',
-              fill: 'ghost-solid',
-            },
-            {
-              loading,
-              disabled,
-              // icon: 'gear',
-              label: 'button',
-              size,
-              color: 'purple-500',
-              shape: 'circle',
-              fill: 'ghost-solid',
-            },
-          ]}
-          render={(btn, index) => (
-            <ctx.Button key={`btn${index}`} box={{ margin: 2 }} {...btn} />
-          )}
-        />
-      </ctx.Row>
-      <ctx.Row x="center" y="center">
-        <ctx.MapIndexed
-          items={[
-            {
-              loading,
-              disabled,
-              // icon: 'gear',
-              label: 'button',
-              size: 'xs',
-              // color: 'purple-500',
-              fill: 'outline',
-              src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
-            },
-            {
-              loading,
-              disabled,
-              // icon: 'gear',
-              label: 'button',
-              size: 'sm',
-              // color: 'purple-500',
-              fill: 'outline',
-              src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
-            },
-            {
-              loading,
-              disabled,
-              // icon: 'gear',
-              label: 'button',
-              size: 'md',
-              // color: 'purple-500',
-              fill: 'outline',
-              src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
-            },
-            {
-              loading,
-              disabled,
-              // icon: 'gear',
-              label: 'button',
-              size: 'lg',
-              // color: 'purple-500',
-              fill: 'outline',
-              src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
-            },
-            {
-              loading,
-              disabled,
-              icon: 'gear',
-              label: 'button',
-              size: 'xl',
-              // color: 'purple-500',
-              fill: 'outline',
-              src: 'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
-            },
-          ]}
-          render={(avatar, index) => (
-            <ctx.Avatar key={`av${index}`} box={{ margin: 2 }} {...avatar} />
-          )}
-        />
-      </ctx.Row>
-      <ctx.IconLabel icon="gear" label={{ text: 'text', fontSize: 'lg' }} />
-      <ctx.Row x="center" y="center">
-        <ctx.MapIndexed
-          items={[]}
-          render={(item, index) => (
-            <ctx.ListItem key={`li${index}`} {...item} />
-          )}
-        />
-      </ctx.Row>
-    </ctx.Page>
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'purple-500',
+                  fill: 'ghost-solid',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'purple-500',
+                  shape: 'square',
+                  fill: 'ghost-solid',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'purple-500',
+                  shape: 'pill',
+                  fill: 'ghost-solid',
+                },
+                {
+                  loading,
+                  disabled,
+                  // icon: 'gear',
+                  label: 'button',
+                  size,
+                  color: 'purple-500',
+                  shape: 'circle',
+                  fill: 'ghost-solid',
+                },
+              ]}
+              render={(btn, index) => (
+                <ctx.Button key={`btn${index}`} box={{ margin: 2 }} {...btn} />
+              )}
+            />
+          </ctx.Row>
+          <ctx.Row x="center" y="center">
+            <ctx.MapIndexed
+              items={[
+                {
+                  loading,
+                  disabled,
+                  // icon: 'gear',
+                  label: 'button',
+                  size: 'xs',
+                  // color: 'purple-500',
+                  fill: 'outline',
+                  src:
+                    'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
+                },
+                {
+                  loading,
+                  disabled,
+                  // icon: 'gear',
+                  label: 'button',
+                  size: 'sm',
+                  // color: 'purple-500',
+                  fill: 'outline',
+                  src:
+                    'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
+                },
+                {
+                  loading,
+                  disabled,
+                  // icon: 'gear',
+                  label: 'button',
+                  size: 'md',
+                  // color: 'purple-500',
+                  fill: 'outline',
+                  src:
+                    'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
+                },
+                {
+                  loading,
+                  disabled,
+                  // icon: 'gear',
+                  label: 'button',
+                  size: 'lg',
+                  // color: 'purple-500',
+                  fill: 'outline',
+                  src:
+                    'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
+                },
+                {
+                  loading,
+                  disabled,
+                  icon: 'gear',
+                  label: 'button',
+                  size: 'xl',
+                  // color: 'purple-500',
+                  fill: 'outline',
+                  src:
+                    'https://avatars1.githubusercontent.com/u/6399322?s=460&v=4',
+                },
+              ]}
+              render={(avatar, index) => (
+                <ctx.Avatar
+                  key={`av${index}`}
+                  box={{ margin: 2 }}
+                  {...avatar}
+                />
+              )}
+            />
+          </ctx.Row>
+          <ctx.IconLabel icon="gear" label={{ text: 'text', fontSize: 'lg' }} />
+          <ctx.Row x="center" y="center">
+            <ctx.MapIndexed
+              items={[]}
+              render={(item, index) => (
+                <ctx.ListItem key={`li${index}`} {...item} />
+              )}
+            />
+          </ctx.Row>
+        </React.Fragment>
+      )}
+    />
   )
 }
 export const notFoundRoute = ctx => () => (

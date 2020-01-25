@@ -6,10 +6,10 @@ import mx from '@z1/lib-feature-macros'
 import views from './views'
 
 // main
-export const route = ctx => {
-  const Views = views.ui(ctx.ui)
-  return z.ui.connect(
+export const route = ctx =>
+  z.ui.connect(
     { account: 'state' },
     ctx.mutators
-  )(props => mx.routeView.render(Views, props.state, props.mutations))
-}
+  )(props =>
+    mx.routeView.render(views.ui(ctx.ui), props.state, props.mutations)
+  )

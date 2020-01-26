@@ -31,8 +31,9 @@ const renderAvatar = z.fn(t => (props, baseProps = {}) => {
 })
 const selectorProps = {
   key: 'selector',
-  size: 'sm',
+  size: 'xl',
   selected: false,
+  
 }
 const renderSelector = z.fn(t => (props, baseProps = {}) => {
   const defaultProps = t.mergeDeepRight(selectorProps, baseProps)
@@ -51,17 +52,18 @@ const renderItemLabel = z.fn(t => (props, baseProps = {}) => {
   }
   const icon = t.pathOr(null, ['icon'], props)
   const label = t.pathOr(null, ['label'], props)
-  console.log('render item label', icon, label)
   return renderIconLabel(
     t.merge(
       defaultProps,
       t.merge(props, {
-        icon: t.isType(icon, 'string')
-          ? t.merge(defaultProps.icon || {}, { name: icon })
-          : t.merge(defaultProps.icon || {}, icon),
-        label: t.isType(label, 'string')
-          ? t.merge(defaultProps.label || {}, { text: label })
-          : t.merge(defaultProps.label || {}, label),
+        icon: t.merge(
+          defaultProps.icon || {},
+          t.isType(icon, 'string') ? { name: icon } : icon
+        ),
+        label: t.merge(
+          defaultProps.label || {},
+          t.isType(label, 'string') ? { text: label } : label
+        ),
       })
     )
   )

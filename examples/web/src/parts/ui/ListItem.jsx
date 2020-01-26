@@ -31,22 +31,33 @@ const renderAvatar = z.fn(t => (props, baseProps = {}) => {
 })
 const selectorProps = {
   key: 'selector',
-  size: 'xl',
+  size: 'sm',
   selected: false,
-  
+  shape: 'circle',
+  fill: 'ghost',
+  colors: { on: 'green-500', off: 'green-500' },
 }
 const renderSelector = z.fn(t => (props, baseProps = {}) => {
   const defaultProps = t.mergeDeepRight(selectorProps, baseProps)
   if (isRenderProp(props)) {
     return props(defaultProps)
   }
-  // if (t.isType(props, 'string')) {
-  //   return <Button {...defaultProps} name={props} />
-  // }
-  return <Button {...defaultProps} {...props} />
+  return (
+    <Button
+      icon={{
+        name: defaultProps.selected ? 'check-circle' : 'minus-circle',
+        prefix: 'las',
+      }}
+      {...defaultProps}
+      {...props}
+    />
+  )
 })
+const itemProps = {
+  size: 'md',
+}
 const renderItemLabel = z.fn(t => (props, baseProps = {}) => {
-  const defaultProps = t.mergeDeepRight(selectorProps, baseProps)
+  const defaultProps = t.mergeDeepRight(itemProps, baseProps)
   if (isRenderProp(props)) {
     return props(defaultProps)
   }
@@ -150,7 +161,7 @@ const renderListItem = z.fn(t => props => {
                   renderSelector(select, {
                     loading,
                     disabled,
-                    selected,
+                    selected: false,
                     onSelect,
                   })
                 }

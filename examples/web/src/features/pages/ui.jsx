@@ -35,6 +35,11 @@ export const landingRoute = ctx => () => (
                 key={rowProps.key}
                 style={rowProps.style}
                 {...account}
+                content={() => (
+                  <React.Fragment>
+                    <ctx.IconLabel icon="plug" label="content" />
+                  </React.Fragment>
+                )}
               />
             )
           }}

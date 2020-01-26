@@ -1,13 +1,19 @@
+const cols = {
+  title: {
+    xs: 3,
+  },
+}
 export const items = [
   {
+    cols,
     selectable: true,
     avatar: {
       icon: 'user',
       size: 'xs',
     },
-    caption: {
-      label: { text: 'caption', fontSize: 'xs' },
-    },
+    // caption: {
+    //   label: { text: 'caption', fontSize: 'xs' },
+    // },
     title: {
       label: 'Title 1',
     },
@@ -15,7 +21,7 @@ export const items = [
     //   icon:'power-off',
     //   label: 'subtitle',
     // },
-    content: [],
+    // content: [],
     stamp: {
       icon: 'stopwatch',
       label: 'stamp',
@@ -31,28 +37,30 @@ export const items = [
     ],
   },
   {
+    cols,
     selectable: true,
     avatar: {
       icon: 'user',
-      size: 'md',
+      // size: 'md',
+      size: 'xs',
     },
-    caption: {
-      label: 'caption',
-    },
+    // caption: {
+    //   label: 'caption',
+    // },
     title: {
-      icon: 'superpowers',
-      label: { text: 'title', fontSize: '2xl' },
-      caption:'super',
-      info:'super super',
+      // icon: 'superpowers',
+      label: { text: 'title' },
+      // caption:'super',
+      // info:'super super',
     },
     subtitle: {
-      icon: { name: 'power-off', fontSize: 'md' },
+      icon: { name: 'power-off', size: 'md' },
       label: { text: 'subtitle', fontSize: 'xs' },
     },
-    content: [],
+    // content: [],
     stamp: {
-      icon: { name: 'stopwatch', size: 'md' },
-      label: { text: 'caption', fontSize: 'xs' },
+      icon: { name: 'stopwatch' },
+      label: { text: 'stamp' },
     },
     buttons: [
       {

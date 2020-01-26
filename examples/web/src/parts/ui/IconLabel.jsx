@@ -26,19 +26,19 @@ export const renderIconLabel = z.fn(t => props => {
   const left = t.pathOr(null, ['left'], cols)
   const icon = t.pathOr(null, ['icon'], props)
   const caption = t.pathOr(null, ['caption'], props)
-  const hasIcon = t.notNil(icon)
-  const hasCaption = t.notNil(caption)
+  const hasIcon = t.and(t.notNil(icon), t.notEmpty(icon))
+  const hasCaption = t.and(t.notNil(caption), t.notEmpty(caption))
   // right col
   const right = t.pathOr(null, ['right'], cols)
   const label = t.pathOr(null, ['label'], props)
   const info = t.pathOr(null, ['info'], props)
   const children = t.pathOr(null, ['children'], props)
-  const hasLabel = t.notNil(label)
-  const hasInfo = t.notNil(info)
+  const hasLabel = t.and(t.notNil(label), t.notEmpty(label))
+  const hasInfo = t.and(t.notNil(info), t.notEmpty(info))
   const hasChildren = t.isNil(children)
     ? false
     : t.gt(React.Children.count(children), 0)
-  // box
+  // element
   const nextProps = t.omit(
     ['cols', 'icon', 'caption', 'label', 'info', 'children'],
     props
@@ -47,8 +47,10 @@ export const renderIconLabel = z.fn(t => props => {
     <Row
       x="left"
       y="center"
-      display="inline-flex"
-      alignSelf="auto"
+      box={{
+        display: 'inline-flex',
+        alignSelf: 'auto',
+      }}
       {...nextProps}
     >
       <When
@@ -66,29 +68,25 @@ export const renderIconLabel = z.fn(t => props => {
                   renderText(caption, {
                     key: 'caption',
                     y: 'bottom',
-                    // alignSelf: 'end',
                     box: { fontSize: 'xs' },
                   })
                 }
               />
             </React.Fragment>
           )
+          const colProps = {
+            y: 'center',
+            x: 'center',
+          }
           if (isRenderProp(left)) {
             return left({
-              x: 'center',
-              y: 'center',
               children: nextChildren,
+              ...colProps,
             })
           }
           const nextProps = t.notNil(left) ? left : {}
           return (
-            <Col
-              key="col-left"
-              x="center"
-              y="center"
-              // justifyContent="between"
-              {...nextProps}
-            >
+            <Col key="col-left" {...colProps} {...nextProps}>
               {nextChildren}
             </Col>
           )
@@ -111,7 +109,6 @@ export const renderIconLabel = z.fn(t => props => {
                 render={() =>
                   renderText(info, {
                     key: 'info',
-                    // y: 'center',
                     box: { fontSize: 'xs', ...spacing },
                   })
                 }
@@ -122,21 +119,19 @@ export const renderIconLabel = z.fn(t => props => {
               />
             </React.Fragment>
           )
+          const colProps = {
+            y: 'center',
+            x: 'left',
+          }
           if (isRenderProp(right)) {
             return right({
-              x: 'center',
-              justifyContent: 'between',
               children: nextChildren,
+              ...colProps,
             })
           }
           const nextProps = t.notNil(right) ? right : {}
           return (
-            <Col
-              key="col-right"
-              x="left"
-              y="center"
-              {...nextProps}
-            >
+            <Col key="col-right" {...colProps} {...nextProps}>
               {nextChildren}
             </Col>
           )

@@ -49,7 +49,22 @@ const renderItemLabel = z.fn(t => (props, baseProps = {}) => {
   if (isRenderProp(props)) {
     return props(defaultProps)
   }
-  return renderIconLabel(t.merge(defaultProps, props))
+  const icon = t.pathOr(null, ['icon'], props)
+  const label = t.pathOr(null, ['label'], props)
+  console.log('render item label', icon, label)
+  return renderIconLabel(
+    t.merge(
+      defaultProps,
+      t.merge(props, {
+        icon: t.isType(icon, 'string')
+          ? t.merge(defaultProps.icon || {}, { name: icon })
+          : t.merge(defaultProps.icon || {}, icon),
+        label: t.isType(label, 'string')
+          ? t.merge(defaultProps.label || {}, { text: label })
+          : t.merge(defaultProps.label || {}, label),
+      })
+    )
+  )
 })
 
 // main
@@ -84,7 +99,7 @@ const renderListItem = z.fn(t => props => {
   const hasSubtitle = t.notNil(subtitle)
   // content col:
   const content = t.pathOr(null, ['content'], props)
-  const hasContent = t.and(t.notNil(content), t.notZeroLen(content || []))
+  const hasContent = t.notNil(content)
   // last col:
   const stamp = t.pathOr(null, ['stamp'], props)
   const buttons = t.pathOr([], ['buttons'], props)
@@ -143,7 +158,6 @@ const renderListItem = z.fn(t => props => {
               y: 'center',
               x: 'center',
               flex: 'init',
-              // alignSelf: 'start',
             }
             if (isRenderProp(colSelect)) {
               return colSelect({
@@ -175,16 +189,22 @@ const renderListItem = z.fn(t => props => {
                 />
                 <When
                   is={hasCaption}
-                  render={() => renderItemLabel(caption, { key: 'caption' })}
+                  render={() =>
+                    renderItemLabel(caption, {
+                      key: 'caption',
+                      label: {
+                        fontSize: 'xs',
+                        margin: hasAvatar ? { top: 1 } : null,
+                      },
+                    })
+                  }
                 />
               </React.Fragment>
             )
             const colProps = {
               x: 'left',
-              y:'center',
-              // justifyContent: 'between',
+              y: 'center',
               flex: 'init',
-              // alignSelf: 'start',
             }
             if (isRenderProp(colAvatar)) {
               return colAvatar({
@@ -206,11 +226,23 @@ const renderListItem = z.fn(t => props => {
               <React.Fragment>
                 <When
                   is={hasTitle}
-                  render={() => renderItemLabel(title, { key: 'title' })}
+                  render={() =>
+                    renderItemLabel(title, {
+                      key: 'title',
+                      label: {
+                        fontSize: subtitle ? null : 'lg',
+                      },
+                    })
+                  }
                 />
                 <When
                   is={hasSubtitle}
-                  render={() => renderItemLabel(subtitle, { key: 'subtitle' })}
+                  render={() =>
+                    renderItemLabel(subtitle, {
+                      key: 'subtitle',
+                      margin: hasTitle ? { top: 1 } : null,
+                    })
+                  }
                 />
               </React.Fragment>
             )
@@ -239,14 +271,18 @@ const renderListItem = z.fn(t => props => {
             const nextChildren = (
               <When
                 is={hasContent}
-                render={() => <HStack key="content">{content}</HStack>}
+                render={() => (
+                  <HStack key="content" y="center" x="left" stretch>
+                    {isRenderProp(content) ? content() : content}
+                  </HStack>
+                )}
               />
             )
             if (isRenderProp(colContent)) {
               return colContent({ children: nextChildren })
             }
             return (
-              <Col key="col-content" {...colTitle}>
+              <Col key="col-content" y="center" flex={1} {...colTitle}>
                 {nextChildren}
               </Col>
             )
@@ -263,7 +299,13 @@ const renderListItem = z.fn(t => props => {
               <React.Fragment>
                 <When
                   is={hasStamp}
-                  render={() => renderItemLabel(stamp, { key: 'stamp' })}
+                  render={() =>
+                    renderItemLabel(stamp, {
+                      key: 'stamp',
+                      icon: { size: 'md' },
+                      label: { fontSize: 'xs' },
+                    })
+                  }
                 />
                 <When
                   is={hasButtons}

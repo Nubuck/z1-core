@@ -80,15 +80,18 @@ export const nav = z.fn(t =>
     effects(fx, box) {
       return [
         fx(
-          ['screen/RESIZE', box.actions.navToggleStatus],
+          ['screen/RESIZE', box.actions.navToggle],
           (ctx, dispatch, done) => {
             done()
           }
         ),
-        fx([t.globrex('*/ROUTING/*').regex, z.routing.actions.notFound], (ctx, dispatch, done)=>{
-          // sc.nav.findItem(path, schema)
-          done()
-        })
+        fx(
+          [t.globrex('*/ROUTING/*').regex, z.routing.actions.notFound],
+          (ctx, dispatch, done) => {
+            // sc.nav.find(path, schema)
+            done()
+          }
+        ),
       ]
     },
     afterInit(ctx) {

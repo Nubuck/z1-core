@@ -10,7 +10,7 @@ export const GRID_SIZES = {
 }
 
 export const screenSizeName = z.fn(t => screenWidth => {
-  const sizePairs = t.reverse(t.toPairs(GRID_SIZES))
+  const sizePairs = t.reverse(t.to.pairs(GRID_SIZES))
   const foundSize = t.find(size => {
     const value = t.head(t.tail(size))
     return t.gte(screenWidth, value)
@@ -32,7 +32,7 @@ export const screen = z.fn(t =>
     mutations(m) {
       return [m('resize', (state, action) => t.merge(state, action.payload))]
     },
-    onInit({ dispatch, mutations, api }) {
+    onInit({ dispatch, mutations }) {
       const handleResize = t.throttle((meta = {}) => {
         dispatch(
           mutations.resize(

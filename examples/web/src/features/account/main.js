@@ -7,15 +7,13 @@ import { route } from './route'
 // main
 export const feature = z.create(
   'account',
-  ctx => {
+  parts => {
     return {
       state: [state],
-      // ui: {},
-      // parts: {},
       routing: [
         {
           action: z.routing.parts.routeActions(state),
-          ui: route({ ui: ctx.ui, mutators: state.mutators }),
+          ui: route({ ui: parts.ui, mutators: state.mutators }),
         },
       ],
     }

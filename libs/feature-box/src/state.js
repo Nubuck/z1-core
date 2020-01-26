@@ -17,7 +17,10 @@ const createRouteFactory = fn(
 const createStateBox = fn(t => (name, props) => {
   const routesProp = t.pathOr(null, ['routes'], props)
   if (t.isNil(routesProp)) {
-    return stateBox.create(props)
+    const box = stateBox.create(name, props)
+    return t.merge(box, {
+      routes: {},
+    })
   }
   const routes = routesProp(createRouteFactory(name), { name })
   const mutationsProp = t.pathOr(null, ['mutations'], props)
@@ -79,7 +82,7 @@ const createOrCompose = fn(t => (rawName, boxOrBoxes) => {
 const combineStateBoxes = fn(t => boxes => {
   return stateBox.combine(boxes, (nextBoxes, box) => {
     return {
-      routes: t.merge(nextBoxes.routes || {}, box.routes),
+      routes: t.merge(nextBoxes.routes || {}, box.routes || {}),
     }
   })
 })

@@ -1,6 +1,6 @@
 import z from '@z1/lib-feature-box'
 
-// main
+// ctx
 export const navMode = {
   primary: 'primary',
   secondary: 'secondary',

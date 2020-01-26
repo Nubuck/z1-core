@@ -3,6 +3,7 @@ import mx from '@z1/lib-feature-macros'
 
 // parts
 import views from './views'
+// import { anon } from './nav'
 
 // types
 const authStatus = {

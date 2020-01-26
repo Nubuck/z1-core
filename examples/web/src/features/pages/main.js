@@ -7,17 +7,17 @@ import { landingRoute, notFoundRoute } from './ui'
 // main
 export const feature = z.create(
   'pages',
-  ctx => {
+  parts => {
     return {
       state: [state],
       routing: [
         {
           action: [z.routing.actions.notFound],
-          ui: notFoundRoute(ctx.ui),
+          ui: notFoundRoute(parts.ui),
         },
         {
           action: [state.actions.routeLanding],
-          ui: landingRoute(ctx.ui),
+          ui: landingRoute(parts.ui),
         },
       ],
     }

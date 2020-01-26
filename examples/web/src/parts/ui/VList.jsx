@@ -3,6 +3,7 @@ import z from '@z1/lib-feature-box'
 import { VStack } from '@z1/lib-ui-box-elements'
 import { AutoSizer, List } from 'react-virtualized'
 import { isRenderProp } from './common'
+
 // main
 const renderVList = z.fn(t => props => {
   const box = t.pathOr({}, ['box'], props)

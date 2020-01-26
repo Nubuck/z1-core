@@ -330,6 +330,7 @@ export const renderButton = fn(t => props => {
       'color',
       'loading',
       'disabled',
+      'selected',
       'mode',
       'icon',
       'label',
@@ -357,6 +358,7 @@ export const renderButton = fn(t => props => {
   // status
   const loading = t.pathOr(false, ['loading'], props)
   const disabled = t.pathOr(false, ['disabled'], props)
+  const selected = t.pathOr(false, ['selected'], props)
   const mode = t.pathOr('active', ['mode'], props)
   const inactive = t.neq(mode, 'active')
   // boxes
@@ -441,7 +443,7 @@ export const renderButton = fn(t => props => {
         fills(fill),
         buttonColor(
           fill,
-          t.anyOf([loading, disabled, inactive]),
+          t.anyOf([loading, disabled, inactive, selected]),
           colors,
           color
         ),

@@ -1,8 +1,5 @@
 import React from 'react'
 
-// stubs
-import { items } from './els'
-
 // main
 export const landingRoute = ctx => () => (
   <ctx.Page
@@ -25,24 +22,6 @@ export const landingRoute = ctx => () => (
           label="Sign-up"
           icon="user-plus"
           color={['blue-500', { hover: 'yellow-500' }]}
-        />
-        <ctx.VList
-          items={items}
-          rowHeight={90}
-          render={(account, rowProps) => {
-            return (
-              <ctx.ListItem
-                key={rowProps.key}
-                style={rowProps.style}
-                {...account}
-                content={() => (
-                  <React.Fragment>
-                    <ctx.IconLabel icon="plug" label="content" />
-                  </React.Fragment>
-                )}
-              />
-            )
-          }}
         />
       </React.Fragment>
     )}

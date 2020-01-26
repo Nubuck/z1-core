@@ -34,8 +34,11 @@ const selectorProps = {
   size: 'sm',
   selected: false,
   shape: 'circle',
-  fill: 'ghost',
-  colors: { on: 'green-500', off: 'green-500' },
+  fill: 'custom',
+  colors: {
+    on: { border: 'transparent', content: 'green-500' },
+    off: { border: 'transparent', content: ['white', { hover: 'green-500' }] },
+  },
 }
 const renderSelector = z.fn(t => (props, baseProps = {}) => {
   const defaultProps = t.mergeDeepRight(selectorProps, baseProps)
@@ -45,8 +48,7 @@ const renderSelector = z.fn(t => (props, baseProps = {}) => {
   return (
     <Button
       icon={{
-        name: defaultProps.selected ? 'check-circle' : 'minus-circle',
-        prefix: 'las',
+        name: defaultProps.selected ? 'check-circle' : 'plus-circle',
       }}
       {...defaultProps}
       {...props}
@@ -122,9 +124,6 @@ const renderListItem = z.fn(t => props => {
   const nested = t.pathOr(null, ['nested'], props)
   const children = t.pathOr(null, ['children'], props)
   const hasNested = t.notNil(nested)
-  // colors: on / off / selected
-  // const colors = t.pathOr(null, ['colors'], props)
-  // const color = t.pathOr(null, ['color'], props)
   const nextProps = t.omit(
     [
       'selectable',
@@ -143,8 +142,6 @@ const renderListItem = z.fn(t => props => {
       'buttons',
       'nested',
       'children',
-      // 'colors',
-      // 'color',
     ],
     props
   )
@@ -171,6 +168,7 @@ const renderListItem = z.fn(t => props => {
               y: 'center',
               x: 'center',
               flex: 'init',
+              padding: { right: 1 },
             }
             if (isRenderProp(colSelect)) {
               return colSelect({
@@ -338,7 +336,6 @@ const renderListItem = z.fn(t => props => {
             const colProps = {
               x: 'right',
               justifyContent: 'between',
-              // alignSelf: 'end',
               flex: 'init',
             }
             if (isRenderProp(colLast)) {

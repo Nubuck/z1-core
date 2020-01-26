@@ -17,7 +17,6 @@ const textProps = {
 }
 export const renderText = z.fn(t => (props, baseProps = {}) => {
   const defaultProps = t.mergeDeepRight(textProps, baseProps)
-  console.log('render text', defaultProps, props)
   if (isRenderProp(props)) {
     return props(defaultProps)
   }

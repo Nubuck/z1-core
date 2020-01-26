@@ -8,6 +8,7 @@ import {
   Button,
   Avatar,
   MapIndexed,
+  Spacer,
 } from '@z1/lib-ui-box-elements'
 import { isRenderProp } from './common'
 import { renderIconLabel } from './IconLabel'
@@ -83,7 +84,7 @@ const renderListItem = z.fn(t => props => {
   const hasSubtitle = t.notNil(subtitle)
   // content col:
   const content = t.pathOr(null, ['content'], props)
-  const hasContent = t.notNil(content)
+  const hasContent = t.and(t.notNil(content), t.notZeroLen(content || []))
   // last col:
   const stamp = t.pathOr(null, ['stamp'], props)
   const buttons = t.pathOr([], ['buttons'], props)
@@ -142,7 +143,7 @@ const renderListItem = z.fn(t => props => {
               y: 'center',
               x: 'center',
               flex: 'init',
-              alignSelf: 'start',
+              // alignSelf: 'start',
             }
             if (isRenderProp(colSelect)) {
               return colSelect({
@@ -180,9 +181,10 @@ const renderListItem = z.fn(t => props => {
             )
             const colProps = {
               x: 'left',
-              justifyContent: 'between',
+              y:'center',
+              // justifyContent: 'between',
               flex: 'init',
-              alignSelf: 'start',
+              // alignSelf: 'start',
             }
             if (isRenderProp(colAvatar)) {
               return colAvatar({
@@ -213,10 +215,10 @@ const renderListItem = z.fn(t => props => {
               </React.Fragment>
             )
             const colProps = {
-              x: 'center',
-              justifyContent: 'between',
+              x: 'left',
+              y: 'center',
               flex: 'init',
-              alignSelf: 'start',
+              padding: { x: 2 },
             }
             if (isRenderProp(colTitle)) {
               return colTitle({
@@ -251,6 +253,10 @@ const renderListItem = z.fn(t => props => {
           }}
         />
         <When
+          is={t.allOf([t.isNil(colContent), t.not(hasContent)])}
+          render={() => <Spacer />}
+        />
+        <When
           is={t.anyOf([t.notNil(colLast), hasStamp, hasButtons])}
           render={() => {
             const nextChildren = (
@@ -262,7 +268,7 @@ const renderListItem = z.fn(t => props => {
                 <When
                   is={hasButtons}
                   render={() => (
-                    <Row key="buttons">
+                    <Row key="buttons" x="right">
                       <MapIndexed
                         items={buttons}
                         render={(button, index) => (
@@ -277,7 +283,7 @@ const renderListItem = z.fn(t => props => {
             const colProps = {
               x: 'right',
               justifyContent: 'between',
-              alignSelf: 'end',
+              // alignSelf: 'end',
               flex: 'init',
             }
             if (isRenderProp(colLast)) {

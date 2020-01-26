@@ -2,6 +2,7 @@
 import App from './App'
 import features from './features'
 import './index.css'
+import 'react-virtualized/styles.css'
 // deps
 import React from 'react'
 import ReactDom from 'react-dom'

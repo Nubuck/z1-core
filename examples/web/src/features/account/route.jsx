@@ -7,9 +7,6 @@ import views from './views'
 
 // main
 export const route = ctx =>
-  z.ui.connect(
-    { account: 'state' },
-    ctx.mutators
-  )(props =>
-    mx.routeView.render(views.ui(ctx.ui), props.state, props.mutations)
-  )
+  z.ui.connect({ account: 'state' }, ctx.mutators, function Route(props) {
+    return mx.routeView.render(views.ui(ctx.ui), props.state, props.mutations)
+  })

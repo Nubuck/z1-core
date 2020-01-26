@@ -66,6 +66,7 @@ export const renderIconLabel = z.fn(t => props => {
                   renderText(caption, {
                     key: 'caption',
                     y: 'bottom',
+                    // alignSelf: 'end',
                     box: { fontSize: 'xs' },
                   })
                 }
@@ -75,7 +76,7 @@ export const renderIconLabel = z.fn(t => props => {
           if (isRenderProp(left)) {
             return left({
               x: 'center',
-              justifyContent: 'between',
+              y: 'center',
               children: nextChildren,
             })
           }
@@ -84,7 +85,8 @@ export const renderIconLabel = z.fn(t => props => {
             <Col
               key="col-left"
               x="center"
-              justifyContent="between"
+              y="center"
+              // justifyContent="between"
               {...nextProps}
             >
               {nextChildren}
@@ -109,7 +111,7 @@ export const renderIconLabel = z.fn(t => props => {
                 render={() =>
                   renderText(info, {
                     key: 'info',
-                    y: 'bottom',
+                    // y: 'center',
                     box: { fontSize: 'xs', ...spacing },
                   })
                 }
@@ -131,8 +133,8 @@ export const renderIconLabel = z.fn(t => props => {
           return (
             <Col
               key="col-right"
-              x="center"
-              justifyContent="between"
+              x="left"
+              y="center"
               {...nextProps}
             >
               {nextChildren}

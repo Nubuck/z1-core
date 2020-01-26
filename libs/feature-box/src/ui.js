@@ -40,12 +40,9 @@ const query = fn(t => (queryMapping = []) => {
 // main
 export const ui = fn(t => ({
   Provider,
-  connect(selector, mutators = undefined) {
-    const nextQuery = t.isType(selector, 'function')
-      ? selector
-      : query(selector)
-    return connect(
-      nextQuery,
+  connect(selector, mutators = undefined, Element = null) {
+    const withCnx = connect(
+      t.notType(selector, 'function') ? query(selector) : selector,
       t.notType(mutators, 'Object')
         ? dispatch => {
             return { dispatch }
@@ -57,6 +54,7 @@ export const ui = fn(t => ({
             }
           }
     )
+    return t.notNil(Element) ? withCnx(Element) : withCnx
   },
   query,
   NavLink,

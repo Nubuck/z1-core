@@ -13,7 +13,7 @@ export const isRenderProp = z.fn(t => prop =>
 const textProps = {
   x: 'left',
   y: 'center',
-  box: { display: 'inline-flex', alignSelf: 'auto' },
+  box: { display: 'inline-flex', alignSelf: 'auto', lineHeight: 'none' },
 }
 export const renderText = z.fn(t => (props, baseProps = {}) => {
   const defaultProps = t.mergeDeepRight(textProps, baseProps)

@@ -1,0 +1,64 @@
+import z from '@z1/lib-feature-box'
+
+// main
+export const navMode = {
+  primary: 'primary',
+  secondary: 'secondary',
+  page: 'page',
+}
+
+export const navStatus = {
+  init: 'init',
+  open: 'open',
+  closed: 'closed',
+}
+
+export const navSize = {
+  primary: 80,
+  secondary: 240,
+  body: 64,
+  bodySm: 66,
+  page: 240,
+}
+
+// sizing
+export const calcPrimaryLeft = z.fn(t => (status, primaryItems = []) =>
+  t.or(t.eq(status, 'closed'), t.isZeroLen(primaryItems))
+    ? 0 - navSize.primary
+    : 0
+)
+export const calcSecondaryLeft = z.fn(t => (status, secondaryItems) =>
+  t.or(t.eq(status, 'closed'), t.isZeroLen(secondaryItems))
+    ? 0 - (navSize.secondary + navSize.primary)
+    : navSize.primary
+)
+export const calcBodyLeft = z.fn(t => (status, size, width, pageNav = false) =>
+  t.not(t.or(t.eq(size, 'lg'), t.eq(size, 'xl')))
+    ? 0
+    : t.eq(status, 'closed')
+    ? 0
+    : pageNav
+    ? width + navSize.page
+    : width
+)
+export const calcBodySpacing = z.fn(t => (key, items, size, height) =>
+  t.isZeroLen(items)
+    ? 0
+    : t.contains(size, ['lg', 'xl'])
+    ? t.eq(key, 'top')
+      ? height
+      : 0
+    : t.eq(key, 'bottom')
+    ? height
+    : 0
+)
+export const calcPageLeft = z.fn(t => (status, size, width, pageStatus) =>
+  t.and(
+    t.not(t.or(t.eq(size, 'lg'), t.eq(size, 'xl'))),
+    t.and(t.eq(status, 'closed'), t.eq(pageStatus, 'closed'))
+  )
+    ? -(width + navSize.page)
+    : t.not(t.or(t.eq(size, 'lg'), t.eq(size, 'xl')))
+    ? 0
+    : width
+)

@@ -8,17 +8,19 @@ import { routeNotFound, screen } from './ui'
 export const feature = z.create(
   'layout',
   parts => {
-    const RouteNotFound = routeNotFound(parts.ui)
-    const Screen = screen({ ui: parts.ui, mutators: state.mutators })
     return {
       state,
       ui: {
-        RouteNotFound,
-        Screen,
+        Screen: screen({ ui: parts.ui, mutators: state.mutators }),
       },
       parts: {
         registerNav,
       },
+      routing: [
+        {
+          action: [z.routing.actions.notFound],
+          ui: routeNotFound(parts.ui),
+        },]
     }
   },
   { ui: null }

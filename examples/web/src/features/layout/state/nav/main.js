@@ -549,8 +549,8 @@ export const nav = z.fn(t =>
                   matched: validMatch,
                   mode: finalMode,
                   title: t.isNil(validMatch)
-                    ? t.pathOr('', ['nav', 'title'], state)
-                    : validMatch.options.title,
+                    ? t.pathOr('', ['nav', 'text'], state)
+                    : validMatch.options.text,
                   width:
                     t.getMatch(finalMode)({
                       [navMode.page]: 0,

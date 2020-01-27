@@ -14,20 +14,6 @@ const authStatus = {
   fail: 'auth-fail',
 }
 
-// schema
-const anon = sc.nav.create(n => [
-  n('/account/sign-in', {
-    slot: 'body-action',
-    title: 'Sign-in',
-    icon: 'sign-in-alt',
-  }),
-  n('/account/sign-up', {
-    slot: 'body-action',
-    title: 'Sign-up',
-    icon: 'user-plus',
-  }),
-])
-
 // main
 const name = 'account'
 export const stateKit = parts =>
@@ -261,7 +247,18 @@ export const stateKit = parts =>
         path: 'account',
         state: views.state({}),
       }),
-      parts.state.registerNav({ anon }),
+      parts.state.registerNav({ anon:sc.nav.create(n => [
+        n('/account/sign-in', {
+          slot: 'body-action',
+          text: 'Sign-in',
+          icon: 'sign-in-alt',
+        }),
+        n('/account/sign-up', {
+          slot: 'body-action',
+          text: 'Sign-up',
+          icon: 'user-plus',
+        }),
+      ]) }),
     ])
   )
 export default stateKit

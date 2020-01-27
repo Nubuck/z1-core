@@ -1,16 +1,11 @@
 @tailwind base;
+/* @import 'tailwindcss/base.css'; */
 
 @tailwind components;
+/* @import 'tailwindcss/components.css'; */
 
 @tailwind utilities;
+/* @import 'tailwindcss/utilities.css'; */
 
 @import './elements.css';
 
-body {
-  @apply bg-gray-900 text-white;
-}
-
-#root {
-  @apply fixed flex flex-col top-0 bottom-0 left-0 right-0 w-full min-h-screen p-0 h-0 overflow-x-hidden overflow-y-auto z-0 antialiased;
-  @extend .scrollbar;
-}

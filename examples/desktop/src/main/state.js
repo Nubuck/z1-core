@@ -9,6 +9,7 @@ const appState = z.fn((t, a) =>
         error: null,
         agent: null,
         auth: null,
+        services: [],
       },
       mutations(m) {
         return [
@@ -23,11 +24,26 @@ const appState = z.fn((t, a) =>
       effects(fx, { actions, mutators }) {
         return [
           fx([actions.boot], async (ctx, dispatch, done) => {
+            const [serviceErr, services] = await a.of(ctx.sysInfo.services('*'))
+            if (serviceErr) {
+              console.log('ERR finding services', serviceErr)
+            }
+            const matcher = t.globrex('**brave**')
+            const nextServices = t.filter(
+              service => matcher.regex.test(service.name),
+              services || []
+            )
             const [agentErr, agent] = await a.of(
               ctx.machine.account({ role: 'agent' })
             )
             if (agentErr) {
-              dispatch(mutators.bootComplete({ agent: null, error: agentErr }))
+              dispatch(
+                mutators.bootComplete({
+                  agent: null,
+                  error: agentErr,
+                  services: nextServices,
+                })
+              )
             } else {
               const [authErr, authResult] = await a.of(
                 ctx.api.authenticate({
@@ -40,6 +56,7 @@ const appState = z.fn((t, a) =>
                   agent,
                   error: authErr,
                   auth: authResult,
+                  services: nextServices,
                 })
               )
               done()

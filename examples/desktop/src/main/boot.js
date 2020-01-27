@@ -13,6 +13,7 @@ export const boot = async () => {
     context: {
       api: client,
       machine: ma.machine,
+      sysInfo: ma.sysInfo,
     },
     logging: process.env.NODE_ENV === 'development',
   })

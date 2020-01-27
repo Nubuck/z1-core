@@ -1,7 +1,7 @@
 import z from '@z1/lib-feature-box'
 
 // parts
-import { state } from './state'
+import { state, registerNav } from './state'
 
 // main
 export const feature = z.create(
@@ -9,6 +9,9 @@ export const feature = z.create(
   parts => {
     return {
       state,
+      parts:{
+        registerNav
+      }
     }
   },
   { ui: null }

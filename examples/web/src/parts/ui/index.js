@@ -11,6 +11,7 @@ import { ListItem } from './ListItem'
 import { Logo } from './Logo'
 import { Modal } from './Modal'
 import { Page } from './Page'
+import { viewRoute } from './viewRoute'
 import { VList } from './VList'
 
 // main
@@ -24,6 +25,7 @@ export const ui = {
   Logo,
   Modal,
   Page,
+  viewRoute,
   VList,
   dateFn,
 }

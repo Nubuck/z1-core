@@ -62,3 +62,29 @@ export const calcPageLeft = z.fn(t => (status, size, width, pageStatus) =>
     ? 0
     : width
 )
+
+// macro
+export const registerNav = z.fn(t => ({ anon, secure }) => {
+  return {
+    onInit(ctx) {
+      if (t.notNil(anon)) {
+        ctx.dispatch({
+          type: 'nav/SCHEMA_REGISTER',
+          payload: {
+            level: 'anon',
+            schema: anon,
+          },
+        })
+      }
+      if (t.notNil(secure)) {
+        ctx.dispatch({
+          type: 'nav/SCHEMA_REGISTER',
+          payload: {
+            level: 'secure',
+            schema: secure,
+          },
+        })
+      }
+    },
+  }
+})

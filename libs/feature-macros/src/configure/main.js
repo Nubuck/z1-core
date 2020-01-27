@@ -232,20 +232,15 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
             t.pick(['route', 'params'], state),
             { next: action.payload },
           ])
-          const nextModal = activeMacro.modal(activeCtx)
-          if (t.isNil(nextModal)) {
-            return state
-          }
-          return t.merge(state, {
-            views: t.merge(state.views, {
-              [state.active.view]: t.merge(activeState, {
-                modal: t.merge(
-                  activeState.modal,
-                  t.omit(['event', 'next', 'route', 'params'], nextModal)
-                ),
+          const nextActiveState = nextViewState(activeMacro, activeCtx)
+          return t.mergeAll([
+            state,
+            {
+              views: t.merge(state.views, {
+                [state.active.view]: nextActiveState,
               }),
-            }),
-          })
+            },
+          ])
         }),
       ]
     },

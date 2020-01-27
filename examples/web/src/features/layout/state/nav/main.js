@@ -73,6 +73,7 @@ export const nav = z.fn(t =>
           const level = t.pathOr(state.level, ['payload', 'level'], action)
           const schema = t.pathOr(null, ['payload', 'schema'], action)
           return t.merge(state, {
+            status: 'ready',
             level,
             schema: t.isNil(schema)
               ? state.schema
@@ -230,22 +231,19 @@ export const nav = z.fn(t =>
         }),
         m('navToggle', (state, action) => {
           const slot = t.pathOr('nav', ['payload', 'slot'], action)
-          const status = t.eq('nav', target)
+          const status = t.eq('nav', slot)
             ? t.eq(state.status, 'open')
               ? 'closed'
               : 'open'
             : state.status
-          const pageStatus = t.neq('nav', target)
+          const pageStatus = t.neq('nav', slot)
             ? t.eq(state.page.status, 'open')
               ? 'closed'
               : 'open'
             : t.eq(status, 'open')
             ? 'closed'
             : state.page.status
-          const nextStatus = t.and(
-            t.neq('nav', target),
-            t.eq(pageStatus, 'open')
-          )
+          const nextStatus = t.and(t.neq('nav', slot), t.eq(pageStatus, 'open'))
             ? 'closed'
             : status
           const pageItems = t.pathOr({}, ['page', 'items'], state)
@@ -315,17 +313,21 @@ export const nav = z.fn(t =>
             const level = t.pathOr(null, ['nav', 'level'], state)
             const isSuccess = t.eq(status, 'auth-success')
             const isSecure = t.eq(level, 'secure')
+            const nextLevel = t.and(t.not(isSecure), isSuccess)
+              ? 'secure'
+              : 'anon'
             if (
-              t.or(
+              t.anyOf([
                 t.and(isSecure, isSuccess),
-                t.and(t.not(isSecure), t.not(isSuccess))
-              )
+                t.and(t.not(isSecure), t.not(isSuccess)),
+                t.eq(level, nextLevel),
+              ])
             ) {
               done()
             } else {
               dispatch(
                 box.mutators.schemaChange({
-                  level: t.and(t.not(isSecure), isSuccess) ? 'secure' : 'anon',
+                  level: nextLevel,
                 })
               )
               done()
@@ -364,225 +366,211 @@ export const nav = z.fn(t =>
           ],
           (ctx, dispatch, done) => {
             const state = ctx.getState()
-            const level = t.path(['nav', 'level'], state)
-            const schema = t.pathOr({}, ['nav', 'schema', level], state)
-            const pathname = t.pathOr('', ['location', 'pathname'], state)
-            const matched = t.pathOr(null, ['nav', 'matched'], state)
-            // find
-            const foundNav = sc.nav.find(pathname, schema)
-            // validate match
-            const checkMatch = t.isNil(foundNav)
-              ? t.isNil(matched)
-                ? foundNav
-                : t.contains(
-                    pathname,
-                    t.pathOr('', ['nav', 'matched', 'path'], state)
-                  )
-                ? matched
-                : foundNav
-              : t.not(foundNav.hasChildren)
-              ? t.notNil(matched)
-                ? t.contains(pathname, matched.path)
+            const status = t.path(['nav', 'status'], state)
+            if (t.neq(status, 'ready')) {
+              done()
+            } else {
+              const level = t.path(['nav', 'level'], state)
+              const schema = t.pathOr({}, ['nav', 'schema', level], state)
+              const pathname = t.pathOr('', ['location', 'pathname'], state)
+              const matched = t.pathOr(null, ['nav', 'matched'], state)
+              // find
+              const foundNav = sc.nav.find(pathname, schema)
+              // validate match
+              const checkMatch = t.isNil(foundNav)
+                ? t.isNil(matched)
+                  ? foundNav
+                  : t.contains(
+                      pathname,
+                      t.pathOr('', ['nav', 'matched', 'path'], state)
+                    )
                   ? matched
+                  : foundNav
+                : t.not(foundNav.hasChildren)
+                ? t.notNil(matched)
+                  ? t.contains(pathname, matched.path)
+                    ? matched
+                    : sc.nav.find(foundNav.parentPath || '', schema)
                   : sc.nav.find(foundNav.parentPath || '', schema)
-                : sc.nav.find(foundNav.parentPath || '', schema)
-              : nextMatch
+                : nextMatch
 
-            // compute primary
-            const primary = t.reduce(
-              (data, [key, item]) => {
-                const isItem = t.eq(slotPath(item), 'nav')
-                const isAction = t.eq(slotPath(item), 'primary-action')
-                return t.merge(data, {
-                  items: t.or(t.not(isItem), isAction)
-                    ? data.items
-                    : t.not(isItem)
-                    ? data.items
-                    : t.merge(data.items, { [key]: item }),
-                  actions: t.not(isAction)
-                    ? data.actions
-                    : t.merge(data.actions, { [key]: item }),
-                })
-              },
-              { items: {}, actions: {} },
-              t.to.pairs(schema)
-            )
+              // compute primary
+              const primary = t.reduce(
+                (data, [key, item]) => {
+                  const isItem = t.eq(slotPath(item), 'nav')
+                  const isAction = t.eq(slotPath(item), 'primary-action')
+                  return t.merge(data, {
+                    items: t.or(t.not(isItem), isAction)
+                      ? data.items
+                      : t.not(isItem)
+                      ? data.items
+                      : t.merge(data.items, { [key]: item }),
+                    actions: t.not(isAction)
+                      ? data.actions
+                      : t.merge(data.actions, { [key]: item }),
+                  })
+                },
+                { items: {}, actions: {} },
+                t.to.pairs(schema)
+              )
 
-            //console.log('primary', primary)
-
-            const validMatch = t.notZeroLen(primary.items)
-              ? t.isNil(checkMatch)
-                ? checkMatch
-                : t.neq('nav', slotPath(checkMatch))
-                ? t.or(
-                    t.not(checkMatch.hasChildren),
-                    t.isZeroLen(
-                      t.filter(
-                        item => t.eq('nav', slotPath(item)),
-                        t.values(checkMatch.children || [])
+              const validMatch = t.notZeroLen(primary.items)
+                ? t.isNil(checkMatch)
+                  ? checkMatch
+                  : t.neq('nav', slotPath(checkMatch))
+                  ? t.or(
+                      t.not(checkMatch.hasChildren),
+                      t.isZeroLen(
+                        t.filter(
+                          item => t.eq('nav', slotPath(item)),
+                          t.values(checkMatch.children || [])
+                        )
                       )
                     )
-                  )
-                  ? sc.nav.find(checkMatch.parentPath || '', schema)
+                    ? sc.nav.find(checkMatch.parentPath || '', schema)
+                    : checkMatch
                   : checkMatch
                 : checkMatch
-              : checkMatch
 
-            //console.log('validMatch', validMatch)
+              const secondary = t.isEmpty(primary.items)
+                ? { items: {}, bodyItems: {}, bodyActions: {} }
+                : t.reduce(
+                    (data, [key, item]) => {
+                      const isBodyItem = t.eq(slotPath(item), 'body')
+                      const isBodyAction = t.eq(slotPath(item), 'body-action')
+                      return t.merge(data, {
+                        items: t.or(isBodyItem, isBodyAction)
+                          ? data.items
+                          : t.merge(data.items, { [key]: item }),
+                        bodyItems: t.not(isBodyItem)
+                          ? data.bodyItems
+                          : t.merge(data.bodyItems, { [key]: item }),
+                        bodyActions: t.not(isBodyAction)
+                          ? data.bodyActions
+                          : t.merge(data.bodyActions, { [key]: item }),
+                      })
+                    },
+                    { items: {}, bodyItems: {}, bodyActions: {} },
+                    t.isNil(validMatch) ? [] : t.to.pairs(validMatch.children)
+                  )
 
-            const secondary = t.isEmpty(primary.items)
-              ? { items: {}, bodyItems: {}, bodyActions: {} }
-              : t.reduce(
-                  (data, [key, item]) => {
-                    const isBodyItem = t.eq(slotPath(item), 'body')
-                    const isBodyAction = t.eq(slotPath(item), 'body-action')
-                    return t.merge(data, {
-                      items: t.or(isBodyItem, isBodyAction)
-                        ? data.items
-                        : t.merge(data.items, { [key]: item }),
-                      bodyItems: t.not(isBodyItem)
-                        ? data.bodyItems
-                        : t.merge(data.bodyItems, { [key]: item }),
-                      bodyActions: t.not(isBodyAction)
-                        ? data.bodyActions
-                        : t.merge(data.bodyActions, { [key]: item }),
-                    })
-                  },
-                  { items: {}, bodyItems: {}, bodyActions: {} },
-                  t.isNil(validMatch) ? [] : t.to.pairs(validMatch.children)
-                )
+              const nextMode = t.isEmpty(
+                t.merge(primary.items, primary.actions)
+              )
+                ? navMode.page
+                : t.isNil(validMatch)
+                ? navMode.primary
+                : t.isEmpty(secondary.items)
+                ? navMode.primary
+                : navMode.secondary
 
-            //console.log('secondary', secondary)
+              const nextBody = t.neq(nextMode, navMode.page)
+                ? {
+                    items: secondary.bodyItems,
+                    actions: secondary.bodyActions,
+                  }
+                : t.reduce(
+                    (data, [key, item]) => {
+                      const isBodyItem = t.eq(slotPath(item), 'body')
+                      const isBodyAction = t.eq(slotPath(item), 'body-action')
+                      return t.merge(data, {
+                        items: t.not(isBodyItem)
+                          ? data.items
+                          : t.merge(data.items, { [key]: item }),
+                        actions: t.not(isBodyAction)
+                          ? data.actions
+                          : t.merge(data.actions, { [key]: item }),
+                      })
+                    },
+                    { items: {}, actions: {} },
+                    t.to.pairs(schema)
+                  )
 
-            const nextMode = t.isEmpty(t.merge(primary.items, primary.actions))
-              ? navMode.page
-              : t.isNil(validMatch)
-              ? navMode.primary
-              : t.isEmpty(secondary.items)
-              ? navMode.primary
-              : navMode.secondary
+              // page items
+              const matchedBodyItem = t.neq(nextMode, navMode.page)
+                ? t.find(
+                    item => t.eq(pathname, item.path),
+                    t.values(nextBody.items) || []
+                  )
+                : validMatch
 
-            //console.log('nextMode', nextMode)
+              const checkBodyItem = t.neq(nextMode, navMode.page)
+                ? t.and(t.isNil(matchedBodyItem), t.notEmpty(nextBody.items))
+                  ? sc.nav.find(pathname, nextBody.items)
+                  : matchedBodyItem
+                : validMatch
 
-            const nextBody = t.neq(nextMode, navMode.page)
-              ? {
-                  items: secondary.bodyItems,
-                  actions: secondary.bodyActions,
-                }
-              : t.reduce(
-                  (data, [key, item]) => {
-                    const isBodyItem = t.eq(slotPath(item), 'body')
-                    const isBodyAction = t.eq(slotPath(item), 'body-action')
-                    return t.merge(data, {
-                      items: t.not(isBodyItem)
-                        ? data.items
-                        : t.merge(data.items, { [key]: item }),
-                      actions: t.not(isBodyAction)
-                        ? data.actions
-                        : t.merge(data.actions, { [key]: item }),
-                    })
-                  },
-                  { items: {}, actions: {} },
-                  t.to.pairs(schema)
-                )
-
-            //console.log('nextBody', nextBody)
-
-            // page items
-            const matchedBodyItem = t.neq(nextMode, navMode.page)
-              ? t.find(
-                  item => t.eq(pathname, item.path),
-                  t.values(nextBody.items) || []
-                )
-              : validMatch
-
-            //console.log('matchedBodyItem', matchedBodyItem)
-
-            const checkBodyItem = t.neq(nextMode, navMode.page)
-              ? t.and(t.isNil(matchedBodyItem), t.notEmpty(nextBody.items))
-                ? sc.nav.find(pathname, nextBody.items)
+              const finalBodyItem = t.and(
+                t.notEmpty(nextBody.items),
+                t.and(t.isNil(matchedBodyItem), t.notNil(checkBodyItem))
+              )
+                ? t.eq(checkBodyItem.path, pathname)
+                  ? sc.nav.find(checkBodyItem.parentPath || '', schema)
+                  : matchedBodyItem
                 : matchedBodyItem
-              : validMatch
 
-            //console.log('checkBodyItem', checkBodyItem)
+              const pageItems = t.isNil(finalBodyItem)
+                ? {}
+                : t.notEmpty(t.pathOr({}, ['children'], finalBodyItem))
+                ? finalBodyItem.children
+                : {}
 
-            const finalBodyItem = t.and(
-              t.notEmpty(nextBody.items),
-              t.and(t.isNil(matchedBodyItem), t.notNil(checkBodyItem))
-            )
-              ? t.eq(checkBodyItem.path, pathname)
-                ? sc.nav.find(checkBodyItem.parentPath || '', schema)
-                : matchedBodyItem
-              : matchedBodyItem
-
-            //console.log('finalBodyItem', finalBodyItem)
-
-            const pageItems = t.isNil(finalBodyItem)
-              ? {}
-              : t.notEmpty(t.pathOr({}, ['children'], finalBodyItem))
-              ? finalBodyItem.children
-              : {}
-
-            //console.log('pageItems', pageItems)
-
-            const nextSecondaryItems = t.eq(nextMode, navMode.page)
-              ? secondary.items
-              : t.and(
-                  t.notEmpty(nextBody.items || {}),
-                  t.isEmpty(secondary.items)
-                )
-              ? t.fromPairs(
-                  t.filter(
-                    ([key, item]) => t.eq('nav', slotPath(item)),
-                    t.to.pairs(
-                      t.pathOr(
-                        {},
-                        ['children'],
-                        sc.nav.find(validMatch.parentPath || '', schema) || {}
+              const nextSecondaryItems = t.eq(nextMode, navMode.page)
+                ? secondary.items
+                : t.and(
+                    t.notEmpty(nextBody.items || {}),
+                    t.isEmpty(secondary.items)
+                  )
+                ? t.fromPairs(
+                    t.filter(
+                      ([key, item]) => t.eq('nav', slotPath(item)),
+                      t.to.pairs(
+                        t.pathOr(
+                          {},
+                          ['children'],
+                          sc.nav.find(validMatch.parentPath || '', schema) || {}
+                        )
                       )
                     )
                   )
-                )
-              : secondary.items
+                : secondary.items
 
-            //console.log('nextSecondaryItems', nextSecondaryItems)
+              const finalMode = t.eq(nextMode, navMode.page)
+                ? nextMode
+                : t.isNil(validMatch)
+                ? navMode.primary
+                : t.isEmpty(nextSecondaryItems)
+                ? navMode.primary
+                : navMode.secondary
 
-            const finalMode = t.eq(nextMode, navMode.page)
-              ? nextMode
-              : t.isNil(validMatch)
-              ? navMode.primary
-              : t.isEmpty(nextSecondaryItems)
-              ? navMode.primary
-              : navMode.secondary
+              // mutate
+              dispatch(
+                box.mutators.navMatch({
+                  matched: validMatch,
+                  mode: finalMode,
+                  title: t.isNil(validMatch)
+                    ? t.pathOr('', ['nav', 'title'], state)
+                    : validMatch.options.title,
+                  width:
+                    t.getMatch(finalMode)({
+                      [navMode.page]: 0,
+                      [navMode.primary]: navSize.primary,
+                      [navMode.secondary]: navSize.primary + navSize.secondary,
+                    }) || 0,
+                  primary,
+                  secondary: { items: nextSecondaryItems },
+                  body: nextBody,
+                  page: {
+                    items: pageItems,
+                  },
+                })
+              )
 
-            ////console.log('finalMode', finalMode)
-
-            // mutate
-            dispatch(
-              box.mutators.navMatch({
-                matched: validMatch,
-                mode: finalMode,
-                title: t.isNil(validMatch)
-                  ? t.pathOr('', ['nav', 'title'], state)
-                  : validMatch.options.title,
-                width:
-                  t.getMatch(finalMode)({
-                    [navMode.page]: 0,
-                    [navMode.primary]: navSize.primary,
-                    [navMode.secondary]: navSize.primary + navSize.secondary,
-                  }) || 0,
-                primary,
-                secondary: { items: nextSecondaryItems },
-                body: nextBody,
-                page: {
-                  items: pageItems,
-                },
-              })
-            )
-
-            // finally
-            done()
-          }
+              // finally
+              done()
+            }
+          },
+          { latest: true }
         ),
       ]
     },

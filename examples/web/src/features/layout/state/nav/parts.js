@@ -21,14 +21,18 @@ export const navSize = {
   page: 240,
 }
 
+export const slotPath = z.fn(t => (item, base) =>
+  t.pathOr(base || 'nav', ['options', 'slot'], item)
+)
+
 // sizing
 export const calcPrimaryLeft = z.fn(t => (status, primaryItems = []) =>
-  t.or(t.eq(status, 'closed'), t.isZeroLen(primaryItems))
+  t.or(t.eq(status, 'closed'), t.isEmpty(primaryItems))
     ? 0 - navSize.primary
     : 0
 )
 export const calcSecondaryLeft = z.fn(t => (status, secondaryItems) =>
-  t.or(t.eq(status, 'closed'), t.isZeroLen(secondaryItems))
+  t.or(t.eq(status, 'closed'), t.isEmpty(secondaryItems))
     ? 0 - (navSize.secondary + navSize.primary)
     : navSize.primary
 )
@@ -42,7 +46,7 @@ export const calcBodyLeft = z.fn(t => (status, size, width, pageNav = false) =>
     : width
 )
 export const calcBodySpacing = z.fn(t => (key, items, size, height) =>
-  t.isZeroLen(items)
+  t.isEmpty(items)
     ? 0
     : t.contains(size, ['lg', 'xl'])
     ? t.eq(key, 'top')

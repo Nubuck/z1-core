@@ -7,7 +7,7 @@ export const api = (z, props) =>
       {
         models: props.models,
         services(s, h) {
-          // disbale create methods on model services to direct 
+          // disbale create methods on model services to direct
           // through machine-account service
           s([props.adapter, 'machines'], props.serviceFactory.machines, {
             hooks: {
@@ -58,6 +58,7 @@ export const api = (z, props) =>
                     })
                   )
                   if (machineErr) {
+                    console.log('machine err', machine, machineErr)
                     throw new z.FeathersErrors.GeneralError(machineErr.message)
                   }
                   // create machine
@@ -66,6 +67,7 @@ export const api = (z, props) =>
                       app.service('machines').create(machine)
                     )
                     if (nextMachineErr) {
+                      console.log('next machine err', nextMachine, machineErr)
                       throw new z.FeathersErrors.GeneralError(
                         nextMachineErr.message
                       )
@@ -80,6 +82,7 @@ export const api = (z, props) =>
                         )
                     )
                     if (nextUserErr) {
+                      console.log('next user err', nextUser, nextUserErr)
                       throw new z.FeathersErrors.GeneralError(
                         nextUserErr.message
                       )
@@ -98,6 +101,7 @@ export const api = (z, props) =>
                     })
                   )
                   if (userErr) {
+                    console.log('user err', userResult, userErr)
                     throw new z.FeathersErrors.GeneralError(userErr.message)
                   }
                   const nextMachine = t.head(machineResult.data)
@@ -113,6 +117,7 @@ export const api = (z, props) =>
                         )
                     )
                     if (nextUserErr) {
+                      console.log('next user 2 err', nextUser, nextUserErr)
                       throw new z.FeathersErrors.GeneralError(
                         nextUserErr.message
                       )

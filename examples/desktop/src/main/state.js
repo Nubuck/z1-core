@@ -55,8 +55,10 @@ const appState = z.fn((t, a) =>
                   )
                 )
               ) {
+                console.log('skip auth')
                 done()
               } else {
+                console.log('auth')
                 dispatch(box.mutators.authenticate())
                 done()
               }
@@ -80,7 +82,7 @@ const appState = z.fn((t, a) =>
                   ctx.api.authentication.reAuthenticate()
                 )
                 if (reAuthErr) {
-                  console.log('reauth failed')
+                  console.log('reauth failed - get machine account begin')
                   const [agentErr, agent] = await a.of(
                     ctx.machine.account({ role: 'agent' })
                   )
@@ -95,6 +97,7 @@ const appState = z.fn((t, a) =>
                     )
                     done()
                   } else {
+                    console.log('auth begin')
                     const [authErr, authResult] = await a.of(
                       ctx.api.authenticate({
                         strategy: 'machine',
@@ -102,7 +105,7 @@ const appState = z.fn((t, a) =>
                       })
                     )
                     if (authErr) {
-                      console.log('auth failed')
+                      console.log('auth failed - system info begin')
                       const [systemErr, systemResult] = await a.of(
                         ctx.machine.system(agent.machine)
                       )

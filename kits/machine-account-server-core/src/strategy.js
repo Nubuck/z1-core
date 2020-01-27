@@ -5,6 +5,7 @@ export function strategy(z) {
   AuthenticationBaseStrategy.prototype.authenticate = z.featureBox.fn(
     (t, a) =>
       async function authenticate(payload) {
+        console.log('machine strat', payload)
         const payloadErrorMsg =
           'Machine account authentication requires a hashId field'
         if (t.not(t.has('hashId')(payload))) {
@@ -21,6 +22,7 @@ export function strategy(z) {
           })
         )
         if (userError) {
+          console.log('user err', payload, userError)
           throw new z.FeathersErrors.Unprocessable(userError.message)
         }
         const invalidErrorMsg = 'Invalid Login'
@@ -35,6 +37,7 @@ export function strategy(z) {
           this.app.service('machines').get(user.machineId)
         )
         if (machineError) {
+          console.log('machine err', userResult,user, machineError)
           throw new z.FeathersErrors.Unprocessable(machineError.message)
         }
         if (t.isNil(machine)) {

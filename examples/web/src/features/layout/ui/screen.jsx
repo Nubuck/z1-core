@@ -221,6 +221,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               box={{
                                 padding: { x: 3 },
                               }}
+                              activeClassName='text-yellow-500'
                               {...elProps}
                             />
                           )

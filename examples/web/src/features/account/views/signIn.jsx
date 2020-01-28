@@ -59,7 +59,15 @@ export const signIn = mx.fn((t, a) =>
             },
           }
         },
-        async transmit({ status, form, api }) {
+        async transmit({
+          status,
+          form,
+          api,
+          dispatch,
+          getState,
+          mutators,
+          redirect,
+        }) {
           const [authErr, authResult] = await a.of(
             api.authenticate({
               strategy: 'local',
@@ -75,6 +83,26 @@ export const signIn = mx.fn((t, a) =>
               error: authErr,
             }
           }
+          // get user success
+          dispatch(mutators.authenticateSuccess({ user }))
+          // NOTE: redirect back or to home
+          const state = getState()
+          if (state.account.redirectBackTo) {
+            const redirectTo = state.account.redirectBackTo
+            dispatch(mutators.redirectChange(null))
+            dispatch(redirect(redirectTo))
+            return {
+              status,
+              data: {},
+              error: null,
+            }
+          }
+          dispatch(
+            redirect({
+              type: 'landing/ROUTE_HOME',
+              payload: {},
+            })
+          )
           return {
             status,
             data: {},

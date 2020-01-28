@@ -51,6 +51,7 @@ const signUpForm = props =>
 export const signUp = mx.fn((t, a) =>
   mx.routeView.create('sign-up', {
     state() {
+      const { types } = mx.routeView
       return {
         initial: {
           data: {
@@ -69,10 +70,7 @@ export const signUp = mx.fn((t, a) =>
             status: props.status,
             data: t.merge(props.data, {
               mode: t.and(
-                t.eq(
-                  props.event,
-                  mx.routeView.types.event.formTransmitComplete
-                ),
+                t.eq(props.event, types.event.formTransmitComplete),
                 t.isNil(props.error)
               )
                 ? 'view'
@@ -85,33 +83,39 @@ export const signUp = mx.fn((t, a) =>
         form(props) {
           return {
             signUp: {
-              data: t.atOr(props.form.signUp.data, 'data', props.next || {}),
+              data: t.atOr(
+                t.at('form.signUp.data', props),
+                'data',
+                props.next || {}
+              ),
               ui: signUpForm({
-                disabled: t.eq(props.status, mx.routeView.types.status.loading),
+                disabled: t.eq(props.status, types.status.loading),
               }),
             },
           }
         },
         async transmit(props) {
+          const data =  t.at('form.signUp.data', props)
           const [checkError] = await a.of(
             props.api.service('auth-management').create({
               action: 'checkUnique',
               value: {
-                email: props.form.signUp.data.email,
+                email: data.email,
               },
             })
           )
           if (checkError) {
             return {
-              status: mx.routeView.types.status.fail,
-              data: props.form.signUp.data,
+              status: types.status.fail,
+              data,
               error: checkError,
             }
           }
+          
           const [userError, userResult] = await a.of(
             props.api.service('users').create(
               t.mergeAll([
-                props.form.signUp.data,
+                data
                 {
                   role: 'user',
                   status: 'offline',
@@ -121,8 +125,8 @@ export const signUp = mx.fn((t, a) =>
           )
           if (userError) {
             return {
-              status: mx.routeView.types.status.fail,
-              data: props.form.signUp.data,
+              status: types.status.fail,
+              data,
               error: userError,
             }
           }
@@ -138,11 +142,11 @@ export const signUp = mx.fn((t, a) =>
       return props => {
         return (
           <ctx.Page
-            key="sign-in"
+            key="sign-up"
             centered
             render={() => (
               <ctx.Match
-                value={props.state.data.mode}
+                value={t.at('state.data.mode', props)}
                 render={{
                   form() {
                     return (
@@ -195,9 +199,12 @@ export const signUp = mx.fn((t, a) =>
                           )}
                         />
                         <ctx.Form
-                          schema={props.state.form.signUp.ui.schema}
-                          uiSchema={props.state.form.signUp.ui.uiSchema}
-                          formData={props.state.form.signUp.data}
+                          schema={t.at('state.form.signUp.ui.schema', props)}
+                          uiSchema={t.at(
+                            'state.form.signUp.ui.uiSchema',
+                            props
+                          )}
+                          formData={t.at('state.form.signUp.data', props)}
                           onSubmit={payload =>
                             props.mutations.formTransmit({
                               data: payload.formData,
@@ -218,7 +225,10 @@ export const signUp = mx.fn((t, a) =>
                               fill="outline"
                               colors={{ on: 'blue-500', off: 'yellow-500' }}
                               label="Continue"
-                              loading={t.eq(props.state.data.status, 'loading')}
+                              loading={t.eq(
+                                t.at('state.data.status', props),
+                                'loading'
+                              )}
                             />
                           </ctx.HStack>
                         </ctx.Form>

@@ -265,7 +265,6 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                     flex: 1,
                     width: 'full',
                     zIndex: 0,
-                    minHeight: 'full',
                   }}
                   style={{
                     paddingLeft: props.nav.body.left,

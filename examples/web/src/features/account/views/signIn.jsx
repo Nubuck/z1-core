@@ -48,10 +48,10 @@ export const signIn = mx.fn((t, a) =>
           return {
             status,
             data,
-            error,
+            error: t.pathOr(error, ['error'], next || {}),
           }
         },
-        form({ event, status, data, form, next }) {
+        form({ event, status, data, form, next, error }) {
           return {
             signIn: {
               data: t.pathOr(form.signIn.data, ['data'], next || {}),
@@ -68,6 +68,13 @@ export const signIn = mx.fn((t, a) =>
             })
           )
           console.log('SIGN IN TRANSMIT', authErr, authResult)
+          if (authErr) {
+            return {
+              status,
+              data: form.signIn.data,
+              error: authErr,
+            }
+          }
           return {
             status,
             data: {},
@@ -90,7 +97,40 @@ export const signIn = mx.fn((t, a) =>
                     size: '3xl',
                     color: 'yellow-500',
                   }}
-                  label={{ text: 'Sign In', fontSize: '2xl' }}
+                  label={{
+                    text: 'Sign-in to your Account',
+                    fontSize: '2xl',
+                  }}
+                  info={{
+                    text: 'Enter your account credentials below to continue.',
+                    fontSize: 'lg',
+                    padding: { left: 1, top: 3 },
+                  }}
+                />
+                <ctx.When
+                  is={t.notNil(props.state.error)}
+                  render={() => (
+                    <ctx.IconLabel
+                      icon={{
+                        name: 'exclamation-triangle',
+                        size: '2xl',
+                        color: 'orange-500',
+                      }}
+                      label={{
+                        text: 'Incorrect email or password',
+                        fontSize: 'xl',
+                        color: 'orange-500',
+                      }}
+                      next={b =>
+                        b.next({
+                          borderWidth: 2,
+                          borderColor: 'orange-500',
+                          padding: 3,
+                          margin: { top: 4 },
+                        })
+                      }
+                    />
+                  )}
                 />
                 <ctx.Form
                   schema={props.state.form.signIn.form.schema}

@@ -392,7 +392,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                       error: null,
                       status: types.status.ready,
                     },
-                    { next: transmitResult }
+                    transmitResult
                   )
             )
           )

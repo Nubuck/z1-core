@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-task",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -17,11 +17,11 @@
   "dependencies": {
     "change-case": "^4.1.0",
     "common-tags": "^1.8.0",
-    "lodash.throttle": "^4.1.1",
-    "source-map-support": "0.4.3",
-    "ramda": "^0.26.1",
     "core-js": "^3.6.3",
-    "regenerator-runtime": "^0.13.3"
+    "lodash.throttle": "^4.1.1",
+    "ramda": "^0.26.1",
+    "regenerator-runtime": "^0.13.3",
+    "source-map-support": "0.4.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

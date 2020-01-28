@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-feathers-server-sql",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,19 +15,19 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
+    "core-js": "^3.6.3",
     "feathers-knex": "^7.1.0",
-    "knex": "^0.20.4",
     "feathers-sequelize": "^6.1.0",
-    "sequelize": "^5.21.2",
+    "knex": "^0.20.4",
     "mysql": "^2.17.1",
     "mysql2": "^2.0.2",
-    "sqlite3": "^4.1.1",
     "pg": "^7.14.0",
     "pg-hstore": "^2.3.3",
-    "tedious": "^6.6.2",
+    "regenerator-runtime": "^0.13.3",
+    "sequelize": "^5.21.2",
     "source-map-support": "0.4.3",
-    "core-js": "^3.6.3",
-    "regenerator-runtime": "^0.13.3"
+    "sqlite3": "^4.1.1",
+    "tedious": "^6.6.2"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

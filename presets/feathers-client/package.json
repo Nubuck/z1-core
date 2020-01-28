@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-feathers-client",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -19,10 +19,10 @@
     "@feathersjs/errors": "^4.4.3",
     "@feathersjs/feathers": "^4.4.3",
     "@feathersjs/socketio-client": "^4.4.3",
-    "source-map-support": "0.4.3",
-    "socket.io-client": "2.3.0",
     "core-js": "^3.6.3",
-    "regenerator-runtime": "^0.13.3"
+    "regenerator-runtime": "^0.13.3",
+    "socket.io-client": "2.3.0",
+    "source-map-support": "0.4.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

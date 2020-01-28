@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-server-core",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,10 +15,10 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "feathers-authentication-management": "^2.0.1",
-    "source-map-support": "0.4.3",
     "core-js": "^3.6.3",
-    "regenerator-runtime": "^0.13.3"
+    "feathers-authentication-management": "^2.0.1",
+    "regenerator-runtime": "^0.13.3",
+    "source-map-support": "0.4.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

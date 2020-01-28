@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-nedb",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,12 +15,12 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-api-box-core": "^0.3.1",
-    "@z1/preset-feathers-server-nedb": "^0.3.1",
-    "@z1/preset-task": "^0.3.1",
-    "source-map-support": "0.4.3",
+    "@z1/lib-api-box-core": "^0.4.0",
+    "@z1/preset-feathers-server-nedb": "^0.4.0",
+    "@z1/preset-task": "^0.4.0",
     "core-js": "^3.6.3",
-    "regenerator-runtime": "^0.13.3"
+    "regenerator-runtime": "^0.13.3",
+    "source-map-support": "0.4.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

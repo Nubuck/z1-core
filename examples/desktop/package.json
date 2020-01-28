@@ -1,6 +1,6 @@
 {
   "name": "example-app-desktop",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "license": "MIT",
   "scripts": {
     "start": "electron-webpack dev",
@@ -12,12 +12,12 @@
     "renderer": null
   },
   "dependencies": {
-    "@z1/lib-api-box-client-node": "^0.3.1",
-    "@z1/lib-state-box-node": "^0.3.1",
-    "@z1/kit-machine-account-node": "^0.3.1",
-    "source-map-support": "^0.5.12",
+    "@z1/kit-machine-account-node": "^0.4.0",
+    "@z1/lib-api-box-client-node": "^0.4.0",
+    "@z1/lib-state-box-node": "^0.4.0",
     "core-js": "^3.6.3",
-    "regenerator-runtime": "^0.13.3"
+    "regenerator-runtime": "^0.13.3",
+    "source-map-support": "^0.5.12"
   },
   "devDependencies": {
     "electron": "5.0.6",

@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-feathers-server-core",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -24,17 +24,17 @@
     "@feathersjs/feathers": "^4.4.3",
     "@feathersjs/socketio": "^4.4.3",
     "compression": "^1.7.4",
+    "core-js": "^3.6.3",
     "cors": "^2.8.5",
     "feathers-authentication-hooks": "^1.0.1",
     "feathers-hooks-common": "^4.20.7",
     "helmet": "^3.21.1",
+    "regenerator-runtime": "^0.13.3",
     "serve-favicon": "^2.5.0",
     "socket.io": "^2.3.0",
-    "uberproto": "^2.0.4",
     "source-map-support": "0.4.3",
-    "winston": "^3.2.1",
-    "core-js": "^3.6.3",
-    "regenerator-runtime": "^0.13.3"
+    "uberproto": "^2.0.4",
+    "winston": "^3.2.1"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

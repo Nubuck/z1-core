@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-feature-box",
   "description": "The Z1 standard feature development solution for web apps",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -16,29 +16,29 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-state-box": "^0.3.1",
+    "@z1/lib-state-box": "^0.4.0",
+    "core-js": "^3.6.3",
     "redux-first-router": "^2.1.5",
     "redux-first-router-link": "^2.1.1",
     "redux-first-router-restore-scroll": "^1.2.2",
-    "source-map-support": "0.4.3",
-    "core-js": "^3.6.3",
-    "regenerator-runtime": "^0.13.3"
+    "regenerator-runtime": "^0.13.3",
+    "source-map-support": "0.4.3"
   },
   "peerDependencies": {
     "react": "*",
     "react-dom": "*",
-    "redux": "*",
-    "react-redux": "*"
+    "react-redux": "*",
+    "redux": "*"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",
     "neutrino": "^9.0.0",
-    "webpack": "^4",
-    "webpack-cli": "^3",
-    "redux": "^4.0.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-redux": "6.0.1"
+    "react-redux": "6.0.1",
+    "redux": "^4.0.4",
+    "webpack": "^4",
+    "webpack-cli": "^3"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

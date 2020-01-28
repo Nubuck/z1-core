@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-state-box-core",
   "description": "The Z1 core state management solution for universal apps, implemented as a macro interface over Redux, Redux-logic and Redux-toolbelt",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -16,13 +16,13 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.3.1",
-    "source-map-support": "0.4.3",
+    "@z1/preset-task": "^0.4.0",
+    "core-js": "^3.6.3",
     "redux-logic": "^2.1.1",
     "redux-toolbelt": "^2.2.6",
+    "regenerator-runtime": "^0.13.3",
     "rxjs": "^6.5.3",
-    "core-js": "^3.6.3",
-    "regenerator-runtime": "^0.13.3"
+    "source-map-support": "0.4.3"
   },
   "peerDependencies": {
     "redux": "*"
@@ -30,9 +30,9 @@
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",
     "neutrino": "^9.0.0",
+    "redux": "^4.0.4",
     "webpack": "^4",
-    "webpack-cli": "^3",
-    "redux": "^4.0.4"
+    "webpack-cli": "^3"
   },
   "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

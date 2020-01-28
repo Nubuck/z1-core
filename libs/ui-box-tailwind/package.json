@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-ui-box-tailwind",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,14 +15,14 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.3.1",
     "@tailwindcss/custom-forms": "^0.1.4",
+    "@z1/preset-task": "^0.4.0",
+    "core-js": "^3.6.3",
+    "regenerator-runtime": "^0.13.3",
+    "source-map-support": "0.4.3",
     "tailwindcss": "^1.0.4",
     "tailwindcss-spinner": "^1.0.0",
-    "tailwindcss-transitions": "^2.1.0",
-    "source-map-support": "0.4.3",
-    "core-js": "^3.6.3",
-    "regenerator-runtime": "^0.13.3"
+    "tailwindcss-transitions": "^2.1.0"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

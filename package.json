@@ -21,7 +21,7 @@
     "boot:kits": "lerna bootstrap --force-local --scope=@z1/kit-*",
     "boot:examples": "lerna bootstrap --force-local --scope=example-app-*",
     "boot:robot": "lerna bootstrap --force-local --scope=robot-app-agent",
-    "publish": "lerna publish --scope=@z1/*"
+    "publish": "lerna publish"
   },
   "dependencies": {
     "lerna": "3.19.0"

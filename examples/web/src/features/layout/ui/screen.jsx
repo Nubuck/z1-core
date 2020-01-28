@@ -20,10 +20,12 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
         render={{
           waiting() {
             return (
-              <ui.Spinner
-                size="lg"
-                color={t.pathOr('white', ['color'], props)}
-              />
+              <ui.Col x="center" y="center" flex={1}>
+                <ui.Spinner
+                  size="lg"
+                  color={t.pathOr('white', ['color'], props)}
+                />
+              </ui.Col>
             )
           },
           view() {
@@ -58,7 +60,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         icon="superpowers"
                         size="lg"
                         fill="solid"
-                        color="green-500"
+                        color="blue-500"
                         fontWeight="bold"
                         margin={{ y: 3 }}
                       />
@@ -177,7 +179,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                             icon="superpowers"
                             size="lg"
                             fill="solid"
-                            color="green-500"
+                            color="blue-500"
                             fontWeight="bold"
                             margin={{ x: 3 }}
                           />
@@ -215,7 +217,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               as={ui.NavLink}
                               to={navItem.path}
                               size="xl"
-                              color={[null, { hover: 'green-500' }]}
+                              color={[null, { hover: 'blue-500' }]}
                               box={{
                                 padding: { x: 3 },
                               }}

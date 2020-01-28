@@ -122,7 +122,7 @@ export const signIn = mx.fn((t, a) =>
                 <ctx.IconLabel
                   icon={{
                     name: 'sign-in-alt',
-                    size: '3xl',
+                    size: '5xl',
                     color: 'yellow-500',
                   }}
                   label={{
@@ -133,6 +133,11 @@ export const signIn = mx.fn((t, a) =>
                     text: 'Enter your account credentials below to continue.',
                     fontSize: 'lg',
                     padding: { left: 1, top: 3 },
+                  }}
+                  flexDirection="col"
+                  cols={{
+                    left: { x: 'center' },
+                    right: { x: 'center' },
                   }}
                 />
                 <ctx.When
@@ -171,6 +176,7 @@ export const signIn = mx.fn((t, a) =>
                   sm={8}
                   md={5}
                   lg={4}
+                  xl={3}
                   x="center"
                 >
                   <ctx.HStack x="center" y="center">
@@ -179,7 +185,7 @@ export const signIn = mx.fn((t, a) =>
                       size="lg"
                       shape="pill"
                       fill="outline"
-                      colors={{ on: 'green-500', off: 'yellow-500' }}
+                      colors={{ on: 'blue-500', off: 'yellow-500' }}
                       label="Submit"
                       loading={t.eq(props.state.data.status, 'loading')}
                     />

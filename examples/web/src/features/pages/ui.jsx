@@ -8,9 +8,19 @@ export const landingRoute = ui => () => (
     render={() => (
       <React.Fragment>
         <ui.IconLabel
-          icon={{ name: 'superpowers', size: '6xl', color: 'green-500' }}
-          label={{ fontWeight: 'bold', text: 'Example App', fontSize: '4xl' }}
+          icon={{ name: 'superpowers', size: '6xl', color: 'blue-500' }}
+          label={{ fontWeight: 'bold', text: 'Z1 System', fontSize: '4xl' }}
+          info={{
+            text: 'Macro driven development',
+            fontSize: 'xl',
+            margin: { y: 4 },
+          }}
           margin={{ bottom: 4 }}
+          flexDirection="col"
+          cols={{
+            left: { x: 'center', margin: { bottom: 3 } },
+            right: { x: 'center' },
+          }}
         />
         <ui.Button
           as={ui.Link}
@@ -19,7 +29,7 @@ export const landingRoute = ui => () => (
           shape="pill"
           fill="outline"
           label="Get Started"
-          color="green-500"
+          color="blue-500"
         />
       </React.Fragment>
     )}

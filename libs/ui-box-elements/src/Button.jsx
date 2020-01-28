@@ -40,18 +40,22 @@ const fills = fn(t =>
   })
 )
 
-const colorByKey = fn(t => (mode, key, colors, color) => {
+const colorByKey = fn(t => (mode, key, fill, colors, color) => {
   const foundColor = t.pathOr(null, [mode, key], colors || {})
   if (t.notNil(foundColor)) {
     return foundColor
   }
   const modeColor = t.pathOr(null, [mode], colors || {})
   if (
-    t.allOf([
+    t.and(
       t.isType(modeColor, 'string'),
-      t.not(t.includes('solid', mode)),
-      t.not(t.eq(key, 'content')),
-    ])
+      t.not(
+        t.allOf([
+          t.or(t.includes('outline', fill), t.includes('solid', fill)),
+          t.and(t.eq(key, 'content'), t.eq(mode, 'on')),
+        ])
+      )
+    )
   ) {
     return modeColor
   }
@@ -61,17 +65,17 @@ const colorByKey = fn(t => (mode, key, colors, color) => {
   return null
 })
 
-const colorsToBox = colors => {
+const colorsToBox = (fill, colors) => {
   return {
     on: {
-      bgColor: colorByKey('on', 'bg', colors),
-      borderColor: colorByKey('on', 'border', colors),
-      color: colorByKey('on', 'content', colors),
+      bgColor: colorByKey('on', 'bg', fill, colors),
+      borderColor: colorByKey('on', 'border', fill, colors),
+      color: colorByKey('on', 'content', fill, colors),
     },
     off: {
-      bgColor: colorByKey('off', 'bg', colors),
-      borderColor: colorByKey('off', 'border', colors),
-      color: colorByKey('off', 'content', colors),
+      bgColor: colorByKey('off', 'bg', fill, colors),
+      borderColor: colorByKey('off', 'border', fill, colors),
+      color: colorByKey('off', 'content', fill, colors),
     },
   }
 }
@@ -80,7 +84,7 @@ const renderColor = fn(t => (fill, colors, color) =>
   t.match({
     _: mode =>
       t.isType(colors, 'object')
-        ? colorsToBox(colors)[mode]
+        ? colorsToBox(fill, colors)[mode]
         : {
             bgColor: null,
             borderColor: 'transparent',
@@ -94,57 +98,61 @@ const renderColor = fn(t => (fill, colors, color) =>
             borderColor: 'transparent',
             color: [
               null,
-              { hover: colorByKey('on', 'content', colors, color) },
+              { hover: colorByKey('on', 'content', fill, colors, color) },
             ],
           }
         : {
             bgColor: null,
             borderColor: 'transparent',
-            color: colorByKey('on', 'content', colors, color),
+            color: colorByKey('on', 'content', fill, colors, color),
           },
     outline: mode =>
       t.eq(mode, 'off')
         ? {
-            bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
+            bgColor: [
+              null,
+              { hover: colorByKey('on', 'bg', fill, colors, color) },
+            ],
             borderColor: [
-              colorByKey('off', 'border', colors, color),
-              { hover: colorByKey('on', 'border', colors, color) },
+              colorByKey('off', 'border', fill, colors, color),
+              { hover: colorByKey('on', 'border', fill, colors, color) },
             ],
             color: [
-              colorByKey('off', 'content', colors, color),
+              colorByKey('off', 'content', fill, colors, color),
               {
                 hover: colorByKey(
                   'on',
                   'content',
+                  fill,
                   colors,
-                  colorByKey('off', 'content', colors, 'white')
+                  colorByKey('on', 'content', fill, colors, 'white')
                 ),
               },
             ],
           }
         : {
-            bgColor: colorByKey('on', 'bg', colors, color),
-            borderColor: colorByKey('on', 'border', colors, color),
-            color: colorByKey('on', 'content', colors, 'white'),
+            bgColor: colorByKey('on', 'bg', fill, colors, color),
+            borderColor: colorByKey('on', 'border', fill, colors, color),
+            color: colorByKey('on', 'content', fill, colors, 'white'),
           },
     solid: mode =>
       t.eq(mode, 'off')
         ? {
             bgColor: [
-              colorByKey('off', 'bg', colors, color),
-              { hover: colorByKey('on', 'bg', colors, color) },
+              colorByKey('off', 'bg', fill, colors, color),
+              { hover: colorByKey('on', 'bg', fill, colors, color) },
             ],
             borderColor: 'transparent',
             color: [
-              colorByKey('off', 'content', colors),
-              { hover: colorByKey('on', 'content', colors, 'white') },
+              colorByKey('off', 'content', fill, colors),
+              { hover: colorByKey('on', 'content', fill, colors, 'white') },
             ],
             shadow: [null, { hover: true }],
           }
         : {
-            bgColor: colorByKey('on', 'bg', colors, color),
+            bgColor: colorByKey('on', 'bg', fill, colors, color),
             borderColor: 'transparent',
-            color: colorByKey('on', 'content', colors, 'white'),
+            color: colorByKey('on', 'content', fill, colors, 'white'),
           },
     ghostOutline: mode =>
       t.eq(mode, 'off')
@@ -152,38 +160,41 @@ const renderColor = fn(t => (fill, colors, color) =>
             bgColor: null,
             borderColor: [
               'transparent',
-              { hover: colorByKey('on', 'border', colors, color) },
+              { hover: colorByKey('on', 'border', fill, colors, color) },
             ],
             color: [
-              colorByKey('off', 'content', colors, color),
-              { hover: colorByKey('on', 'content', colors, color) },
+              colorByKey('off', 'content', fill, colors, color),
+              { hover: colorByKey('on', 'content', fill, colors, color) },
             ],
           }
         : {
             bgColor: null,
-            borderColor: colorByKey('on', 'border', colors, color),
-            color: colorByKey('on', 'content', colors, color),
+            borderColor: colorByKey('on', 'border', fill, colors, color),
+            color: colorByKey('on', 'content', fill, colors, color),
           },
     ghostSolid: mode =>
       t.eq(mode, 'off')
         ? {
-            bgColor: [null, { hover: colorByKey('on', 'bg', colors, color) }],
+            bgColor: [
+              null,
+              { hover: colorByKey('on', 'bg', fill, colors, color) },
+            ],
             borderColor: 'transparent',
             color: [
-              colorByKey('off', 'content', colors, color),
-              { hover: colorByKey('on', 'content', colors, 'white') },
+              colorByKey('off', 'content', fill, colors, color),
+              { hover: colorByKey('on', 'content', fill, colors, 'white') },
             ],
           }
         : {
-            bgColor: colorByKey('on', 'bg', colors, color),
+            bgColor: colorByKey('on', 'bg', fill, colors, color),
             borderColor: 'transparent',
-            color: colorByKey('on', 'content', colors, 'white'),
+            color: colorByKey('on', 'content', fill, colors, 'white'),
           },
   })(fill)
 )
 
 const buttonColor = fn(t => (fill, active, colors, color) => {
-  if (t.and(t.isNil(colors), t.isNil(color))) {
+  if (t.and(t.isNil(fill, colors), t.isNil(color))) {
     return {}
   }
   const render = renderColor(fill, colors, color)
@@ -485,6 +496,7 @@ export const renderButton = fn(t => props => {
             color: colorByKey(
               'on',
               'content',
+              fill,
               colors,
               t.or(
                 t.and(

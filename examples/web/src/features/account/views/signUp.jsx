@@ -150,7 +150,7 @@ export const signUp = mx.fn((t, a) =>
                         <ctx.IconLabel
                           icon={{
                             name: 'user-plus',
-                            size: '3xl',
+                            size: '5xl',
                             color: 'yellow-500',
                           }}
                           label={{
@@ -162,6 +162,11 @@ export const signUp = mx.fn((t, a) =>
                               'Enter your account credentials below to continue.',
                             fontSize: 'lg',
                             padding: { left: 1, y: 3 },
+                          }}
+                          flexDirection="col"
+                          cols={{
+                            left: { x: 'center' },
+                            right: { x: 'center' },
                           }}
                         />
                         <ctx.When
@@ -202,6 +207,7 @@ export const signUp = mx.fn((t, a) =>
                           sm={8}
                           md={5}
                           lg={4}
+                          xl={3}
                           x="center"
                         >
                           <ctx.HStack x="center" y="center">
@@ -210,7 +216,7 @@ export const signUp = mx.fn((t, a) =>
                               size="lg"
                               shape="pill"
                               fill="outline"
-                              colors={{ on: 'green-500', off: 'yellow-500' }}
+                              colors={{ on: 'blue-500', off: 'yellow-500' }}
                               label="Submit"
                               loading={t.eq(props.state.data.status, 'loading')}
                             />
@@ -233,7 +239,7 @@ export const signUp = mx.fn((t, a) =>
                             fontSize: '4xl',
                           }}
                           info={{
-                            text: 'Thank you for registering a Novabot account',
+                            text: 'Thank you for registering an Account',
                             fontSize: '2xl',
                             padding: { left: 1, y: 4 },
                           }}
@@ -246,7 +252,7 @@ export const signUp = mx.fn((t, a) =>
                           size="lg"
                           shape="pill"
                           fill="outline"
-                          colors={{ on: 'green-500', off: 'yellow-500' }}
+                          colors={{ on: 'blue-500', off: 'yellow-500' }}
                           label="Continue to Sign-in"
                           margin={{ top: 2 }}
                         />

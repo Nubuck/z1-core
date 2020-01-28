@@ -1,22 +1,36 @@
 import React from 'react'
 
 // main
-export const routeNotFound = ctx => () => {
+export const routeNotFound = ui => () => {
   return (
-    <ctx.Page
+    <ui.Page
       key="not-found"
       centered
       render={() => (
         <React.Fragment>
-          <ctx.Row x='center' as="h1" fontSize="2xl" fontWeight="medium">
-            404 Not Found
-          </ctx.Row>
-          <ctx.IconLabel
-            as={ctx.Link}
+          <ui.IconLabel
+            icon={{ name: 'route', size: '6xl', color: 'blue-500' }}
+            label={{ fontWeight: 'bold', text: '404', fontSize: '4xl' }}
+            info={{
+              text: 'Way off route',
+              fontSize: 'xl',
+              margin: { y: 4 },
+            }}
+            margin={{ bottom: 4 }}
+            flexDirection="col"
+            slots={{
+              icon: { x: 'center', margin: { bottom: 3 } },
+              label: { x: 'center' },
+            }}
+          />
+          <ui.Button
+            as={ui.Link}
             to="/"
-            label="Home"
+            label="Back Home"
             icon="home"
-            color={['blue-500', { hover: 'yellow-500' }]}
+            shape="pill"
+            fill="outline"
+            colors={{ on: 'blue-500', off: 'yellow-500' }}
           />
         </React.Fragment>
       )}

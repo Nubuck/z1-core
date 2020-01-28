@@ -7,6 +7,7 @@ import parts from '../parts'
 import layoutKit from './layout'
 import account from './account'
 import pages from './pages'
+import machines from './machines'
 
 // unpack
 const layout = layoutKit(parts)
@@ -17,4 +18,9 @@ const ctx = z.fn(t => ({
 }))
 
 // main
-export const features = z.combine([layout, account(ctx), pages(ctx)])
+export const features = z.combine([
+  layout,
+  account(ctx),
+  pages(ctx),
+  machines(ctx),
+])

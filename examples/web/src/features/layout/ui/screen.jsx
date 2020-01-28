@@ -11,8 +11,8 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
       <ui.Match
         value={
           t.or(
-            t.eq(props.account.status, 'init'),
-            t.eq(props.account.status, 'auth-waiting')
+            t.eq(props.account.authStatus, 'init'),
+            t.eq(props.account.authStatus, 'auth-waiting')
           )
             ? 'waiting'
             : 'view'
@@ -21,10 +21,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
           waiting() {
             return (
               <ui.Col x="center" y="center" flex={1}>
-                <ui.Spinner
-                  size="lg"
-                  color={t.atOr('white', 'color', props)}
-                />
+                <ui.Spinner size="lg" color={t.atOr('white', 'color', props)} />
               </ui.Col>
             )
           },
@@ -164,6 +161,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                           { lg: { top: true, right: true } },
                         ],
                         zIndex: 30,
+                        padding: [{ x: 3 }, { lg: { x: 4 } }],
                       }}
                       style={t.pick(['height', 'left'], props.nav.body)}
                     >
@@ -221,7 +219,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               box={{
                                 padding: { x: 3 },
                               }}
-                              activeClassName='text-yellow-500'
+                              activeClassName="text-yellow-500"
                               {...elProps}
                             />
                           )

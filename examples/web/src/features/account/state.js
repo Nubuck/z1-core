@@ -22,7 +22,7 @@ export const stateKit = parts =>
       {
         initial: {
           connected: false,
-          status: authStatus.init,
+          authStatus: authStatus.init,
           user: null,
           error: null,
           redirectBackTo: null,
@@ -40,7 +40,7 @@ export const stateKit = parts =>
             }),
             m('authenticate', state => {
               return t.merge(state, {
-                status: authStatus.waiting,
+                authStatus: authStatus.waiting,
                 error: null,
               })
             }),
@@ -49,7 +49,7 @@ export const stateKit = parts =>
             }),
             m('logout', state => {
               return t.merge(state, {
-                status: authStatus.fail,
+                authStatus: authStatus.fail,
                 user: null,
                 error: null,
                 redirectBackTo: null,
@@ -80,7 +80,7 @@ export const stateKit = parts =>
                 } else {
                   const authenticated = t.and(
                     t.notNil(t.at('account.user', state)),
-                    t.eq(authStatus.success, t.at('account.status', state))
+                    t.eq(authStatus.success, t.at('account.authStatus', state))
                   )
                   // skip if route only requires authentication + account is valid
                   if (t.and(t.isNil(route.allowRoles), authenticated)) {
@@ -126,7 +126,7 @@ export const stateKit = parts =>
               if (
                 t.and(
                   t.isNil(t.at('account.user', state)),
-                  t.neq(authStatus.success, t.at('account.status', state))
+                  t.neq(authStatus.success, t.at('account.authStatus', state))
                 )
               ) {
                 allow(ctx.action)
@@ -153,7 +153,7 @@ export const stateKit = parts =>
                   t.or(
                     t.not(account.connected),
                     t.and(
-                      t.eq(account.status, authStatus.success),
+                      t.eq(account.authStatus, authStatus.success),
                       t.eq(account.connected, true)
                     )
                   )
@@ -173,7 +173,7 @@ export const stateKit = parts =>
                 if (authError) {
                   dispatch(
                     box.mutators.authenticateComplete({
-                      status: authStatus.fail,
+                      authStatus: authStatus.fail,
                       user: null,
                       error: authError,
                     })
@@ -182,7 +182,7 @@ export const stateKit = parts =>
                 } else {
                   dispatch(
                     box.mutators.authenticateComplete({
-                      status: authStatus.success,
+                      authStatus: authStatus.success,
                       user: authResult,
                       error: null,
                     })
@@ -247,6 +247,17 @@ export const stateKit = parts =>
             slot: 'body-action',
             label: 'Sign-up',
             icon: 'user-plus',
+          }),
+        ]),
+        secure: sc.nav.create(n => [
+          n('/#sign-out', {
+            slot: 'primary-action',
+            icon: 'sign-out-alt',
+            label: 'Sign-out',
+            action: {
+              type: 'account/LOGOUT',
+              payload: null,
+            },
           }),
         ]),
       }),

@@ -307,6 +307,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                     next: t.neq(context.action.type, actions.dataLoad)
                       ? null
                       : context.action.payload,
+                    dispatch,
                   },
                 ])
               )
@@ -332,8 +333,8 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
         // routes exit
         fx(
           [t.globrex('*/ROUTING/*').regex, z.routing.actions.notFound],
-          async ({ getState, action }, dispatch, done) => {
-            const state = getState()
+          async (context, dispatch, done) => {
+            const state = context.getState()
             const prev = state.location.prev
             if (t.not(t.includes(prev.type, routeActionTypes))) {
               done()
@@ -361,6 +362,31 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
             }
           }
         ),
+        fx([actions.routeExit], async (context, dispatch, done) => {
+          const boxState = t.at(boxName, context.getState())
+          const activeView = t.at('action.payload.active.view', context)
+          const activeState = t.path(['views', activeView], boxState)
+          const activeMacro = viewMacros[activeView]
+          if (t.isNil(activeMacro)) {
+            done()
+          } else {
+            await a.of(
+              activeMacro.exit(
+                t.mergeAll([
+                  context,
+                  activeState,
+                  {
+                    status: types.status.ready,
+                    mutators,
+                    next: context.action.payload,
+                    dispatch,
+                  },
+                ])
+              )
+            )
+            done()
+          }
+        }),
         // form transmit
         fx([actions.formTransmit], async (context, dispatch, done) => {
           const boxState = t.at(boxName, context.getState())
@@ -375,6 +401,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                   status: types.status.ready,
                   mutators,
                   next: context.action.payload,
+                  dispatch,
                 },
               ])
             )
@@ -465,11 +492,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
             fx(
               actions.sub,
               context => {
-                const activeView = t.atOr(
-                  null,
-                  'action.payload.view',
-                  context
-                )
+                const activeView = t.atOr(null, 'action.payload.view', context)
                 if (t.isNil(activeView)) {
                   return null
                 }

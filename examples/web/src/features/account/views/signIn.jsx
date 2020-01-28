@@ -84,7 +84,14 @@ export const signIn = mx.fn((t, a) =>
             }
           }
           // get user success
-          dispatch(mutators.authenticateSuccess({ user }))
+          dispatch({
+            type: 'account/AUTHENTICATE_COMPLETE',
+            payload: {
+              authStatus: 'auth-success',
+              user: authResult.user,
+              error: null,
+            },
+          })
           // NOTE: redirect back or to home
           const state = getState()
           if (state.account.redirectBackTo) {
@@ -99,8 +106,7 @@ export const signIn = mx.fn((t, a) =>
           }
           dispatch(
             redirect({
-              type: 'landing/ROUTE_HOME',
-              payload: {},
+              type: 'pages/ROUTING/ROUTE_LANDING',
             })
           )
           return {
@@ -113,10 +119,12 @@ export const signIn = mx.fn((t, a) =>
     },
     ui(ctx) {
       return props => {
+        console.log('SIGN IN STATUS', t.at('state.status', props))
         return (
           <ctx.Page
             key="sign-in"
             centered
+            loading={t.neq('ready', t.at('state.status', props))}
             render={() => (
               <React.Fragment>
                 <ctx.IconLabel

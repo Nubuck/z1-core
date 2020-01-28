@@ -1,6 +1,6 @@
 import React from 'react'
 import z from '@z1/lib-feature-box'
-import { VStack, Match, Spinner } from '@z1/lib-ui-box-elements'
+import { VStack, Match, Spinner, Col } from '@z1/lib-ui-box-elements'
 import { isRenderProp } from './common'
 
 // main
@@ -15,7 +15,7 @@ const renderPage = z.fn(t => props => {
       x: shouldCenter ? 'center' : 'left',
       y: shouldCenter ? 'center' : 'top',
       box: {
-        padding: 3,
+        padding: [3, { lg: 4 }],
         position: 'relative',
         flex: 1,
         width: 'full',
@@ -35,7 +35,9 @@ const renderPage = z.fn(t => props => {
         value={loading ? 'loading' : 'ready'}
         render={{
           loading: () => (
-            <Spinner size="lg" color={t.atOr('white', 'color', props)} />
+            <Col x="center" y="center" flex={1}>
+              <Spinner size="lg" color={t.atOr('white', 'color', props)} />
+            </Col>
           ),
           ready: () => {
             return isRenderProp(props.render)

@@ -1,7 +1,7 @@
 import React from 'react'
 
 // main
-export const landingRoute = ui => () => (
+export const routeLanding = ui => () => (
   <ui.Page
     key="landing"
     centered
@@ -17,9 +17,9 @@ export const landingRoute = ui => () => (
           }}
           margin={{ bottom: 4 }}
           flexDirection="col"
-          cols={{
-            left: { x: 'center', margin: { bottom: 3 } },
-            right: { x: 'center' },
+          slots={{
+            icon: { x: 'center', margin: { bottom: 3 } },
+            label: { x: 'center' },
           }}
         />
         <ui.Button
@@ -30,27 +30,6 @@ export const landingRoute = ui => () => (
           fill="outline"
           label="Get Started"
           color="blue-500"
-        />
-      </React.Fragment>
-    )}
-  />
-)
-
-export const notFoundRoute = ctx => () => (
-  <ctx.Page
-    key="not-found"
-    centered
-    render={() => (
-      <React.Fragment>
-        <ctx.Row as="h1" fontSize="2xl" fontWeight="medium">
-          404 Not Found
-        </ctx.Row>
-        <ctx.IconLabel
-          as={ctx.Link}
-          to="/"
-          label="Home"
-          icon="home"
-          color={['blue-500', { hover: 'yellow-500' }]}
         />
       </React.Fragment>
     )}

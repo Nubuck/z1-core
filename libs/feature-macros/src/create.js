@@ -72,7 +72,7 @@ export const create = fn(t => (name, { state, ui, render }) => {
           if (t.isNil(exitHandle)) {
             return null
           }
-          return await exitHandle(props)
+          await exitHandle(props)
         },
       }
     },

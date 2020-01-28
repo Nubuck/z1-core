@@ -309,7 +309,7 @@ export const nav = z.fn(t =>
           [accountActions.authenticateComplete, accountActions.logout],
           (ctx, dispatch, done) => {
             const state = ctx.getState()
-            const status = t.atOr(null, 'account.status', state)
+            const status = t.atOr(null, 'account.authStatus', state)
             const level = t.atOr(null, 'nav.level', state)
             const isSuccess = t.eq(status, 'auth-success')
             const isSecure = t.eq(level, 'secure')

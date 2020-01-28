@@ -68,6 +68,9 @@ fieldset {
   }
   & .control-label {
     @apply inline-block mb-2;
+    & .required {
+      @apply text-lg px-1 text-red-500;
+    }
   }
 
   & .form-control {

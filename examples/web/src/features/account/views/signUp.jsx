@@ -76,7 +76,6 @@ export const signUp = mx.fn((t, a) =>
                 ? 'view'
                 : 'form',
             }),
-            data: props.data,
             error: t.atOr(null, 'error', props.next || {}),
           }
         },
@@ -95,7 +94,7 @@ export const signUp = mx.fn((t, a) =>
           }
         },
         async transmit(props) {
-          const data =  t.at('form.signUp.data', props)
+          const data = t.at('form.signUp.data', props)
           const [checkError] = await a.of(
             props.api.service('auth-management').create({
               action: 'checkUnique',
@@ -111,11 +110,11 @@ export const signUp = mx.fn((t, a) =>
               error: checkError,
             }
           }
-          
+
           const [userError, userResult] = await a.of(
             props.api.service('users').create(
               t.mergeAll([
-                data
+                data,
                 {
                   role: 'user',
                   status: 'offline',
@@ -135,6 +134,9 @@ export const signUp = mx.fn((t, a) =>
             data: userResult,
             error: null,
           }
+        },
+        async exit() {
+          console.log('EXIT SIGN UP ASYNC')
         },
       }
     },

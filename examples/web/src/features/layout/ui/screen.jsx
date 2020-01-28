@@ -53,6 +53,8 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                       )}
                     >
                       <ui.Avatar
+                        as={ui.Link}
+                        to="/"
                         icon="superpowers"
                         size="lg"
                         fill="solid"
@@ -170,6 +172,8 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         )}
                         render={() => (
                           <ui.Avatar
+                            as={ui.Link}
+                            to="/"
                             icon="superpowers"
                             size="lg"
                             fill="solid"

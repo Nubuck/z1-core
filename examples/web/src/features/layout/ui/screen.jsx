@@ -52,7 +52,14 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         props.nav.primary
                       )}
                     >
-                      <ui.Avatar label="Z" size="lg" />
+                      <ui.Avatar
+                        icon="superpowers"
+                        size="lg"
+                        fill="solid"
+                        color="green-500"
+                        fontWeight="bold"
+                        margin={{ y: 3 }}
+                      />
 
                       <ui.MapIndexed
                         items={t.to.pairs(props.nav.primary.items)}
@@ -163,7 +170,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         )}
                         render={() => (
                           <ui.Avatar
-                            label="Z"
+                            icon="superpowers"
                             size="lg"
                             fill="solid"
                             color="green-500"

@@ -48,7 +48,7 @@ export const signIn = mx.fn((t, a) =>
           return {
             status,
             data,
-            error: t.pathOr(error, ['error'], next || {}),
+            error: t.pathOr(null, ['error'], next || {}),
           }
         },
         form({ event, status, data, form, next, error }) {
@@ -181,6 +181,7 @@ export const signIn = mx.fn((t, a) =>
                       fill="outline"
                       colors={{ on: 'green-500', off: 'yellow-500' }}
                       label="Submit"
+                      loading={t.eq(props.state.data.status, 'loading')}
                     />
                   </ctx.HStack>
                 </ctx.Form>

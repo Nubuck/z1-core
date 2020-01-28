@@ -302,6 +302,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                   context,
                   activeState,
                   {
+                    status: types.status.ready,
                     mutators,
                     next: t.neq(context.action.type, actions.dataLoad)
                       ? null
@@ -371,6 +372,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                 context,
                 activeState,
                 {
+                  status: types.status.ready,
                   mutators,
                   next: context.action.payload,
                 },

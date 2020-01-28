@@ -70,6 +70,28 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                           )
                         }}
                       />
+                      <ui.When
+                        is={t.notEmpty(props.nav.primary.actions)}
+                        render={() => <ui.Spacer />}
+                      />
+                      <ui.MapIndexed
+                        items={t.to.pairs(props.nav.primary.actions)}
+                        render={([navKey, navItem], index) => {
+                          const elProps = t.omit(
+                            ['slot', 'text'],
+                            navItem.options
+                          )
+                          return (
+                            <ui.IconLabel
+                              key={`${navKey}_${index}`}
+                              as={ui.NavLink}
+                              to={navItem.path}
+                              size="xl"
+                              {...elProps}
+                            />
+                          )
+                        }}
+                      />
                     </ui.VStack>
                   )}
                 />
@@ -117,16 +139,101 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                     t.notEmpty(props.nav.body.items),
                     t.notEmpty(props.nav.body.actions)
                   )}
-                  render={() => <ui.HStack key="page-nav"></ui.HStack>}
+                  render={() => (
+                    <ui.HStack
+                      key="page-nav"
+                      x="left"
+                      y="center"
+                      box={{
+                        position: 'fixed',
+                        pin: [
+                          { bottom: true, right: true },
+                          { lg: { top: true, right: true } },
+                        ],
+                        zIndex: 30,
+                      }}
+                      style={t.pick(['height', 'left'], props.nav.body)}
+                    >
+                      <ui.MapIndexed
+                        items={t.to.pairs(props.nav.body.items)}
+                        render={([navKey, navItem], index) => {
+                          const elProps = t.omit(['slot'], navItem.options)
+                          return (
+                            <ui.IconLabel
+                              key={`${navKey}_${index}`}
+                              as={ui.NavLink}
+                              to={navItem.path}
+                              size="xl"
+                              {...elProps}
+                            />
+                          )
+                        }}
+                      />
+                      <ui.When
+                        is={t.notEmpty(props.nav.body.actions)}
+                        render={() => <ui.Spacer />}
+                      />
+                      <ui.MapIndexed
+                        items={t.to.pairs(props.nav.body.actions)}
+                        render={([navKey, navItem], index) => {
+                          const elProps = t.omit(['slot'], navItem.options)
+                          return (
+                            <ui.IconLabel
+                              key={`${navKey}_${index}`}
+                              as={ui.NavLink}
+                              to={navItem.path}
+                              size="xl"
+                              {...elProps}
+                            />
+                          )
+                        }}
+                      />
+                    </ui.HStack>
+                  )}
                 />
                 <ui.When
                   is={t.notEmpty(props.nav.page.items)}
                   render={() => (
-                    <ui.HStack key="page-nav-secondary"></ui.HStack>
+                    <ui.HStack
+                      key="page-nav-secondary"
+                      box={{
+                        position: 'fixed',
+                        zIndex: 20,
+                        overflowY: 'auto',
+                        overflowX: 'hidden',
+                      }}
+                      className="scroll-hide"
+                      style={t.pick(
+                        ['width', 'top', 'left', 'bottom'],
+                        props.nav.page
+                      )}
+                    >
+                      <ui.MapIndexed
+                        items={t.to.pairs(props.nav.page.items)}
+                        render={([navKey, navItem], index) => {
+                          const elProps = t.omit(['slot'], navItem.options)
+                          return (
+                            <ui.IconLabel
+                              key={`${navKey}_${index}`}
+                              as={ui.NavLink}
+                              to={navItem.path}
+                              size="xl"
+                              {...elProps}
+                            />
+                          )
+                        }}
+                      />
+                    </ui.HStack>
                   )}
                 />
-
-                <ui.VStack key="body">
+                <ui.VStack
+                  key="body"
+                  style={{
+                    paddingLeft: props.nav.body.left,
+                    paddingTop: props.nav.body.top,
+                    paddingBottom: props.nav.body.bottom,
+                  }}
+                >
                   {z.routing.render(props.location.type, props.routing)}
                 </ui.VStack>
               </React.Fragment>

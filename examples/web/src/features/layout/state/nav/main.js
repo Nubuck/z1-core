@@ -86,7 +86,7 @@ export const nav = z.fn(t =>
           if (t.isEmpty(action.payload)) {
             return state
           }
-          const status = t.pathOr(state.status, ['payload', 'status'], action)
+          const status = t.pathOr('ready', ['payload', 'status'], action)
           const bodyHeight = t.pathOr(
             state.body.height,
             ['payload', 'height'],
@@ -343,7 +343,7 @@ export const nav = z.fn(t =>
             ? t.eq(status, navStatus.init)
               ? navStatus.closed
               : status
-            : navStatus.init
+            : navStatus.ready
           if (t.or(t.neq(status, nextStatus), t.neq(size, currentNavSize))) {
             dispatch(
               box.mutations.navChange({
@@ -367,7 +367,7 @@ export const nav = z.fn(t =>
           (ctx, dispatch, done) => {
             const state = ctx.getState()
             const status = t.path(['nav', 'status'], state)
-            if (t.neq(status, 'ready')) {
+            if (t.eq(status, navStatus.init)) {
               done()
             } else {
               const level = t.path(['nav', 'level'], state)

@@ -217,7 +217,7 @@ export const signUp = mx.fn((t, a) =>
                               shape="pill"
                               fill="outline"
                               colors={{ on: 'blue-500', off: 'yellow-500' }}
-                              label="Submit"
+                              label="Continue"
                               loading={t.eq(props.state.data.status, 'loading')}
                             />
                           </ctx.HStack>

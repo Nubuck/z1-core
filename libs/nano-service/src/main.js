@@ -6,7 +6,7 @@ const gracefulShutdown = task(t => (server, props, config) => {
   console.log('Received SIGINT or SIGTERM. Shutting down gracefully...')
   server.close(() => {
     console.log('Closed out remaining connections.')
-    if (t.equals(t.type(t.path(['onStop'], props)), 'Function')) {
+    if (t.equals(t.type(t.at('onStop', props)), 'Function')) {
       props.onStop(config)
     }
     process.exit()
@@ -27,7 +27,7 @@ export const service = task(t => async props => {
   const server = createServer(props.app || undefined).listen(
     config.port,
     () => {
-      if (t.equals(t.type(t.path(['onStart'], props)), 'Function')) {
+      if (t.equals(t.type(t.at('onStart', props)), 'Function')) {
         props.onStart(config)
       }
     }

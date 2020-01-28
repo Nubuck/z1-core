@@ -12,22 +12,22 @@ import {
 
 // main
 export const configure = z.fn((t, a) => (boxName, props = {}) => {
-  const path = t.pathOr(t.to.paramCase(boxName), ['path'], props)
+  const path = t.atOr(t.to.paramCase(boxName), 'path', props)
   const defaultRoute = { authenticate: false }
-  const routes = t.pathOr(
+  const routes = t.atOr(
     {
       home: defaultRoute,
       view: defaultRoute,
       detail: defaultRoute,
       more: defaultRoute,
     },
-    ['routes'],
+    'routes',
     props
   )
-  const viewMacros = t.pathOr(null, ['state', 'views'], props)
+  const viewMacros = t.atOr(null, 'state.views', props)
   const macroCtx = t.pick(
     ['viewKeys', 'params', '_shouldSub'],
-    t.pathOr({}, ['state'], props)
+    t.atOr({}, 'state', props)
   )
   if (t.isNil(viewMacros)) {
     return {}
@@ -55,14 +55,14 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
           reEnter: false,
           subbed: false,
           error: null,
-          data: t.pathOr({}, ['initial', 'data'], macro),
-          form: t.pathOr({}, ['initial', 'form'], macro),
-          modal: t.pathOr(
+          data: t.atOr({}, 'initial.data', macro),
+          form: t.atOr({}, 'initial.form', macro),
+          modal: t.atOr(
             {
               open: false,
               type: null,
             },
-            ['initial', 'modal'],
+            'initial.modal',
             macro
           ),
         }
@@ -102,8 +102,8 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
     mutations(m) {
       return [
         m(['routeExit'], (state, action) => {
-          const activeExit = t.pathOr(null, ['payload', 'active'], action)
-          const exitStatus = t.pathOr(null, ['payload', 'status'], action)
+          const activeExit = t.atOr(null, 'payload.active', action)
+          const exitStatus = t.atOr(null, 'payload.status', action)
           if (t.isNil(activeExit)) {
             return t.merge(state, { status: exitStatus })
           }
@@ -134,9 +134,9 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
           )
           const activeMacro = viewMacros[state.active.view]
           const activeState = state.views[state.active.view]
-          const nextStatus = t.pathOr(
+          const nextStatus = t.atOr(
             activeState.status,
-            ['payload', 'status'],
+            'payload.status',
             action
           )
           const activeCtx = t.mergeAll([
@@ -160,16 +160,16 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
           ])
         }),
         m(['sub', 'unsub'], (state, action) => {
-          const activeView = t.pathOr(null, ['payload', 'view'], action)
+          const activeView = t.atOr(null, 'payload.view', action)
           if (t.isNil(activeView)) {
             return state
           }
           return t.merge(state, {
             views: t.merge(state.views, {
               [activeView]: t.merge(state.views[activeView], {
-                subbed: t.pathOr(
+                subbed: t.atOr(
                   state.views[activeView].subbed,
-                  ['payload', 'subbed'],
+                  'payload.subbed',
                   action
                 ),
               }),
@@ -290,7 +290,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
             actions.dataLoad,
           ],
           async (context, dispatch, done) => {
-            const boxState = t.path([boxName], context.getState())
+            const boxState = t.at(boxName, context.getState())
             const activeState = t.path(
               ['views', boxState.active.view],
               boxState
@@ -363,7 +363,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
         ),
         // form transmit
         fx([actions.formTransmit], async (context, dispatch, done) => {
-          const boxState = t.path([boxName], context.getState())
+          const boxState = t.at(boxName, context.getState())
           const activeState = t.path(['views', boxState.active.view], boxState)
           const activeMacro = viewMacros[boxState.active.view]
           const [transmitError, transmitResult] = await a.of(
@@ -414,8 +414,8 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                   ? 'unsub'
                   : 'sub'
                 const activeView = t.eq(mode, 'unsub')
-                  ? t.pathOr(null, ['payload', 'active', 'view'], action)
-                  : t.pathOr(null, ['active', 'view'], boxState)
+                  ? t.atOr(null, 'payload.active.view', action)
+                  : t.atOr(null, 'active.view', boxState)
                 if (t.isNil(activeView)) {
                   done()
                 } else {
@@ -465,9 +465,9 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
             fx(
               actions.sub,
               context => {
-                const activeView = t.pathOr(
+                const activeView = t.atOr(
                   null,
-                  ['action', 'payload', 'view'],
+                  'action.payload.view',
                   context
                 )
                 if (t.isNil(activeView)) {

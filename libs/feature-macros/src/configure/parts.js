@@ -23,9 +23,9 @@ export const routingFromAction = fn(
     }
   ) => {
     const params = {
-      view: t.pathOr('home', ['payload', 'view'], action),
-      detail: t.pathOr(null, ['payload', 'detail'], action),
-      more: t.pathOr(null, ['payload', 'more'], action),
+      view: t.atOr('home', 'payload.view', action),
+      detail: t.atOr(null, 'payload.detail', action),
+      more: t.atOr(null, 'payload.more', action),
     }
     return t.mergeAll([
       {

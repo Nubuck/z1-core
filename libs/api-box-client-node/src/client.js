@@ -25,7 +25,7 @@ export const api = fn(t => (path = '/', props = {}) => {
       )
     )
   )
-  if (t.eq('Function', t.type(t.path(['configure'], props)))) {
+  if (t.eq('Function', t.type(t.at('configure', props)))) {
     client.configure(props.configure)
   }
   return client

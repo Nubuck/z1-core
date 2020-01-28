@@ -35,37 +35,44 @@ export const create = fn(t => (name, { state, ui, render }) => {
         _shouldSub: t.has('subscribe')(nextState),
         initial: t.merge(
           { subbed: false },
-          t.pathOr({ data: {}, form: {}, modal: {} }, ['initial'], nextState)
+          t.atOr({ data: {}, form: {}, modal: {} }, 'initial', nextState)
         ),
         data(props) {
-          const dataHandle = t.pathOr(() => null, ['data'], nextState)
+          const dataHandle = t.atOr(() => null, 'data', nextState)
           return dataHandle(props)
         },
         form(props) {
-          const formHandle = t.pathOr(() => null, ['form'], nextState)
+          const formHandle = t.atOr(() => null, 'form', nextState)
           return formHandle(props)
         },
         modal(props) {
-          const modalHandle = t.pathOr(() => null, ['modal'], nextState)
+          const modalHandle = t.atOr(() => null, 'modal', nextState)
           return modalHandle(props)
         },
         subscribe(context, box) {
-          const subscribeHandle = t.pathOr(() => null, ['subscribe'], nextState)
+          const subscribeHandle = t.atOr(() => null, 'subscribe', nextState)
           return subscribeHandle(context, box)
         },
         async load(props) {
-          const loadHandle = t.pathOr(null, ['load'], nextState)
+          const loadHandle = t.atOr(null, 'load', nextState)
           if (t.isNil(loadHandle)) {
             return null
           }
           return await loadHandle(props)
         },
         async transmit(props) {
-          const transmitHandle = t.pathOr(null, ['transmit'], nextState)
+          const transmitHandle = t.atOr(null, 'transmit', nextState)
           if (t.isNil(transmitHandle)) {
             return null
           }
           return await transmitHandle(props)
+        },
+        async exit(props) {
+          const exitHandle = t.atOr(null, 'exit', nextState)
+          if (t.isNil(exitHandle)) {
+            return null
+          }
+          return await exitHandle(props)
         },
       }
     },

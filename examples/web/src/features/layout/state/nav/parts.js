@@ -22,7 +22,7 @@ export const navSize = {
 }
 
 export const slotPath = z.fn(t => (item, base) =>
-  t.pathOr(base || 'nav', ['options', 'slot'], item)
+  t.atOr(base || 'nav', 'options.slot', item)
 )
 
 // sizing

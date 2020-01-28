@@ -48,13 +48,13 @@ export const signIn = mx.fn((t, a) =>
           return {
             status,
             data,
-            error: t.pathOr(null, ['error'], next || {}),
+            error: t.atOr(null, 'error', next || {}),
           }
         },
         form({ event, status, data, form, next, error }) {
           return {
             signIn: {
-              data: t.pathOr(form.signIn.data, ['data'], next || {}),
+              data: t.atOr(form.signIn.data, 'data', next || {}),
               form: signInForm({ disabled: t.eq(status, 'loading') }),
             },
           }
@@ -135,9 +135,9 @@ export const signIn = mx.fn((t, a) =>
                     padding: { left: 1, top: 3 },
                   }}
                   flexDirection="col"
-                  cols={{
-                    left: { x: 'center' },
-                    right: { x: 'center' },
+                  slots={{
+                    icon: { x: 'center' },
+                    label: { x: 'center' },
                   }}
                 />
                 <ctx.When

@@ -4,7 +4,7 @@ import { Nedb, FeathersNedb } from '@z1/preset-feathers-server-nedb'
 // main
 export const withNedbAdapter = Fn(t => (ctx = {}) => {
   const adapterName = 'nedb'
-  const adapters = t.pathOr([], ['adapters'], ctx)
+  const adapters = t.atOr([], 'adapters', ctx)
   const nedbAdapter = app => {
     const dbTools = app.get('dbTools')
     return {
@@ -34,11 +34,11 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
         // register services
         const nextModels = dbTools.models.get(adapterName)
         const serviceModelProps = (factoryObj = {}) => {
-          const modelName = t.pathOr(null, ['modelName'], factoryObj)
+          const modelName = t.atOr(null, 'modelName', factoryObj)
           if (t.isNil(modelName)) {
             return null
           }
-          const Model = t.pathOr(null, [modelName], nextModels)
+          const Model = t.atOr(null, modelName, nextModels)
           if (t.isNil(Model)) {
             return null
           }

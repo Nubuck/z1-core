@@ -23,7 +23,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
               <ui.Col x="center" y="center" flex={1}>
                 <ui.Spinner
                   size="lg"
-                  color={t.pathOr('white', ['color'], props)}
+                  color={t.atOr('white', 'color', props)}
                 />
               </ui.Col>
             )

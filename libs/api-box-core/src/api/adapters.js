@@ -10,10 +10,10 @@ export const adapters = task(t => ctx => {
       app.set(storeName, {})
       app.set(toolsName, {
         dbConfig(adapterName) {
-          return t.pathOr(null, [adapterName], app.get('db'))
+          return t.atOr(null, adapterName, app.get('db'))
         },
         get(adapterName) {
-          return t.pathOr({}, [adapterName], app.get(storeName))
+          return t.atOr({}, adapterName, app.get(storeName))
         },
         set(adapterName, adapter) {
           app.set(
@@ -70,7 +70,7 @@ export const adapters = task(t => ctx => {
           create(serviceId, factory, hooksEvents) {
             const mode = t.isType(serviceId, 'Array') ? 'adapter' : 'manual'
             const dbTools = app.get(toolsName)
-  
+
             if (t.eq(mode, 'adapter')) {
               const [adapterName, serviceName] = serviceId
               // const adapter = dbTools.get(adapterName)
@@ -106,9 +106,9 @@ export const adapters = task(t => ctx => {
                   if (t.isType(hooksEvents.events, 'Object')) {
                     t.forEach(eventKey => {
                       service.on(eventKey, (data, context) => {
-                        t.pathOr(
+                        t.atOr(
                           () => {},
-                          [eventKey],
+                          eventKey,
                           hooksEvents.events
                         )(data, context)
                       })
@@ -125,7 +125,7 @@ export const adapters = task(t => ctx => {
       t.forEach(adapterFactory => {
         const adapter = adapterFactory(app)
         app.get('dbTools').set(adapter.name, adapter)
-      }, t.pathOr([], ['adapters'], ctx))
+      }, t.atOr([], 'adapters', ctx))
     },
   }
 })

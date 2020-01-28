@@ -6,8 +6,8 @@ import { Box } from '../Box'
 
 // main
 const renderTextArea = fn(t => props => {
-  const as = t.pathOr('textarea', ['as'], props)
-  const className = t.pathOr(null, ['className'], props)
+  const as = t.atOr('textarea', 'as', props)
+  const className = t.atOr(null, 'className', props)
   return React.createElement(
     Box,
     t.merge(t.omit(['as', 'className', 'box'], props), {
@@ -18,7 +18,7 @@ const renderTextArea = fn(t => props => {
           display: 'block',
           width: 'full',
         },
-        t.pathOr({}, ['box'], props)
+        t.atOr({}, ['box'], props)
       ),
     })
   )

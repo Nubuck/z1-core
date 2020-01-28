@@ -6,8 +6,8 @@ import { Box } from '../Box'
 
 // main
 const renderInput = fn(t => props => {
-  const as = t.pathOr('input', ['as'], props)
-  const className = t.pathOr(null, ['className'], props)
+  const as = t.atOr('input', 'as', props)
+  const className = t.atOr(null, 'className', props)
   return React.createElement(
     Box,
     t.merge(t.omit(['as', 'className', 'box'], props), {
@@ -18,7 +18,7 @@ const renderInput = fn(t => props => {
           display: 'block',
           width: 'full',
         },
-        t.pathOr({}, ['box'], props)
+        t.atOr({}, 'box', props)
       ),
     })
   )

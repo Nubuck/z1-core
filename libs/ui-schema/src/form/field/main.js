@@ -16,11 +16,11 @@ export const field = fn(
     const props = noName ? nameOrProps : propsOrChildren
     const children = noName ? propsOrChildren : childrenOrAdditional
     const additional = noName ? childrenOrAdditional : otherAdditional
-    const ui = t.pathOr({}, ['ui'], props)
-    const required = t.pathOr(false, ['required'], props)
+    const ui = t.atOr({}, 'ui', props)
+    const required = t.atOr(false, 'required', props)
     // next
     const fieldKey = t.to.camelCase(name)
-    const baseType = t.pathOr('string', ['type'], props)
+    const baseType = t.atOr('string', 'type', props)
     const fieldType = t.eq(baseType, 'array')
       ? isFixedItemList(children, additional)
         ? 'fixedArray'
@@ -29,13 +29,13 @@ export const field = fn(
     const fieldProps = t.omit(['ui', 'required'], props)
     // yield
     return (ctx, parent) => {
-      const xProps = t.pathOr(
+      const xProps = t.atOr(
         t.eq(parent, 'fixedArray') ? [] : {},
-        ['props'],
+        'props',
         ctx
       )
-      const xUi = t.pathOr(t.eq(parent, 'fixedArray') ? [] : {}, ['ui'], ctx)
-      const xRequired = t.pathOr([], ['required'], ctx)
+      const xUi = t.atOr(t.eq(parent, 'fixedArray') ? [] : {}, 'ui', ctx)
+      const xRequired = t.atOr([], 'required', ctx)
       return fieldSchema(parent)({
         name,
         fieldKey,

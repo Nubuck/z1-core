@@ -66,6 +66,7 @@ import tail from 'ramda/es/tail'
 import take from 'ramda/es/take'
 import takeLast from 'ramda/es/takeLast'
 import toLower from 'ramda/es/toLower'
+import toUpper from 'ramda/es/toUpper'
 import toPairs from 'ramda/es/toPairs'
 import toString from 'ramda/es/toString'
 import trim from 'ramda/es/trim'
@@ -76,20 +77,12 @@ import values from 'ramda/es/values'
 import when from 'ramda/es/when'
 
 import { camelCase } from 'camel-case'
+import { snakeCase } from 'snake-case'
+import { pathCase } from 'path-case'
+import { sentenceCase } from 'sentence-case'
+import { dotCase } from 'dot-case'
+import { constantCase } from 'constant-case'
 import { paramCase } from 'param-case'
-import {
-  // camelCase,
-  capitalCase,
-  constantCase,
-  dotCase,
-  headerCase,
-  noCase,
-  // paramCase,
-  pascalCase,
-  pathCase,
-  sentenceCase,
-  snakeCase,
-} from 'change-case'
 
 import {
   html,
@@ -152,24 +145,29 @@ const allOf = (list = []) => {
 
 const isZeroLen = subject => equals(length(subject), 0)
 
+const at = (pathAt, subject = {}) => {
+  return path(split('.', pathAt), subject)
+}
+const atOr = (other, pathAt, subject = {}) => {
+  return pathOr(other, split('.', pathAt), subject)
+}
 const to = {
   camelCase,
-  capitalCase,
   constantCase,
   dotCase,
-  headerCase,
-  noCase,
   paramCase,
-  pascalCase,
   pathCase,
   sentenceCase,
   snakeCase,
   lowerCase: toLower,
+  upperCase: toLower,
   pairs: toPairs,
   string: toString,
 }
 
 export const TASK = {
+  at,
+  atOr,
   addIndex,
   allPass,
   anyPass,

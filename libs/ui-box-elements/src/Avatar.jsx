@@ -35,13 +35,13 @@ const circleSize = fn(t =>
   })
 )
 const renderAvatar = fn(t => props => {
-  const src = t.pathOr(null, ['src'], props)
-  const to = t.pathOr(null, ['to'], props)
-  const onClick = t.pathOr(null, ['onClick'], props)
+  const src = t.atOr(null, 'src', props)
+  const to = t.atOr(null, 'to', props)
+  const onClick = t.atOr(null, 'onClick', props)
   const noLink = t.isNil(to)
   const noClick = t.isNil(onClick)
   const baseMode = t.and(noLink, noClick) ? 'inactive' : 'active'
-  const mode = t.pathOr(baseMode, ['mode'], props)
+  const mode = t.atOr(baseMode, 'mode', props)
   const nextProps = t.mergeAll([
     baseProps,
     t.omit(['src', 'style', 'to', 'onClick', 'mode'], props),
@@ -55,7 +55,7 @@ const renderAvatar = fn(t => props => {
           style: t.mergeAll([
             { backgroundImage: `url("${src}")` },
             circleSize(props.size || 'md'),
-            t.pathOr({}, ['style'], props),
+            t.atOr({}, 'style', props),
           ]),
         },
   ])

@@ -3,11 +3,11 @@ import { fn } from '@z1/lib-ui-box'
 
 // main
 const renderWhen = fn(t => props => {
-  const is = t.pathOr(false, ['is'], props)
+  const is = t.atOr(false, 'is', props)
   if (t.not(is)) {
     return null
   }
-  const render = t.pathOr(null, ['render'], props)
+  const render = t.atOr(null, 'render', props)
   if (t.isNil(render)) {
     return null
   }

@@ -31,11 +31,11 @@ const matchSize = fn(t =>
   })
 )
 const renderSpinner = fn(t => props => {
-  const size = t.pathOr('default', ['size'], props)
-  const colorProp = t.pathOr('white', ['color'], props)
+  const size = t.atOr('default', 'size', props)
+  const colorProp = t.atOr('white', 'color', props)
   const color = t.head(t.split('-', colorProp))
-  const className = t.pathOr(null, ['className'], props)
-  const style = t.pathOr({}, ['style'], props)
+  const className = t.atOr(null, 'className', props)
+  const style = t.atOr({}, 'style', props)
   return renderBox(
     t.merge(t.omit(['className', 'size', 'color', 'box'], props), {
       className: `spinner${
@@ -45,7 +45,7 @@ const renderSpinner = fn(t => props => {
         {
           display: 'block',
         },
-        t.pathOr({}, ['box'], props)
+        t.atOr({}, 'box', props)
       ),
       style: t.merge(style, matchSize(size)),
     })

@@ -11,10 +11,10 @@ const colWidth = fn(t => width =>
 
 // main
 const renderCol = fn(t => props => {
-  const sm = colWidth(t.pathOr(null, ['sm'], props))
-  const md = colWidth(t.pathOr(null, ['md'], props))
-  const lg = colWidth(t.pathOr(null, ['lg'], props))
-  const xl = colWidth(t.pathOr(null, ['xl'], props))
+  const sm = colWidth(t.atOr(null, 'sm', props))
+  const md = colWidth(t.atOr(null, 'md', props))
+  const lg = colWidth(t.atOr(null, 'lg', props))
+  const xl = colWidth(t.atOr(null, 'xl', props))
   return renderStack(
     'vertical',
     t.merge(t.omit(['box', 'xs', 'sm', 'md', 'lg', 'xl'], props), {
@@ -22,7 +22,7 @@ const renderCol = fn(t => props => {
         {
           flex: 'none',
           width: [
-            colWidth(t.pathOr(null, ['xs'], props)),
+            colWidth(t.atOr(null, 'xs', props)),
             t.mergeAll([
               t.isNil(sm) ? {} : { sm },
               t.isNil(md) ? {} : { md },
@@ -31,7 +31,7 @@ const renderCol = fn(t => props => {
             ]),
           ],
         },
-        t.pathOr({}, ['box'], props)
+        t.atOr({}, 'box', props)
       ),
     })
   )

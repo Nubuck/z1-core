@@ -70,8 +70,8 @@ export const nav = z.fn(t =>
           })
         }),
         m('schemaChange', (state, action) => {
-          const level = t.pathOr(state.level, ['payload', 'level'], action)
-          const schema = t.pathOr(null, ['payload', 'schema'], action)
+          const level = t.atOr(state.level, 'payload.level', action)
+          const schema = t.atOr(null, 'payload.schema', action)
           return t.merge(state, {
             status: 'ready',
             level,
@@ -86,22 +86,22 @@ export const nav = z.fn(t =>
           if (t.isEmpty(action.payload)) {
             return state
           }
-          const status = t.pathOr('ready', ['payload', 'status'], action)
-          const bodyHeight = t.pathOr(
+          const status = t.atOr('ready', 'payload.status', action)
+          const bodyHeight = t.atOr(
             state.body.height,
-            ['payload', 'height'],
+            'payload.height',
             action
           )
-          const size = t.pathOr(state.size, ['payload', 'size'], action)
-          const width = t.pathOr(state.width, ['payload', 'width'], action)
-          const secondaryItems = t.pathOr({}, ['secondary', 'items'], state)
-          const pageItems = t.pathOr({}, ['page', 'items'], state)
-          const bodyItems = t.pathOr({}, ['body', 'items'], state)
-          const bodyActions = t.pathOr({}, ['body', 'actions'], state)
+          const size = t.atOr(state.size, 'payload.size', action)
+          const width = t.atOr(state.width, 'payload.width', action)
+          const secondaryItems = t.atOr({}, 'secondary.items', state)
+          const pageItems = t.atOr({}, 'page.items', state)
+          const bodyItems = t.atOr({}, 'body.items', state)
+          const bodyActions = t.atOr({}, 'body.actions', state)
           const body = t.merge(bodyItems, bodyActions)
-          const pageStatus = t.pathOr(
+          const pageStatus = t.atOr(
             state.page.status,
-            ['payload', 'pageStatus'],
+            'payload.pageStatus',
             action
           )
           const bottom = calcBodySpacing('bottom', body, size, bodyHeight)
@@ -110,8 +110,8 @@ export const nav = z.fn(t =>
             status,
             width,
             size,
-            title: t.pathOr(state.title, ['payload', 'title'], action),
-            mode: t.pathOr(state.mode, ['payload', 'mode'], action),
+            title: t.atOr(state.title, 'payload.title', action),
+            mode: t.atOr(state.mode, 'payload.mode', action),
             primary: t.merge(state.primary, {
               left: calcPrimaryLeft(
                 status,
@@ -139,36 +139,36 @@ export const nav = z.fn(t =>
           })
         }),
         m('navMatch', (state, action) => {
-          const width = t.pathOr(state.width, ['payload', 'width'], action)
-          const primaryItems = t.pathOr(
+          const width = t.atOr(state.width, 'payload.width', action)
+          const primaryItems = t.atOr(
             state.primary.items,
-            ['payload', 'primary', 'items'],
+            'payload.primary.items',
             action
           )
-          const primaryActions = t.pathOr(
+          const primaryActions = t.atOr(
             state.primary.actions,
-            ['payload', 'primary', 'actions'],
+            'payload.primary.actions',
             action
           )
-          const secondaryItems = t.pathOr(
+          const secondaryItems = t.atOr(
             state.secondary.items,
-            ['payload', 'secondary', 'items'],
+            'payload.secondary.items',
             action
           )
-          const bodyItems = t.pathOr(
+          const bodyItems = t.atOr(
             state.body.items,
-            ['payload', 'body', 'items'],
+            'payload.body.items',
             action
           )
-          const bodyActions = t.pathOr(
+          const bodyActions = t.atOr(
             state.body.actions,
-            ['payload', 'body', 'actions'],
+            'payload.body.actions',
             action
           )
           const body = t.merge(bodyItems, bodyActions)
-          const pageItems = t.pathOr(
+          const pageItems = t.atOr(
             state.page.items,
-            ['payload', 'page', 'items'],
+            'payload.page.items',
             action
           )
           const pageStatus = t.isEmpty(pageItems) ? 'closed' : state.page.status
@@ -186,9 +186,9 @@ export const nav = z.fn(t =>
           )
           return t.merge(state, {
             width,
-            title: t.pathOr(state.title, ['payload', 'title'], action),
-            mode: t.pathOr(state.mode, ['payload', 'mode'], action),
-            matched: t.pathOr(state.matched, ['payload', 'matched'], action),
+            title: t.atOr(state.title, 'payload.title', action),
+            mode: t.atOr(state.mode, 'payload.mode', action),
+            matched: t.atOr(state.matched, 'payload.matched', action),
             primary: t.merge(state.primary, {
               left: calcPrimaryLeft(
                 state.status,
@@ -214,9 +214,9 @@ export const nav = z.fn(t =>
               top,
               bottom,
               items: bodyItems,
-              actions: t.pathOr(
+              actions: t.atOr(
                 state.body.actions,
-                ['payload', 'body', 'actions'],
+                'payload.body.actions',
                 action
               ),
             }),
@@ -230,7 +230,7 @@ export const nav = z.fn(t =>
           })
         }),
         m('navToggle', (state, action) => {
-          const slot = t.pathOr('nav', ['payload', 'slot'], action)
+          const slot = t.atOr('nav', 'payload.slot', action)
           const status = t.eq('nav', slot)
             ? t.eq(state.status, 'open')
               ? 'closed'
@@ -246,7 +246,7 @@ export const nav = z.fn(t =>
           const nextStatus = t.and(t.neq('nav', slot), t.eq(pageStatus, 'open'))
             ? 'closed'
             : status
-          const pageItems = t.pathOr({}, ['page', 'items'], state)
+          const pageItems = t.atOr({}, 'page.items', state)
           const body = t.merge(state.body.items, state.body.actions)
           const bottom = calcBodySpacing(
             'bottom',
@@ -309,8 +309,8 @@ export const nav = z.fn(t =>
           [accountActions.authenticateComplete, accountActions.logout],
           (ctx, dispatch, done) => {
             const state = ctx.getState()
-            const status = t.pathOr(null, ['account', 'status'], state)
-            const level = t.pathOr(null, ['nav', 'level'], state)
+            const status = t.atOr(null, 'account.status', state)
+            const level = t.atOr(null, 'nav.level', state)
             const isSuccess = t.eq(status, 'auth-success')
             const isSecure = t.eq(level, 'secure')
             const nextLevel = t.and(t.not(isSecure), isSuccess)
@@ -336,9 +336,9 @@ export const nav = z.fn(t =>
         ),
         fx(['screen/RESIZE', box.actions.navToggle], (ctx, dispatch, done) => {
           const state = ctx.getState()
-          const status = t.pathOr(null, ['nav', 'status'], state)
-          const size = t.pathOr('xs', ['screen', 'size'], state)
-          const currentNavSize = t.pathOr('xs', ['nav', 'size'], state)
+          const status = t.atOr(null, 'nav.status', state)
+          const size = t.atOr('xs', 'screen.size', state)
+          const currentNavSize = t.atOr('xs', 'nav.size', state)
           const nextStatus = t.not(t.or(t.eq(size, 'lg'), t.eq(size, 'xl')))
             ? t.eq(status, navStatus.init)
               ? navStatus.closed
@@ -366,14 +366,14 @@ export const nav = z.fn(t =>
           ],
           (ctx, dispatch, done) => {
             const state = ctx.getState()
-            const status = t.path(['nav', 'status'], state)
+            const status = t.at('nav.status', state)
             if (t.eq(status, navStatus.init)) {
               done()
             } else {
-              const level = t.path(['nav', 'level'], state)
+              const level = t.at('nav.level', state)
               const schema = t.pathOr({}, ['nav', 'schema', level], state)
-              const pathname = t.pathOr('', ['location', 'pathname'], state)
-              const matched = t.pathOr(null, ['nav', 'matched'], state)
+              const pathname = t.atOr('', 'location.pathname', state)
+              const matched = t.atOr(null, 'nav.matched', state)
               // find
               const foundNav = sc.nav.find(pathname, schema)
               // validate match
@@ -382,7 +382,7 @@ export const nav = z.fn(t =>
                   ? foundNav
                   : t.contains(
                       pathname,
-                      t.pathOr('', ['nav', 'matched', 'path'], state)
+                      t.atOr('', 'nav.matched.path', state)
                     )
                   ? matched
                   : foundNav
@@ -511,7 +511,7 @@ export const nav = z.fn(t =>
 
               const pageItems = t.isNil(finalBodyItem)
                 ? {}
-                : t.notEmpty(t.pathOr({}, ['children'], finalBodyItem))
+                : t.notEmpty(t.atOr({}, 'children', finalBodyItem))
                 ? finalBodyItem.children
                 : {}
 
@@ -525,9 +525,9 @@ export const nav = z.fn(t =>
                     t.filter(
                       ([key, item]) => t.eq('nav', slotPath(item)),
                       t.to.pairs(
-                        t.pathOr(
+                        t.atOr(
                           {},
-                          ['children'],
+                          'children',
                           sc.nav.find(validMatch.parentPath || '', schema) || {}
                         )
                       )
@@ -549,7 +549,7 @@ export const nav = z.fn(t =>
                   matched: validMatch,
                   mode: finalMode,
                   title: t.isNil(validMatch)
-                    ? t.pathOr('', ['nav', 'text'], state)
+                    ? t.atOr('', 'nav.text', state)
                     : validMatch.options.text,
                   width:
                     t.getMatch(finalMode)({

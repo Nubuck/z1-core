@@ -6,7 +6,9 @@ import FeathersMailer from 'feathers-mailer'
 export const mailApi = createApiBox({
   models(m, T) {
     return [
-      m('delivery_report', {
+      m(
+        'delivery_report',
+        {
           transport: {
             type: T.STRING,
             allowNull: true,
@@ -114,35 +116,33 @@ export const mailApi = createApiBox({
               options.raw = true
             },
           },
-        },
+        }
       ),
     ]
   },
   services(s, models, { auth, data, common }) {
     return [
-      s('mail-delivery-reports', {
+      s(
+        'mail-delivery-reports',
+        {
           Model: models.delivery_report,
         },
         {
           hooks: {
             before: {
-              all: [
-                auth.authenticate('jwt'),
-              ],
-              find: [
-                data.safeFindMSSQL,
-              ],
+              all: [auth.authenticate('jwt')],
+              find: [data.safeFindMSSQL],
             },
           },
-        },
+        }
       ),
-      s('mail', task(
-        t => app => {
+      s(
+        'mail',
+        task(t => app => {
           const mail = app.get('mail')
           if (t.not(mail)) {
             app.set('communication', 'inactive')
-          }
-          else {
+          } else {
             const endPoint = '/mail'
             const transport = t.prop('transport', mail)
             if (t.eq(transport, 'aws')) {
@@ -155,8 +155,7 @@ export const mailApi = createApiBox({
               //   )
               //   app.set('communication', 'active')
               // }
-            }
-            else if (t.eq(transport, 'mg')) {
+            } else if (t.eq(transport, 'mg')) {
               // const mgAuth = app.get('mg')
               // if (mgAuth) {
               //   app.use(endPoint, FeathersMailer(
@@ -167,15 +166,13 @@ export const mailApi = createApiBox({
               //   )
               //   app.set('communication', 'active')
               // }
-            }
-            else if (t.eq(transport, 'smtp')) {
+            } else if (t.eq(transport, 'smtp')) {
               const smtpAuth = app.get('smtp')
               if (smtpAuth) {
                 app.use(endPoint, FeathersMailer(smtpAuth))
                 app.set('communication', 'active')
               }
-            }
-            else {
+            } else {
               app.set('communication', 'inactive')
             }
           }
@@ -183,40 +180,34 @@ export const mailApi = createApiBox({
         {
           hooks: {
             before: {
-              all: [
-                common
-                  .disallow('external'),
-              ],
+              all: [common.disallow('external')],
             },
             after: {
               create: [
-                task(
-                  (t, a) => async hook => {
-                    const transport = t.path([ 'transport' ], hook.app.get('mail'))
-                    const metaId = t.path([ 'meta', 'id' ], hook.data) || null
-                    const metaKey = t.path([ 'meta', 'key' ], hook.data) || null
-                    const deliveryPayload = t.mergeAll([
-                      { metaId, metaKey, transport },
-                      t.omit([ 'meta' ], hook.data),
-                      { error: hook.error },
-                      t.omit([ 'id' ], hook.result),
-                    ])
-                    const [ reportError ] = await a.of(
-                      hook
-                        .app
-                        .service('mail-delivery-reports')
-                        .create(deliveryPayload),
-                    )
-                    if (reportError) {
-                      hook.app.error('MAIL DELIVERY ERROR', reportError)
-                    }
-                    return hook
-                  },
-                ),
+                task((t, a) => async hook => {
+                  const transport = t.at('transport', hook.app.get('mail'))
+                  const metaId = t.at('meta.id', hook.data) || null
+                  const metaKey = t.at('meta.key', hook.data) || null
+                  const deliveryPayload = t.mergeAll([
+                    { metaId, metaKey, transport },
+                    t.omit(['meta'], hook.data),
+                    { error: hook.error },
+                    t.omit(['id'], hook.result),
+                  ])
+                  const [reportError] = await a.of(
+                    hook.app
+                      .service('mail-delivery-reports')
+                      .create(deliveryPayload)
+                  )
+                  if (reportError) {
+                    hook.app.error('MAIL DELIVERY ERROR', reportError)
+                  }
+                  return hook
+                }),
               ],
             },
           },
-        },
+        }
       ),
     ]
   },

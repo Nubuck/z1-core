@@ -8,7 +8,7 @@ import { renderBox } from './Box'
 const renderSpacer = fn(t => props =>
   renderBox(
     t.merge(t.omit(['box'], props), {
-      box: t.merge({ flex: 1 }, t.pathOr({}, ['box'], props)),
+      box: t.merge({ flex: 1 }, t.atOr({}, 'box', props)),
     })
   )
 )

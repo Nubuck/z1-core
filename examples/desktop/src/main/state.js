@@ -45,7 +45,7 @@ const appState = z.fn((t, a) =>
           fx(
             [box.actions.boot, box.actions.connection],
             (ctx, dispatch, done) => {
-              const account = t.path(['app'], ctx.getState())
+              const account = t.at('app', ctx.getState())
               if (
                 t.or(
                   t.not(account.connected),
@@ -67,7 +67,7 @@ const appState = z.fn((t, a) =>
           fx([box.actions.authenticate], async (ctx, dispatch, done) => {
             try {
               if (
-                t.not(t.pathOr(false, ['app', 'connected'], ctx.getState()))
+                t.not(t.atOr(false, 'app.connected', ctx.getState()))
               ) {
                 console.log('auth not connected')
                 dispatch(

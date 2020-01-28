@@ -15,8 +15,8 @@ export const renderStack = fn(t => (direction, props) => {
   const stackProps = {
     flexDirection: t.eq(direction, 'vertical') ? 'col' : 'row',
   }
-  const alignX = t.pathOr(null, ['x'], props)
-  const alignY = t.pathOr(null, ['y'], props)
+  const alignX = t.atOr(null, 'x', props)
+  const alignY = t.atOr(null, 'y', props)
   const alignProps = t.isNil(alignX)
     ? {}
     : t.eq(direction, 'vertical')
@@ -36,7 +36,7 @@ export const renderStack = fn(t => (direction, props) => {
     : {
         alignItems: matchY(alignY),
       }
-  const stretch = t.pathOr(null, ['stretch'], props)
+  const stretch = t.atOr(null, 'stretch', props)
   const stretchProps = t.isNil(stretch)
     ? {}
     : t.eq(direction, 'vertical')
@@ -55,7 +55,7 @@ export const renderStack = fn(t => (direction, props) => {
         alignProps,
         justifyProps,
         stretchProps,
-        t.pathOr({}, ['box'], props),
+        t.atOr({}, 'box', props),
       ]),
     })
   )

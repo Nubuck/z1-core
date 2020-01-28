@@ -42,7 +42,7 @@ export const routing = fn(t => ({
     pathToAction,
     isLocationAction,
     routeActions(box) {
-      return t.keys(t.pathOr({}, ['routes'], box))
+      return t.keys(t.atOr({}, 'routes', box))
     },
   },
 }))

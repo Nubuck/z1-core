@@ -6,9 +6,9 @@ import { isRenderProp } from './common'
 
 // main
 const renderVList = z.fn(t => props => {
-  const box = t.pathOr({}, ['box'], props)
-  const items = t.pathOr([], ['items'], props)
-  const render = t.pathOr(null, ['render'], props)
+  const box = t.atOr({}, 'box', props)
+  const items = t.atOr([], 'items', props)
+  const render = t.atOr(null, 'render', props)
   const baseListProps = isRenderProp(render)
     ? {
         rowCount: t.len(items),

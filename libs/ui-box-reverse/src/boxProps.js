@@ -39,7 +39,7 @@ const macroCssProp = task(
       return null
     }
     if (t.isZeroLen(mod)) {
-      const result = t.pathOr(null, ['css'], t.head(base))
+      const result = t.atOr(null, 'css', t.head(base))
       return t.not(t.eq(trueKey, undefined))
         ? t.eq(result, trueKey)
           ? true
@@ -51,10 +51,10 @@ const macroCssProp = task(
         : result
     }
     return [
-      t.isZeroLen(base) ? null : t.pathOr(null, ['css'], t.head(base)),
+      t.isZeroLen(base) ? null : t.atOr(null, 'css', t.head(base)),
       t.mergeAll(
         t.map(item => {
-          const result = t.pathOr(null, ['css'], item)
+          const result = t.atOr(null, 'css', item)
           return {
             [item.prefix]: t.not(t.eq(trueKey, undefined))
               ? t.eq(result, trueKey)
@@ -91,20 +91,20 @@ const macroFilteredKeyProp = task(
     }
     if (t.isZeroLen(mod)) {
       return nextMacroResult(
-        rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base))),
+        rejoinFiltered(propKey, t.atOr([], 'chunks', t.head(base))),
         swapVal
       )
     }
     const result = t.isZeroLen(base)
       ? null
-      : rejoinFiltered(propKey, t.pathOr([], ['chunks'], t.head(base)))
+      : rejoinFiltered(propKey, t.atOr([], 'chunks', t.head(base)))
     return [
       nextMacroResult(result, swapVal),
       t.mergeAll(
         t.map(item => {
           return {
             [item.prefix]: nextMacroResult(
-              rejoinFiltered(propKey, t.pathOr([], ['chunks'], item)),
+              rejoinFiltered(propKey, t.atOr([], 'chunks', item)),
               swapVal
             ),
           }
@@ -145,7 +145,7 @@ const macroObjectFilteredKeyProp = task(
             : t.getMatch(prop.match)(match)
           return {
             [nextKey]: nextMacroResult(
-              rejoinFiltered(propKey, t.pathOr([], ['chunks'], prop)),
+              rejoinFiltered(propKey, t.atOr([], 'chunks', prop)),
               swapVal
             ),
           }

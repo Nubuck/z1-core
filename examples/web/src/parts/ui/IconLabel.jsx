@@ -21,18 +21,18 @@ const renderIcon = z.fn(t => (props, baseProps = {}) => {
 
 // main
 export const renderIconLabel = z.fn(t => props => {
-  const cols = t.pathOr({}, ['cols'], props)
-  // left col
-  const left = t.pathOr(null, ['left'], cols)
-  const icon = t.pathOr(null, ['icon'], props)
-  const caption = t.pathOr(null, ['caption'], props)
+  const slots = t.atOr({}, 'slots', props)
+  // iconSlot col
+  const iconSlot = t.atOr(null, 'icon', slots)
+  const icon = t.atOr(null, 'icon', props)
+  const caption = t.atOr(null, 'caption', props)
   const hasIcon = t.and(t.notNil(icon), t.notEmpty(icon))
   const hasCaption = t.and(t.notNil(caption), t.notEmpty(caption))
-  // right col
-  const right = t.pathOr(null, ['right'], cols)
-  const label = t.pathOr(null, ['label'], props)
-  const info = t.pathOr(null, ['info'], props)
-  const children = t.pathOr(null, ['children'], props)
+  // labelSlot col
+  const labelSlot = t.atOr(null, 'label', slots)
+  const label = t.atOr(null, 'label', props)
+  const info = t.atOr(null, 'info', props)
+  const children = t.atOr(null, 'children', props)
   const hasLabel = t.and(t.notNil(label), t.notEmpty(label))
   const hasInfo = t.and(t.notNil(info), t.notEmpty(info))
   const hasChildren = t.isNil(children)
@@ -40,7 +40,7 @@ export const renderIconLabel = z.fn(t => props => {
     : t.gt(React.Children.count(children), 0)
   // element
   const nextProps = t.omit(
-    ['cols', 'icon', 'caption', 'label', 'info', 'children'],
+    ['slots', 'icon', 'caption', 'label', 'info', 'children'],
     props
   )
   return (
@@ -78,15 +78,15 @@ export const renderIconLabel = z.fn(t => props => {
             y: 'center',
             x: 'center',
           }
-          if (isRenderProp(left)) {
-            return left({
+          if (isRenderProp(iconSlot)) {
+            return iconSlot({
               children: nextChildren,
               ...colProps,
             })
           }
-          const nextProps = t.notNil(left) ? left : {}
+          const nextProps = t.notNil(iconSlot) ? iconSlot : {}
           return (
-            <Col key="col-left" {...colProps} {...nextProps}>
+            <Col key="col-icon-slot" {...colProps} {...nextProps}>
               {nextChildren}
             </Col>
           )
@@ -123,15 +123,15 @@ export const renderIconLabel = z.fn(t => props => {
             y: 'center',
             x: 'left',
           }
-          if (isRenderProp(right)) {
-            return right({
+          if (isRenderProp(labelSlot)) {
+            return labelSlot({
               children: nextChildren,
               ...colProps,
             })
           }
-          const nextProps = t.notNil(right) ? right : {}
+          const nextProps = t.notNil(labelSlot) ? labelSlot : {}
           return (
-            <Col key="col-right" {...colProps} {...nextProps}>
+            <Col key="col-label-slot" {...colProps} {...nextProps}>
               {nextChildren}
             </Col>
           )

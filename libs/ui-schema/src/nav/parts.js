@@ -18,7 +18,7 @@ export const findNavItem = fn(t =>
     const pathKey = t.to.snakeCase(path)
     if (t.eq(t.len(schemaKeys), 1)) {
       const singleKey = t.head(schemaKeys)
-      const singleItem = t.path([singleKey], schema)
+      const singleItem = t.at(singleKey, schema)
       if (t.eq(pathKey, singleKey)) {
         return singleItem
       }
@@ -26,7 +26,7 @@ export const findNavItem = fn(t =>
         ? () => search(path, singleItem.children)
         : null
     }
-    const item = t.path([pathKey], schema)
+    const item = t.at(pathKey, schema)
     if (t.notNil(item)) {
       return item
     }

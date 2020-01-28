@@ -63,8 +63,8 @@ const renderItemLabel = z.fn(t => (props, baseProps = {}) => {
   if (isRenderProp(props)) {
     return props(defaultProps)
   }
-  const icon = t.pathOr(null, ['icon'], props)
-  const label = t.pathOr(null, ['label'], props)
+  const icon = t.atOr(null, 'icon', props)
+  const label = t.atOr(null, 'label', props)
   return renderIconLabel(
     t.merge(
       defaultProps,
@@ -85,44 +85,44 @@ const renderItemLabel = z.fn(t => (props, baseProps = {}) => {
 // main
 const renderListItem = z.fn(t => props => {
   // mode:
-  const selectable = t.pathOr(false, ['selectable'], props)
+  const selectable = t.atOr(false, 'selectable', props)
   // status:
-  const loading = t.pathOr(false, ['loading'], props)
-  const disabled = t.pathOr(false, ['disabled'], props)
-  const selected = t.pathOr(false, ['selected'], props)
+  const loading = t.atOr(false, 'loading', props)
+  const disabled = t.atOr(false, 'disabled', props)
+  const selected = t.atOr(false, 'selected', props)
   // actions:
-  const onSelect = t.pathOr(() => null, ['onSelect'], props)
+  const onSelect = t.atOr(() => null, 'onSelect', props)
   // layout:
-  const cols = t.pathOr({}, ['cols'], props)
-  const colSelect = t.pathOr(null, ['select'], cols)
-  const colAvatar = t.pathOr(null, ['avatar'], cols)
-  const colTitle = t.pathOr(null, ['title'], cols)
-  const colContent = t.pathOr(null, ['content'], cols)
-  const colLast = t.pathOr(null, ['last'], cols)
-  const colNested = t.pathOr(null, ['nested'], cols)
+  const slots = t.atOr({}, 'slots', props)
+  const selectSlot = t.atOr(null, 'select', slots)
+  const avatarSlot = t.atOr(null, 'avatar', slots)
+  const titleSlot = t.atOr(null, 'title', slots)
+  const contentSlot = t.atOr(null, 'content', slots)
+  const lastSlot = t.atOr(null, 'last', slots)
+  const nestedSlot = t.atOr(null, 'nested', slots)
   // select col:
-  const select = t.pathOr(null, ['select'], props)
+  const select = t.atOr(null, 'select', props)
   // avatar col:
-  const avatar = t.pathOr(null, ['avatar'], props)
-  const caption = t.pathOr(null, ['caption'], props)
+  const avatar = t.atOr(null, 'avatar', props)
+  const caption = t.atOr(null, 'caption', props)
   const hasAvatar = t.notNil(avatar)
   const hasCaption = t.notNil(caption)
   // title col:
-  const title = t.pathOr(null, ['title'], props)
-  const subtitle = t.pathOr(null, ['subtitle'], props)
+  const title = t.atOr(null, 'title', props)
+  const subtitle = t.atOr(null, 'subtitle', props)
   const hasTitle = t.notNil(title)
   const hasSubtitle = t.notNil(subtitle)
   // content col:
-  const content = t.pathOr(null, ['content'], props)
+  const content = t.atOr(null, 'content', props)
   const hasContent = t.notNil(content)
   // last col:
-  const stamp = t.pathOr(null, ['stamp'], props)
-  const buttons = t.pathOr([], ['buttons'], props)
+  const stamp = t.atOr(null, 'stamp', props)
+  const buttons = t.atOr([], 'buttons', props)
   const hasStamp = t.notNil(stamp)
   const hasButtons = t.notZeroLen(buttons)
   // nested
-  const nested = t.pathOr(null, ['nested'], props)
-  const children = t.pathOr(null, ['children'], props)
+  const nested = t.atOr(null, 'nested', props)
+  const children = t.atOr(null, 'children', props)
   const hasNested = t.notNil(nested)
   const nextProps = t.omit(
     [
@@ -131,7 +131,7 @@ const renderListItem = z.fn(t => props => {
       'disabled',
       'selected',
       'onSelect',
-      'cols',
+      'slots',
       'select',
       'avatar',
       'caption',
@@ -149,7 +149,7 @@ const renderListItem = z.fn(t => props => {
     <Col {...nextProps}>
       <Row key="row-main" y="center">
         <When
-          is={t.anyOf([t.notNil(colSelect), selectable])}
+          is={t.anyOf([t.notNil(selectSlot), selectable])}
           render={() => {
             const nextChildren = (
               <When
@@ -170,8 +170,8 @@ const renderListItem = z.fn(t => props => {
               flex: 'init',
               padding: { right: 1 },
             }
-            if (isRenderProp(colSelect)) {
-              return colSelect({
+            if (isRenderProp(selectSlot)) {
+              return selectSlot({
                 children: nextChildren,
                 loading,
                 disabled,
@@ -181,14 +181,14 @@ const renderListItem = z.fn(t => props => {
               })
             }
             return (
-              <Col key="col-select" {...colProps} {...colSelect}>
+              <Col key="slot-select" {...colProps} {...selectSlot}>
                 {nextChildren}
               </Col>
             )
           }}
         />
         <When
-          is={t.anyOf([t.notNil(colAvatar), hasAvatar, hasCaption])}
+          is={t.anyOf([t.notNil(avatarSlot), hasAvatar, hasCaption])}
           render={() => {
             const nextChildren = (
               <React.Fragment>
@@ -217,21 +217,21 @@ const renderListItem = z.fn(t => props => {
               y: 'center',
               flex: 'init',
             }
-            if (isRenderProp(colAvatar)) {
-              return colAvatar({
+            if (isRenderProp(avatarSlot)) {
+              return avatarSlot({
                 children: nextChildren,
                 ...colProps,
               })
             }
             return (
-              <Col key="col-avatar" {...colProps} {...colAvatar}>
+              <Col key="slot-avatar" {...colProps} {...avatarSlot}>
                 {nextChildren}
               </Col>
             )
           }}
         />
         <When
-          is={t.anyOf([t.notNil(colTitle), hasTitle, hasSubtitle])}
+          is={t.anyOf([t.notNil(titleSlot), hasTitle, hasSubtitle])}
           render={() => {
             const nextChildren = (
               <React.Fragment>
@@ -263,21 +263,21 @@ const renderListItem = z.fn(t => props => {
               flex: 'init',
               padding: { x: 2 },
             }
-            if (isRenderProp(colTitle)) {
-              return colTitle({
+            if (isRenderProp(titleSlot)) {
+              return titleSlot({
                 children: nextChildren,
                 ...colProps,
               })
             }
             return (
-              <Col key="col-title" {...colProps} {...colTitle}>
+              <Col key="slot-title" {...colProps} {...titleSlot}>
                 {nextChildren}
               </Col>
             )
           }}
         />
         <When
-          is={t.anyOf([t.notNil(colContent), hasContent])}
+          is={t.anyOf([t.notNil(contentSlot), hasContent])}
           render={() => {
             const nextChildren = (
               <When
@@ -289,22 +289,22 @@ const renderListItem = z.fn(t => props => {
                 )}
               />
             )
-            if (isRenderProp(colContent)) {
-              return colContent({ children: nextChildren })
+            if (isRenderProp(contentSlot)) {
+              return contentSlot({ children: nextChildren })
             }
             return (
-              <Col key="col-content" y="center" flex={1} {...colTitle}>
+              <Col key="slot-content" y="center" flex={1} {...titleSlot}>
                 {nextChildren}
               </Col>
             )
           }}
         />
         <When
-          is={t.allOf([t.isNil(colContent), t.not(hasContent)])}
+          is={t.allOf([t.isNil(contentSlot), t.not(hasContent)])}
           render={() => <Spacer />}
         />
         <When
-          is={t.anyOf([t.notNil(colLast), hasStamp, hasButtons])}
+          is={t.anyOf([t.notNil(lastSlot), hasStamp, hasButtons])}
           render={() => {
             const nextChildren = (
               <React.Fragment>
@@ -338,14 +338,14 @@ const renderListItem = z.fn(t => props => {
               justifyContent: 'between',
               flex: 'init',
             }
-            if (isRenderProp(colLast)) {
-              return colLast({
+            if (isRenderProp(lastSlot)) {
+              return lastSlot({
                 children: nextChildren,
                 ...colProps,
               })
             }
             return (
-              <Col key="col-last" {...colProps} {...colLast}>
+              <Col key="slot-last" {...colProps} {...lastSlot}>
                 {nextChildren}
               </Col>
             )
@@ -354,18 +354,18 @@ const renderListItem = z.fn(t => props => {
       </Row>
       <When
         is={t.anyOf([
-          t.notNil(colNested),
+          t.notNil(nestedSlot),
           hasNested,
           t.isNil(children) ? false : t.gt(React.Children.count(children), 0),
         ])}
         render={() => {
           const nextChildren = <React.Fragment></React.Fragment>
-          if (isRenderProp(colNested)) {
-            return colNested({ children: nextChildren })
+          if (isRenderProp(nestedSlot)) {
+            return nestedSlot({ children: nextChildren })
           }
           return (
             <Row key="row-nested">
-              <Col key="col-nested" {...colNested}>
+              <Col key="slot-nested" {...nestedSlot}>
                 {nextChildren}
               </Col>
             </Row>

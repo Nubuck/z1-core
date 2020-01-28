@@ -52,7 +52,7 @@ export const common = task(t => ({
         const db = hook.app.get('db') || {}
         if (t.eq('find', hook.method)) {
           if (t.eq('mssql', db.dialect)) {
-            if (t.not(t.path(['params', 'query', '$sort'], hook))) {
+            if (t.not(t.at('params.query.$sort', hook))) {
               if (t.not(t.has('params')(hook))) {
                 hook.params = {
                   query: {

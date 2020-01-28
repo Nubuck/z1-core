@@ -8,9 +8,7 @@ import {
 
 const api = fn(t => (path = '/', props = {}) => {
   const client = Feathers()
-  const ioClient = t.has('options')(props)
-    ? IO(path, props.options)
-    : IO(path)
+  const ioClient = t.has('options')(props) ? IO(path, props.options) : IO(path)
   const feathersClient = t.has('timeout')(props)
     ? FeathersIO(ioClient, props.timeout)
     : FeathersIO(ioClient)
@@ -25,7 +23,7 @@ const api = fn(t => (path = '/', props = {}) => {
       )
     )
   )
-  if (t.eq('Function', t.type(t.path(['configure'], props)))) {
+  if (t.eq('Function', t.type(t.at('configure', props)))) {
     client.configure(props.configure)
   }
   return client

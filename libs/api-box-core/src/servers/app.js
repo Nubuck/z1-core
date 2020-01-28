@@ -12,9 +12,9 @@ export const app = task(t => ctx => {
   const create = (props, cb) => {
     // check for namespace and configure props
     // -> create main app and mount api at namespace
-    const namespace = t.pathOr('api',['apiPath'], props)
-    const appFolderName = t.pathOr('site', ['siteFolder'], props)
-    const configure = t.path(['configure'], props)
+    const namespace = t.atOr('api','apiPath', props)
+    const appFolderName = t.atOr('site', 'siteFolder', props)
+    const configure = t.at('configure', props)
     const api = ctx.api(props)
     const main = FeathersExpress()
     main.use(Cors())

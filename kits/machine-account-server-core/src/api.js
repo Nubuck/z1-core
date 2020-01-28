@@ -42,8 +42,8 @@ export const api = (z, props) =>
                   }
                   if (
                     t.or(
-                      t.isNil(t.pathOr(null, ['hashId'], machine || {})),
-                      t.isNil(t.pathOr(null, ['hashId'], user || {}))
+                      t.isNil(t.atOr(null, 'hashId', machine || {})),
+                      t.isNil(t.atOr(null, 'hashId', user || {}))
                     )
                   ) {
                     throw new z.FeathersErrors.Unprocessable(

@@ -2,6 +2,7 @@
   "name": "example-app-desktop",
   "version": "0.4.1",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "start": "electron-webpack dev",
     "compile": "electron-webpack",

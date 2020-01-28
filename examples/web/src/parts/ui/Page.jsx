@@ -5,11 +5,11 @@ import { isRenderProp } from './common'
 
 // main
 const renderPage = z.fn(t => props => {
-  const loading = t.pathOr(false, ['loading'], props)
-  const centered = t.pathOr(false, ['centered'], props)
+  const loading = t.atOr(false, 'loading', props)
+  const centered = t.atOr(false, 'centered', props)
   const shouldCenter = loading ? true : centered
-  const box = t.pathOr({}, ['box'], props)
-  const next = t.pathOr({}, ['next'], props)
+  const box = t.atOr({}, 'box', props)
+  const next = t.atOr({}, 'next', props)
   const pageProps = t.merge(
     {
       x: shouldCenter ? 'center' : 'left',
@@ -35,7 +35,7 @@ const renderPage = z.fn(t => props => {
         value={loading ? 'loading' : 'ready'}
         render={{
           loading: () => (
-            <Spinner size="lg" color={t.pathOr('white', ['color'], props)} />
+            <Spinner size="lg" color={t.atOr('white', 'color', props)} />
           ),
           ready: () => {
             return isRenderProp(props.render)

@@ -63,55 +63,55 @@ export const signUp = mx.fn((t, a) =>
             },
           },
         },
-        data({ event, status, error, data, next }) {
-          console.log('SIGN-UP VIEW DATA', event, next)
+        data(props) {
+          console.log('SIGN-UP VIEW DATA', props)
           return {
-            status,
-            data: t.merge(data, {
-              mode: t.and(t.eq(event, 'form-transmit-complete'), t.isNil(error))
+            status: props.status,
+            data: t.merge(props.data, {
+              mode: t.and(
+                t.eq(
+                  props.event,
+                  mx.routeView.types.event.formTransmitComplete
+                ),
+                t.isNil(props.error)
+              )
                 ? 'view'
                 : 'form',
             }),
-            data,
-            error: t.pathOr(null, ['error'], next || {}),
+            data: props.data,
+            error: t.atOr(null, 'error', props.next || {}),
           }
         },
-        form({ event, status, data, form, next, error }) {
+        form(props) {
           return {
             signUp: {
-              data: t.pathOr(form.signUp.data, ['data'], next || {}),
-              form: signUpForm({ disabled: t.eq(status, 'loading') }),
+              data: t.atOr(props.form.signUp.data, 'data', props.next || {}),
+              ui: signUpForm({
+                disabled: t.eq(props.status, mx.routeView.types.status.loading),
+              }),
             },
           }
         },
-        async transmit({
-          status,
-          form,
-          api,
-          dispatch,
-          getState,
-          mutators,
-          redirect,
-        }) {
+        async transmit(props) {
           const [checkError] = await a.of(
-            api.service('auth-management').create({
+            props.api.service('auth-management').create({
               action: 'checkUnique',
               value: {
-                email: form.signUp.data.email,
+                email: props.form.signUp.data.email,
               },
             })
           )
           if (checkError) {
             return {
-              status,
-              data: form.signUp.data,
+              status: mx.routeView.types.status.fail,
+              data: props.form.signUp.data,
               error: checkError,
             }
           }
           const [userError, userResult] = await a.of(
-            api.service('users').create(
+            props.api.service('users').create(
               t.mergeAll([
-                form.signUp.data,
+                props.form.signUp.data,
                 {
                   role: 'user',
                   status: 'offline',
@@ -121,13 +121,13 @@ export const signUp = mx.fn((t, a) =>
           )
           if (userError) {
             return {
-              status,
-              data: form.signUp.data,
+              status: mx.routeView.types.status.fail,
+              data: props.form.signUp.data,
               error: userError,
             }
           }
           return {
-            status,
+            status: props.status,
             data: userResult,
             error: null,
           }
@@ -164,9 +164,9 @@ export const signUp = mx.fn((t, a) =>
                             padding: { left: 1, y: 3 },
                           }}
                           flexDirection="col"
-                          cols={{
-                            left: { x: 'center' },
-                            right: { x: 'center' },
+                          slots={{
+                            icon: { x: 'center' },
+                            label: { x: 'center' },
                           }}
                         />
                         <ctx.When
@@ -195,8 +195,8 @@ export const signUp = mx.fn((t, a) =>
                           )}
                         />
                         <ctx.Form
-                          schema={props.state.form.signUp.form.schema}
-                          uiSchema={props.state.form.signUp.form.uiSchema}
+                          schema={props.state.form.signUp.ui.schema}
+                          uiSchema={props.state.form.signUp.ui.uiSchema}
                           formData={props.state.form.signUp.data}
                           onSubmit={payload =>
                             props.mutations.formTransmit({

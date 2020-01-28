@@ -14,18 +14,18 @@ export const featureBox = Fn(t => ({
     return t.reduce(
       (combined, feature) => {
         return {
-          api: t.notType(t.path(['api'], feature), 'Array')
+          api: t.notType(t.at('api', feature), 'Array')
             ? combined.api
-            : t.concat(combined.api, t.path(['api'], feature)),
-          hooks: t.notType(t.path(['hooks'], feature), 'Object')
+            : t.concat(combined.api, t.at('api', feature)),
+          hooks: t.notType(t.at('hooks', feature), 'Object')
             ? combined.hooks
             : t.merge(combined.hooks, {
-                [feature.name || 'common']: t.path(['hooks'], feature),
+                [feature.name || 'common']: t.at('hooks', feature),
               }),
-          parts: t.notType(t.path(['parts'], feature), 'Object')
+          parts: t.notType(t.at('parts', feature), 'Object')
             ? combined.parts
             : t.merge(combined.parts, {
-                [feature.name || 'common']: t.path(['parts'], feature),
+                [feature.name || 'common']: t.at('parts', feature),
               }),
         }
       },

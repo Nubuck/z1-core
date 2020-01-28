@@ -29,7 +29,7 @@ const query = fn(t => (queryMapping = []) => {
     t.reduce(
       (nextState, queryMap) => {
         return t.merge(nextState, {
-          [queryMap.to]: t.pathOr(null, [queryMap.from], state),
+          [queryMap.to]: t.atOr(null, queryMap.from, state),
         })
       },
       {},

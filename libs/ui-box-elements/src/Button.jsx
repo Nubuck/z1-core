@@ -45,7 +45,7 @@ const colorByKey = fn(t => (mode, key, fill, colors, color) => {
   if (t.notNil(foundColor)) {
     return foundColor
   }
-  const modeColor = t.pathOr(null, [mode], colors || {})
+  const modeColor = t.atOr(null, mode, colors || {})
   if (
     t.and(
       t.isType(modeColor, 'string'),
@@ -319,7 +319,7 @@ const Label = fn(t => ({ isCircle, noIcon, text, children, ...props }) =>
         {
           margin: isCircle ? 0 : { x: 1 },
         },
-        t.pathOr({}, ['box'], props),
+        t.atOr({}, 'box', props),
       ]),
     }),
     t.isNil(text) ? children || null : text
@@ -352,25 +352,25 @@ export const renderButton = fn(t => props => {
     ],
     props
   )
-  const el = t.pathOr('button', ['as'], props)
-  const box = t.pathOr({}, ['box'], props)
-  const next = t.pathOr({}, ['next'], props)
+  const el = t.atOr('button', 'as', props)
+  const box = t.atOr({}, 'box', props)
+  const next = t.atOr({}, 'next', props)
   // appearance
-  const size = t.pathOr('default', ['size'], props)
-  const shape = t.pathOr('normal', ['shape'], props)
-  const fill = t.to.camelCase(t.pathOr('ghost', ['fill'], props))
-  const style = t.pathOr({}, ['style'], props)
-  const className = t.pathOr('', ['className'], props)
-  const transition = t.pathOr('transition-all', ['transition'], props)
+  const size = t.atOr('default', 'size', props)
+  const shape = t.atOr('normal', 'shape', props)
+  const fill = t.to.camelCase(t.atOr('ghost', 'fill', props))
+  const style = t.atOr({}, 'style', props)
+  const className = t.atOr('', 'className', props)
+  const transition = t.atOr('transition-all', 'transition', props)
   const isCircle = t.eq(shape, 'circle')
   // brand
-  const colors = t.pathOr(null, ['colors'], props)
-  const color = t.pathOr(null, ['color'], props)
+  const colors = t.atOr(null, 'colors', props)
+  const color = t.atOr(null, 'color', props)
   // status
-  const loading = t.pathOr(false, ['loading'], props)
-  const disabled = t.pathOr(false, ['disabled'], props)
-  const selected = t.pathOr(false, ['selected'], props)
-  const mode = t.pathOr('active', ['mode'], props)
+  const loading = t.atOr(false, 'loading', props)
+  const disabled = t.atOr(false, 'disabled', props)
+  const selected = t.atOr(false, 'selected', props)
+  const mode = t.atOr('active', 'mode', props)
   const inactive = t.neq(mode, 'active')
   // boxes
   const layout = {
@@ -398,8 +398,8 @@ export const renderButton = fn(t => props => {
     }),
   }
   // elements
-  const icon = t.pathOr(null, ['icon'], props)
-  const label = t.pathOr(null, ['label'], props)
+  const icon = t.atOr(null, 'icon', props)
+  const label = t.atOr(null, 'label', props)
   const nextIcon = t.isNil(icon)
     ? null
     : t.isType(icon, 'string')

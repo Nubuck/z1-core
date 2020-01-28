@@ -9,7 +9,7 @@ const renderRow = fn(t => props =>
   renderStack(
     'horizontal',
     t.merge(t.omit(['box'], props), {
-      box: t.merge({ flexWrap: true }, t.pathOr({}, ['box'], props)),
+      box: t.merge({ flexWrap: true }, t.atOr({}, 'box', props)),
     })
   )
 )

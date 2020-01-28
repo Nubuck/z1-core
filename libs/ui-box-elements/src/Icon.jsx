@@ -6,12 +6,12 @@ import { renderBox } from './Box'
 
 // main
 const renderIcon = fn(t => props => {
-  const el = t.pathOr('i', ['as'], props)
-  const prefix = t.pathOr('la', ['prefix'], props)
-  const iconPrefix = t.pathOr('la', ['iconPrefix'], props)
-  const icon = t.pathOr('', ['name'], props)
-  const fontSize = t.pathOr(null, ['size'], props)
-  const className = t.pathOr(null, ['className'], props)
+  const el = t.atOr('i', 'as', props)
+  const prefix = t.atOr('la', 'prefix', props)
+  const iconPrefix = t.atOr('la', 'iconPrefix', props)
+  const icon = t.atOr('', 'name', props)
+  const fontSize = t.atOr(null, 'size', props)
+  const className = t.atOr(null, 'className', props)
   return renderBox(
     t.merge(
       t.omit(
@@ -27,7 +27,7 @@ const renderIcon = fn(t => props => {
           {
             fontSize,
           },
-          t.pathOr({}, ['box'], props)
+          t.atOr({}, 'box', props)
         ),
       }
     )

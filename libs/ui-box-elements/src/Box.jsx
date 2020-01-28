@@ -3,12 +3,12 @@ import { uiBox, fn } from '@z1/lib-ui-box'
 
 // main
 export const renderBox = fn(t => (props, otherChildren) => {
-  const Element = t.pathOr('div', ['as'], props)
-  const box = t.pathOr(null, ['box'], props)
-  const next = t.pathOr(null, ['next'], props)
-  const stretch = t.pathOr(null, ['stretch'], props)
+  const Element = t.atOr('div', 'as', props)
+  const box = t.atOr(null, 'box', props)
+  const next = t.atOr(null, 'next', props)
+  const stretch = t.atOr(null, 'stretch', props)
   const uiProps = t.pick(uiBox.keys, props)
-  const children = t.pathOr(otherChildren, ['children'], props)
+  const children = t.atOr(otherChildren, 'children', props)
   const nextProps = t.omit(
     t.uniq(
       t.concat(
@@ -24,7 +24,7 @@ export const renderBox = fn(t => (props, otherChildren) => {
     t.isNil(next),
     t.isZeroLen(t.keys(uiProps)),
   ])
-    ? t.pathOr('', ['className'], props)
+    ? t.atOr('', 'className', props)
     : uiBox
         .create(box || {})
         .next(
@@ -36,9 +36,9 @@ export const renderBox = fn(t => (props, otherChildren) => {
               }
         )
         .next({
-          className: t.pathOr(
-            t.pathOr('', ['className'], box || {}),
-            ['className'],
+          className: t.atOr(
+            t.atOr('', 'className', box || {}),
+            'className',
             props
           ),
         })

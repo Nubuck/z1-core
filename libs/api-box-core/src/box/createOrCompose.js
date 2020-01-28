@@ -15,7 +15,7 @@ const create = task(t => ctx => {
         : app => channels(app),
       lifecycle: t.notType(lifecycle, 'Object')
         ? undefined
-        : (key, app) => t.pathOr(() => {}, [key], lifecycle || {})(app),
+        : (key, app) => t.atOr(() => {}, key, lifecycle || {})(app),
     }
   }
 })

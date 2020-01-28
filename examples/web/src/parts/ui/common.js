@@ -23,7 +23,7 @@ export const renderText = z.fn(t => (props, baseProps = {}) => {
   if (t.isType(props, 'string')) {
     return <Row {...defaultProps}>{props}</Row>
   }
-  const text = t.pathOr(null, ['text'], props)
+  const text = t.atOr(null, 'text', props)
   if (t.notNil(text)) {
     const nextProps = t.omit(['text'], props)
     return (

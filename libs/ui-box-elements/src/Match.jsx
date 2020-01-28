@@ -3,8 +3,8 @@ import { fn } from '@z1/lib-ui-box'
 
 // main
 const renderMatch = fn(t => props => {
-  const when = t.pathOr(null, ['when'], props)
-  const render = t.pathOr(null, ['render'], props)
+  const when = t.atOr(null, 'when', props)
+  const render = t.atOr(null, 'render', props)
   const matcher = t.and(t.isNil(when), t.isNil(render))
     ? null
     : t.isNil(when)
@@ -13,7 +13,7 @@ const renderMatch = fn(t => props => {
   if (t.isNil(matcher)) {
     return null
   }
-  const value = t.pathOr('null', ['value'], props)
+  const value = t.atOr('null', 'value', props)
   const matched = t.match(t.eq(matcher, 'render') ? render : when)(value)
   if (t.isNil(matched)) {
     return null

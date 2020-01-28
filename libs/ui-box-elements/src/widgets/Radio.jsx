@@ -6,9 +6,9 @@ import { Box } from '../Box'
 
 // main
 const renderRadio = fn(t => props => {
-  const as = t.pathOr('input', ['as'], props)
-  const type = t.pathOr('radio', ['as'], props)
-  const className = t.pathOr(null, ['className'], props)
+  const as = t.atOr('input','as', props)
+  const type = t.atOr('radio', 'as', props)
+  const className = t.atOr(null, 'className', props)
   return React.createElement(
     Box,
     t.merge(t.omit(['as', 'className', 'type'], props), {

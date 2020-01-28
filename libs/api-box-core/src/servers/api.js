@@ -9,9 +9,9 @@ export const api = task(t => ctx => {
   const create = (props = {}, server = undefined) => {
     try {
       // check props for namespace and site
-      const namespace = t.path(['apiPath'], props)
-      const appFolderName = t.path(['sitePath'], props)
-      const middleware = t.path(['middleware'], props)
+      const namespace = t.at('apiPath', props)
+      const appFolderName = t.at('sitePath', props)
+      const middleware = t.at('middleware', props)
       if (
         t.and(t.isType(namespace, 'String'), t.isType(appFolderName, 'String'))
       ) {

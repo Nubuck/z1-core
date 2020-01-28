@@ -62,16 +62,13 @@ export const stateKit = parts =>
             // protect routes
             g([t.globrex('*/ROUTING/*').regex], async (ctx, allow, reject) => {
               const state = ctx.getState()
-              const routesMap = t.path(['location', 'routesMap'], state)
-              const routeMeta = t.path(
-                ['meta', 'location', 'current'],
-                ctx.action
-              )
+              const routesMap = t.at('location.routesMap', state)
+              const routeMeta = t.at('meta.location.current', ctx.action)
               // skip if location invalid
               if (t.or(t.isNil(routesMap), t.isNil(routeMeta))) {
                 allow(ctx.action)
               } else {
-                const route = t.path([ctx.action.type], routesMap)
+                const route = t.at(ctx.action.type, routesMap)
                 // skip if route invalid
                 if (t.isNil(route)) {
                   allow(ctx.action)
@@ -82,11 +79,8 @@ export const stateKit = parts =>
                   allow(ctx.action)
                 } else {
                   const authenticated = t.and(
-                    t.notNil(t.path(['account', 'user'], state)),
-                    t.eq(
-                      authStatus.success,
-                      t.path(['account', 'status'], state)
-                    )
+                    t.notNil(t.at('account.user', state)),
+                    t.eq(authStatus.success, t.at('account.status', state))
                   )
                   // skip if route only requires authentication + account is valid
                   if (t.and(t.isNil(route.allowRoles), authenticated)) {
@@ -107,10 +101,7 @@ export const stateKit = parts =>
                       : [route.allowRoles]
                     // skip if user in routes declared roles
                     if (
-                      t.includes(
-                        t.path(['account', 'user', 'role'], state),
-                        allowRoles
-                      )
+                      t.includes(t.at('account.user.role', state), allowRoles)
                     ) {
                       allow(ctx.action)
                     } else {
@@ -134,11 +125,8 @@ export const stateKit = parts =>
               const state = ctx.getState()
               if (
                 t.and(
-                  t.isNil(t.path(['account', 'user'], state)),
-                  t.neq(
-                    authStatus.success,
-                    t.path(['account', 'status'], state)
-                  )
+                  t.isNil(t.at('account.user', state)),
+                  t.neq(authStatus.success, t.at('account.status', state))
                 )
               ) {
                 allow(ctx.action)
@@ -147,7 +135,7 @@ export const stateKit = parts =>
                   ctx.redirect(
                     z.routing.parts.pathToAction(
                       '/',
-                      t.path(['location', 'routesMap'], state)
+                      t.at('location.routesMap', state)
                     )
                   )
                 )
@@ -160,7 +148,7 @@ export const stateKit = parts =>
             fx(
               [box.actions.boot, box.actions.connection],
               (ctx, dispatch, done) => {
-                const account = t.path(['account'], ctx.getState())
+                const account = t.at('account', ctx.getState())
                 if (
                   t.or(
                     t.not(account.connected),
@@ -199,14 +187,18 @@ export const stateKit = parts =>
                       error: null,
                     })
                   )
-                  const redirectBackTo = t.path(
-                    ['account', 'redirectBackTo'],
+                  const redirectBackTo = t.at(
+                    'account.redirectBackTo',
                     ctx.getState()
                   )
                   if (t.isNil(redirectBackTo)) {
-                    const routesMap = t.path(['location', 'routesMap'], state)
                     dispatch(
-                      ctx.redirect(z.routing.parts.pathToAction('/', routesMap))
+                      ctx.redirect(
+                        z.routing.parts.pathToAction(
+                          '/',
+                          t.at('location.routesMap', state)
+                        )
+                      )
                     )
                     done()
                   } else {
@@ -220,10 +212,7 @@ export const stateKit = parts =>
               }
             }),
             fx([box.actions.routeView], (ctx, dispatch, done) => {
-              const redirectBackTo = t.path(
-                ['payload', 'redirectBackTo'],
-                ctx.action
-              )
+              const redirectBackTo = t.at('payload.redirectBackTo', ctx.action)
               if (t.isNil(redirectBackTo)) {
                 done()
               } else {
@@ -247,18 +236,20 @@ export const stateKit = parts =>
         path: 'account',
         state: views.state({}),
       }),
-      parts.state.registerNav({ anon:sc.nav.create(n => [
-        n('/account/sign-in', {
-          slot: 'body-action',
-          label: 'Sign-in',
-          icon: 'sign-in-alt',
-        }),
-        n('/account/sign-up', {
-          slot: 'body-action',
-          label: 'Sign-up',
-          icon: 'user-plus',
-        }),
-      ]) }),
+      parts.state.registerNav({
+        anon: sc.nav.create(n => [
+          n('/account/sign-in', {
+            slot: 'body-action',
+            label: 'Sign-in',
+            icon: 'sign-in-alt',
+          }),
+          n('/account/sign-up', {
+            slot: 'body-action',
+            label: 'Sign-up',
+            icon: 'user-plus',
+          }),
+        ]),
+      }),
     ])
   )
 export default stateKit

@@ -103,7 +103,7 @@ export const signIn = mx.fn((t, a) =>
                   sm={8}
                   md={5}
                   lg={4}
-                  x='center'
+                  x="center"
                 >
                   <ctx.HStack x="center" y="center">
                     <ctx.Button

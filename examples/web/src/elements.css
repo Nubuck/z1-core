@@ -69,8 +69,25 @@ fieldset {
   & .control-label {
     @apply inline-block mb-2;
   }
+
   & .form-control {
     @extend .form-input;
+    @apply bg-transparent border !important;
+    &input[type='checkbox'] {
+      @extend .form-checkbox;
+    }
+    &input[type='radio'] {
+      @extend .form-radio;
+    }
+    &textarea {
+      @extend .form-textarea;
+    }
+    &select {
+      @extend .form-select;
+      & option {
+        @apply text-gray-900 !important;
+      }
+    }
   }
 }
 

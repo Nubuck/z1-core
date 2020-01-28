@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "change-case": "^4.1.0",
+    "camel-case": "^4.1.1",
+    "param-case": "^3.0.3",
     "common-tags": "^1.8.0",
     "core-js": "^3.6.3",
     "lodash.throttle": "^4.1.1",

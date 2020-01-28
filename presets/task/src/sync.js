@@ -75,14 +75,16 @@ import uniq from 'ramda/es/uniq'
 import values from 'ramda/es/values'
 import when from 'ramda/es/when'
 
+import { camelCase } from 'camel-case'
+import { paramCase } from 'param-case'
 import {
-  camelCase,
+  // camelCase,
   capitalCase,
   constantCase,
   dotCase,
   headerCase,
   noCase,
-  paramCase,
+  // paramCase,
   pascalCase,
   pathCase,
   sentenceCase,

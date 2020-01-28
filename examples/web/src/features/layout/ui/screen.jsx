@@ -52,11 +52,13 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         props.nav.primary
                       )}
                     >
+                      <ui.Avatar label="Z" size="lg" />
+
                       <ui.MapIndexed
                         items={t.to.pairs(props.nav.primary.items)}
                         render={([navKey, navItem], index) => {
                           const elProps = t.omit(
-                            ['slot', 'text'],
+                            ['slot', 'label'],
                             navItem.options
                           )
                           return (
@@ -78,7 +80,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         items={t.to.pairs(props.nav.primary.actions)}
                         render={([navKey, navItem], index) => {
                           const elProps = t.omit(
-                            ['slot', 'text'],
+                            ['slot', 'label'],
                             navItem.options
                           )
                           return (
@@ -154,6 +156,22 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                       }}
                       style={t.pick(['height', 'left'], props.nav.body)}
                     >
+                      <ui.When
+                        is={t.and(
+                          t.isEmpty(props.nav.primary.items),
+                          t.isEmpty(props.nav.primary.actions)
+                        )}
+                        render={() => (
+                          <ui.Avatar
+                            label="Z"
+                            size="lg"
+                            fill="solid"
+                            color="green-500"
+                            fontWeight="bold"
+                            margin={{ x: 3 }}
+                          />
+                        )}
+                      />
                       <ui.MapIndexed
                         items={t.to.pairs(props.nav.body.items)}
                         render={([navKey, navItem], index) => {
@@ -164,6 +182,9 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               as={ui.NavLink}
                               to={navItem.path}
                               size="xl"
+                              box={{
+                                padding: { x: 3 },
+                              }}
                               {...elProps}
                             />
                           )
@@ -183,6 +204,10 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               as={ui.NavLink}
                               to={navItem.path}
                               size="xl"
+                              color={[null, { hover: 'green-500' }]}
+                              box={{
+                                padding: { x: 3 },
+                              }}
                               {...elProps}
                             />
                           )
@@ -228,6 +253,13 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                 />
                 <ui.VStack
                   key="body"
+                  box={{
+                    position: 'relative',
+                    flex: 1,
+                    width: 'full',
+                    zIndex: 0,
+                    minHeight: 'full',
+                  }}
                   style={{
                     paddingLeft: props.nav.body.left,
                     paddingTop: props.nav.body.top,

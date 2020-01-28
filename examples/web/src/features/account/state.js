@@ -250,12 +250,12 @@ export const stateKit = parts =>
       parts.state.registerNav({ anon:sc.nav.create(n => [
         n('/account/sign-in', {
           slot: 'body-action',
-          text: 'Sign-in',
+          label: 'Sign-in',
           icon: 'sign-in-alt',
         }),
         n('/account/sign-up', {
           slot: 'body-action',
-          text: 'Sign-up',
+          label: 'Sign-up',
           icon: 'user-plus',
         }),
       ]) }),

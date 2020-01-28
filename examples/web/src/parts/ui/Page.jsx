@@ -20,6 +20,7 @@ const renderPage = z.fn(t => props => {
         flex: 1,
         width: 'full',
         zIndex: 0,
+        minHeight: 'full',
       },
       next: b => b.next(box).next(next),
     },

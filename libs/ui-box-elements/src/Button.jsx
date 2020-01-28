@@ -237,23 +237,23 @@ const circleSize = fn(t =>
 const buttonSpacing = fn(t =>
   t.match({
     _: {
-      padding: { y: 1, x: 2 },
+      padding: { top: 1, bottom: 2, x: 2 },
       fontSize: 'lg',
     },
     xs: {
-      padding: { y: 1, x: 2 },
+      padding: { top: 1, bottom: 2, x: 2 },
       fontSize: 'sm',
     },
     sm: {
-      padding: { y: 1, x: 2 },
+      padding: { top: 1, bottom: 2, x: 2 },
       fontSize: 'md',
     },
     lg: {
-      padding: { y: 2, x: 3 },
+      padding: { top: 2, bottom: 3, x: 3 },
       fontSize: '2xl',
     },
     xl: {
-      padding: { y: 3, x: 3 },
+      padding: { top: 3, bottom: 3, x: 3 },
       fontSize: '3xl',
     },
   })
@@ -306,7 +306,7 @@ const Label = fn(t => ({ isCircle, noIcon, text, children, ...props }) =>
       key: 'label',
       box: t.mergeAll([
         {
-          margin: isCircle ? 0 : noIcon ? { right: 1 } : { x: 1 },
+          margin: isCircle ? 0 : { x: 1 },
         },
         t.pathOr({}, ['box'], props),
       ]),

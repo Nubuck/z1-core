@@ -91,13 +91,33 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                             ['slot', 'label'],
                             navItem.options
                           )
+                          const icon = t.atOr({}, 'icon', elProps)
+                          const nextProps = t.mergeAll([
+                            t.omit(['action', 'to'], elProps),
+                            {
+                              icon: t.merge(
+                                { size: '3xl' },
+                                t.isType(icon, 'string') ? { name: icon } : icon
+                              ),
+                            },
+                            t.notNil(t.at('action.type', elProps))
+                              ? {
+                                  as: 'button',
+                                  onClick() {
+                                    props.dispatch(elProps.action)
+                                  },
+                                  cursor: 'pointer',
+                                }
+                              : {
+                                  as: ui.NavLink,
+                                  to: navItem.path,
+                                },
+                          ])
+                          console.log('Next props', nextProps)
                           return (
                             <ui.IconLabel
                               key={`${navKey}_${index}`}
-                              as={ui.NavLink}
-                              to={navItem.path}
-                              size="xl"
-                              {...elProps}
+                              {...nextProps}
                             />
                           )
                         }}

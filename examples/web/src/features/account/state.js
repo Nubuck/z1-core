@@ -165,7 +165,7 @@ export const stateKit = parts =>
                 }
               }
             ),
-            fx([box.actions.authenticate], async (ctx, dispatch, done) => {
+            fx(box.actions.authenticate, async (ctx, dispatch, done) => {
               try {
                 const [authError, authResult] = await a.of(
                   ctx.api.authentication.reAuthenticate()
@@ -211,7 +211,7 @@ export const stateKit = parts =>
                 done()
               }
             }),
-            fx([box.actions.routeView], (ctx, dispatch, done) => {
+            fx(box.actions.routeView, (ctx, dispatch, done) => {
               const redirectBackTo = t.at('payload.redirectBackTo', ctx.action)
               if (t.isNil(redirectBackTo)) {
                 done()
@@ -219,6 +219,18 @@ export const stateKit = parts =>
                 dispatch(box.mutators.redirectChange(redirectBackTo))
                 done()
               }
+            }),
+            fx(box.actions.logout, (ctx, dispatch, done) => {
+              ctx.api.logout()
+              dispatch(
+                ctx.redirect(
+                  z.routing.parts.pathToAction(
+                    '/',
+                    t.at('location.routesMap', ctx.getState())
+                  )
+                )
+              )
+              done()
             }),
           ]
         },

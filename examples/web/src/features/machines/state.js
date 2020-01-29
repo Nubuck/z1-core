@@ -1,6 +1,6 @@
 import z from '@z1/lib-feature-box'
 import mx from '@z1/lib-feature-macros'
-// import sc from '@z1/lib-ui-schema'
+import sc from '@z1/lib-ui-schema'
 
 // parts
 import views from './views'
@@ -21,9 +21,15 @@ export const stateKit = parts =>
           more: routeProps,
         },
       }),
-      // parts.state.registerNav({
-      //   secure: sc.nav.create(n => []),
-      // }),
+      parts.state.registerNav({
+        secure: sc.nav.create(n => [
+          n('/machines', {
+            slot: 'nav',
+            label: 'Machines',
+            icon: 'laptop',
+          }),
+        ]),
+      }),
     ])
   )
 export default stateKit

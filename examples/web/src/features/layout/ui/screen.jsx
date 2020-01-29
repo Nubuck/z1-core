@@ -76,6 +76,9 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               as={ui.NavLink}
                               to={navItem.path}
                               size="xl"
+                              color={[null, { hover: 'blue-500' }]}
+                              padding={{ y: 3 }}
+                              activeClassName="text-yellow-500"
                               {...elProps}
                             />
                           )
@@ -112,6 +115,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               : {
                                   as: ui.NavLink,
                                   to: navItem.path,
+                                  activeClassName: 'text-yellow-500',
                                 },
                           ])
                           // console.log('Next props', nextProps)
@@ -160,6 +164,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               as={ui.NavLink}
                               to={navItem.path}
                               size="xl"
+                              activeClassName="text-yellow-500"
                               {...elProps}
                             />
                           )
@@ -218,6 +223,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               size="xl"
                               color={[null, { hover: 'blue-500' }]}
                               padding={{ x: 3 }}
+                              activeClassName="text-yellow-500"
                               {...elProps}
                             />
                           )
@@ -275,6 +281,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               as={ui.NavLink}
                               to={navItem.path}
                               size="xl"
+                              activeClassName="text-yellow-500"
                               {...elProps}
                             />
                           )

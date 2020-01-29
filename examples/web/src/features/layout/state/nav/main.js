@@ -63,9 +63,10 @@ export const nav = z.fn(t =>
     mutations(m) {
       return [
         m('schemaRegister', (state, action) => {
+          const level = t.atOr('anon', 'payload.level', action)
           return t.merge(state, {
             schema: t.merge(state.schema, {
-              [action.payload.level]: action.payload.schema,
+              [level]: t.merge(state.schema[level], action.payload.schema),
             }),
           })
         }),
@@ -78,7 +79,7 @@ export const nav = z.fn(t =>
             schema: t.isNil(schema)
               ? state.schema
               : t.merge(state.schema, {
-                  [level]: action.payload.schema,
+                  [level]: t.merge(state.schema[level], action.payload.schema),
                 }),
           })
         }),
@@ -87,11 +88,7 @@ export const nav = z.fn(t =>
             return state
           }
           const status = t.atOr('ready', 'payload.status', action)
-          const bodyHeight = t.atOr(
-            state.body.height,
-            'payload.height',
-            action
-          )
+          const bodyHeight = t.atOr(state.body.height, 'payload.height', action)
           const size = t.atOr(state.size, 'payload.size', action)
           const width = t.atOr(state.width, 'payload.width', action)
           const secondaryItems = t.atOr({}, 'secondary.items', state)
@@ -380,10 +377,7 @@ export const nav = z.fn(t =>
               const checkMatch = t.isNil(foundNav)
                 ? t.isNil(matched)
                   ? foundNav
-                  : t.contains(
-                      pathname,
-                      t.atOr('', 'nav.matched.path', state)
-                    )
+                  : t.contains(pathname, t.atOr('', 'nav.matched.path', state))
                   ? matched
                   : foundNav
                 : t.not(foundNav.hasChildren)

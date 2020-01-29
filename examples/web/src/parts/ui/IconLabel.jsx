@@ -16,25 +16,26 @@ const renderIcon = z.fn(t => (props, baseProps = {}) => {
   if (t.isType(props, 'string')) {
     return <Icon {...defaultProps} name={props} />
   }
-  return <Icon {...defaultProps} {...props} />
+  const nextProps = t.merge(defaultProps, props)
+  return <Icon {...nextProps} />
 })
 
 // main
 export const renderIconLabel = z.fn(t => props => {
   const slots = t.atOr({}, 'slots', props)
   // iconSlot col
-  const iconSlot = t.atOr(null, 'icon', slots)
-  const icon = t.atOr(null, 'icon', props)
-  const caption = t.atOr(null, 'caption', props)
-  const hasIcon = t.and(t.notNil(icon), t.notEmpty(icon))
-  const hasCaption = t.and(t.notNil(caption), t.notEmpty(caption))
+  const iconSlot = t.at('icon', slots)
+  const icon = t.at('icon', props)
+  const caption = t.at('caption', props)
+  const hasIcon = t.notNil(icon)
+  const hasCaption = t.notNil(caption)
   // labelSlot col
-  const labelSlot = t.atOr(null, 'label', slots)
-  const label = t.atOr(null, 'label', props)
-  const info = t.atOr(null, 'info', props)
-  const children = t.atOr(null, 'children', props)
-  const hasLabel = t.and(t.notNil(label), t.notEmpty(label))
-  const hasInfo = t.and(t.notNil(info), t.notEmpty(info))
+  const labelSlot = t.at('label', slots)
+  const label = t.at('label', props)
+  const info = t.at('info', props)
+  const children = t.at('children', props)
+  const hasLabel = t.notNil(label)
+  const hasInfo = t.notNil(info)
   const hasChildren = t.isNil(children)
     ? false
     : t.gt(React.Children.count(children), 0)

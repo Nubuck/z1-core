@@ -111,7 +111,6 @@ export const stateKit = parts =>
                       allow(ctx.action)
                     } else {
                       // reject invalid role -> redirect 401
-                      console.log('REDIRECT 2', ctx.action)
                       reject(
                         ctx.redirect(
                           box.mutators.routeView({
@@ -198,39 +197,45 @@ export const stateKit = parts =>
                       error: null,
                     })
                   )
-                  const redirectBackTo = t.at(
-                    'account.redirectBackTo',
-                    ctx.getState()
-                  )
-                  if (t.isNil(redirectBackTo)) {
-                    dispatch(
-                      ctx.redirect(
-                        z.routing.parts.pathToAction(
-                          '/',
-                          t.at('location.routesMap', state)
-                        )
-                      )
-                    )
-                    done()
-                  } else {
-                    dispatch(box.mutators.redirectChange(null))
-                    dispatch(ctx.redirect(redirectBackTo))
-                    done()
-                  }
+                  done()
                 }
               } catch (e) {
                 done()
               }
             }),
-            fx(box.actions.routeView, (ctx, dispatch, done) => {
-              const redirectBackTo = t.at('payload.redirectBackTo', ctx.action)
+            fx(box.actions.authenticateComplete, (ctx, dispatch, done) => {
+              const state = ctx.getState()
+              const redirectBackTo = t.at('account.redirectBackTo', state)
               if (t.isNil(redirectBackTo)) {
+                if (
+                  t.eq(t.at('account.authStatus', state), authStatus.success)
+                ) {
+                  dispatch(
+                    ctx.redirect(
+                      z.routing.parts.pathToAction(
+                        '/',
+                        t.at('location.routesMap', state)
+                      )
+                    )
+                  )
+                }
                 done()
               } else {
-                dispatch(box.mutators.redirectChange(redirectBackTo))
+                dispatch(box.mutators.redirectChange(null))
+                dispatch(ctx.redirect(redirectBackTo))
                 done()
               }
+              done()
             }),
+            // fx(box.actions.routeView, (ctx, dispatch, done) => {
+            //   const redirectBackTo = t.at('payload.redirectBackTo', ctx.action)
+            //   if (t.isNil(redirectBackTo)) {
+            //     done()
+            //   } else {
+            //     dispatch(box.mutators.redirectChange(redirectBackTo))
+            //     done()
+            //   }
+            // }),
             fx(box.actions.logout, (ctx, dispatch, done) => {
               ctx.api.logout()
               dispatch(

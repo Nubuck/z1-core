@@ -1,8 +1,10 @@
 import React from 'react'
 import mx from '@z1/lib-feature-macros'
 import sc from '@z1/lib-ui-schema'
+import * as cm from './common'
 
 // parts
+const { types } = mx.view
 const signUpForm = props =>
   sc.form.create((f, k) =>
     f({ type: k.object }, [
@@ -51,49 +53,41 @@ const signUpForm = props =>
 export const signUp = mx.fn((t, a) =>
   mx.view.create('sign-up', {
     state() {
-      const { types } = mx.view
       return {
         initial: {
           data: {
             mode: 'form',
           },
           form: {
-            signUp: {
-              data: {},
-              form: signUpForm({ disabled: false }),
-            },
+            data: {},
+            form: signUpForm({ disabled: false }),
           },
         },
         data(props) {
           return {
             status: props.status,
             data: t.merge(props.data, {
-              mode: t.and(
-                t.eq(props.event, types.event.formTransmitComplete),
-                t.isNil(props.error)
-              )
-                ? 'view'
-                : 'form',
+              mode: cm.transmitOk(props) ? 'view' : 'form',
             }),
             error: t.atOr(null, 'error', props.next || {}),
           }
         },
         form(props) {
           return {
-            signUp: {
-              data: t.merge(
-                t.at('form.signUp.data', props),
-                t.atOr({}, 'next.data', props)
-              ),
-              ui: signUpForm({
-                disabled: t.eq(props.status, types.status.loading),
-              }),
-            },
+            data: cm.transmitOk(props)
+              ? {}
+              : t.merge(
+                  t.at('form.data', props),
+                  t.atOr({}, 'next.data', props)
+                ),
+            ui: signUpForm({
+              disabled: t.eq(props.status, types.status.loading),
+            }),
           }
         },
         async transmit(props) {
-          const data = t.at('form.signUp.data', props)
-          const [checkError] = await a.of(
+          const data = t.at('form.data', props)
+          const [checkError, checkResult] = await a.of(
             props.api.service('auth-management').create({
               action: 'checkUnique',
               value: {
@@ -136,10 +130,12 @@ export const signUp = mx.fn((t, a) =>
     },
     ui(ctx) {
       return props => {
+        const status = t.at('state.status', props)
         return (
           <ctx.Page
             key="sign-up"
             centered
+            loading={t.eq(status, 'waiting')}
             render={() => (
               <ctx.Match
                 value={t.at('state.data.mode', props)}
@@ -190,12 +186,9 @@ export const signUp = mx.fn((t, a) =>
                           )}
                         />
                         <ctx.Form
-                          schema={t.at('state.form.signUp.ui.schema', props)}
-                          uiSchema={t.at(
-                            'state.form.signUp.ui.uiSchema',
-                            props
-                          )}
-                          formData={t.at('state.form.signUp.data', props)}
+                          schema={t.at('state.form.ui.schema', props)}
+                          uiSchema={t.at('state.form.ui.uiSchema', props)}
+                          formData={t.at('state.form.data', props)}
                           onSubmit={payload =>
                             props.mutations.formTransmit({
                               data: payload.formData,
@@ -214,10 +207,7 @@ export const signUp = mx.fn((t, a) =>
                               shape="pill"
                               fill="outline"
                               colors={{ on: 'blue-500', off: 'yellow-500' }}
-                              loading={t.eq(
-                                t.at('state.data.status', props),
-                                'loading'
-                              )}
+                              loading={t.eq(status, 'loading')}
                             />
                           </ctx.HStack>
                         </ctx.Form>
@@ -232,6 +222,7 @@ export const signUp = mx.fn((t, a) =>
                             name: 'check-circle',
                             size: '5xl',
                             color: 'yellow-500',
+                            margin: { right: 3 },
                           }}
                           label={{
                             text: 'Sign-up Successful',
@@ -244,6 +235,7 @@ export const signUp = mx.fn((t, a) =>
                           }}
                         />
                         <ctx.Button
+                          reverse
                           as={ctx.Link}
                           to="/account/sign-in"
                           label="Continue to Sign-in"
@@ -253,7 +245,6 @@ export const signUp = mx.fn((t, a) =>
                           shape="pill"
                           fill="outline"
                           colors={{ on: 'blue-500', off: 'yellow-500' }}
-                          flexDirection="row-reverse"
                           margin={{ top: 2 }}
                         />
                       </React.Fragment>

@@ -76,6 +76,9 @@ fieldset {
   & .form-control {
     @extend .form-input;
     @apply bg-transparent border !important;
+    &:disabled {
+      @apply opacity-50 cursor-not-allowed;
+    }
     &input[type='checkbox'] {
       @extend .form-checkbox;
     }

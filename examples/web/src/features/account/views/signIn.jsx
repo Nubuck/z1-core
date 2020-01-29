@@ -1,8 +1,10 @@
 import React from 'react'
 import mx from '@z1/lib-feature-macros'
 import sc from '@z1/lib-ui-schema'
+import * as cm from './common'
 
 // parts
+const { types } = mx.view
 const signInForm = props =>
   sc.form.create((f, k) =>
     f({ type: k.object }, [
@@ -33,15 +35,12 @@ const signInForm = props =>
 export const signIn = mx.fn((t, a) =>
   mx.view.create('sign-in', {
     state() {
-      const { types } = mx.view
       return {
         initial: {
           data: {},
           form: {
-            signIn: {
-              data: {},
-              ui: signInForm({ disabled: false }),
-            },
+            data: {},
+            ui: signInForm({ disabled: false }),
           },
         },
         data(props) {
@@ -53,22 +52,21 @@ export const signIn = mx.fn((t, a) =>
         },
         form(props) {
           return {
-            signIn: {
-              data: t.atOr(
-                t.at('form.signIn.data', props),
-                'data',
-                props.next || {}
-              ),
-              ui: signInForm({ disabled: t.eq(props.status, 'loading') }),
-            },
+            data: cm.transmitOk(props)
+              ? {}
+              : t.merge(
+                  t.at('form.data', props),
+                  t.atOr({}, 'next.data', props)
+                ),
+            ui: signInForm({ disabled: t.eq(props.status, 'loading') }),
           }
         },
         async transmit(props) {
           const [authErr, authResult] = await a.of(
             props.api.authenticate({
               strategy: 'local',
-              email: t.at('form.signIn.data.email', props),
-              password: t.at('form.signIn.data.password', props),
+              email: t.at('form.data.email', props),
+              password: t.at('form.data.password', props),
             })
           )
           if (authErr) {
@@ -81,7 +79,7 @@ export const signIn = mx.fn((t, a) =>
             )
             return {
               status: props.status,
-              data: t.at('form.signIn.data', props),
+              data: t.at('form.data', props),
               error: authErr,
             }
           }
@@ -92,22 +90,6 @@ export const signIn = mx.fn((t, a) =>
               error: null,
             })
           )
-          // const state = props.getState()
-          // if (t.notNil(state.account.redirectBackTo)) {
-          //   const redirectTo = state.account.redirectBackTo
-          //   props.dispatch(props.mutators.redirectChange(null))
-          //   props.dispatch(props.redirect(redirectTo))
-          //   return {
-          //     status: props.status,
-          //     data: {},
-          //     error: null,
-          //   }
-          // }
-          // props.dispatch(
-          //   props.redirect({
-          //     type: 'pages/ROUTING/ROUTE_LANDING',
-          //   })
-          // )
           return {
             status: types.status.waiting,
             data: {},
@@ -118,11 +100,12 @@ export const signIn = mx.fn((t, a) =>
     },
     ui(ctx) {
       return props => {
+        const status = t.at('state.status', props)
         return (
           <ctx.Page
             key="sign-in"
             centered
-            loading={t.neq('ready', t.at('state.status', props))}
+            loading={t.eq(status, 'waiting')}
             render={() => {
               const sizes = {
                 xs: 10,
@@ -168,9 +151,9 @@ export const signIn = mx.fn((t, a) =>
                     )}
                   />
                   <ctx.Form
-                    schema={t.at('state.form.signIn.ui.schema', props)}
-                    uiSchema={t.at('state.form.signIn.form.uiSchema', props)}
-                    formData={t.at('state.form.signIn.data', props)}
+                    schema={t.at('state.form.ui.schema', props)}
+                    uiSchema={t.at('state.form.ui.uiSchema', props)}
+                    formData={t.at('state.form.data', props)}
                     onSubmit={payload =>
                       props.mutations.formTransmit({ data: payload.formData })
                     }
@@ -187,10 +170,7 @@ export const signIn = mx.fn((t, a) =>
                         shape="pill"
                         fill="outline"
                         colors={{ on: 'blue-500', off: 'yellow-500' }}
-                        loading={t.eq(
-                          t.at('state.data.status', props),
-                          'loading'
-                        )}
+                        loading={t.eq(status, 'loading')}
                       />
                     </ctx.Row>
                   </ctx.Form>

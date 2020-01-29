@@ -44,6 +44,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         zIndex: 30,
                         overflowY: 'auto',
                         overflowX: 'hidden',
+                        padding: { bottom: 3 },
                       }}
                       className="scroll-hide"
                       style={t.pick(
@@ -56,7 +57,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         to="/"
                         icon="superpowers"
                         size="lg"
-                        fill="solid"
+                        fill="ghost-solid"
                         color="blue-500"
                         fontWeight="bold"
                         margin={{ y: 3 }}
@@ -113,10 +114,13 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                                   to: navItem.path,
                                 },
                           ])
-                          console.log('Next props', nextProps)
+                          // console.log('Next props', nextProps)
                           return (
                             <ui.IconLabel
                               key={`${navKey}_${index}`}
+                              size="xl"
+                              color={[null, { hover: 'blue-500' }]}
+                              padding={{ y: 3 }}
                               {...nextProps}
                             />
                           )
@@ -199,7 +203,6 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                             fill="solid"
                             color="blue-500"
                             fontWeight="bold"
-                            margin={{ x: 3 }}
                           />
                         )}
                       />
@@ -213,6 +216,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               as={ui.NavLink}
                               to={navItem.path}
                               size="xl"
+                              color={[null, { hover: 'blue-500' }]}
                               padding={{ x: 3 }}
                               {...elProps}
                             />

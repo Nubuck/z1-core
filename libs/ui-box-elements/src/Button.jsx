@@ -350,6 +350,7 @@ export const renderButton = fn(t => props => {
       'style',
       'className',
       'transition',
+      'reverse',
     ],
     props
   )

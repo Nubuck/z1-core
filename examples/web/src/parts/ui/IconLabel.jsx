@@ -39,20 +39,23 @@ export const renderIconLabel = z.fn(t => props => {
     ? false
     : t.gt(React.Children.count(children), 0)
   // element
-  const nextProps = t.omit(
-    ['slots', 'icon', 'caption', 'label', 'info', 'children'],
-    props
+  const nextProps = t.merge(
+    t.omit(
+      ['slots', 'icon', 'caption', 'label', 'info', 'children', 'box'],
+      props
+    ),
+    {
+      box: t.merge(
+        {
+          display: 'inline-flex',
+          alignSelf: 'auto',
+        },
+        t.atOr({}, 'box', props)
+      ),
+    }
   )
   return (
-    <Row
-      x="left"
-      y="center"
-      box={{
-        display: 'inline-flex',
-        alignSelf: 'auto',
-      }}
-      {...nextProps}
-    >
+    <Row x="left" y="center" {...nextProps}>
       <When
         is={t.or(hasIcon, hasCaption)}
         render={() => {

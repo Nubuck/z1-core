@@ -213,9 +213,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               as={ui.NavLink}
                               to={navItem.path}
                               size="xl"
-                              box={{
-                                padding: { x: 3 },
-                              }}
+                              padding={{ x: 3 }}
                               {...elProps}
                             />
                           )
@@ -236,9 +234,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               to={navItem.path}
                               size="xl"
                               color={[null, { hover: 'blue-500' }]}
-                              box={{
-                                padding: { x: 3 },
-                              }}
+                              padding={{ x: 3 }}
                               activeClassName="text-yellow-500"
                               {...elProps}
                             />

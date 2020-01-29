@@ -145,7 +145,7 @@ export const signUp = mx.fn((t, a) =>
                 value={t.at('state.data.mode', props)}
                 render={{
                   form() {
-                    const colSize = {
+                    const sizes = {
                       xs: 10,
                       sm: 8,
                       md: 5,
@@ -155,6 +155,10 @@ export const signUp = mx.fn((t, a) =>
                     return (
                       <React.Fragment>
                         <ctx.IconLabel
+                          slots={{
+                            icon: { x: 'center' },
+                            label: { x: 'center' },
+                          }}
                           icon={{
                             name: 'user-plus',
                             size: '5xl',
@@ -171,31 +175,17 @@ export const signUp = mx.fn((t, a) =>
                             padding: { left: 1, y: 3 },
                           }}
                           flexDirection="col"
-                          slots={{
-                            icon: { x: 'center' },
-                            label: { x: 'center' },
-                          }}
                         />
                         <ctx.When
                           is={t.notNil(props.state.error)}
                           render={() => (
-                            <ctx.IconLabel
-                              as={ctx.Col}
-                              icon={{
-                                name: 'exclamation-triangle',
-                                size: '2xl',
-                                color: 'orange-500',
-                              }}
-                              label={{
-                                text: props.state.error.message,
-                                fontSize: 'xl',
-                                color: 'orange-500',
-                              }}
-                              borderWidth={2}
-                              borderColor="orange-500"
-                              padding={3}
+                            <ctx.Alert
+                              icon="exclamation-triangle"
+                              message={props.state.error.message}
+                              color="orange-500"
                               margin={{ top: 5 }}
-                              {...colSize}
+                              x="center"
+                              {...sizes}
                             />
                           )}
                         />
@@ -212,16 +202,18 @@ export const signUp = mx.fn((t, a) =>
                             })
                           }
                           x="center"
-                          {...colSize}
+                          {...sizes}
                         >
                           <ctx.HStack x="center" y="center">
                             <ctx.Button
+                              reverse
+                              label="Continue"
+                              icon="arrow-circle-right"
                               type="submit"
                               size="lg"
                               shape="pill"
                               fill="outline"
                               colors={{ on: 'blue-500', off: 'yellow-500' }}
-                              label="Continue"
                               loading={t.eq(
                                 t.at('state.data.status', props),
                                 'loading'
@@ -254,13 +246,14 @@ export const signUp = mx.fn((t, a) =>
                         <ctx.Button
                           as={ctx.Link}
                           to="/account/sign-in"
+                          label="Continue to Sign-in"
                           icon="sign-in-alt"
                           type="submit"
                           size="lg"
                           shape="pill"
                           fill="outline"
                           colors={{ on: 'blue-500', off: 'yellow-500' }}
-                          label="Continue to Sign-in"
+                          flexDirection="row-reverse"
                           margin={{ top: 2 }}
                         />
                       </React.Fragment>

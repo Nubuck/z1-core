@@ -91,7 +91,12 @@ export const stateKit = parts =>
                       ctx.redirect(
                         box.mutators.routeView({
                           view: 'sign-in',
-                          redirectBackTo: t.omit(['meta'], ctx.action),
+                          redirectBackTo: t.neq(
+                            box.actions.routeView,
+                            ctx.action.type
+                          )
+                            ? t.omit(['meta'], ctx.action)
+                            : null,
                         })
                       )
                     )
@@ -106,11 +111,17 @@ export const stateKit = parts =>
                       allow(ctx.action)
                     } else {
                       // reject invalid role -> redirect 401
+                      console.log('REDIRECT 2', ctx.action)
                       reject(
                         ctx.redirect(
                           box.mutators.routeView({
                             view: 'not-authorized',
-                            redirectBackTo: t.omit(['meta'], ctx.action),
+                            redirectBackTo: t.neq(
+                              box.actions.routeView,
+                              ctx.action.type
+                            )
+                              ? t.omit(['meta'], ctx.action)
+                              : null,
                           })
                         )
                       )
@@ -121,7 +132,7 @@ export const stateKit = parts =>
               // end logic
             }),
             // prevent public account view access when authenticated
-            g([box.actions.routeView], async (ctx, allow, reject) => {
+            g(box.actions.routeView, async (ctx, allow, reject) => {
               const state = ctx.getState()
               if (
                 t.and(

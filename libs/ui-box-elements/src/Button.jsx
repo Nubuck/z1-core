@@ -245,29 +245,29 @@ const circleSize = fn(t =>
     },
   })
 )
-const buttonSpacing = fn(t =>
+const buttonSpacing = fn(t => (size, noIcon) =>
   t.match({
     _: {
-      padding: { top: 1, bottom: 2, x: 2 },
+      padding: { top: 1, bottom: noIcon ? 2 : 1, x: 2 },
       fontSize: 'lg',
     },
     xs: {
-      padding: { top: 1, bottom: 2, x: 2 },
+      padding: { top: 1, bottom: noIcon ? 2 : 1, x: 2 },
       fontSize: 'sm',
     },
     sm: {
-      padding: { top: 1, bottom: 2, x: 2 },
+      padding: { top: 1, bottom: noIcon ? 2 : 1, x: 2 },
       fontSize: 'md',
     },
     lg: {
-      padding: { top: 2, bottom: 3, x: 3 },
+      padding: { top: 2, bottom: noIcon ? 3 : 2, x: 3 },
       fontSize: '2xl',
     },
     xl: {
       padding: { top: 3, bottom: 3, x: 3 },
       fontSize: '3xl',
     },
-  })
+  })(size)
 )
 
 // box
@@ -317,6 +317,7 @@ const Label = fn(t => ({ isCircle, noIcon, text, children, ...props }) =>
       key: 'label',
       box: t.mergeAll([
         {
+          display: 'flex',
           margin: isCircle ? 0 : { x: 1 },
         },
         t.atOr({}, 'box', props),
@@ -372,6 +373,8 @@ export const renderButton = fn(t => props => {
   const selected = t.atOr(false, 'selected', props)
   const mode = t.atOr('active', 'mode', props)
   const inactive = t.neq(mode, 'active')
+  // modifiers
+  const reverse = t.atOr(false, 'reverse', props)
   // boxes
   const layout = {
     container: t.mergeAll([
@@ -390,7 +393,7 @@ export const renderButton = fn(t => props => {
     content: t.merge(buttonBox.content, {
       opacity: t.not(loading) ? 100 : 0,
       visible: t.not(loading),
-      flexDirection: isCircle ? 'col' : 'row',
+      flexDirection: isCircle ? 'col' : reverse ? 'row-reverse' : 'row',
     }),
     spinner: t.merge(buttonBox.spinner, {
       opacity: loading ? 100 : 0,
@@ -449,7 +452,7 @@ export const renderButton = fn(t => props => {
       as: el,
       box: t.mergeAll([
         layout.container,
-        buttonSpacing(size),
+        buttonSpacing(size, noIcon),
         shapes(shape),
         fills(fill),
         buttonColor(

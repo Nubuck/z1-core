@@ -5,6 +5,7 @@ import el from '@z1/lib-ui-box-elements'
 import { dateFn } from './common'
 
 // elements
+import { Alert } from './Alert'
 import { Form } from './Form'
 import { IconLabel } from './IconLabel'
 import { ListItem } from './ListItem'
@@ -17,6 +18,7 @@ export const ui = {
   ...el,
   Link: z.ui.Link,
   NavLink: z.ui.NavLink,
+  Alert,
   Form,
   IconLabel,
   ListItem,

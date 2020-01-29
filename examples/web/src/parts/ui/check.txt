@@ -1,0 +1,1 @@
+"inline-flex self-auto flex-row justify-center items-center flex-none w-10/12 sm:w-8/12 md:w-5/12 lg:w-4/12 xl:w-3/12 flex-wrap border-orange-500 border-2 text-orange-500 px-3 py-4 mt-5"

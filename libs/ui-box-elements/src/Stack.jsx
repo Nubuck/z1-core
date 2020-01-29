@@ -46,17 +46,50 @@ export const renderStack = fn(t => (direction, props) => {
     : {}
   return renderBox(
     t.merge(t.omit(['box', 'x', 'y', 'direction'], props), {
-      box: t.mergeAll([
-        {
-          display: 'flex',
-          alignSelf: 'stretch',
-        },
-        stackProps,
-        alignProps,
-        justifyProps,
-        stretchProps,
-        t.atOr({}, 'box', props),
-      ]),
+      box: t.merge(
+        t.mergeAll([
+          {
+            display: 'flex',
+            alignSelf: 'stretch',
+          },
+          stackProps,
+          alignProps,
+          justifyProps,
+          stretchProps,
+        ]),
+        t.atOr({}, 'box', props)
+      ),
+    })
+  )
+})
+const colWidth = fn(t => width =>
+  t.isNil(width) ? width : t.gte(width, 12) ? 'full' : `${width}/12`
+)
+export const renderResponsiveStack = fn(t => (direction, props) => {
+  const sm = colWidth(t.atOr(null, 'sm', props))
+  const md = colWidth(t.atOr(null, 'md', props))
+  const lg = colWidth(t.atOr(null, 'lg', props))
+  const xl = colWidth(t.atOr(null, 'xl', props))
+  return renderStack(
+    direction,
+    t.merge(t.omit(['box', 'xs', 'sm', 'md', 'lg', 'xl'], props), {
+      box: t.allOf([t.isNil(sm), t.isNil(md), t.isNil(lg), t.isNil(xl)])
+        ? t.at('box', props)
+        : t.merge(
+            {
+              flex: 'none',
+              width: [
+                colWidth(t.atOr(null, 'xs', props)),
+                t.mergeAll([
+                  t.isNil(sm) ? {} : { sm },
+                  t.isNil(md) ? {} : { md },
+                  t.isNil(lg) ? {} : { lg },
+                  t.isNil(xl) ? {} : { xl },
+                ]),
+              ],
+            },
+            t.atOr({}, 'box', props)
+          ),
     })
   )
 })

@@ -18,13 +18,14 @@ export const renderBox = fn(t => (props, otherChildren) => {
     ),
     props
   )
+  const elClassName = t.atOr('', 'className', props)
   const className = t.allOf([
     t.isNil(box),
     t.isNil(stretch),
     t.isNil(next),
     t.isZeroLen(t.keys(uiProps)),
   ])
-    ? t.atOr('', 'className', props)
+    ? elClassName
     : uiBox
         .create(box || {})
         .next(
@@ -35,21 +36,12 @@ export const renderBox = fn(t => (props, otherChildren) => {
                 flex: 'auto',
               }
         )
-        .next({
-          className: t.atOr(
-            t.atOr('', 'className', box || {}),
-            'className',
-            props
-          ),
-        })
         .next(t.omit(['className'], uiProps || {}))
+        .next(t.isZeroLen(elClassName) ? {} : { className: elClassName })
         .next(next || {})
         .toCss()
-  return React.createElement(
-    Element,
-    t.merge(nextProps, { className }),
-    children
-  )
+  const boxProps = t.merge(nextProps, { className })
+  return React.createElement(Element, boxProps, children)
 })
 
 export class Box extends React.Component {

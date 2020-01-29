@@ -33,6 +33,7 @@ const signInForm = props =>
 export const signIn = mx.fn((t, a) =>
   mx.view.create('sign-in', {
     state() {
+      const { types } = mx.view
       return {
         initial: {
           data: {},
@@ -47,7 +48,7 @@ export const signIn = mx.fn((t, a) =>
           return {
             status: props.status,
             data: props.data,
-            error: t.atOr(null, 'error',  props.next || {}),
+            error: t.atOr(null, 'error', props.next || {}),
           }
         },
         form(props) {
@@ -71,6 +72,13 @@ export const signIn = mx.fn((t, a) =>
             })
           )
           if (authErr) {
+            props.dispatch(
+              props.mutators.authenticateComplete({
+                authStatus: 'auth-fail',
+                user: null,
+                error: authErr,
+              })
+            )
             return {
               status: props.status,
               data: t.at('form.signIn.data', props),
@@ -84,24 +92,24 @@ export const signIn = mx.fn((t, a) =>
               error: null,
             })
           )
-          const state = props.getState()
-          if (t.notNil(state.account.redirectBackTo)) {
-            const redirectTo = state.account.redirectBackTo
-            props.dispatch(props.mutators.redirectChange(null))
-            props.dispatch(props.redirect(redirectTo))
-            return {
-              status: props.status,
-              data: {},
-              error: null,
-            }
-          }
-          props.dispatch(
-            props.redirect({
-              type: 'pages/ROUTING/ROUTE_LANDING',
-            })
-          )
+          // const state = props.getState()
+          // if (t.notNil(state.account.redirectBackTo)) {
+          //   const redirectTo = state.account.redirectBackTo
+          //   props.dispatch(props.mutators.redirectChange(null))
+          //   props.dispatch(props.redirect(redirectTo))
+          //   return {
+          //     status: props.status,
+          //     data: {},
+          //     error: null,
+          //   }
+          // }
+          // props.dispatch(
+          //   props.redirect({
+          //     type: 'pages/ROUTING/ROUTE_LANDING',
+          //   })
+          // )
           return {
-            status: props.status,
+            status: types.status.waiting,
             data: {},
             error: null,
           }
@@ -115,81 +123,80 @@ export const signIn = mx.fn((t, a) =>
             key="sign-in"
             centered
             loading={t.neq('ready', t.at('state.status', props))}
-            render={() => (
-              <React.Fragment>
-                <ctx.IconLabel
-                  icon={{
-                    name: 'sign-in-alt',
-                    size: '5xl',
-                    color: 'yellow-500',
-                  }}
-                  label={{
-                    text: 'Sign-in to your Account',
-                    fontSize: '2xl',
-                  }}
-                  info={{
-                    text: 'Enter your account credentials below to continue.',
-                    fontSize: 'lg',
-                    padding: { left: 1, top: 3 },
-                  }}
-                  flexDirection="col"
-                  slots={{
-                    icon: { x: 'center' },
-                    label: { x: 'center' },
-                  }}
-                />
-                <ctx.When
-                  is={t.notNil(props.state.error)}
-                  render={() => (
-                    <ctx.IconLabel
-                      icon={{
-                        name: 'exclamation-triangle',
-                        size: '2xl',
-                        color: 'orange-500',
-                      }}
-                      label={{
-                        text: 'Incorrect email or password',
-                        fontSize: 'xl',
-                        color: 'orange-500',
-                      }}
-                      borderWidth={2}
-                      borderColor="orange-500"
-                      padding={3}
-                      margin={{ top: 5 }}
-                    />
-                  )}
-                />
-                <ctx.Form
-                  schema={t.at('state.form.signIn.ui.schema', props)}
-                  uiSchema={t.at('state.form.signIn.form.uiSchema', props)}
-                  formData={t.at('state.form.signIn.data', props)}
-                  onSubmit={payload =>
-                    props.mutations.formTransmit({ data: payload.formData })
-                  }
-                  xs={10}
-                  sm={8}
-                  md={5}
-                  lg={4}
-                  xl={3}
-                  x="center"
-                >
-                  <ctx.Row x="center" y="center">
-                    <ctx.Button
-                      type="submit"
-                      size="lg"
-                      shape="pill"
-                      fill="outline"
-                      colors={{ on: 'blue-500', off: 'yellow-500' }}
-                      label="Continue"
-                      loading={t.eq(
-                        t.at('state.data.status', props),
-                        'loading'
-                      )}
-                    />
-                  </ctx.Row>
-                </ctx.Form>
-              </React.Fragment>
-            )}
+            render={() => {
+              const sizes = {
+                xs: 10,
+                sm: 8,
+                md: 5,
+                lg: 4,
+                xl: 3,
+              }
+              return (
+                <React.Fragment>
+                  <ctx.IconLabel
+                    slots={{
+                      icon: { x: 'center' },
+                      label: { x: 'center' },
+                    }}
+                    icon={{
+                      name: 'sign-in-alt',
+                      size: '5xl',
+                      color: 'yellow-500',
+                    }}
+                    label={{
+                      text: 'Sign-in to your Account',
+                      fontSize: '2xl',
+                    }}
+                    info={{
+                      text: 'Enter your account credentials below to continue.',
+                      fontSize: 'lg',
+                      padding: { left: 1, top: 3 },
+                    }}
+                    flexDirection="col"
+                  />
+                  <ctx.When
+                    is={t.notNil(props.state.error)}
+                    render={() => (
+                      <ctx.Alert
+                        icon="exclamation-triangle"
+                        message="Incorrect email or password"
+                        color="orange-500"
+                        margin={{ top: 5 }}
+                        x="center"
+                        {...sizes}
+                      />
+                    )}
+                  />
+                  <ctx.Form
+                    schema={t.at('state.form.signIn.ui.schema', props)}
+                    uiSchema={t.at('state.form.signIn.form.uiSchema', props)}
+                    formData={t.at('state.form.signIn.data', props)}
+                    onSubmit={payload =>
+                      props.mutations.formTransmit({ data: payload.formData })
+                    }
+                    x="center"
+                    {...sizes}
+                  >
+                    <ctx.Row x="center" y="center">
+                      <ctx.Button
+                        reverse
+                        label="Continue"
+                        icon="arrow-circle-right"
+                        type="submit"
+                        size="lg"
+                        shape="pill"
+                        fill="outline"
+                        colors={{ on: 'blue-500', off: 'yellow-500' }}
+                        loading={t.eq(
+                          t.at('state.data.status', props),
+                          'loading'
+                        )}
+                      />
+                    </ctx.Row>
+                  </ctx.Form>
+                </React.Fragment>
+              )
+            }}
           />
         )
       }

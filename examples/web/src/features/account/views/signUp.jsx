@@ -197,7 +197,7 @@ export const signUp = mx.fn((t, a) =>
                           x="center"
                           {...sizes}
                         >
-                          <ctx.HStack x="center" y="center">
+                          <ctx.Row x="center" y="center" margin={{ top: 3 }}>
                             <ctx.Button
                               reverse
                               label="Continue"
@@ -209,7 +209,7 @@ export const signUp = mx.fn((t, a) =>
                               colors={{ on: 'blue-500', off: 'yellow-500' }}
                               loading={t.eq(status, 'loading')}
                             />
-                          </ctx.HStack>
+                          </ctx.Row>
                         </ctx.Form>
                       </React.Fragment>
                     )

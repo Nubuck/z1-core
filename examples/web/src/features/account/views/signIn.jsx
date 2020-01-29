@@ -160,7 +160,7 @@ export const signIn = mx.fn((t, a) =>
                     x="center"
                     {...sizes}
                   >
-                    <ctx.Row x="center" y="center">
+                    <ctx.Row x="center" y="center" margin={{ top: 3 }}>
                       <ctx.Button
                         reverse
                         label="Continue"

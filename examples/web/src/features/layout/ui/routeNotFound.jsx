@@ -10,7 +10,7 @@ export const routeNotFound = ui => () => {
         <React.Fragment>
           <ui.IconLabel
             icon={{ name: 'route', size: '6xl', color: 'blue-500' }}
-            label={{ fontWeight: 'bold', text: '404', fontSize: '4xl' }}
+            label={{ text: '404', fontWeight: 'bold', fontSize: '4xl' }}
             info={{
               text: 'Way off route',
               fontSize: 'xl',

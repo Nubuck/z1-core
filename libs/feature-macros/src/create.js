@@ -30,7 +30,11 @@ export const create = fn(t => (name, { state, ui, render }) => {
       : t.to.camelCase(nextName),
     param: t.eq(param, 'viewList') ? 'view' : param,
     state(ctx) {
-      const nextState = t.isType(state, 'function') ? state(ctx) : state
+      const nextState = t.isType(state, 'function')
+        ? state(ctx)
+        : t.isNil(state)
+        ? {}
+        : state
       return {
         _shouldSub: t.has('subscribe')(nextState),
         initial: t.merge(

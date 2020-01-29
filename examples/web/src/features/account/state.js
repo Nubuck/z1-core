@@ -136,7 +136,8 @@ export const stateKit = parts =>
               if (
                 t.and(
                   t.isNil(t.at('account.user', state)),
-                  t.neq(authStatus.success, t.at('account.authStatus', state))
+                  t.neq(authStatus.success, t.at('account.authStatus', state)),
+                  // t.not(t.eq(t.to.lowerCase(t.pathOr('','location.pathna'))))
                 )
               ) {
                 allow(ctx.action)

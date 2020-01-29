@@ -4,7 +4,7 @@ import mx from '@z1/lib-feature-macros'
 
 // main
 export const notAuthorized = mx.fn((t, a) =>
-  mx.routeView.create('not-authorized', {
+  mx.view.create('not-authorized', {
     state(ctx) {
       return {
         initial: {

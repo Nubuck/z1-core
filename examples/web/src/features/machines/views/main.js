@@ -4,4 +4,4 @@ import mx from '@z1/lib-feature-macros'
 import { home } from './home'
 
 // main
-export const views = mx.routeView.combine([home])
+export const views = mx.view.combine([home])

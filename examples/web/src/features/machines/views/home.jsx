@@ -4,9 +4,9 @@ import sc from '@z1/lib-ui-schema'
 
 // main
 export const home = mx.fn((t, a) =>
-  mx.routeView.create('home', {
+  mx.view.create('home', {
     state() {
-      const { types } = mx.routeView
+      const { types } = mx.view
       return {
         initial: {
           data: {

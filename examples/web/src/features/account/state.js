@@ -232,7 +232,7 @@ export const stateKit = parts =>
           })
         },
       },
-      mx.routeView.configure(name, {
+      mx.view.configure(name, {
         path: 'account',
         state: views.state({}),
       }),

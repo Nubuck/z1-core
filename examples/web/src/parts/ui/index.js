@@ -8,10 +8,8 @@ import { dateFn } from './common'
 import { Form } from './Form'
 import { IconLabel } from './IconLabel'
 import { ListItem } from './ListItem'
-import { Logo } from './Logo'
 import { Modal } from './Modal'
 import { Page } from './Page'
-import { viewRoute } from './viewRoute'
 import { VList } from './VList'
 
 // main
@@ -22,10 +20,8 @@ export const ui = {
   Form,
   IconLabel,
   ListItem,
-  Logo,
   Modal,
   Page,
-  viewRoute,
   VList,
   dateFn,
 }

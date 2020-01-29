@@ -31,7 +31,7 @@ const signInForm = props =>
 
 // main
 export const signIn = mx.fn((t, a) =>
-  mx.routeView.create('sign-in', {
+  mx.view.create('sign-in', {
     state() {
       return {
         initial: {
@@ -39,78 +39,69 @@ export const signIn = mx.fn((t, a) =>
           form: {
             signIn: {
               data: {},
-              form: signInForm({ disabled: false }),
+              ui: signInForm({ disabled: false }),
             },
           },
         },
-        data({ event, status, error, data, next }) {
-          console.log('SIGN-IN VIEW DATA', event, next)
+        data(props) {
           return {
-            status,
-            data,
-            error: t.atOr(null, 'error', next || {}),
+            status: props.status,
+            data: props.data,
+            error: t.atOr(null, 'error',  props.next || {}),
           }
         },
-        form({ event, status, data, form, next, error }) {
+        form(props) {
           return {
             signIn: {
-              data: t.atOr(form.signIn.data, 'data', next || {}),
-              form: signInForm({ disabled: t.eq(status, 'loading') }),
+              data: t.atOr(
+                t.at('form.signIn.data', props),
+                'data',
+                props.next || {}
+              ),
+              ui: signInForm({ disabled: t.eq(props.status, 'loading') }),
             },
           }
         },
-        async transmit({
-          status,
-          form,
-          api,
-          dispatch,
-          getState,
-          mutators,
-          redirect,
-        }) {
+        async transmit(props) {
           const [authErr, authResult] = await a.of(
-            api.authenticate({
+            props.api.authenticate({
               strategy: 'local',
-              email: form.signIn.data.email,
-              password: form.signIn.data.password,
+              email: t.at('form.signIn.data.email', props),
+              password: t.at('form.signIn.data.password', props),
             })
           )
-          console.log('SIGN IN TRANSMIT', authErr, authResult)
           if (authErr) {
             return {
-              status,
-              data: form.signIn.data,
+              status: props.status,
+              data: t.at('form.signIn.data', props),
               error: authErr,
             }
           }
-          // get user success
-          dispatch({
-            type: 'account/AUTHENTICATE_COMPLETE',
-            payload: {
+          props.dispatch(
+            props.mutators.authenticateComplete({
               authStatus: 'auth-success',
               user: authResult.user,
               error: null,
-            },
-          })
-          // NOTE: redirect back or to home
-          const state = getState()
-          if (state.account.redirectBackTo) {
+            })
+          )
+          const state = props.getState()
+          if (t.notNil(state.account.redirectBackTo)) {
             const redirectTo = state.account.redirectBackTo
-            dispatch(mutators.redirectChange(null))
-            dispatch(redirect(redirectTo))
+            props.dispatch(props.mutators.redirectChange(null))
+            props.dispatch(props.redirect(redirectTo))
             return {
-              status,
+              status: props.status,
               data: {},
               error: null,
             }
           }
-          dispatch(
-            redirect({
+          props.dispatch(
+            props.redirect({
               type: 'pages/ROUTING/ROUTE_LANDING',
             })
           )
           return {
-            status,
+            status: props.status,
             data: {},
             error: null,
           }
@@ -119,7 +110,6 @@ export const signIn = mx.fn((t, a) =>
     },
     ui(ctx) {
       return props => {
-        console.log('SIGN IN STATUS', t.at('state.status', props))
         return (
           <ctx.Page
             key="sign-in"
@@ -162,21 +152,17 @@ export const signIn = mx.fn((t, a) =>
                         fontSize: 'xl',
                         color: 'orange-500',
                       }}
-                      next={b =>
-                        b.next({
-                          borderWidth: 2,
-                          borderColor: 'orange-500',
-                          padding: 3,
-                          margin: { top: 5 },
-                        })
-                      }
+                      borderWidth={2}
+                      borderColor="orange-500"
+                      padding={3}
+                      margin={{ top: 5 }}
                     />
                   )}
                 />
                 <ctx.Form
-                  schema={props.state.form.signIn.form.schema}
-                  uiSchema={props.state.form.signIn.form.uiSchema}
-                  formData={props.state.form.signIn.data}
+                  schema={t.at('state.form.signIn.ui.schema', props)}
+                  uiSchema={t.at('state.form.signIn.form.uiSchema', props)}
+                  formData={t.at('state.form.signIn.data', props)}
                   onSubmit={payload =>
                     props.mutations.formTransmit({ data: payload.formData })
                   }
@@ -187,7 +173,7 @@ export const signIn = mx.fn((t, a) =>
                   xl={3}
                   x="center"
                 >
-                  <ctx.HStack x="center" y="center">
+                  <ctx.Row x="center" y="center">
                     <ctx.Button
                       type="submit"
                       size="lg"
@@ -195,9 +181,12 @@ export const signIn = mx.fn((t, a) =>
                       fill="outline"
                       colors={{ on: 'blue-500', off: 'yellow-500' }}
                       label="Continue"
-                      loading={t.eq(props.state.data.status, 'loading')}
+                      loading={t.eq(
+                        t.at('state.data.status', props),
+                        'loading'
+                      )}
                     />
-                  </ctx.HStack>
+                  </ctx.Row>
                 </ctx.Form>
               </React.Fragment>
             )}

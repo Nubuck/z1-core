@@ -6,4 +6,4 @@ import { signUp } from './signUp'
 import { notAuthorized } from './not-authorized'
 
 // main
-export const views = mx.routeView.combine([notAuthorized, signIn, signUp])
+export const views = mx.view.combine([notAuthorized, signIn, signUp])

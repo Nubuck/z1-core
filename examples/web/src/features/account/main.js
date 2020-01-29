@@ -1,4 +1,5 @@
 import z from '@z1/lib-feature-box'
+import mx from '@z1/lib-feature-macros'
 
 // parts
 import stateKit from './state'
@@ -14,7 +15,7 @@ export const feature = z.create(
       routing: [
         {
           action: z.routing.parts.routeActions(state),
-          ui: parts.ui.viewRoute({
+          ui: mx.view.route({
             views,
             query: { account: 'state' },
             ui: parts.ui,

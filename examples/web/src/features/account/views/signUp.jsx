@@ -49,9 +49,9 @@ const signUpForm = props =>
 
 // main
 export const signUp = mx.fn((t, a) =>
-  mx.routeView.create('sign-up', {
+  mx.view.create('sign-up', {
     state() {
-      const { types } = mx.routeView
+      const { types } = mx.view
       return {
         initial: {
           data: {
@@ -65,7 +65,6 @@ export const signUp = mx.fn((t, a) =>
           },
         },
         data(props) {
-          console.log('SIGN-UP VIEW DATA', props)
           return {
             status: props.status,
             data: t.merge(props.data, {
@@ -110,7 +109,6 @@ export const signUp = mx.fn((t, a) =>
               error: checkError,
             }
           }
-
           const [userError, userResult] = await a.of(
             props.api.service('users').create(
               t.mergeAll([
@@ -134,9 +132,6 @@ export const signUp = mx.fn((t, a) =>
             data: userResult,
             error: null,
           }
-        },
-        async exit() {
-          console.log('EXIT SIGN UP ASYNC')
         },
       }
     },
@@ -189,14 +184,10 @@ export const signUp = mx.fn((t, a) =>
                                 fontSize: 'xl',
                                 color: 'orange-500',
                               }}
-                              next={b =>
-                                b.next({
-                                  borderWidth: 2,
-                                  borderColor: 'orange-500',
-                                  padding: 3,
-                                  margin: { top: 5 },
-                                })
-                              }
+                              borderWidth={2}
+                              borderColor="orange-500"
+                              padding={3}
+                              margin={{ top: 5 }}
                             />
                           )}
                         />

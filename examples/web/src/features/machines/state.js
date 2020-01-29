@@ -11,7 +11,7 @@ const routeProps = { authenticate: true }
 export const stateKit = parts =>
   z.fn((t, a) =>
     z.state.create(name, [
-      mx.routeView.configure(name, {
+      mx.view.configure(name, {
         path: 'machines',
         state: views.state({}),
         routes: {

@@ -81,10 +81,9 @@ export const signUp = mx.fn((t, a) =>
         form(props) {
           return {
             signUp: {
-              data: t.atOr(
+              data: t.merge(
                 t.at('form.signUp.data', props),
-                'data',
-                props.next || {}
+                t.atOr({}, 'next.data', props)
               ),
               ui: signUpForm({
                 disabled: t.eq(props.status, types.status.loading),
@@ -146,6 +145,13 @@ export const signUp = mx.fn((t, a) =>
                 value={t.at('state.data.mode', props)}
                 render={{
                   form() {
+                    const colSize = {
+                      xs: 10,
+                      sm: 8,
+                      md: 5,
+                      lg: 4,
+                      xl: 3,
+                    }
                     return (
                       <React.Fragment>
                         <ctx.IconLabel
@@ -174,6 +180,7 @@ export const signUp = mx.fn((t, a) =>
                           is={t.notNil(props.state.error)}
                           render={() => (
                             <ctx.IconLabel
+                              as={ctx.Col}
                               icon={{
                                 name: 'exclamation-triangle',
                                 size: '2xl',
@@ -188,6 +195,7 @@ export const signUp = mx.fn((t, a) =>
                               borderColor="orange-500"
                               padding={3}
                               margin={{ top: 5 }}
+                              {...colSize}
                             />
                           )}
                         />
@@ -203,12 +211,8 @@ export const signUp = mx.fn((t, a) =>
                               data: payload.formData,
                             })
                           }
-                          xs={10}
-                          sm={8}
-                          md={5}
-                          lg={4}
-                          xl={3}
                           x="center"
+                          {...colSize}
                         >
                           <ctx.HStack x="center" y="center">
                             <ctx.Button

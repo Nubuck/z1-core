@@ -17,10 +17,14 @@ export const api = (z, props) =>
               },
               after: {
                 find: [
-                  async ctx => {
-                    ctx.app.debug('machines hook params', ctx.params)
-                    return ctx
-                  },
+                  h.common.when(
+                    ctx =>
+                      t.eq(true, t.atOr(false, 'params.includeUsers', ctx)),
+                    async ctx => {
+                      ctx.app.debug('machines hook params', ctx.params)
+                      return ctx
+                    }
+                  ),
                 ],
               },
             },

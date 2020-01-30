@@ -269,7 +269,7 @@ export const stateKit = parts =>
       },
       mx.view.configure(name, {
         path: 'account',
-        state: views.state({}),
+        state: views.state({ authStatus }),
       }),
       parts.registerNav({
         anon: sc.nav.create(n => [

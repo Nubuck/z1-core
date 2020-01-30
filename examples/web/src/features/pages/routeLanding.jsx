@@ -24,11 +24,11 @@ export const routeLanding = ui => () => (
         />
         <ui.Button
           as={ui.Link}
+          label="Get Started"
           to="/account/sign-up"
           size="lg"
           shape="pill"
           fill="outline"
-          label="Get Started"
           color="blue-500"
         />
       </React.Fragment>

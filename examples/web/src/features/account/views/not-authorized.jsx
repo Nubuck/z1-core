@@ -28,9 +28,9 @@ export const notAuthorized = mx.view.create('not-authorized', {
               />
               <ctx.Button
                 as={ctx.Link}
-                to="/"
                 label="Back Home"
                 icon="home"
+                to="/"
                 shape="pill"
                 fill="outline"
                 colors={{ on: 'blue-500', off: 'yellow-500' }}

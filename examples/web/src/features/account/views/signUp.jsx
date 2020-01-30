@@ -68,7 +68,7 @@ export const signUp = mx.fn((t, a) =>
             data: t.merge(props.data, {
               mode: cm.transmitOk(props) ? 'view' : 'form',
             }),
-            error: t.atOr(null, 'error', props.next || {}),
+            error: t.atOr(null, 'next.error', props),
           }
         },
         form(props) {
@@ -134,7 +134,7 @@ export const signUp = mx.fn((t, a) =>
           <ctx.Page
             key="sign-up"
             centered
-            loading={t.eq(status, 'waiting')}
+            loading={t.eq(status, ctx.status.waiting)}
             render={() => (
               <ctx.Match
                 value={t.at('state.data.mode', props)}
@@ -169,7 +169,11 @@ export const signUp = mx.fn((t, a) =>
                           render={() => (
                             <ctx.Alert
                               icon="exclamation-triangle"
-                              message={props.state.error.message}
+                              message={t.atOr(
+                                'Sign-up failed',
+                                'state.error.message',
+                                props
+                              )}
                               color="orange-500"
                               margin={{ top: 5 }}
                               x="center"
@@ -199,7 +203,7 @@ export const signUp = mx.fn((t, a) =>
                               shape="pill"
                               fill="outline"
                               colors={{ on: 'blue-500', off: 'yellow-500' }}
-                              loading={t.eq(status, 'loading')}
+                              loading={t.eq(status, ctx.status.loading)}
                             />
                           </ctx.Row>
                         </ctx.Form>
@@ -229,8 +233,8 @@ export const signUp = mx.fn((t, a) =>
                         <ctx.Button
                           reverse
                           as={ctx.Link}
-                          to="/account/sign-in"
                           label="Continue to Sign-in"
+                          to="/account/sign-in"
                           icon="sign-in-alt"
                           type="submit"
                           size="lg"

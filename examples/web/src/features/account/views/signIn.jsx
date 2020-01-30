@@ -46,7 +46,7 @@ export const signIn = mx.fn((t, a) =>
           return {
             status: props.status,
             data: props.data,
-            error: t.atOr(null, 'error', props.next || {}),
+            error: t.atOr(null, 'next.error', props),
           }
         },
         form(props) {
@@ -57,7 +57,9 @@ export const signIn = mx.fn((t, a) =>
                   t.at('form.data', props),
                   t.atOr({}, 'next.data', props)
                 ),
-            ui: signInForm({ disabled: t.eq(props.status, 'loading') }),
+            ui: signInForm({
+              disabled: t.eq(props.status, ctx.status.loading),
+            }),
           }
         },
         async transmit(props) {
@@ -71,7 +73,7 @@ export const signIn = mx.fn((t, a) =>
           if (authErr) {
             props.dispatch(
               props.mutators.authenticateComplete({
-                authStatus: 'auth-fail',
+                authStatus: ctx.authStatus.fail,
                 user: null,
                 error: authErr,
               })
@@ -84,7 +86,7 @@ export const signIn = mx.fn((t, a) =>
           }
           props.dispatch(
             props.mutators.authenticateComplete({
-              authStatus: 'auth-success',
+              authStatus: ctx.authStatus.success,
               user: authResult.user,
               error: null,
             })
@@ -104,9 +106,8 @@ export const signIn = mx.fn((t, a) =>
           <ctx.Page
             key="sign-in"
             centered
-            loading={t.eq(status, 'waiting')}
+            loading={t.eq(status, ctx.status.waiting)}
             render={() => {
-          
               return (
                 <React.Fragment>
                   <ctx.IconLabel
@@ -163,7 +164,7 @@ export const signIn = mx.fn((t, a) =>
                         shape="pill"
                         fill="outline"
                         colors={{ on: 'blue-500', off: 'yellow-500' }}
-                        loading={t.eq(status, 'loading')}
+                        loading={t.eq(status, ctx.status.loading)}
                       />
                     </ctx.Row>
                   </ctx.Form>

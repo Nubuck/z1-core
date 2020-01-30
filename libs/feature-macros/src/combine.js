@@ -34,7 +34,7 @@ export const combine = fn(t => (rawViews = []) => {
       return t.mergeAll(
         t.map(view => {
           return {
-            [view.key]: view.ui(ctx),
+            [view.key]: view.ui(t.merge(types, ctx)),
           }
         }, views)
       )

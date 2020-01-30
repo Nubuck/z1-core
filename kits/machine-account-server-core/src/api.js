@@ -8,8 +8,41 @@ export const api = (z, props) =>
         models: props.models,
         services(s, h) {
           const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
-          // disable create methods on model services to direct
-          // through machine-account service
+          const withLogins = h.common.when(
+            ctx => t.eq(true, t.atOr(false, 'params.includeLogins', ctx)),
+            h.common.fastJoin(ctx => {
+              return {
+                joins: {
+                  logins() {
+                    return async machine => {
+                      return await ctx.app.service('machine-logins').find({
+                        query: {
+                          machineId: machine[dbId],
+                          $limit: 10000,
+                        },
+                      }).data
+                    }
+                  },
+                },
+              }
+            })
+          )
+          const withMachine = h.common.when(
+            ctx => t.eq(true, t.atOr(false, 'params.includeMachine', ctx)),
+            h.common.fastJoin(ctx => {
+              return {
+                joins: {
+                  machine() {
+                    return async login => {
+                      return await ctx.app.service('machines').get(login.machineId)
+                    }
+                  },
+                },
+              }
+            })
+          )
+          const withStatus = (login, status) => t.merge(login, { status })
+
           s([props.adapter, 'machines'], props.serviceFactory.machines, {
             hooks: {
               before: {
@@ -17,16 +50,8 @@ export const api = (z, props) =>
                 create: [h.common.disallow('external')],
               },
               after: {
-                find: [
-                  h.common.when(
-                    ctx =>
-                      t.eq(true, t.atOr(false, 'params.includeLogins', ctx)),
-                    async ctx => {
-                      ctx.app.debug('machines hook params', ctx.params)
-                      return ctx
-                    }
-                  ),
-                ],
+                find: [withLogins],
+                get: [withLogins],
               },
             },
           })
@@ -40,21 +65,13 @@ export const api = (z, props) =>
                   create: [h.common.disallow('external')],
                 },
                 after: {
-                  find: [
-                    h.common.when(
-                      ctx =>
-                        t.eq(true, t.atOr(false, 'params.includeMachine', ctx)),
-                      async ctx => {
-                        ctx.app.debug('machine login hook params', ctx.params)
-                        return ctx
-                      }
-                    ),
-                  ],
+                  find: [withMachine],
+                  get: [withMachine],
                 },
               },
             }
           )
-          const withStatus = (login, status) => t.merge(login, { status })
+
           s(
             'machine-account',
             app => {
@@ -111,6 +128,7 @@ export const api = (z, props) =>
                       )
                     }
                     return {
+                      [dbId]: nextLogin[dbId],
                       machine: nextMachine,
                       login: nextLogin,
                     }
@@ -145,6 +163,7 @@ export const api = (z, props) =>
                       )
                     }
                     return {
+                      [dbId]: nextLogin[dbId],
                       machine: nextMachine,
                       login: nextLogin,
                     }
@@ -152,92 +171,52 @@ export const api = (z, props) =>
                   // login exists
                   const nextLogin = t.head(loginResult.data)
                   return {
+                    [dbId]: nextLogin[dbId],
                     machine: nextMachine,
                     login: nextLogin,
                   }
                 },
                 async get(id) {
-                  return { id }
-                  // const type = t.at('type', id)
-                  // const payload = t.at('payload', id)
-                  // if (t.or(t.isNil(type), t.isNil(payload))) {
-                  //   throw new z.FeathersErrors.Unprocessable(
-                  //     'Machine account get requires a type and payload in the id'
-                  //   )
-                  // }
-                  // return await t.match({
-                  //   async machine() {
-                  //     const machine = await app.service('machines').get(payload)
-                  //     if (t.isNil(machine)) {
-                  //       throw new z.FeathersErrors.NotFound(
-                  //         `No machine found for id '${payload}'`
-                  //       )
-                  //     }
-                  //     const logins = await app.service('machine-logins').find({
-                  //       query: {
-                  //         machineId: payload,
-                  //       },
-                  //     })
-                  //     return {
-                  //       machine: t.merge(machine, { logins: logins.data }),
-                  //       login: null,
-                  //     }
-                  //   },
-                  //   async login() {
-                  //     const login = await app
-                  //       .service('machine-logins')
-                  //       .get(payload)
-                  //     if (t.isNil(login)) {
-                  //       throw new z.FeathersErrors.NotFound(
-                  //         `No machine-login found for id '${payload}'`
-                  //       )
-                  //     }
-                  //     const machine = await app
-                  //       .service('machines')
-                  //       .get(login.machineId)
-                  //     return {
-                  //       machine,
-                  //       login,
-                  //     }
-                  //   },
-                  //   _: async () => null,
-                  // })(t.to.lowerCase(type))()
+                  const login = await app
+                    .service('machine-logins')
+                    .get(id, { includeMachine: true })
+                  return {
+                    [dbId]: login[dbId],
+                    login: t.omit(['machine'], login),
+                    machine: t.at('machine', login),
+                  }
                 },
                 async find(params) {
-                  return []
-                  // const type = t.at('query.type', params)
-                  // if (t.isNil(type)) {
-                  //   throw new z.FeathersErrors.Unprocessable(
-                  //     'Machine account find requires a type in the query'
-                  //   )
-                  // }
-                  // return await t.match({
-                  //   async machine() {
-                  //     return await app.service('machines').find({
-                  //       query: t.omit(['type'], params.query),
-                  //       includelogins: true,
-                  //     })
-                  //   },
-                  //   async login() {
-                  //     return await app.service('machine-logins').find({
-                  //       query: t.omit(['type'], params.query),
-                  //       includeMachine: true,
-                  //     })
-                  //   },
-                  //   _: async () => null,
-                  // })(t.to.lowerCase(type))()
+                  const logins = await app
+                    .service('machine-logins')
+                    .find(params, { includeMachine: true })
+
+                  return t.merge(logins, {
+                    data: t.map(login => {
+                      return {
+                        [dbId]: login[dbId],
+                        login: t.omit(['machine'], login),
+                        machine: t.at('machine', login),
+                      }
+                    }, logins.data),
+                  })
                 },
               }
             },
             {
-              hooks: {},
+              hooks: {
+                before: {
+                  get: [h.auth.authenticate('jwt')],
+                  find: [h.auth.authenticate('jwt')],
+                },
+              },
               events: {},
             }
           )
         },
         lifecycle: {
           [z.featureBox.api.lifecycle.onAuthConfig]: app => {
-            const { MachineStrategy } = strategy(z)
+            const { MachineStrategy } = strategy(z, props.adapter)
             app
               .get('authenticationService')
               .register('machine', new MachineStrategy())

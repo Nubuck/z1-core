@@ -76,6 +76,7 @@ const appState = z.fn((t, a) =>
                     error: new Error('Not connected'),
                   })
                 )
+                done()
               } else {
                 log.debug('re-auth begin')
                 const [reAuthErr, reAuthResult] = await a.of(
@@ -106,7 +107,7 @@ const appState = z.fn((t, a) =>
                     const [authErr, authResult] = await a.of(
                       ctx.api.authenticate({
                         strategy: 'machine',
-                        hashId: t.at('user.hashId', account),
+                        hashId: t.at('login.hashId', account),
                       })
                     )
                     if (authErr) {
@@ -134,7 +135,7 @@ const appState = z.fn((t, a) =>
                         const [nextAuthErr, nextAuthResult] = await a.of(
                           ctx.api.authenticate({
                             strategy: 'machine',
-                            hashId: t.at('user.hashId', remote),
+                            hashId: t.at('login.hashId', remote),
                           })
                         )
                         if (nextAuthErr) {
@@ -152,7 +153,7 @@ const appState = z.fn((t, a) =>
                           dispatch(
                             box.mutators.authenticateComplete({
                               status: authStatus.success,
-                              account: t.at('account',  nextAuthResult),
+                              account: t.at('user', nextAuthResult),
                               error: null,
                             })
                           )
@@ -164,10 +165,11 @@ const appState = z.fn((t, a) =>
                       dispatch(
                         box.mutators.authenticateComplete({
                           status: authStatus.success,
-                          account: t.at('account', authResult),
+                          account: t.at('user', authResult),
                           error: null,
                         })
                       )
+                      done()
                     }
                   }
                 } else {
@@ -175,10 +177,11 @@ const appState = z.fn((t, a) =>
                   dispatch(
                     box.mutators.authenticateComplete({
                       status: authStatus.success,
-                      account: t.at('account', reAuthResult),
+                      account: t.at('user', reAuthResult),
                       error: null,
                     })
                   )
+                  done()
                 }
               }
             } catch (e) {

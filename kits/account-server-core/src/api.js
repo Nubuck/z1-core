@@ -69,10 +69,10 @@ export const api = (z, props) => {
               before: {
                 find: [data.safeFindMSSQL],
                 create: [
-                  // common.when(
-                  //   isAction(['passwordChange', 'identityChange']),
-                  //   auth.authenticate('jwt')
-                  // ),
+                  common.when(
+                    isAction(['passwordChange', 'identityChange']),
+                    auth.authenticate('jwt')
+                  ),
                 ],
               },
             },

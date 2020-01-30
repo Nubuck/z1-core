@@ -12,7 +12,7 @@ export const feature = z.create(
       state: [state],
       routing: [
         {
-          action: [state.actions.routeLanding],
+          action: state.actions.routeLanding,
           ui: routeLanding(parts.ui),
         },
       ],

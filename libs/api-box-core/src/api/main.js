@@ -14,7 +14,7 @@ import {
 import { adapters } from './adapters'
 import { auth } from './auth'
 import { channel } from './channel'
-
+import { lifecycle } from './types'
 // main
 export const api = task(t => (ctx = {}) => {
   const Adapters = adapters(ctx)
@@ -56,14 +56,16 @@ export const api = task(t => (ctx = {}) => {
     )
 
     // adapters
-    api.configure(Adapters.configure)
+    // api.configure(Adapters.configure)
+    Adapters.configure(api)
 
     // Lifecycle before
-    api.configure(nextBoxes.lifecycle('beforeConfig'))
+    // api.configure(nextBoxes.lifecycle(lifecycle.onConfig))
+    nextBoxes.lifecycle(lifecycle.onConfig)(api)
 
     // Configure authentication
     if (api.get('authentication')) {
-      api.configure(Auth(nextBoxes.lifecycle('authConfig')))
+      Auth(nextBoxes.lifecycle(lifecycle.onAuthConfig))(api)
     }
 
     // Configure boxes
@@ -85,7 +87,7 @@ export const api = task(t => (ctx = {}) => {
       }
     }, nextBoxes.services || [])
 
-    // adapter beforeSetup
+    // adapter beforeSetup - not for api boxes
     t.forEach(adapterName => {
       t.pathOr(() => {}, [adapterName, 'beforeSetup'], adapterStore)(nextBoxes)
     }, adapterKeys)
@@ -101,25 +103,30 @@ export const api = task(t => (ctx = {}) => {
       }, adapterKeys)
 
       // lifecycle onSetup
-      nextBoxes.lifecycle('onSetup')(api)
+      nextBoxes.lifecycle(lifecycle.onSetup)(api)
 
       return result
     }
-
-    // adapter afterSetup
+    // adapter afterSetup - not for api boxes
     t.forEach(adapterName => {
       t.pathOr(() => {}, [adapterName, 'afterSetup'], adapterStore)(nextBoxes)
     }, adapterKeys)
 
     // Configure channels
-    api.configure(
-      channel.config(
-        t.concat(
-          t.isType(channels, 'Function') ? [channels] : [],
-          nextBoxes.channels || []
-        )
+    // api.configure(
+    //   channel.config(
+    //     t.concat(
+    //       t.isType(channels, 'Function') ? [channels] : [],
+    //       nextBoxes.channels || []
+    //     )
+    //   )
+    // )
+    channel.config(
+      t.concat(
+        t.isType(channels, 'Function') ? [channels] : [],
+        nextBoxes.channels || []
       )
-    )
+    )(api)
 
     // Host the public folder
     if (api.get('public')) {
@@ -134,7 +141,6 @@ export const api = task(t => (ctx = {}) => {
     // Configure a middleware for 404s and the error handler
     api.use(FeathersExpress.notFound())
     api.use(FeathersExpress.errorHandler({ logger }))
-    // api.use(FeathersExpress.errorHandler())
 
     // Attach global hooks
     if (t.isType(hooks, 'Object')) {
@@ -144,9 +150,11 @@ export const api = task(t => (ctx = {}) => {
     }
 
     // Lifecycle after and onStart
-    api.configure(nextBoxes.lifecycle('afterConfig'))
+    // api.configure(nextBoxes.lifecycle(lifecycle.afterConfig))
+    nextBoxes.lifecycle(lifecycle.afterConfig)(api)
+
     api.onStart = () => {
-      nextBoxes.lifecycle('onStart')(api)
+      nextBoxes.lifecycle(lifecycle.onStart)(api)
     }
 
     // yield

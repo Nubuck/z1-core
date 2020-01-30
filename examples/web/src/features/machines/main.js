@@ -14,7 +14,7 @@ export const feature = z.create(
       state: [state],
       routing: [
         {
-          action: z.routing.parts.routeActions(state),
+          actions: mx.view.routeActions(state),
           ui: mx.view.route({
             views,
             query: { machines: 'state' },

@@ -7,7 +7,7 @@ export const apiBox = Fn(t => t.pipe(withNedbAdapter, apiBoxCore)())
 export const featureBox = Fn(t =>
   t.mergeAll([
     core,
-    { api: t.pick(['create', 'combine', 'configure'], apiBox) },
+    { api: t.pick(['create', 'combine', 'configure', 'lifecycle'], apiBox) },
     t.pick(['server', 'app'], apiBox),
   ])
 )

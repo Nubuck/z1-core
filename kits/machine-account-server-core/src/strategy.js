@@ -37,7 +37,7 @@ export function strategy(z) {
           this.app.service('machines').get(user.machineId)
         )
         if (machineError) {
-          console.log('machine err', userResult,user, machineError)
+          console.log('machine err', userResult, user, machineError)
           throw new z.FeathersErrors.Unprocessable(machineError.message)
         }
         if (t.isNil(machine)) {
@@ -45,8 +45,7 @@ export function strategy(z) {
         }
         return {
           authentication: { strategy: this.name },
-          machine,
-          user,
+          account: { machine, user },
         }
       }
   )

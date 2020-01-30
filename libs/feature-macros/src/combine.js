@@ -1,5 +1,5 @@
 import { fn } from '@z1/lib-feature-box'
-
+import { types } from './types'
 // main
 export const combine = fn(t => (rawViews = []) => {
   const views = t.sort(t.ascend(t.prop('key')), rawViews)
@@ -16,7 +16,7 @@ export const combine = fn(t => (rawViews = []) => {
         t.map(view => {
           return {
             [view.key]: view.state(
-              t.merge(ctx, { params, viewKeys, key: view.key })
+              t.mergeAll([ctx, types, { params, viewKeys, key: view.key }])
             ),
           }
         }, views)

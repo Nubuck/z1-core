@@ -105,8 +105,7 @@ export const api = (z, props) =>
                       )
                     }
                     return {
-                      machine: nextMachine,
-                      user: nextUser,
+                      account: { machine: nextMachine, user: nextUser },
                     }
                   }
                   // machine exists
@@ -141,8 +140,7 @@ export const api = (z, props) =>
                       )
                     }
                     return {
-                      machine: nextMachine,
-                      user: nextUser,
+                      account: { machine: nextMachine, user: nextUser },
                     }
                   }
                   // user exists
@@ -207,20 +205,16 @@ export const api = (z, props) =>
                   }
                   return await t.match({
                     async machine() {
-                      return await app
-                        .service('machines')
-                        .find({
-                          query: t.omit(['type'], params.query),
-                          includeUsers: true,
-                        })
+                      return await app.service('machines').find({
+                        query: t.omit(['type'], params.query),
+                        includeUsers: true,
+                      })
                     },
                     async user() {
-                      return await app
-                        .service('machine-users')
-                        .find({
-                          query: t.omit(['type'], params.query),
-                          includeMachine: true,
-                        })
+                      return await app.service('machine-users').find({
+                        query: t.omit(['type'], params.query),
+                        includeMachine: true,
+                      })
                     },
                     _: async () => null,
                   })(t.to.lowerCase(type))()
@@ -234,12 +228,33 @@ export const api = (z, props) =>
           )
         },
         lifecycle: {
-          authConfig(app) {
+          [z.featureBox.api.lifecycle.onAuthConfig]: app => {
             const { MachineStrategy } = strategy(z)
             app
               .get('authenticationService')
               .register('machine', new MachineStrategy())
           },
+          // [z.featureBox.api.lifecycle.onSetup]: app => {
+          //   app.on('login', (authResult, params, context) => {
+          //     app.debug(
+          //       'MACHINE LOGIN',
+          //       authResult,
+          //       t.keys(params),
+          //       t.keys(context)
+          //     )
+          //   })
+          //   app.on('logout', (authResult, params, context) => {
+          //     app.debug(
+          //       'MACHINE LOGOUT',
+          //       authResult,
+          //       t.keys(params),
+          //       t.keys(context)
+          //     )
+          //   })
+          //   app.on('disconnect', connection => {
+          //     app.debug('MACHINE DISCONNECT', t.keys(connection))
+          //   })
+          // },
         },
       },
     ])

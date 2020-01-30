@@ -5,6 +5,7 @@ import { configure } from './configure'
 import { render } from './render'
 import { route } from './route'
 import { types } from './types'
+import { routeActions } from './parts'
 
 // main
 export const routeView = {
@@ -14,4 +15,5 @@ export const routeView = {
   render,
   route,
   types,
+  routeActions,
 }

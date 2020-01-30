@@ -11,11 +11,15 @@ import machines from './machines'
 
 // unpack
 const layout = layoutKit(parts)
+
 // context
-const ctx = z.fn(t => ({
-  ui: parts.ui,
-  state: t.merge(parts.state, layout.parts),
-}))
+const ctx = {
+  ...parts,
+  state: {
+    ...parts.state,
+    ...layout.parts,
+  },
+}
 
 // main
 export const features = z.combine([

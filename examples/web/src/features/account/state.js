@@ -21,10 +21,7 @@ export const stateKit = parts =>
     const skipViewsExcept401 = (actions, actionType, state) =>
       t.or(
         t.neq(actions.routeView, actionType),
-        t.and(
-          t.eq(actions.routeView, actionType),
-          t.eq(t.at('location.payload.view', state), 'not-authorized')
-        )
+        t.eq(t.at('location.payload.view', state), 'not-authorized')
       )
     const authenticated = state =>
       t.and(

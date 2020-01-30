@@ -12,6 +12,7 @@ import {
 
 // parts
 import { api } from './api'
+import { lifecycle } from './api/types'
 import { box } from './box'
 import { servers } from './servers'
 import { common } from './common'
@@ -42,8 +43,6 @@ export const apiBoxCore = Fn(t => (ctx = {}) => {
       configure: Api,
     },
     Servers,
+    { lifecycle },
   ])
 })
-
-
-

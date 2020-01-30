@@ -36,11 +36,11 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
         const serviceModelProps = (factoryObj = {}) => {
           const modelName = t.atOr(null, 'modelName', factoryObj)
           if (t.isNil(modelName)) {
-            return null
+            return {}
           }
           const Model = t.atOr(null, modelName, nextModels)
           if (t.isNil(Model)) {
-            return null
+            return {}
           }
           return t.merge({ Model }, t.omit(['modelName'], factoryObj))
         }

@@ -49,26 +49,26 @@ export const common = task(t => ({
         return hook
       },
       safeFindMSSQL(hook) {
-        const db = hook.app.get('db') || {}
-        if (t.eq('find', hook.method)) {
-          if (t.eq('mssql', db.dialect)) {
-            if (t.not(t.at('params.query.$sort', hook))) {
-              if (t.not(t.has('params')(hook))) {
-                hook.params = {
-                  query: {
-                    $sort: { id: 1 },
-                  },
-                }
-              } else if (t.not(t.has('query')(hook.params))) {
-                hook.params.query = {
-                  $sort: { id: 1 },
-                }
-              } else {
-                hook.params.query.$sort = { id: 1 }
-              }
-            }
-          }
-        }
+        // const db = hook.app.get('db') || {}
+        // if (t.eq('find', hook.method)) {
+        //   if (t.eq('mssql', db.dialect)) {
+        //     if (t.not(t.at('params.query.$sort', hook))) {
+        //       if (t.not(t.has('params')(hook))) {
+        //         hook.params = {
+        //           query: {
+        //             $sort: { id: 1 },
+        //           },
+        //         }
+        //       } else if (t.not(t.has('query')(hook.params))) {
+        //         hook.params.query = {
+        //           $sort: { id: 1 },
+        //         }
+        //       } else {
+        //         hook.params.query.$sort = { id: 1 }
+        //       }
+        //     }
+        //   }
+        // }
         return hook
       },
     },

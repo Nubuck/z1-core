@@ -7,5 +7,5 @@ export default z =>
     models(m) {
       m(['nedb', 'bucket_registry'])
     },
-    serviceFactory: { modelName: 'bucket_registry' },
+    serviceFactory: {id: '_id', modelName: 'bucket_registry' },
   })

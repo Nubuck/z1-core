@@ -2,9 +2,10 @@ import AuthManagement from 'feathers-authentication-management'
 
 // main
 export const api = (z, props) => {
-  const isAction = z.featureBox.fn(t => (actions = []) => hook =>
-    t.notNil(t.find(action => t.eq(action, hook.data.action), actions))
-  )
+  const isAction = z.featureBox.fn(t => (actions = []) => hook => {
+    console.log('IS ACTION', hook)
+    return t.notNil(t.find(action => t.eq(action, hook.data.action), actions))
+  })
   return z.featureBox.fn((t, a) =>
     z.featureBox.api.create('account', {
       models: props.models,
@@ -68,10 +69,10 @@ export const api = (z, props) => {
               before: {
                 find: [data.safeFindMSSQL],
                 create: [
-                  common.when(
-                    isAction(['passwordChange', 'identityChange']),
-                    auth.authenticate('jwt')
-                  ),
+                  // common.when(
+                  //   isAction(['passwordChange', 'identityChange']),
+                  //   auth.authenticate('jwt')
+                  // ),
                 ],
               },
             },

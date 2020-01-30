@@ -7,7 +7,8 @@ export const api = (z, props) =>
       {
         models: props.models,
         services(s, h) {
-          // disbale create methods on model services to direct
+          const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
+          // disable create methods on model services to direct
           // through machine-account service
           s([props.adapter, 'machines'], props.serviceFactory.machines, {
             hooks: {
@@ -19,7 +20,7 @@ export const api = (z, props) =>
                 find: [
                   h.common.when(
                     ctx =>
-                      t.eq(true, t.atOr(false, 'params.includeUsers', ctx)),
+                      t.eq(true, t.atOr(false, 'params.includeLogins', ctx)),
                     async ctx => {
                       ctx.app.debug('machines hook params', ctx.params)
                       return ctx
@@ -30,8 +31,8 @@ export const api = (z, props) =>
             },
           })
           s(
-            [props.adapter, 'machine-users'],
-            props.serviceFactory.machineUsers,
+            [props.adapter, 'machine-logins'],
+            props.serviceFactory.machineLogins,
             {
               hooks: {
                 before: {
@@ -40,34 +41,38 @@ export const api = (z, props) =>
                 },
                 after: {
                   find: [
-                    async ctx => {
-                      ctx.app.debug('machine users hook params', ctx.params)
-                      return ctx
-                    },
+                    h.common.when(
+                      ctx =>
+                        t.eq(true, t.atOr(false, 'params.includeMachine', ctx)),
+                      async ctx => {
+                        ctx.app.debug('machine login hook params', ctx.params)
+                        return ctx
+                      }
+                    ),
                   ],
                 },
               },
             }
           )
-          const withStatus = (user, status) => t.merge(user, { status })
+          const withStatus = (login, status) => t.merge(login, { status })
           s(
             'machine-account',
             app => {
               return {
-                async create({ machine, user }, params) {
-                  if (t.or(t.isNil(machine), t.isNil(user))) {
+                async create({ machine, login }, params) {
+                  if (t.or(t.isNil(machine), t.isNil(login))) {
                     throw new z.FeathersErrors.Unprocessable(
-                      'Machine account requires both machine and user keys'
+                      'Machine account requires both machine and login keys'
                     )
                   }
                   if (
                     t.or(
                       t.isNil(t.atOr(null, 'hashId', machine || {})),
-                      t.isNil(t.atOr(null, 'hashId', user || {}))
+                      t.isNil(t.atOr(null, 'hashId', login || {}))
                     )
                   ) {
                     throw new z.FeathersErrors.Unprocessable(
-                      'Machine accounts requires a hashId field for both machine and user'
+                      'Machine accounts requires a hashId field for both machine and login'
                     )
                   }
                   const [machineErr, machineResult] = await a.of(
@@ -90,65 +95,65 @@ export const api = (z, props) =>
                         nextMachineErr.message
                       )
                     }
-                    const [nextUserErr, nextUser] = await a.of(
+                    const [nextLoginErr, nextLogin] = await a.of(
                       app
-                        .service('machine-users')
+                        .service('machine-logins')
                         .create(
                           withStatus(
-                            t.merge(user, { machineId: nextMachine._id }),
+                            t.merge(login, { machineId: nextMachine[dbId] }),
                             'offline'
                           )
                         )
                     )
-                    if (nextUserErr) {
+                    if (nextLoginErr) {
                       throw new z.FeathersErrors.GeneralError(
-                        nextUserErr.message
+                        nextLoginErr.message
                       )
                     }
                     return {
                       machine: nextMachine,
-                      user: nextUser,
+                      login: nextLogin,
                     }
                   }
                   // machine exists
-                  const [userErr, userResult] = await a.of(
-                    app.service('machine-users').find({
+                  const [loginErr, loginResult] = await a.of(
+                    app.service('machine-logins').find({
                       query: {
-                        hashId: user.hashId,
+                        hashId: login.hashId,
                       },
                     })
                   )
-                  if (userErr) {
-                    throw new z.FeathersErrors.GeneralError(userErr.message)
+                  if (loginErr) {
+                    throw new z.FeathersErrors.GeneralError(loginErr.message)
                   }
                   const nextMachine = t.head(machineResult.data)
-                  // create user
-                  if (t.eq(userResult.total, 0)) {
-                    const [nextUserErr, nextUser] = await a.of(
+                  // create login
+                  if (t.eq(loginResult.total, 0)) {
+                    const [nextLoginErr, nextLogin] = await a.of(
                       app
-                        .service('machine-users')
+                        .service('machine-logins')
                         .create(
                           withStatus(
-                            t.merge(user, { machineId: nextMachine._id }),
+                            t.merge(login, { machineId: nextMachine[dbId] }),
                             'offline'
                           )
                         )
                     )
-                    if (nextUserErr) {
+                    if (nextLoginErr) {
                       throw new z.FeathersErrors.GeneralError(
-                        nextUserErr.message
+                        nextLoginErr.message
                       )
                     }
                     return {
                       machine: nextMachine,
-                      user: nextUser,
+                      login: nextLogin,
                     }
                   }
-                  // user exists
-                  const nextUser = t.head(userResult.data)
+                  // login exists
+                  const nextLogin = t.head(loginResult.data)
                   return {
                     machine: nextMachine,
-                    user: nextUser,
+                    login: nextLogin,
                   }
                 },
                 async get(id) {
@@ -168,31 +173,31 @@ export const api = (z, props) =>
                   //         `No machine found for id '${payload}'`
                   //       )
                   //     }
-                  //     const users = await app.service('machine-users').find({
+                  //     const logins = await app.service('machine-logins').find({
                   //       query: {
                   //         machineId: payload,
                   //       },
                   //     })
                   //     return {
-                  //       machine: t.merge(machine, { users: users.data }),
-                  //       user: null,
+                  //       machine: t.merge(machine, { logins: logins.data }),
+                  //       login: null,
                   //     }
                   //   },
-                  //   async user() {
-                  //     const user = await app
-                  //       .service('machine-users')
+                  //   async login() {
+                  //     const login = await app
+                  //       .service('machine-logins')
                   //       .get(payload)
-                  //     if (t.isNil(user)) {
+                  //     if (t.isNil(login)) {
                   //       throw new z.FeathersErrors.NotFound(
-                  //         `No machine-user found for id '${payload}'`
+                  //         `No machine-login found for id '${payload}'`
                   //       )
                   //     }
                   //     const machine = await app
                   //       .service('machines')
-                  //       .get(user.machineId)
+                  //       .get(login.machineId)
                   //     return {
                   //       machine,
-                  //       user,
+                  //       login,
                   //     }
                   //   },
                   //   _: async () => null,
@@ -210,11 +215,11 @@ export const api = (z, props) =>
                   //   async machine() {
                   //     return await app.service('machines').find({
                   //       query: t.omit(['type'], params.query),
-                  //       includeUsers: true,
+                  //       includelogins: true,
                   //     })
                   //   },
-                  //   async user() {
-                  //     return await app.service('machine-users').find({
+                  //   async login() {
+                  //     return await app.service('machine-logins').find({
                   //       query: t.omit(['type'], params.query),
                   //       includeMachine: true,
                   //     })

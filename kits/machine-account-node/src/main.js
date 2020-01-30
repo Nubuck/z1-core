@@ -39,7 +39,7 @@ const account = task(t => async ({ role, system }) => {
     role,
   }
   const hashId = await hashCtx(userCtx)
-  const user = t.merge(t.omit(['hardwareuuid'], userCtx), {
+  const login = t.merge(t.omit(['hardwareuuid'], userCtx), {
     machineHashId,
     hashId,
   })
@@ -67,12 +67,12 @@ const account = task(t => async ({ role, system }) => {
         osCtx,
         { hashId: machineHashId },
       ]),
-      user,
+      login,
     }
   }
   return {
     machine: t.mergeAll([machCtx, { hashId: machineHashId }]),
-    user,
+    login,
   }
 })
 

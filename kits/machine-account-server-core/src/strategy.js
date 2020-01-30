@@ -5,6 +5,15 @@ export function strategy(z) {
   AuthenticationBaseStrategy.prototype.authenticate = z.featureBox.fn(
     (t, a) =>
       async function authenticate(payload) {
+        console.log(
+          'MACHINE STRATEGY AUTHENTICATE',
+          this.name,
+          this.configuration
+        )
+        return {
+          authentication: { strategy: this.name },
+          user: { id: 'machine' },
+        }
         // const payloadErrorMsg =
         //   'Machine account authentication requires a hashId field'
         // if (t.not(t.has('hashId')(payload))) {
@@ -42,7 +51,7 @@ export function strategy(z) {
         // }
         // return {
         //   authentication: { strategy: 'machine' },
-        //   account: { id: user._id, machine, user },
+        //   account: { id: user.id, machine, user },
         // }
       }
   )

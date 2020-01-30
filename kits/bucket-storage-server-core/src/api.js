@@ -18,6 +18,7 @@ export const api = (z, props) =>
           }
           return ctx
         }
+        const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
         // registry
         s([props.adapter, SERVICES.REGISTRY], props.serviceFactory, {
           hooks: {
@@ -112,7 +113,7 @@ export const api = (z, props) =>
                       const [patchError, result] = await a.of(
                         ctx.app
                           .service(SERVICES.REGISTRY)
-                          .patch(registryFile._id, nextMeta)
+                          .patch(registryFile[dbId], nextMeta)
                       )
                       if (t.not(patchError)) {
                         ctx.result.meta = result
@@ -150,11 +151,11 @@ export const api = (z, props) =>
                       const [removeError, removeResult] = await a.of(
                         ctx.app
                           .service(SERVICES.REGISTRY)
-                          .remove(registryFile._id)
+                          .remove(registryFile[dbId])
                       )
                       if (t.not(removeError)) {
                         ctx.result.meta = {
-                          id: removeResult._id,
+                          id: removeResult[dbId],
                         }
                       }
                     }

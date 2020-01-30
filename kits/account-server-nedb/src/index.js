@@ -7,5 +7,5 @@ export default z =>
     models(m) {
       m(['nedb', 'users'])
     },
-    serviceFactory: { modelName: 'users' },
+    serviceFactory: { id: '_id', modelName: 'users' },
   })

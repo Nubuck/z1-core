@@ -6,10 +6,10 @@ export default z =>
     adapter: 'nedb',
     models(m) {
       m(['nedb', 'machine'])
-      m(['nedb', 'machine_user'])
+      m(['nedb', 'machine_login'])
     },
     serviceFactory: {
-      machines: { modelName: 'machine' },
-      machineUsers: { modelName: 'machine_user' },
+      machines: { id: '_id', modelName: 'machine' },
+      machineLogins: { id: '_id', modelName: 'machine_login' },
     },
   })

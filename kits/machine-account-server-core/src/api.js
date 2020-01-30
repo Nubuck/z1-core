@@ -152,73 +152,75 @@ export const api = (z, props) =>
                   }
                 },
                 async get(id) {
-                  const type = t.at('type', id)
-                  const payload = t.at('payload', id)
-                  if (t.or(t.isNil(type), t.isNil(payload))) {
-                    throw new z.FeathersErrors.Unprocessable(
-                      'Machine account get requires a type and payload in the id'
-                    )
-                  }
-                  return await t.match({
-                    async machine() {
-                      const machine = await app.service('machines').get(payload)
-                      if (t.isNil(machine)) {
-                        throw new z.FeathersErrors.NotFound(
-                          `No machine found for id '${payload}'`
-                        )
-                      }
-                      const users = await app.service('machine-users').find({
-                        query: {
-                          machineId: payload,
-                        },
-                      })
-                      return {
-                        machine: t.merge(machine, { users: users.data }),
-                        user: null,
-                      }
-                    },
-                    async user() {
-                      const user = await app
-                        .service('machine-users')
-                        .get(payload)
-                      if (t.isNil(user)) {
-                        throw new z.FeathersErrors.NotFound(
-                          `No machine-user found for id '${payload}'`
-                        )
-                      }
-                      const machine = await app
-                        .service('machines')
-                        .get(user.machineId)
-                      return {
-                        machine,
-                        user,
-                      }
-                    },
-                    _: async () => null,
-                  })(t.to.lowerCase(type))()
+                  return { id }
+                  // const type = t.at('type', id)
+                  // const payload = t.at('payload', id)
+                  // if (t.or(t.isNil(type), t.isNil(payload))) {
+                  //   throw new z.FeathersErrors.Unprocessable(
+                  //     'Machine account get requires a type and payload in the id'
+                  //   )
+                  // }
+                  // return await t.match({
+                  //   async machine() {
+                  //     const machine = await app.service('machines').get(payload)
+                  //     if (t.isNil(machine)) {
+                  //       throw new z.FeathersErrors.NotFound(
+                  //         `No machine found for id '${payload}'`
+                  //       )
+                  //     }
+                  //     const users = await app.service('machine-users').find({
+                  //       query: {
+                  //         machineId: payload,
+                  //       },
+                  //     })
+                  //     return {
+                  //       machine: t.merge(machine, { users: users.data }),
+                  //       user: null,
+                  //     }
+                  //   },
+                  //   async user() {
+                  //     const user = await app
+                  //       .service('machine-users')
+                  //       .get(payload)
+                  //     if (t.isNil(user)) {
+                  //       throw new z.FeathersErrors.NotFound(
+                  //         `No machine-user found for id '${payload}'`
+                  //       )
+                  //     }
+                  //     const machine = await app
+                  //       .service('machines')
+                  //       .get(user.machineId)
+                  //     return {
+                  //       machine,
+                  //       user,
+                  //     }
+                  //   },
+                  //   _: async () => null,
+                  // })(t.to.lowerCase(type))()
                 },
                 async find(params) {
-                  const type = t.at('query.type', params)
-                  if (t.isNil(type)) {
-                    throw new z.FeathersErrors.Unprocessable(
-                      'Machine account find requires a type in the query'
-                    )
-                  }
-                  return await t.match({
-                    async machine() {
-                      return await app.service('machines').find({
-                        query: t.omit(['type'], params.query),
-                        includeUsers: true,
-                      })
-                    },
-                    async user() {
-                      return await app.service('machine-users').find({
-                        query: t.omit(['type'], params.query),
-                        includeMachine: true,
-                      })
-                    },
-                    _: async () => null,
-                  })(t.to.lowerCase(type))()
+                  return []
+                  // const type = t.at('query.type', params)
+                  // if (t.isNil(type)) {
+                  //   throw new z.FeathersErrors.Unprocessable(
+                  //     'Machine account find requires a type in the query'
+                  //   )
+                  // }
+                  // return await t.match({
+                  //   async machine() {
+                  //     return await app.service('machines').find({
+                  //       query: t.omit(['type'], params.query),
+                  //       includeUsers: true,
+                  //     })
+                  //   },
+                  //   async user() {
+                  //     return await app.service('machine-users').find({
+                  //       query: t.omit(['type'], params.query),
+                  //       includeMachine: true,
+                  //     })
+                  //   },
+                  //   _: async () => null,
+                  // })(t.to.lowerCase(type))()
                 },
               }
             },

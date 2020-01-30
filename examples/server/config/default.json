@@ -47,6 +47,6 @@
     "local": {
       "usernameField": "email",
       "passwordField": "password"
-    }
+    },
   }
 }

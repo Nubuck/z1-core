@@ -20,26 +20,26 @@ export const api = (z, props) => {
               ],
               update: [common.disallow('external')],
               patch: [
-                common.iff(common.isProvider('external'), [
+                common.when(
+                  common.isProvider('external'),
                   auth.hashPassword('password'),
-                  auth.authenticate('jwt'),
-                ]),
+                  auth.authenticate('jwt')
+                ),
               ],
               remove: [auth.authenticate('jwt')],
             },
             after: {
               all: [auth.protect('password')],
               create: [
-                // NOTE: MIGRATE TO SAFER TASK
                 hook => {
                   if (!hook.params.provider) {
                     return hook
                   }
-                  const user = hook.result
-                  if (hook.data && hook.data.email && user) {
-                    // communicate(hook.app, user)['resendVerifySignup']()
-                    return hook
-                  }
+                  // const user = hook.result
+                  // if (hook.data && hook.data.email && user) {
+                  // communicate(hook.app, user)['resendVerifySignup']()
+                  // return hook
+                  // }
                   return hook
                 },
                 AuthManagement.hooks.removeVerification(),
@@ -57,7 +57,6 @@ export const api = (z, props) => {
               notifier(type, user) {
                 // const actions = communicate(app, user)
                 // return !actions[type] ? null : actions[type]()
-                app.debug('Account notifier', action, user.enail)
                 return null
               },
             })
@@ -69,9 +68,10 @@ export const api = (z, props) => {
               before: {
                 find: [data.safeFindMSSQL],
                 create: [
-                  common.iff(isAction(['passwordChange', 'identityChange']), [
-                    auth.authenticate('jwt'),
-                  ]),
+                  common.when(
+                    isAction(['passwordChange', 'identityChange']),
+                    auth.authenticate('jwt')
+                  ),
                 ],
               },
             },

@@ -17,8 +17,21 @@ const authStatus = {
 // main
 const name = 'account'
 export const stateKit = parts =>
-  z.fn((t, a) =>
-    z.state.create(name, [
+  z.fn((t, a) => {
+    const skipViewsExcept401 = (actions, actionType, state) =>
+      t.or(
+        t.neq(actions.routeView, actionType),
+        t.and(
+          t.eq(actions.routeView, actionType),
+          t.eq(t.at('location.payload.view', state), 'not-authorized')
+        )
+      )
+    const authenticated = state =>
+      t.and(
+        t.notNil(t.at('account.user', state)),
+        t.eq(authStatus.success, t.at('account.authStatus', state))
+      )
+    return z.state.create(name, [
       {
         initial: {
           connected: false,
@@ -60,7 +73,7 @@ export const stateKit = parts =>
         guards(g, box) {
           return [
             // protect routes
-            g([t.globrex('*/ROUTING/*').regex], async (ctx, allow, reject) => {
+            g([t.globrex('*/ROUTING/*').regex], (ctx, allow, reject) => {
               const state = ctx.getState()
               const routesMap = t.at('location.routesMap', state)
               const routeMeta = t.at('meta.location.current', ctx.action)
@@ -78,22 +91,19 @@ export const stateKit = parts =>
                   // skip if route is public
                   allow(ctx.action)
                 } else {
-                  const authenticated = t.and(
-                    t.notNil(t.at('account.user', state)),
-                    t.eq(authStatus.success, t.at('account.authStatus', state))
-                  )
                   // skip if route only requires authentication + account is valid
-                  if (t.and(t.isNil(route.allowRoles), authenticated)) {
+                  if (t.and(t.isNil(route.allowRoles), authenticated(state))) {
                     allow(ctx.action)
-                  } else if (t.not(authenticated)) {
+                  } else if (t.not(authenticated(state))) {
                     // reject invalid account -> redirect to login
                     reject(
                       ctx.redirect(
                         box.mutators.routeView({
                           view: 'sign-in',
-                          redirectBackTo: t.neq(
-                            box.actions.routeView,
-                            ctx.action.type
+                          redirectBackTo: skipViewsExcept401(
+                            box.actions,
+                            ctx.action.type,
+                            state
                           )
                             ? t.omit(['meta'], ctx.action)
                             : null,
@@ -115,9 +125,10 @@ export const stateKit = parts =>
                         ctx.redirect(
                           box.mutators.routeView({
                             view: 'not-authorized',
-                            redirectBackTo: t.neq(
-                              box.actions.routeView,
-                              ctx.action.type
+                            redirectBackTo: skipViewsExcept401(
+                              box.actions,
+                              ctx.action.type,
+                              state
                             )
                               ? t.omit(['meta'], ctx.action)
                               : null,
@@ -131,13 +142,12 @@ export const stateKit = parts =>
               // end logic
             }),
             // prevent public account view access when authenticated
-            g(box.actions.routeView, async (ctx, allow, reject) => {
+            g(box.actions.routeView, (ctx, allow, reject) => {
               const state = ctx.getState()
               if (
-                t.and(
-                  t.isNil(t.at('account.user', state)),
-                  t.neq(authStatus.success, t.at('account.authStatus', state)),
-                  // t.not(t.eq(t.to.lowerCase(t.pathOr('','location.pathna'))))
+                t.or(
+                  t.not(authenticated(state)),
+                  t.eq(t.at('location.payload.view', state), 'not-authorized')
                 )
               ) {
                 allow(ctx.action)
@@ -159,14 +169,12 @@ export const stateKit = parts =>
             fx(
               [box.actions.boot, box.actions.connection],
               (ctx, dispatch, done) => {
-                const account = t.at('account', ctx.getState())
+                const state = ctx.getState()
+                const connected = t.at('account.connected', state)
                 if (
                   t.or(
-                    t.not(account.connected),
-                    t.and(
-                      t.eq(account.authStatus, authStatus.success),
-                      t.eq(account.connected, true)
-                    )
+                    t.not(connected),
+                    t.and(authenticated(state), t.eq(connected, true))
                   )
                 ) {
                   done()
@@ -209,7 +217,16 @@ export const stateKit = parts =>
               const redirectBackTo = t.at('account.redirectBackTo', state)
               if (t.isNil(redirectBackTo)) {
                 if (
-                  t.eq(t.at('account.authStatus', state), authStatus.success)
+                  t.allOf([
+                    authenticated(state),
+                    t.not(
+                      skipViewsExcept401(
+                        box.actions,
+                        t.at('location.type', state),
+                        state
+                      )
+                    ),
+                  ])
                 ) {
                   dispatch(
                     ctx.redirect(
@@ -226,17 +243,7 @@ export const stateKit = parts =>
                 dispatch(ctx.redirect(redirectBackTo))
                 done()
               }
-              done()
             }),
-            // fx(box.actions.routeView, (ctx, dispatch, done) => {
-            //   const redirectBackTo = t.at('payload.redirectBackTo', ctx.action)
-            //   if (t.isNil(redirectBackTo)) {
-            //     done()
-            //   } else {
-            //     dispatch(box.mutators.redirectChange(redirectBackTo))
-            //     done()
-            //   }
-            // }),
             fx(box.actions.logout, (ctx, dispatch, done) => {
               ctx.api.logout()
               dispatch(
@@ -291,5 +298,5 @@ export const stateKit = parts =>
         ]),
       }),
     ])
-  )
+  })
 export default stateKit

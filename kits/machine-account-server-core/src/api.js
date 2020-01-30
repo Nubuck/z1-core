@@ -138,11 +138,11 @@ export const api = (z, props) =>
                 //   console.log('MACHINE ACCOUNT GET', id)
                 //   return null
                 // },
-                // async find(params) {
-                //   console.log('MACHINE ACCOUNT GET', find)
-                //   // params: { query }
-                //   return null
-                // },
+                async find(params) {
+                  console.log('MACHINE ACCOUNT GET', params)
+                  // params: { query }
+                  return null
+                },
                 // async patch(id, data, params) {
                 //   console.log('MACHINE ACCOUNT PATCH', id, data)
                 //   // data: { machine, user, action }

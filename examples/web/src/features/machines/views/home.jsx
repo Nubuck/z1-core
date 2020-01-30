@@ -19,7 +19,32 @@ export const home = mx.fn((t, a) =>
           return {
             status: props.status,
             data: props.data,
-            error: t.atOr(null, 'error', props.next || {}),
+            error: t.atOr(null, 'next.error', props),
+          }
+        },
+        async load(props) {
+          const [machErr, machines] = await a.of(
+            props.api.service('machine-account').find({
+              query: {
+                $limit: 10000,
+              },
+            })
+          )
+          if (machErr) {
+            return {
+              status: props.status,
+              data: {
+                machines: {},
+              },
+              error: machErr,
+            }
+          }
+          return {
+            status: props.status,
+            data: {
+              machines: {},
+            },
+            error: null,
           }
         },
       }
@@ -29,27 +54,16 @@ export const home = mx.fn((t, a) =>
         return (
           <ctx.Page
             key="machines"
-            centered
             render={() => (
               <React.Fragment>
                 <ctx.IconLabel
-                  icon={{ name: 'laptop', size: '6xl', color: 'blue-500' }}
+                  icon={{ name: 'laptop', size: '3xl', color: 'blue-500' }}
                   label={{
                     fontWeight: 'bold',
                     text: 'Machines',
-                    fontSize: '4xl',
-                  }}
-                  info={{
-                    text: 'under construction',
                     fontSize: 'xl',
-                    margin: { y: 4 },
                   }}
                   margin={{ bottom: 4 }}
-                  flexDirection="col"
-                  slots={{
-                    icon: { x: 'center', margin: { bottom: 3 } },
-                    label: { x: 'center' },
-                  }}
                 />
               </React.Fragment>
             )}

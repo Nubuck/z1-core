@@ -16,6 +16,7 @@
     "@z1/kit-machine-account-node": "^0.4.1",
     "@z1/lib-api-box-client-node": "^0.4.1",
     "@z1/lib-state-box-node": "^0.4.1",
+    "electron-log": "^4.0.4",
     "redux": "^4.0.4",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",

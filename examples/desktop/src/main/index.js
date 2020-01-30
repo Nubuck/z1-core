@@ -1,22 +1,21 @@
 import { app } from 'electron'
 import { boot } from './boot'
+import { log } from './logger'
 
 process.on('unhandledRejection', (reason, p) => {
-  console.error('Unhandled Rejection at: Promise ', p, reason)
-  process.exit(0)
+  log.error('Unhandled Rejection at: Promise ', p, reason)
 })
 process.on('uncaughtException', err => {
-  console.error('Unhandled Exception: ', err)
-  process.exit(0)
+  log.error('Unhandled Exception: ', err)
 })
 process.on('exit', code => {
-  console.log(`About to exit with code: ${code}`)
+  log.debug(`About to exit with code: ${code}`)
 })
 
 // main
 app.on('ready', () => {
-  console.log('App ready')
+  log.debug('App ready')
   boot()
-    .then(() => console.log('Boot run'))
-    .catch(err => console.log('Boot err', err))
+    .then(() => log.debug('Boot run'))
+    .catch(err => log.error('Boot err', err))
 })

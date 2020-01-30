@@ -83,7 +83,7 @@ export const api = (z, props) => {
           app.on('login', (authResult, params, context) => {
             app.debug(
               'ACCOUNT LOGIN',
-              authResult,
+              t.keys(authResult),
               t.keys(params),
               t.keys(context)
             )
@@ -91,7 +91,7 @@ export const api = (z, props) => {
           app.on('logout', (authResult, params, context) => {
             app.debug(
               'ACCOUNT LOGOUT',
-              authResult,
+              t.keys(authResult),
               t.keys(params),
               t.keys(context)
             )

@@ -1,4 +1,5 @@
 import z from '@z1/lib-state-box-node'
+import { log } from './logger'
 
 // types
 const authStatus = {
@@ -17,9 +18,7 @@ const appState = z.fn((t, a) =>
         connected: false,
         status: authStatus.init,
         error: null,
-        agent: null,
-        auth: null,
-        services: [],
+        account: null,
       },
       mutations(m) {
         return [
@@ -45,7 +44,7 @@ const appState = z.fn((t, a) =>
           fx(
             [box.actions.boot, box.actions.connection],
             (ctx, dispatch, done) => {
-              const account = t.at('app', ctx.getState())
+              const account = t.path(['app'], ctx.getState())
               if (
                 t.or(
                   t.not(account.connected),
@@ -55,10 +54,10 @@ const appState = z.fn((t, a) =>
                   )
                 )
               ) {
-                console.log('skip auth')
+                log.debug('skip auth')
                 done()
               } else {
-                console.log('auth')
+                log.debug('auth')
                 dispatch(box.mutators.authenticate())
                 done()
               }
@@ -67,92 +66,93 @@ const appState = z.fn((t, a) =>
           fx([box.actions.authenticate], async (ctx, dispatch, done) => {
             try {
               if (
-                t.not(t.atOr(false, 'app.connected', ctx.getState()))
+                t.not(t.pathOr(false, ['app', 'connected'], ctx.getState()))
               ) {
-                console.log('auth not connected')
+                log.debug('auth not connected')
                 dispatch(
                   box.mutators.authenticateComplete({
                     status: authStatus.fail,
-                    agent: null,
+                    account: null,
                     error: new Error('Not connected'),
                   })
                 )
               } else {
+                log.debug('re-auth begin')
                 const [reAuthErr, reAuthResult] = await a.of(
                   ctx.api.authentication.reAuthenticate()
                 )
                 if (reAuthErr) {
-                  console.log('reauth failed - get machine account begin')
-                  const [agentErr, agent] = await a.of(
+                  log.debug(
+                    're-auth failed -> create local machine account begin'
+                  )
+                  const [accountErr, account] = await a.of(
                     ctx.machine.account({ role: 'agent' })
                   )
-                  if (agentErr) {
-                    console.log('agent failed')
+                  if (accountErr) {
+                    log.debug('create local machine account failed')
                     dispatch(
                       box.mutators.authenticateComplete({
                         status: authStatus.fail,
-                        agent: null,
-                        error: agentErr,
+                        account: null,
+                        error: accountErr,
                       })
                     )
                     done()
                   } else {
-                    console.log('auth begin')
+                    log.debug(
+                      'create local machine account -> auth begin',
+                      account
+                    )
                     const [authErr, authResult] = await a.of(
                       ctx.api.authenticate({
                         strategy: 'machine',
-                        hashId: agent.user.hashId,
+                        hashId: t.at('user.hashId', account),
                       })
                     )
                     if (authErr) {
-                      console.log('auth failed - system info begin')
-                      const [systemErr, systemResult] = await a.of(
-                        ctx.machine.system(agent.machine)
+                      log.debug(
+                        'auth failed -> create remote machine account begin'
                       )
-                      const [accountErr, account] = await a.of(
-                        ctx.api
-                          .service('machine-account')
-                          .create(
-                            t.isNil(systemErr)
-                              ? { machine: systemResult, user: agent.user }
-                              : agent
-                          )
+                      const [remoteErr, remote] = await a.of(
+                        ctx.api.service('machine-account').create(account)
                       )
-                      if (accountErr) {
-                        console.log('account failed')
+                      if (remoteErr) {
+                        log.debug('create remote machine account failed')
                         dispatch(
                           box.mutators.authenticateComplete({
                             status: authStatus.fail,
-                            agent: null,
-                            error: accountErr,
+                            account: null,
+                            error: remoteErr,
                           })
                         )
                         done()
                       } else {
+                        log.debug(
+                          'create remote machine account success -> next auth begin',
+                          remote
+                        )
                         const [nextAuthErr, nextAuthResult] = await a.of(
                           ctx.api.authenticate({
                             strategy: 'machine',
-                            hashId: account.user.hashId,
+                            hashId: t.at('user.hashId', remote),
                           })
                         )
                         if (nextAuthErr) {
-                          console.log('next auth failed')
+                          log.debug('next auth failed')
                           dispatch(
                             box.mutators.authenticateComplete({
                               status: authStatus.fail,
-                              agent: null,
+                              account: null,
                               error: nextAuthErr,
                             })
                           )
                           done()
                         } else {
+                          log.debug('next auth success', nextAuthResult)
                           dispatch(
                             box.mutators.authenticateComplete({
                               status: authStatus.success,
-                              agent: t.pick(
-                                ['machine', 'user'],
-                                nextAuthResult
-                              ),
+                              account: t.at('account',  nextAuthResult),
                               error: null,
                             })
                           )
@@ -160,27 +160,29 @@ const appState = z.fn((t, a) =>
                         }
                       }
                     } else {
+                      log.debug('auth success', authResult)
                       dispatch(
                         box.mutators.authenticateComplete({
                           status: authStatus.success,
-                          agent: t.pick(['machine', 'user'], authResult),
+                          account: t.at('account', authResult),
                           error: null,
                         })
                       )
                     }
                   }
                 } else {
+                  log.debug('re-auth success')
                   dispatch(
                     box.mutators.authenticateComplete({
                       status: authStatus.success,
-                      agent: t.pick(['machine', 'user'], reAuthResult),
+                      account: t.at('account', reAuthResult),
                       error: null,
                     })
                   )
                 }
               }
             } catch (e) {
-              console.log('AUTH ERR', e)
+              log.debug('AUTH ERR', e)
               done()
             }
           }),

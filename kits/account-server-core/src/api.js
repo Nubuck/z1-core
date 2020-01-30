@@ -3,7 +3,6 @@ import AuthManagement from 'feathers-authentication-management'
 // main
 export const api = (z, props) => {
   const isAction = z.featureBox.fn(t => (actions = []) => hook => {
-    console.log('IS ACTION', hook)
     return t.notNil(t.find(action => t.eq(action, hook.data.action), actions))
   })
   return z.featureBox.fn((t, a) =>

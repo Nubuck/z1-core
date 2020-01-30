@@ -9,7 +9,7 @@ export const api = (z, props) =>
         services(s, h) {
           const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
           const withLogins = h.common.when(
-            ctx => t.eq(true, t.atOr(false, 'params.includeLogins', ctx)),
+            ctx => t.not(t.atOr(false, 'params.excludeLogins', ctx)),
             h.common.fastJoin(ctx => {
               return {
                 joins: {
@@ -34,7 +34,9 @@ export const api = (z, props) =>
                 joins: {
                   machine() {
                     return async login => {
-                      return await ctx.app.service('machines').get(login.machineId)
+                      return await ctx.app
+                        .service('machines')
+                        .get(login.machineId, { excludeLogins: true })
                     }
                   },
                 },
@@ -93,11 +95,14 @@ export const api = (z, props) =>
                     )
                   }
                   const [machineErr, machineResult] = await a.of(
-                    app.service('machines').find({
-                      query: {
-                        hashId: machine.hashId,
+                    app.service('machines').find(
+                      {
+                        query: {
+                          hashId: machine.hashId,
+                        },
                       },
-                    })
+                      { excludeLogins: true }
+                    )
                   )
                   if (machineErr) {
                     throw new z.FeathersErrors.GeneralError(machineErr.message)

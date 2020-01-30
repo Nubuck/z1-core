@@ -71,7 +71,7 @@ export const nav = z.fn(t =>
           })
         }),
         m('schemaChange', (state, action) => {
-          const level = t.atOr(state.level, 'payload.level', action)
+          const level = t.atOr('anon', 'payload.level', action)
           const schema = t.atOr(null, 'payload.schema', action)
           return t.merge(state, {
             status: 'ready',

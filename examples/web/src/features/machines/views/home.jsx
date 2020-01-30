@@ -10,7 +10,7 @@ export const home = mx.fn((t, a) =>
       return {
         initial: {
           data: {
-            machines: {},
+            machines: [],
           },
           form: {},
         },
@@ -18,15 +18,20 @@ export const home = mx.fn((t, a) =>
           console.log('Machines VIEW DATA', props)
           return {
             status: props.status,
-            data: props.data,
+            data: t.merge(props.data, {
+              machines: t.atOr(
+                props.data.machines,
+                'next.data.machines',
+                props
+              ),
+            }),
             error: t.atOr(null, 'next.error', props),
           }
         },
         async load(props) {
           const [machErr, machines] = await a.of(
-            props.api.service('machine-account').find({
+            props.api.service('machines').find({
               query: {
-                type: 'machine',
                 $limit: 10000,
               },
             })
@@ -35,31 +40,15 @@ export const home = mx.fn((t, a) =>
             return {
               status: props.status,
               data: {
-                machines: {},
+                machines: [],
               },
               error: machErr,
-            }
-          }
-          const [singleErr, single] = await a.of(
-            props.api.service('machine-account').get({
-              type: 'machine',
-              payload: '',
-            })
-          )
-          if (singleErr) {
-            return {
-              status: props.status,
-              data: {
-                machines: {},
-              },
-              error: singleErr,
             }
           }
           return {
             status: props.status,
             data: {
-              machines,
-              single,
+              machines: machines.data,
             },
             error: null,
           }

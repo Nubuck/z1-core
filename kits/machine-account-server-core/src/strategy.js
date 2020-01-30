@@ -1,20 +1,20 @@
 export function strategy(z, adapter) {
- 
   let { AuthenticationBaseStrategy } = z.FeathersAuth
   // Webpack compiler butchers classes defined in functions.
   // Classes as a top level API is cringe AF and results in hacks like this.
-  Object.defineProperty(AuthenticationBaseStrategy.prototype, 'configuration', {
-    get() {
-      const authConfig = this.authentication.configuration
-      const config = super.configuration || {}
-      return {
-        service: 'machine-account',
-        entity: 'user',
-        errorMessage: 'Invalid login',
-        ...config,
-      }
-    },
-  })
+  // Object.defineProperty(AuthenticationBaseStrategy.prototype, 'configuration', {
+  //   get() {
+  //     const authConfig = this.authentication.configuration
+  //     const config = super.configuration || {}
+  //     console.log('MACHINE ACCOUNT GET', this.name, authConfig, config)
+  //     return {
+  //       // service: 'machine-account',
+  //       entity: 'user',
+  //       errorMessage: 'Invalid login',
+  //       ...config,
+  //     }
+  //   },
+  // })
   AuthenticationBaseStrategy.prototype.authenticate = z.featureBox.fn(
     (t, a) =>
       async function authenticate(payload) {
@@ -25,10 +25,6 @@ export function strategy(z, adapter) {
           this.configuration,
           dbId
         )
-        // return {
-        //   authentication: { strategy: this.name },
-        //   user: { _id: 'machine' },
-        // }
         const payloadErrorMsg =
           'Machine account authentication requires a hashId field'
         if (t.not(t.has('hashId')(payload))) {
@@ -56,7 +52,9 @@ export function strategy(z, adapter) {
         }
         const login = t.head(loginResult.data)
         const [machineError, machine] = await a.of(
-          this.app.service('machines').get(login.machineId)
+          this.app
+            .service('machines')
+            .get(login.machineId, { excludeLogins: true })
         )
         if (machineError) {
           throw new z.FeathersErrors.Unprocessable(machineError.message)

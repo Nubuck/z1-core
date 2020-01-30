@@ -47,7 +47,9 @@
     "local": {
       "usernameField": "email",
       "passwordField": "password"
+    },
+    "machine": {
+      "service": "machine-account"
     }
-   
   }
 }

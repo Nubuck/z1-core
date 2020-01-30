@@ -26,6 +26,7 @@ export const home = mx.fn((t, a) =>
           const [machErr, machines] = await a.of(
             props.api.service('machine-account').find({
               query: {
+                type: 'machine',
                 $limit: 10000,
               },
             })
@@ -39,10 +40,26 @@ export const home = mx.fn((t, a) =>
               error: machErr,
             }
           }
+          const [singleErr, single] = await a.of(
+            props.api.service('machine-account').get({
+              type: 'machine',
+              payload: '',
+            })
+          )
+          if (singleErr) {
+            return {
+              status: props.status,
+              data: {
+                machines: {},
+              },
+              error: singleErr,
+            }
+          }
           return {
             status: props.status,
             data: {
-              machines: {},
+              machines,
+              single,
             },
             error: null,
           }

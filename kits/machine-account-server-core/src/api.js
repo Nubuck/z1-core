@@ -15,6 +15,14 @@ export const api = (z, props) =>
                 all: [h.auth.authenticate('jwt')],
                 create: [h.common.disallow('external')],
               },
+              after: {
+                find: [
+                  async ctx => {
+                    ctx.app.debug('machines hook params', ctx.params)
+                    return ctx
+                  },
+                ],
+              },
             },
           })
           s(
@@ -26,10 +34,18 @@ export const api = (z, props) =>
                   all: [h.auth.authenticate('jwt')],
                   create: [h.common.disallow('external')],
                 },
+                after: {
+                  find: [
+                    async ctx => {
+                      ctx.app.debug('machine users hook params', ctx.params)
+                      return ctx
+                    },
+                  ],
+                },
               },
             }
           )
-          const withOffline = user => t.merge(user, { status: 'offline' })
+          const withStatus = (user, status) => t.merge(user, { status })
           s(
             'machine-account',
             app => {
@@ -76,8 +92,9 @@ export const api = (z, props) =>
                       app
                         .service('machine-users')
                         .create(
-                          withOffline(
-                            t.merge(user, { machineId: nextMachine._id })
+                          withStatus(
+                            t.merge(user, { machineId: nextMachine._id }),
+                            'offline'
                           )
                         )
                     )
@@ -111,8 +128,9 @@ export const api = (z, props) =>
                       app
                         .service('machine-users')
                         .create(
-                          withOffline(
-                            t.merge(user, { machineId: nextMachine._id })
+                          withStatus(
+                            t.merge(user, { machineId: nextMachine._id }),
+                            'offline'
                           )
                         )
                     )
@@ -134,20 +152,79 @@ export const api = (z, props) =>
                     user: nextUser,
                   }
                 },
-                // async get(id, params) {
-                //   console.log('MACHINE ACCOUNT GET', id)
-                //   return null
-                // },
-                async find(params) {
-                  console.log('MACHINE ACCOUNT GET', params)
-                  // params: { query }
-                  return null
+                async get(id) {
+                  const type = t.at('type', id)
+                  const payload = t.at('payload', id)
+                  if (t.or(t.isNil(type), t.isNil(payload))) {
+                    throw new z.FeathersErrors.Unprocessable(
+                      'Machine account get requires a type and payload in the id'
+                    )
+                  }
+                  return await t.match({
+                    async machine() {
+                      const machine = await app.service('machines').get(payload)
+                      if (t.isNil(machine)) {
+                        throw new z.FeathersErrors.NotFound(
+                          `No machine found for id '${payload}'`
+                        )
+                      }
+                      const users = await app.service('machine-users').find({
+                        query: {
+                          machineId: payload,
+                        },
+                      })
+                      return {
+                        machine: t.merge(machine, { users: users.data }),
+                        user: null,
+                      }
+                    },
+                    async user() {
+                      const user = await app
+                        .service('machine-users')
+                        .get(payload)
+                      if (t.isNil(user)) {
+                        throw new z.FeathersErrors.NotFound(
+                          `No machine-user found for id '${payload}'`
+                        )
+                      }
+                      const machine = await app
+                        .service('machines')
+                        .get(user.machineId)
+                      return {
+                        machine,
+                        user,
+                      }
+                    },
+                    _: async () => null,
+                  })(t.to.lowerCase(type))()
                 },
-                // async patch(id, data, params) {
-                //   console.log('MACHINE ACCOUNT PATCH', id, data)
-                //   // data: { machine, user, action }
-                //   return null
-                // },
+                async find(params) {
+                  const type = t.at('query.type', params)
+                  if (t.isNil(type)) {
+                    throw new z.FeathersErrors.Unprocessable(
+                      'Machine account find requires a type in the query'
+                    )
+                  }
+                  return await t.match({
+                    async machine() {
+                      return await app
+                        .service('machines')
+                        .find({
+                          query: t.omit(['type'], params.query),
+                          includeUsers: true,
+                        })
+                    },
+                    async user() {
+                      return await app
+                        .service('machine-users')
+                        .find({
+                          query: t.omit(['type'], params.query),
+                          includeMachine: true,
+                        })
+                    },
+                    _: async () => null,
+                  })(t.to.lowerCase(type))()
+                },
               }
             },
             {

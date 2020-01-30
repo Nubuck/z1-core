@@ -1,7 +1,7 @@
 import z from '@z1/lib-feature-box'
 
 // main
-export const state = z.fn(t =>
+export const stateKit = parts => z.fn(t =>
   z.state.create('pages', [
     {
       routes(r) {
@@ -15,7 +15,7 @@ export const state = z.fn(t =>
               const state = context.getState()
               if (
                 t.and(
-                  t.eq(t.atOr(null, 'account.authStatus', state), 'auth-success'),
+                  parts.authenticated(state),
                   t.eq(t.at('location.type', state), box.actions.routeLanding)
                 )
               ) {
@@ -33,3 +33,4 @@ export const state = z.fn(t =>
     },
   ])
 )
+export default stateKit

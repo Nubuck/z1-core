@@ -4,7 +4,6 @@ import sc from '@z1/lib-ui-schema'
 import * as cm from './common'
 
 // parts
-const { types } = mx.view
 const signUpForm = props =>
   sc.form.create((f, k) =>
     f({ type: k.object }, [
@@ -52,7 +51,7 @@ const signUpForm = props =>
 // main
 export const signUp = mx.fn((t, a) =>
   mx.view.create('sign-up', {
-    state() {
+    state(ctx) {
       return {
         initial: {
           data: {
@@ -81,7 +80,7 @@ export const signUp = mx.fn((t, a) =>
                   t.atOr({}, 'next.data', props)
                 ),
             ui: signUpForm({
-              disabled: t.eq(props.status, types.status.loading),
+              disabled: t.eq(props.status, ctx.status.loading),
             }),
           }
         },
@@ -97,7 +96,7 @@ export const signUp = mx.fn((t, a) =>
           )
           if (checkError) {
             return {
-              status: types.status.fail,
+              status: ctx.status.fail,
               data,
               error: checkError,
             }
@@ -115,7 +114,7 @@ export const signUp = mx.fn((t, a) =>
           )
           if (userError) {
             return {
-              status: types.status.fail,
+              status: ctx.status.fail,
               data,
               error: userError,
             }
@@ -141,13 +140,6 @@ export const signUp = mx.fn((t, a) =>
                 value={t.at('state.data.mode', props)}
                 render={{
                   form() {
-                    const sizes = {
-                      xs: 10,
-                      sm: 8,
-                      md: 5,
-                      lg: 4,
-                      xl: 3,
-                    }
                     return (
                       <React.Fragment>
                         <ctx.IconLabel
@@ -181,7 +173,7 @@ export const signUp = mx.fn((t, a) =>
                               color="orange-500"
                               margin={{ top: 5 }}
                               x="center"
-                              {...sizes}
+                              {...cm.sizes}
                             />
                           )}
                         />
@@ -195,7 +187,7 @@ export const signUp = mx.fn((t, a) =>
                             })
                           }
                           x="center"
-                          {...sizes}
+                          {...cm.sizes}
                         >
                           <ctx.Row x="center" y="center" margin={{ top: 3 }}>
                             <ctx.Button

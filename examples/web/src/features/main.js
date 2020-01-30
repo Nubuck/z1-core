@@ -5,26 +5,29 @@ import parts from '../parts'
 
 // features
 import layoutKit from './layout'
-import account from './account'
+import accountKit from './account'
 import pages from './pages'
 import machines from './machines'
 
 // unpack
 const layout = layoutKit(parts)
-
-// context
-const ctx = {
+const core = {
   ...parts,
   state: {
     ...parts.state,
     ...layout.parts,
   },
 }
+const account = accountKit(core)
+
+// context
+const ctx = {
+  ...core,
+  state: {
+    ...core.state,
+    ...account.parts,
+  },
+}
 
 // main
-export const features = z.combine([
-  layout,
-  account(ctx),
-  pages(ctx),
-  machines(ctx),
-])
+export const features = z.combine([layout, account, pages(ctx), machines(ctx)])

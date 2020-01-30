@@ -15,6 +15,13 @@ const authStatus = {
 }
 
 // main
+export const authenticated = z.fn(t => state =>
+  t.and(
+    t.notNil(t.at('account.user', state)),
+    t.eq(authStatus.success, t.at('account.authStatus', state))
+  )
+)
+
 const name = 'account'
 export const stateKit = parts =>
   z.fn((t, a) => {
@@ -22,11 +29,6 @@ export const stateKit = parts =>
       t.or(
         t.neq(actions.routeView, actionType),
         t.eq(t.at('location.payload.view', state), 'not-authorized')
-      )
-    const authenticated = state =>
-      t.and(
-        t.notNil(t.at('account.user', state)),
-        t.eq(authStatus.success, t.at('account.authStatus', state))
       )
     return z.state.create(name, [
       {
@@ -269,7 +271,7 @@ export const stateKit = parts =>
         path: 'account',
         state: views.state({}),
       }),
-      parts.state.registerNav({
+      parts.registerNav({
         anon: sc.nav.create(n => [
           n('/account/sign-in', {
             slot: 'body-action',

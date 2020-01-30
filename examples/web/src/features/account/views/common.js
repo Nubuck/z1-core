@@ -7,3 +7,11 @@ export const transmitOk = mx.fn(t => props =>
     t.isNil(t.at('next.error', props))
   )
 )
+
+export const sizes = {
+  xs: 10,
+  sm: 8,
+  md: 5,
+  lg: 4,
+  xl: 3,
+}

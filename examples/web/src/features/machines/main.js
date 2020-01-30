@@ -9,7 +9,7 @@ import views from './views'
 export const feature = z.create(
   'machines',
   parts => {
-    const state = stateKit(parts)
+    const state = stateKit(parts.state)
     return {
       state: [state],
       routing: [

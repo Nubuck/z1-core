@@ -4,7 +4,6 @@ import sc from '@z1/lib-ui-schema'
 import * as cm from './common'
 
 // parts
-const { types } = mx.view
 const signInForm = props =>
   sc.form.create((f, k) =>
     f({ type: k.object }, [
@@ -34,7 +33,7 @@ const signInForm = props =>
 // main
 export const signIn = mx.fn((t, a) =>
   mx.view.create('sign-in', {
-    state() {
+    state(ctx) {
       return {
         initial: {
           data: {},
@@ -91,7 +90,7 @@ export const signIn = mx.fn((t, a) =>
             })
           )
           return {
-            status: types.status.waiting,
+            status: ctx.status.waiting,
             data: {},
             error: null,
           }
@@ -107,13 +106,7 @@ export const signIn = mx.fn((t, a) =>
             centered
             loading={t.eq(status, 'waiting')}
             render={() => {
-              const sizes = {
-                xs: 10,
-                sm: 8,
-                md: 5,
-                lg: 4,
-                xl: 3,
-              }
+          
               return (
                 <React.Fragment>
                   <ctx.IconLabel
@@ -146,7 +139,7 @@ export const signIn = mx.fn((t, a) =>
                         color="orange-500"
                         margin={{ top: 5 }}
                         x="center"
-                        {...sizes}
+                        {...cm.sizes}
                       />
                     )}
                   />
@@ -158,7 +151,7 @@ export const signIn = mx.fn((t, a) =>
                       props.mutations.formTransmit({ data: payload.formData })
                     }
                     x="center"
-                    {...sizes}
+                    {...cm.sizes}
                   >
                     <ctx.Row x="center" y="center" margin={{ top: 3 }}>
                       <ctx.Button

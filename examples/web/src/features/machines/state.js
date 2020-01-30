@@ -21,7 +21,7 @@ export const stateKit = parts =>
           more: routeProps,
         },
       }),
-      parts.state.registerNav({
+      parts.registerNav({
         secure: sc.nav.create(n => [
           n('/machines', {
             slot: 'nav',

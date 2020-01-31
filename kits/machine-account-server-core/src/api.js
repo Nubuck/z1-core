@@ -219,7 +219,7 @@ export const api = (z, props) => {
                         login: t.omit(['machine'], login),
                         machine: t.at('machine', login),
                       }
-                    }, logins.data),
+                    }, logins.data || []),
                   })
                 },
               }
@@ -246,21 +246,21 @@ export const api = (z, props) => {
             app.on('login', (authResult, params, context) => {
               if (isLogin(authResult.user)) {
                 patchStatus(app, authResult.user, 'online')
-                  .then()
+                .then(()=>{})
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })
             app.on('logout', (authResult, params, context) => {
               if (isLogin(authResult.user)) {
                 patchStatus(app, authResult.user, 'offline')
-                  .then()
+                .then(()=>{})
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })
             app.on('disconnect', connection => {
               if (isLogin(connection.user)) {
                 patchStatus(app, connection.user, 'offline')
-                  .then()
+                .then(()=>{})
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })

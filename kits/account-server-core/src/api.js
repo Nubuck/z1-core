@@ -92,21 +92,21 @@ export const api = (z, props) => {
           app.on('login', (authResult, params, context) => {
             if (isUser(authResult.user)) {
               patchStatus(app, authResult.user, 'online')
-                .then(() => app.debug('user online', authResult.user[dbId]))
+                .then()
                 .catch(e => app.error('failed to updated user status', e))
             }
           })
           app.on('logout', (authResult, params, context) => {
             if (isUser(authResult.user)) {
               patchStatus(app, authResult.user, 'offline')
-                .then(() => app.debug('user offline', authResult.user[dbId]))
+                .then()
                 .catch(e => app.error('failed to updated user status', e))
             }
           })
           app.on('disconnect', connection => {
-              if (isUser(connection.user)) {
+            if (isUser(connection.user)) {
               patchStatus(app, connection.user, 'offline')
-                .then(() => app.debug('user offline', connection.user[dbId]))
+                .then()
                 .catch(e => app.error('failed to updated user status', e))
             }
           })

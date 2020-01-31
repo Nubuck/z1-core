@@ -3,7 +3,7 @@ import mx from '@z1/lib-feature-macros'
 import sc from '@z1/lib-ui-schema'
 
 // main
-export const home = mx.fn((t, a) =>
+export const home = mx.fn((t, a, rx) =>
   mx.view.create('home', {
     state() {
       const { types } = mx.view
@@ -53,6 +53,33 @@ export const home = mx.fn((t, a) =>
             error: null,
           }
         },
+        subscribe(props) {
+          console.log('SUBSCRIBE', t.keys(props))
+          const patched$ = rx.fromEvent(
+            props.api.service('machine-logins'),
+            'patched'
+          )
+          const created$ = rx.fromEvent(
+            props.api.service('machine-logins'),
+            'created'
+          )
+          return patched$.pipe(
+            rx.merge(
+              created$.pipe(
+                rx.map(created => ({
+                  data: { item: created, event: 'created' },
+                }))
+              )
+            ),
+            rx.map(patchedOrCreated =>
+              t.eq(t.at('data.event', patchedOrCreated), 'created')
+                ? props.mutators.dataChange(patchedOrCreated)
+                : props.mutators.dataChange({
+                    data: { item: patchedOrCreated, event: 'patched' },
+                  })
+            )
+          )
+        },
       }
     },
     ui(ctx) {
@@ -79,7 +106,6 @@ export const home = mx.fn((t, a) =>
                     return 50 + 50 * t.len(item.logins)
                   }}
                   render={(machine, rowProps) => {
-                    console.log('ROW PROPS', rowProps)
                     return (
                       <ctx.ListItem
                         key={rowProps.key}

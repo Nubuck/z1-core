@@ -1,4 +1,5 @@
 import addIndex from 'ramda/es/addIndex'
+import adjust from 'ramda/es/adjust'
 import allPass from 'ramda/es/allPass'
 import anyPass from 'ramda/es/anyPass'
 import and from 'ramda/es/and'
@@ -72,6 +73,7 @@ import toString from 'ramda/es/toString'
 import trim from 'ramda/es/trim'
 import tryCatch from 'ramda/es/tryCatch'
 import rType from 'ramda/es/type'
+import update from 'ramda/es/update'
 import uniq from 'ramda/es/uniq'
 import values from 'ramda/es/values'
 import when from 'ramda/es/when'
@@ -169,6 +171,7 @@ export const TASK = {
   at,
   atOr,
   addIndex,
+  adjust,
   allPass,
   anyPass,
   and,
@@ -250,6 +253,7 @@ export const TASK = {
   trim,
   tryCatch,
   type: rType,
+  update,
   uniq,
   values,
   isType,

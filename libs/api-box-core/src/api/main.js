@@ -56,11 +56,9 @@ export const api = task(t => (ctx = {}) => {
     )
 
     // adapters
-    // api.configure(Adapters.configure)
     Adapters.configure(api)
 
     // Lifecycle before
-    // api.configure(nextBoxes.lifecycle(lifecycle.onConfig))
     nextBoxes.lifecycle(lifecycle.onConfig)(api)
 
     // Configure authentication
@@ -69,7 +67,6 @@ export const api = task(t => (ctx = {}) => {
     }
 
     // Configure boxes
-    // api.configure(nextBoxes.configure)
     const adapterStore = api.get('adapterStore')
     const adapterKeys = t.keys(adapterStore)
 
@@ -113,14 +110,6 @@ export const api = task(t => (ctx = {}) => {
     }, adapterKeys)
 
     // Configure channels
-    // api.configure(
-    //   channel.config(
-    //     t.concat(
-    //       t.isType(channels, 'Function') ? [channels] : [],
-    //       nextBoxes.channels || []
-    //     )
-    //   )
-    // )
     channel.config(
       t.concat(
         t.isType(channels, 'Function') ? [channels] : [],
@@ -150,7 +139,6 @@ export const api = task(t => (ctx = {}) => {
     }
 
     // Lifecycle after and onStart
-    // api.configure(nextBoxes.lifecycle(lifecycle.afterConfig))
     nextBoxes.lifecycle(lifecycle.afterConfig)(api)
 
     api.onStart = () => {

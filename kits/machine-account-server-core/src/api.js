@@ -65,7 +65,7 @@ export const api = (z, props) => {
             hooks: {
               before: {
                 all: [h.auth.authenticate('jwt')],
-                create: [h.common.disallow('external')],
+                // create: [h.common.disallow('external')],
               },
               after: {
                 find: [withLogins],
@@ -80,7 +80,7 @@ export const api = (z, props) => {
               hooks: {
                 before: {
                   all: [h.auth.authenticate('jwt')],
-                  create: [h.common.disallow('external')],
+                  // create: [h.common.disallow('external')],
                 },
                 after: {
                   find: [withMachine],
@@ -246,27 +246,21 @@ export const api = (z, props) => {
             app.on('login', (authResult, params, context) => {
               if (isLogin(authResult.user)) {
                 patchStatus(app, authResult.user, 'online')
-                  .then(() =>
-                    app.debug('machine online', authResult.user[dbId])
-                  )
+                  .then()
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })
             app.on('logout', (authResult, params, context) => {
               if (isLogin(authResult.user)) {
                 patchStatus(app, authResult.user, 'offline')
-                  .then(() =>
-                    app.debug('machine offline', authResult.user[dbId])
-                  )
+                  .then()
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })
             app.on('disconnect', connection => {
               if (isLogin(connection.user)) {
                 patchStatus(app, connection.user, 'offline')
-                  .then(() =>
-                    app.debug('machine offline', connection.user[dbId])
-                  )
+                  .then()
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })

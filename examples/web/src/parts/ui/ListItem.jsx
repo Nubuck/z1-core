@@ -359,7 +359,20 @@ const renderListItem = z.fn(t => props => {
           t.isNil(children) ? false : t.gt(React.Children.count(children), 0),
         ])}
         render={() => {
-          const nextChildren = <React.Fragment>{nested}</React.Fragment>
+          const nextChildren = (
+            <React.Fragment>
+              <When key="nested" is={hasNested} render={() => nested} />
+              <When
+                key="children"
+                is={
+                  t.isNil(children)
+                    ? false
+                    : t.gt(React.Children.count(children), 0)
+                }
+                render={() => children}
+              />
+            </React.Fragment>
+          )
           if (isRenderProp(nestedSlot)) {
             return nestedSlot({ children: nextChildren })
           }

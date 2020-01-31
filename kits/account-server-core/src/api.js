@@ -17,28 +17,28 @@ export const api = (z, props) => {
   return z.featureBox.fn((t, a) =>
     z.featureBox.api.create('account', {
       models: props.models,
-      services(s, { auth, common, data }) {
+      services(s, h) {
         s([props.adapter, 'users'], props.serviceFactory, {
           hooks: {
             before: {
-              find: [auth.authenticate('jwt'), data.safeFindMSSQL],
-              get: [auth.authenticate('jwt')],
+              find: [h.auth.authenticate('jwt'), h.data.safeFindMSSQL],
+              get: [h.auth.authenticate('jwt')],
               create: [
-                auth.hashPassword('password'),
+                h.auth.hashPassword('password'),
                 AuthManagement.hooks.addVerification('auth-management'),
               ],
-              update: [common.disallow('external')],
+              update: [h.common.disallow('external')],
               patch: [
-                common.when(
-                  common.isProvider('external'),
-                  auth.hashPassword('password'),
-                  auth.authenticate('jwt')
+                h.common.when(
+                  h.common.isProvider('external'),
+                  h.auth.hashPassword('password'),
+                  h.auth.authenticate('jwt')
                 ),
               ],
-              remove: [auth.authenticate('jwt')],
+              remove: [h.auth.authenticate('jwt')],
             },
             after: {
-              all: [auth.protect('password')],
+              all: [h.auth.protect('password')],
               create: [
                 hook => {
                   if (!hook.params.provider) {
@@ -75,13 +75,46 @@ export const api = (z, props) => {
           {
             hooks: {
               before: {
-                find: [data.safeFindMSSQL],
+                find: [h.data.safeFindMSSQL],
                 create: [
-                  common.when(
+                  h.common.when(
                     isAction(['passwordChange', 'identityChange']),
-                    auth.authenticate('jwt')
+                    h.auth.authenticate('jwt')
                   ),
                 ],
+              },
+            },
+          }
+        )
+        // meta user for multi jwt auth
+        s(
+          'meta-users',
+          app => {
+            const entityService = params =>
+              t.eq(
+                'node-xmlhttprequest',
+                t.to.lowerCase(t.atOr('', 'headers.user-agent', params))
+              )
+                ? 'machine-account'
+                : 'users'
+            return {
+              id: '_id',
+              async get(id, params) {
+                const entity = entityService(params)
+                // app.debug('META USERS GET', entity, t.at('user', params))
+                return await app.service(entity).get(id, params)
+              },
+              async find(params) {
+                const entity = entityService(params)
+                // app.debug('META USERS FIND', entity, t.at('user', params))
+                return await app.service(entity).find(params)
+              },
+            }
+          },
+          {
+            hooks: {
+              before: {
+                all: [h.auth.authenticate('jwt')],
               },
             },
           }

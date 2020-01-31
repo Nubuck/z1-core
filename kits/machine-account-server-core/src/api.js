@@ -211,7 +211,6 @@ export const api = (z, props) => {
                   const logins = await app
                     .service('machine-logins')
                     .find(params, { includeMachine: true })
-
                   return t.merge(logins, {
                     data: t.map(login => {
                       return {

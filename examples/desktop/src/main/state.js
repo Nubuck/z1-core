@@ -112,11 +112,28 @@ const appState = z.fn((t, a) =>
                     )
                     if (authErr) {
                       log.debug(
-                        'auth failed -> create remote machine account begin'
+                        'auth failed -> create remote machine account with sysInfo begin'
                       )
-                      // TODO: add system info
+                      const [sysErr, machineWithSys] = await a.of(
+                        ctx.machine.system(account.machine)
+                      )
+                      const nextAccount = t.and(
+                        t.isNil(sysErr),
+                        t.notNil(machineWithSys)
+                      )
+                        ? {
+                            machine: machineWithSys,
+                            login: account.login,
+                          }
+                        : account
+                      if (sysErr) {
+                        log.debug(
+                          'collecting system information failed',
+                          sysErr
+                        )
+                      }
                       const [remoteErr, remote] = await a.of(
-                        ctx.api.service('machine-account').create(account)
+                        ctx.api.service('machine-account').create(nextAccount)
                       )
                       if (remoteErr) {
                         log.debug('create remote machine account failed')

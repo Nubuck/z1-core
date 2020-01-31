@@ -2,8 +2,17 @@ import AuthManagement from 'feathers-authentication-management'
 
 // main
 export const api = (z, props) => {
+  const dbId = z.featureBox.fn(t =>
+    t.eq(props.adapter, 'nedb') ? '_id' : 'id'
+  )
   const isAction = z.featureBox.fn(t => (actions = []) => hook => {
     return t.notNil(t.find(action => t.eq(action, hook.data.action), actions))
+  })
+  const isUser = z.featureBox.fn(t => user =>
+    t.allOf([t.has('name')(user), t.has('surname')(user), t.has('email')(user)])
+  )
+  const patchStatus = z.featureBox.fn((t, a) => async (app, user, status) => {
+    await a.of(app.service('users').patch(user[dbId], { status }))
   })
   return z.featureBox.fn((t, a) =>
     z.featureBox.api.create('account', {
@@ -81,23 +90,25 @@ export const api = (z, props) => {
       lifecycle: {
         [z.featureBox.api.lifecycle.onSetup]: app => {
           app.on('login', (authResult, params, context) => {
-            app.debug(
-              'ACCOUNT LOGIN',
-              t.keys(authResult),
-              t.keys(params),
-              t.keys(context)
-            )
+            if (isUser(authResult.user)) {
+              patchStatus(app, authResult.user, 'online')
+                .then(() => app.debug('user online', authResult.user[dbId]))
+                .catch(e => app.error('failed to updated user status', e))
+            }
           })
           app.on('logout', (authResult, params, context) => {
-            app.debug(
-              'ACCOUNT LOGOUT',
-              t.keys(authResult),
-              t.keys(params),
-              t.keys(context)
-            )
+            if (isUser(authResult.user)) {
+              patchStatus(app, authResult.user, 'offline')
+                .then(() => app.debug('user offline', authResult.user[dbId]))
+                .catch(e => app.error('failed to updated user status', e))
+            }
           })
           app.on('disconnect', connection => {
-            app.debug('ACCOUNT DISCONNECT', t.keys(connection))
+            if (isUser(connection.user)) {
+              patchStatus(app, connection.user, 'offline')
+                .then(() => app.debug('user offline', connection.user[dbId]))
+                .catch(e => app.error('failed to updated user status', e))
+            }
           })
         },
       },

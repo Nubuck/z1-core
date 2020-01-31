@@ -1,26 +1,40 @@
 import { strategy } from './strategy'
 
 // main
-export const api = (z, props) =>
-  z.featureBox.fn((t, a) =>
+export const api = (z, props) => {
+  const dbId = z.featureBox.fn(t =>
+    t.eq(props.adapter, 'nedb') ? '_id' : 'id'
+  )
+  const isLogin = z.featureBox.fn(t => user =>
+    t.allOf([t.has('login')(user), t.has('machine')(user)])
+  )
+  const patchStatus = z.featureBox.fn((t, a) => async (app, user, status) => {
+    await a.of(app.service('machine-logins').patch(user[dbId], { status }))
+  })
+  return z.featureBox.fn((t, a) =>
     z.featureBox.api.create('machineAccount', [
       {
         models: props.models,
         services(s, h) {
-          const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
           const withLogins = h.common.when(
-            ctx => t.not(t.atOr(false, 'params.excludeLogins', ctx)),
+            ctx => {
+              return t.not(t.atOr(false, 'params.excludeLogins', ctx))
+            },
             h.common.fastJoin(ctx => {
               return {
                 joins: {
                   logins() {
                     return async machine => {
-                      return await ctx.app.service('machine-logins').find({
-                        query: {
-                          machineId: machine[dbId],
-                          $limit: 10000,
-                        },
-                      }).data
+                      const result = await ctx.app
+                        .service('machine-logins')
+                        .find({
+                          query: {
+                            machineId: machine[dbId],
+                            $limit: 10000,
+                          },
+                        })
+                      machine.logins = result.data
+                      return machine
                     }
                   },
                 },
@@ -34,9 +48,11 @@ export const api = (z, props) =>
                 joins: {
                   machine() {
                     return async login => {
-                      return await ctx.app
+                      const result = await ctx.app
                         .service('machines')
                         .get(login.machineId, { excludeLogins: true })
+                      login.machine = result
+                      return login
                     }
                   },
                 },
@@ -226,28 +242,37 @@ export const api = (z, props) =>
               .get('authenticationService')
               .register('machine', new MachineStrategy())
           },
-          // [z.featureBox.api.lifecycle.onSetup]: app => {
-          //   app.on('login', (authResult, params, context) => {
-          //     app.debug(
-          //       'MACHINE LOGIN',
-          //       authResult,
-          //       t.keys(params),
-          //       t.keys(context)
-          //     )
-          //   })
-          //   app.on('logout', (authResult, params, context) => {
-          //     app.debug(
-          //       'MACHINE LOGOUT',
-          //       authResult,
-          //       t.keys(params),
-          //       t.keys(context)
-          //     )
-          //   })
-          //   app.on('disconnect', connection => {
-          //     app.debug('MACHINE DISCONNECT', t.keys(connection))
-          //   })
-          // },
+          [z.featureBox.api.lifecycle.onSetup]: app => {
+            app.on('login', (authResult, params, context) => {
+              if (isLogin(authResult.user)) {
+                patchStatus(app, authResult.user, 'online')
+                  .then(() =>
+                    app.debug('machine online', authResult.user[dbId])
+                  )
+                  .catch(e => app.error('failed to updated machine status', e))
+              }
+            })
+            app.on('logout', (authResult, params, context) => {
+              if (isLogin(authResult.user)) {
+                patchStatus(app, authResult.user, 'offline')
+                  .then(() =>
+                    app.debug('machine offline', authResult.user[dbId])
+                  )
+                  .catch(e => app.error('failed to updated machine status', e))
+              }
+            })
+            app.on('disconnect', connection => {
+              if (isLogin(connection.user)) {
+                patchStatus(app, connection.user, 'offline')
+                  .then(() =>
+                    app.debug('machine offline', connection.user[dbId])
+                  )
+                  .catch(e => app.error('failed to updated machine status', e))
+              }
+            })
+          },
         },
       },
     ])
   )
+}

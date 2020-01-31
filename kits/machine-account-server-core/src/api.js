@@ -264,6 +264,7 @@ export const api = (z, props) => {
               }
             })
           },
+          [z.featureBox.api.lifecycle.onSync]: app => {},
         },
       },
     ])

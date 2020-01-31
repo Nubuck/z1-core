@@ -1,6 +1,6 @@
 // hot code
 import App from './App'
-import features from './features'
+import features, { withRest } from './features'
 import './index.css'
 import 'react-virtualized/styles.css'
 // deps
@@ -13,7 +13,7 @@ const dev = process.env.NODE_ENV === 'development'
 const store = z.store.create({
   boxes: features.state,
   context: {
-    api: api(dev ? 'http://localhost:3035' : '/'),
+    api: withRest(api(dev ? 'http://localhost:3035' : '/')),
   },
   logging: dev,
 })

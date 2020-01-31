@@ -8,6 +8,7 @@ import layoutKit from './layout'
 import accountKit from './account'
 import pages from './pages'
 import machines from './machines'
+import cloudStorage from './cloud-storage'
 
 // unpack
 const layout = layoutKit(parts)
@@ -30,4 +31,11 @@ const ctx = {
 }
 
 // main
-export const features = z.combine([layout, account, pages(ctx), machines(ctx)])
+export const withRest = parts.state.withRest
+export const features = z.combine([
+  layout,
+  account,
+  pages(ctx),
+  machines(ctx),
+  cloudStorage(ctx),
+])

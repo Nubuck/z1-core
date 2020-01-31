@@ -465,7 +465,7 @@ export const renderButton = fn(t => props => {
       ]),
       next: b => b.next(box).next(next),
       className: `${
-        t.isZeroLen(className) ? '' : `${className} `
+        t.noLen(className) ? '' : `${className} `
       }${transition} ${shape} ${fill}`,
       style: isCircle ? t.merge(circleSize(size), style) : style,
       disabled: loading ? true : disabled,

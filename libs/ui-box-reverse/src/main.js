@@ -19,7 +19,7 @@ const splitProps = task(t => list =>
   )
 )
 export const toBox = task(t => (css = '') => {
-  if (t.isZeroLen(css)) {
+  if (t.noLen(css)) {
     return {}
   }
   return t.mapObjIndexed(

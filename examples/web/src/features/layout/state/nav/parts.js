@@ -48,7 +48,7 @@ export const calcBodyLeft = z.fn(t => (status, size, width, pageNav = false) =>
 export const calcBodySpacing = z.fn(t => (key, items, size, height) =>
   t.isEmpty(items)
     ? 0
-    : t.contains(size, ['lg', 'xl'])
+    : t.includes(size, ['lg', 'xl'])
     ? t.eq(key, 'top')
       ? height
       : 0
@@ -59,7 +59,7 @@ export const calcBodySpacing = z.fn(t => (key, items, size, height) =>
 export const calcPageLeft = z.fn(t => (status, size, width, pageStatus) =>
   t.and(
     t.not(t.or(t.eq(size, 'lg'), t.eq(size, 'xl'))),
-    t.and(t.eq(status, 'closed'), t.eq(pageStatus, 'closed'))
+    t.neq(status, 'closed'), t.eq(pageStatus, 'closed')
   )
     ? -(width + navSize.page)
     : t.not(t.or(t.eq(size, 'lg'), t.eq(size, 'xl')))

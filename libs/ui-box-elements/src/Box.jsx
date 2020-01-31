@@ -23,7 +23,7 @@ export const renderBox = fn(t => (props, otherChildren) => {
     t.isNil(box),
     t.isNil(stretch),
     t.isNil(next),
-    t.isZeroLen(t.keys(uiProps)),
+    t.noLen(t.keys(uiProps)),
   ])
     ? elClassName
     : uiBox
@@ -37,7 +37,7 @@ export const renderBox = fn(t => (props, otherChildren) => {
               }
         )
         .next(t.omit(['className'], uiProps || {}))
-        .next(t.isZeroLen(elClassName) ? {} : { className: elClassName })
+        .next(t.noLen(elClassName) ? {} : { className: elClassName })
         .next(next || {})
         .toCss()
   const boxProps = t.merge(nextProps, { className })

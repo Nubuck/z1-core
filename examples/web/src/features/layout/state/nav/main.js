@@ -377,12 +377,12 @@ export const nav = z.fn(t =>
               const checkMatch = t.isNil(foundNav)
                 ? t.isNil(matched)
                   ? foundNav
-                  : t.contains(pathname, t.atOr('', 'nav.matched.path', state))
+                  : t.includes(pathname, t.atOr('', 'nav.matched.path', state))
                   ? matched
                   : foundNav
                 : t.not(foundNav.hasChildren)
                 ? t.notNil(matched)
-                  ? t.contains(pathname, matched.path)
+                  ? t.includes(pathname, matched.path)
                     ? matched
                     : sc.nav.find(foundNav.parentPath || '', schema)
                   : sc.nav.find(foundNav.parentPath || '', schema)
@@ -408,13 +408,13 @@ export const nav = z.fn(t =>
                 t.to.pairs(schema)
               )
 
-              const validMatch = t.notZeroLen(primary.items)
+              const validMatch = t.hasLen(primary.items)
                 ? t.isNil(checkMatch)
                   ? checkMatch
                   : t.neq('nav', slotPath(checkMatch))
                   ? t.or(
                       t.not(checkMatch.hasChildren),
-                      t.isZeroLen(
+                      t.noLen(
                         t.filter(
                           item => t.eq('nav', slotPath(item)),
                           t.values(checkMatch.children || [])
@@ -546,11 +546,11 @@ export const nav = z.fn(t =>
                     ? t.atOr('', 'nav.text', state)
                     : validMatch.options.text,
                   width:
-                    t.getMatch(finalMode)({
+                    t.match({
                       [navMode.page]: 0,
                       [navMode.primary]: navSize.primary,
                       [navMode.secondary]: navSize.primary + navSize.secondary,
-                    }) || 0,
+                    })(finalMode) || 0,
                   primary,
                   secondary: { items: nextSecondaryItems },
                   body: nextBody,

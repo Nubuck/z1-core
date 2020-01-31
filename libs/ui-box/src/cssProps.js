@@ -78,7 +78,7 @@ export const cssProps = task(t => ({
       return t.not(v) ? '' : 'rounded'
     }
     if (t.isType(v, 'String')) {
-      return `rounded-${t.contains(v, sides) ? t.head(v) : v}`
+      return `rounded-${t.includes(v, sides) ? t.head(v) : v}`
     }
     if (t.isType(v, 'Object')) {
       return t.tags.oneLineInlineLists`

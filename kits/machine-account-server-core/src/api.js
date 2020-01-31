@@ -65,7 +65,7 @@ export const api = (z, props) => {
             hooks: {
               before: {
                 all: [h.auth.authenticate('jwt')],
-                // create: [h.common.disallow('external')],
+                create: [h.common.disallow('external')],
               },
               after: {
                 find: [withLogins],
@@ -80,7 +80,7 @@ export const api = (z, props) => {
               hooks: {
                 before: {
                   all: [h.auth.authenticate('jwt')],
-                  // create: [h.common.disallow('external')],
+                  create: [h.common.disallow('external')],
                 },
                 after: {
                   find: [withMachine],

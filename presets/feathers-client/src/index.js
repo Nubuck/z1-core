@@ -9,4 +9,3 @@ export const Feathers = feathers
 export const FeathersIO = feathersIO
 export const FeathersAuth = feathersAuth
 export const IO = io
-// export const LocalForage = localForage

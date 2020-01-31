@@ -119,7 +119,7 @@ const renderListItem = z.fn(t => props => {
   const stamp = t.atOr(null, 'stamp', props)
   const buttons = t.atOr([], 'buttons', props)
   const hasStamp = t.notNil(stamp)
-  const hasButtons = t.notZeroLen(buttons)
+  const hasButtons = t.hasLen(buttons)
   // nested
   const nested = t.atOr(null, 'nested', props)
   const children = t.atOr(null, 'children', props)

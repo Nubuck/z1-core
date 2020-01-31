@@ -14,43 +14,41 @@ export const home = mx.fn((t, a, rx) =>
         data(props) {
           return {
             status: props.status,
-            data: t.match({
+            error: t.atOr(null, 'next.error', props),
+            data: t.runMatch({
               _: () => props.data,
               [ctx.event.dataLoadComplete]: () =>
-                t.merge(
-                  props.data,
-                  {
-                    machines: t.atOr(
-                      props.data.machines,
-                      'next.data.machines',
-                      props
-                    ),
-                  },
-                  props.event
-                ),
+                t.merge(props.data, {
+                  machines: t.atOr(
+                    props.data.machines,
+                    'next.data.machines',
+                    props
+                  ),
+                }),
               [ctx.event.dataChange]: () => {
-                const entity = t.at('next.entity', props)
+                // events from subscribe
                 const change = t.at('next.change', props)
                 const machines = t.at('data.machines', props)
-                if (t.eq('machine', entity)) {
+                // machine events
+                if (t.eq('machine', t.at('next.entity', props))) {
                   const machine = t.at('next.machine', props)
                   return t.merge(props.data, {
-                    machines: t.match({
+                    machines: t.runMatch({
                       _: () => machines,
                       created: () => t.append(machine, machines),
-                      patched: () => {
-                        return t.update(
+                      patched: () =>
+                        t.update(
                           t.findIndex(
                             current => t.eq(current._id, machine._id),
                             machines
                           ),
                           machine,
                           machines
-                        )
-                      },
-                    })(change)(),
+                        ),
+                    })(change),
                   })
                 }
+                // login events
                 const login = t.at('next.login', props)
                 const machineIndex = t.findIndex(
                   machine => t.eq(machine._id, login.machineId),
@@ -69,24 +67,25 @@ export const home = mx.fn((t, a, rx) =>
                     machineIndex,
                     machine =>
                       t.merge(machine, {
-                        logins: t.match({
+                        logins: t.runMatch({
                           _: () => machine.logins,
-                          patched: () => {
-                            const loginIndex = t.findIndex(
-                              current => t.eq(current._id, login._id),
+                          patched: () =>
+                            t.update(
+                              t.findIndex(
+                                current => t.eq(current._id, login._id),
+                                logins
+                              ),
+                              login,
                               logins
-                            )
-                            return t.update(loginIndex, login, logins)
-                          },
+                            ),
                           created: () => t.append(login, logins),
-                        })(change)(),
+                        })(change),
                       }),
                     machines
                   ),
                 })
               },
-            })(props.event)(),
-            error: t.atOr(null, 'next.error', props),
+            })(props.event),
           }
         },
         async load(props) {
@@ -115,47 +114,46 @@ export const home = mx.fn((t, a, rx) =>
           }
         },
         subscribe(props) {
-          const machineCreated$ = rx.fromEvent(
-            props.api.service('machines'),
-            'created'
-          )
-          const loginPatched$ = rx.fromEvent(
-            props.api.service('machine-logins'),
-            'patched'
-          )
-          const loginCreated$ = rx.fromEvent(
-            props.api.service('machine-logins'),
-            'created'
-          )
-          return loginPatched$.pipe(
-            rx.merge(
-              machineCreated$.pipe(
-                rx.map(machine => ({
-                  machine,
-                  change: 'created',
-                  entity: 'machine',
-                }))
+          return rx
+            .fromEvent(props.api.service('machine-logins'), 'patched')
+            .pipe(
+              rx.merge(
+                rx.fromEvent(props.api.service('machines'), 'created').pipe(
+                  rx.map(machine => ({
+                    machine,
+                    change: 'created',
+                    entity: 'machine',
+                  }))
+                ),
+                rx
+                  .fromEvent(props.api.service('machine-logins'), 'created')
+                  .pipe(
+                    rx.map(machineOrlogin =>
+                      t.eq('machine', t.at('entity', machineOrlogin))
+                        ? machineOrlogin
+                        : {
+                            login: machineOrlogin,
+                            change: 'created',
+                            entity: 'login',
+                          }
+                    )
+                  )
               ),
-              loginCreated$.pipe(
-                rx.map(machineOrlogin =>
-                  t.eq('machine', t.at('entity', machineOrlogin))
+              rx.map(machineOrlogin =>
+                props.mutators.dataChange(
+                  t.or(
+                    t.eq('created', t.at('change', machineOrlogin)),
+                    t.eq('machine', t.at('entity', machineOrlogin))
+                  )
                     ? machineOrlogin
                     : {
                         login: machineOrlogin,
-                        change: 'created',
+                        change: 'patched',
                         entity: 'login',
                       }
                 )
               )
-            ),
-            rx.map(login =>
-              props.mutators.dataChange(
-                t.eq('created', t.at('change', login))
-                  ? login
-                  : { login, change: 'patched', entity: 'login' }
-              )
             )
-          )
         },
       }
     },
@@ -170,8 +168,8 @@ export const home = mx.fn((t, a, rx) =>
                 <ctx.IconLabel
                   icon={{ name: 'laptop', size: '3xl', color: 'blue-500' }}
                   label={{
-                    fontWeight: 'bold',
                     text: 'Machines',
+                    fontWeight: 'bold',
                     fontSize: 'xl',
                   }}
                   margin={{ bottom: 4 }}
@@ -183,7 +181,7 @@ export const home = mx.fn((t, a, rx) =>
                     if (t.isNil(item)) {
                       return 50
                     }
-                    return 50 + 70 * t.len(item.logins || [])
+                    return 70 * t.len(t.atOr([], 'logins', item)) + 50
                   }}
                   render={(machine, rowProps) => {
                     return (
@@ -202,57 +200,62 @@ export const home = mx.fn((t, a, rx) =>
                             fontSize: 'xs',
                           },
                         }}
-                        nested={
-                          <ctx.MapIndexed
-                            items={machine.logins || []}
-                            render={(login, index) => {
-                              return (
-                                <ctx.ListItem
-                                  key={`nested_${index}`}
-                                  avatar={{ icon: 'user', size: 'xs' }}
-                                  title={{
-                                    label: {
-                                      text: `${login.hostname} - ${login.username}`,
-                                      fontSize: 'sm',
-                                      margin: { bottom: 2 },
-                                    },
-                                  }}
-                                  subtitle={{
-                                    icon: { name: 'power-off', size: 'md' },
-                                    label: {
-                                      text: login.status,
-                                      fontSize: 'xs',
-                                    },
-                                    color: t.eq(login.status, 'online')
-                                      ? 'green-500'
-                                      : 'red-500',
-                                  }}
-                                  stamp={{
-                                    label: {
-                                      text: ctx
-                                        .dateFn(login.updatedAt)
-                                        .format('YYYY MM-DD HH:mm:ss A'),
-                                      fontSize: 'xs',
-                                    },
+                      >
+                        <ctx.MapIndexed
+                          items={t.atOr([], 'logins', machine)}
+                          render={(login, index) => {
+                            return (
+                              <ctx.ListItem
+                                key={`nested_login_${login._id}_${index}`}
+                                avatar={{ icon: 'user', size: 'xs' }}
+                                caption={{
+                                  label: {
+                                    text: t.at('role', login),
+                                    fontSize: 'xs',
+                                  },
+                                }}
+                                title={{
+                                  label: {
+                                    text: `${login.hostname} - ${login.username}`,
+                                    fontSize: 'sm',
                                     margin: { bottom: 2 },
-                                  }}
-                                  buttons={[
-                                    {
-                                      icon: 'gear',
-                                      shape: 'circle',
-                                      fill: 'ghost-solid',
-                                      size: 'xs',
-                                      color: 'blue-500',
-                                    },
-                                  ]}
-                                  padding={{ left: 1, top: 2 }}
-                                  width="full"
-                                />
-                              )
-                            }}
-                          />
-                        }
-                      />
+                                  },
+                                }}
+                                subtitle={{
+                                  icon: { name: 'power-off', size: 'md' },
+                                  label: {
+                                    text: login.status,
+                                    fontSize: 'xs',
+                                  },
+                                  color: t.eq(login.status, 'online')
+                                    ? 'green-500'
+                                    : 'red-500',
+                                }}
+                                stamp={{
+                                  label: {
+                                    text: ctx
+                                      .dateFn(login.updatedAt)
+                                      .format('YYYY MM-DD HH:mm:ss A'),
+                                    fontSize: 'xs',
+                                  },
+                                  margin: { bottom: 2 },
+                                }}
+                                buttons={[
+                                  {
+                                    icon: 'gear',
+                                    shape: 'circle',
+                                    fill: 'ghost-solid',
+                                    size: 'xs',
+                                    color: 'blue-500',
+                                  },
+                                ]}
+                                padding={{ left: 1, top: 2 }}
+                                width="full"
+                              />
+                            )
+                          }}
+                        />
+                      </ctx.ListItem>
                     )
                   }}
                 />

@@ -18,7 +18,7 @@ export const withSequelizeAdapter = Fn(t => (ctx = {}) => {
         const sequelize = createDBConnection(app)
         if (t.notNil(sequelize)) {
           const adapter = dbTools.get(adapterName)
-          if (t.notZeroLen(t.keys(adapter.models || {}))) {
+          if (t.hasLen(t.keys(adapter.models || {}))) {
             const define = sequelize.define.bind(sequelize)
             // register models
             t.forEach(modelName => {
@@ -95,7 +95,7 @@ export const withSequelizeAdapter = Fn(t => (ctx = {}) => {
       onSetup(boxes) {
         const adapter = dbTools.get(adapterName)
         if (t.notNil(adapter.client)) {
-          if (t.notZeroLen(t.keys(adapter.models || {}))) {
+          if (t.hasLen(t.keys(adapter.models || {}))) {
             t.forEach(associate => {
               if (t.isType(associate, 'Function')) {
                 associate(adapter.client.models)

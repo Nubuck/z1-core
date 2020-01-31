@@ -1,12 +1,9 @@
 import addIndex from 'ramda/es/addIndex'
 import adjust from 'ramda/es/adjust'
-import allPass from 'ramda/es/allPass'
-import anyPass from 'ramda/es/anyPass'
 import and from 'ramda/es/and'
 import append from 'ramda/es/append'
 import compose from 'ramda/es/compose'
 import concat from 'ramda/es/concat'
-import contains from 'ramda/es/contains'
 import dropLast from 'ramda/es/dropLast'
 import endsWith from 'ramda/es/endsWith'
 import equals from 'ramda/es/equals'
@@ -43,13 +40,10 @@ import or from 'ramda/es/or'
 import path from 'ramda/es/path'
 import pathOr from 'ramda/es/pathOr'
 import pick from 'ramda/es/pick'
-import pickAll from 'ramda/es/pickAll'
-import pickBy from 'ramda/es/pickBy'
 import pipe from 'ramda/es/pipe'
 import pluck from 'ramda/es/pluck'
 import prepend from 'ramda/es/prepend'
 import prop from 'ramda/es/prop'
-import propEq from 'ramda/es/propEq'
 import range from 'ramda/es/range'
 import reduce from 'ramda/es/reduce'
 import repeat from 'ramda/es/repeat'
@@ -83,7 +77,6 @@ import { snakeCase } from 'snake-case'
 import { pathCase } from 'path-case'
 import { sentenceCase } from 'sentence-case'
 import { dotCase } from 'dot-case'
-import { constantCase } from 'constant-case'
 import { paramCase } from 'param-case'
 
 import {
@@ -122,14 +115,14 @@ const getMatch = key => cases => {
 
 const match = cases => key => getMatch(`${key}`)(cases)
 
-const runMatch = (key, value) => cases => {
-  const matched = getMatch(key)(cases)
-  return isType(matched, 'Function') ? matched(value) : null
+const runMatch = cases => (key, value = {}) => {
+  const matched = match(cases)(key)
+  return isType(matched, 'function') ? matched(value) : null
 }
 
 const trampoline = fn => (...args) => {
   let result = fn(...args)
-  while (typeof result === 'function') {
+  while (isType(result, 'function')) {
     result = result()
   }
   return result
@@ -145,7 +138,9 @@ const allOf = (list = []) => {
   return equals(length(filter(subject => equals(subject, false), list)), 0)
 }
 
+// new alias: noLen + hasLen
 const isZeroLen = subject => equals(length(subject), 0)
+const notZeroLen = pipe(isZeroLen, not)
 
 const at = (pathAt, subject = {}) => {
   return path(split('.', pathAt), subject)
@@ -153,9 +148,12 @@ const at = (pathAt, subject = {}) => {
 const atOr = (other, pathAt, subject = {}) => {
   return pathOr(other, split('.', pathAt), subject)
 }
+
+const valPipe = val => (...args) => pipe(...args)(val)
+
 const to = {
   camelCase,
-  constantCase: pipe(constantCase, toUpper),
+  constantCase: pipe(snakeCase, toUpper),
   dotCase,
   paramCase,
   pathCase,
@@ -172,15 +170,12 @@ export const TASK = {
   atOr,
   addIndex,
   adjust,
-  allPass,
-  anyPass,
   and,
   anyOf,
   allOf,
   append,
   compose,
   concat,
-  contains,
   dropLast,
   endsWith,
   equals,
@@ -223,13 +218,10 @@ export const TASK = {
   path,
   pathOr,
   pick,
-  pickAll,
-  pickBy,
   pipe,
   pluck,
   prepend,
   prop,
-  propEq,
   range,
   reduce,
   repeat,
@@ -259,9 +251,13 @@ export const TASK = {
   isType,
   when,
   notType: (subject, typeKey) => not(isType(subject, typeKey)),
+  // should deprecate: isZeroLen for shorter noLen
   isZeroLen,
-  notZeroLen: pipe(isZeroLen, not),
-  valPipe: val => (...args) => pipe(...args)(val),
+  notZeroLen,
+  noLen: isZeroLen,
+  hasLen: notZeroLen,
+  valPipe,
+  vPipe: valPipe,
   runMatch,
   getMatch,
   match,

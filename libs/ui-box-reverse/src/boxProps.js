@@ -4,7 +4,7 @@ import { task } from '@z1/preset-task'
 const rejoin = task(t => list =>
   t.reduce(
     (state, next) => {
-      return t.isZeroLen(state) ? next : `${state}-${next}`
+      return t.noLen(state) ? next : `${state}-${next}`
     },
     '',
     list
@@ -12,20 +12,20 @@ const rejoin = task(t => list =>
 )
 const rejoinFiltered = task(t => (key, list) =>
   t.isType(key, 'Array')
-    ? rejoin(t.filter(prop => t.not(t.contains(prop, key)), list))
+    ? rejoin(t.filter(prop => t.not(t.includes(prop, key)), list))
     : rejoin(t.filter(prop => t.not(t.eq(key, prop)), list))
 )
 
 // macros
 const macroBoolProp = task(t => ({ base, mod }) => {
-  if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+  if (t.and(t.noLen(base), t.noLen(mod))) {
     return null
   }
-  if (t.isZeroLen(mod)) {
+  if (t.noLen(mod)) {
     return true
   }
   return [
-    t.isZeroLen(base) ? null : true,
+    t.noLen(base) ? null : true,
     t.mergeAll(
       t.map(item => {
         return { [item.prefix]: true }
@@ -35,10 +35,10 @@ const macroBoolProp = task(t => ({ base, mod }) => {
 })
 const macroCssProp = task(
   t => ({ base, mod }, trueKey = undefined, valSwap = undefined) => {
-    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+    if (t.and(t.noLen(base), t.noLen(mod))) {
       return null
     }
-    if (t.isZeroLen(mod)) {
+    if (t.noLen(mod)) {
       const result = t.atOr(null, 'css', t.head(base))
       return t.not(t.eq(trueKey, undefined))
         ? t.eq(result, trueKey)
@@ -51,7 +51,7 @@ const macroCssProp = task(
         : result
     }
     return [
-      t.isZeroLen(base) ? null : t.atOr(null, 'css', t.head(base)),
+      t.noLen(base) ? null : t.atOr(null, 'css', t.head(base)),
       t.mergeAll(
         t.map(item => {
           const result = t.atOr(null, 'css', item)
@@ -86,16 +86,16 @@ const nextMacroResult = task(t => (result, swapVal) => {
 })
 const macroFilteredKeyProp = task(
   t => (propKey, { base, mod }, swapVal = undefined) => {
-    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+    if (t.and(t.noLen(base), t.noLen(mod))) {
       return null
     }
-    if (t.isZeroLen(mod)) {
+    if (t.noLen(mod)) {
       return nextMacroResult(
         rejoinFiltered(propKey, t.atOr([], 'chunks', t.head(base))),
         swapVal
       )
     }
-    const result = t.isZeroLen(base)
+    const result = t.noLen(base)
       ? null
       : rejoinFiltered(propKey, t.atOr([], 'chunks', t.head(base)))
     return [
@@ -115,7 +115,7 @@ const macroFilteredKeyProp = task(
 )
 const macroObjectFilteredKeyProp = task(
   t => (propKey, match, { base, mod }, swapVal = undefined) => {
-    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+    if (t.and(t.noLen(base), t.noLen(mod))) {
       return null
     }
     const mergeProps = propList => {
@@ -142,7 +142,7 @@ const macroObjectFilteredKeyProp = task(
             ? t.has('alias')(prop)
               ? prop.alias
               : prop.match
-            : t.getMatch(prop.match)(match)
+            : t.match(match)(prop.match)
           return {
             [nextKey]: nextMacroResult(
               rejoinFiltered(propKey, t.atOr([], 'chunks', prop)),
@@ -152,11 +152,11 @@ const macroObjectFilteredKeyProp = task(
         }, propList)
       )
     }
-    if (t.isZeroLen(mod)) {
+    if (t.noLen(mod)) {
       return mergeProps(base)
     }
     return [
-      t.isZeroLen(base) ? null : mergeProps(base),
+      t.noLen(base) ? null : mergeProps(base),
       t.mapObjIndexed(
         value => mergeProps(value),
         t.groupBy(item => item.prefix, mod)
@@ -210,20 +210,20 @@ export const boxProps = task(t => ({
     return macroFilteredKeyProp(['inset', 'y'], props)
   },
   pin({ base, mod }) {
-    if (t.and(t.isZeroLen(base), t.isZeroLen(mod))) {
+    if (t.and(t.noLen(base), t.noLen(mod))) {
       return null
     }
     const mergeProps = propList =>
       t.mergeAll(
         t.map(prop => {
-          return { [prop.key]: t.not(t.contains('auto', prop.chunks)) }
+          return { [prop.key]: t.not(t.includes('auto', prop.chunks)) }
         }, propList)
       )
-    if (t.isZeroLen(mod)) {
+    if (t.noLen(mod)) {
       return mergeProps(base)
     }
     return [
-      t.isZeroLen(base) ? null : mergeProps(base),
+      t.noLen(base) ? null : mergeProps(base),
       t.mapObjIndexed(
         value => mergeProps(value),
         t.groupBy(item => item.prefix, mod)

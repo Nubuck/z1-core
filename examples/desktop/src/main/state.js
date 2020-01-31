@@ -54,7 +54,9 @@ const appState = z.fn((t, a) =>
                   )
                 )
               ) {
-                log.debug('skip auth')
+                log.debug(
+                  t.not(account.connected) ? 'disconnected' : 'skip auth'
+                )
                 done()
               } else {
                 log.debug('auth')
@@ -65,9 +67,7 @@ const appState = z.fn((t, a) =>
           ),
           fx([box.actions.authenticate], async (ctx, dispatch, done) => {
             try {
-              if (
-                t.not(t.atOr(false, 'app.connected', ctx.getState()))
-              ) {
+              if (t.not(t.atOr(false, 'app.connected', ctx.getState()))) {
                 log.debug('auth not connected')
                 dispatch(
                   box.mutators.authenticateComplete({
@@ -114,6 +114,7 @@ const appState = z.fn((t, a) =>
                       log.debug(
                         'auth failed -> create remote machine account begin'
                       )
+                      // TODO: add system info
                       const [remoteErr, remote] = await a.of(
                         ctx.api.service('machine-account').create(account)
                       )

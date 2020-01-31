@@ -8,8 +8,8 @@ import ma from '@z1/kit-machine-account-node'
 import { state } from './state'
 
 // main
-export const boot = async () => {
-  const client = await api('http://127.0.0.1:3035', {
+export const boot = async (apiPath = 'http://127.0.0.1:3035') => {
+  const client = await api(apiPath, {
     storageOptions: { dir: path.join(app.getPath('home'), '.z1') },
   })
   const store = z.store.create({

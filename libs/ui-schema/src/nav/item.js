@@ -5,7 +5,7 @@ import { renderChildren } from './parts'
 
 // main
 export const item = fn(t => (path = '/', options = {}, children = []) => {
-  const hasChildren = t.notZeroLen(children)
+  const hasChildren = t.hasLen(children)
   return (ctx, parent, parentPath) => {
     const nextPath = t.startsWith('~', path)
       ? `/${t.replace(/_/g, '/', parent)}/${t.replace(

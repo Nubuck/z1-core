@@ -19,18 +19,12 @@ export function strategy(z, adapter) {
     (t, a) =>
       async function authenticate(payload) {
         const dbId = t.eq(adapter, 'nedb') ? '_id' : 'id'
-        console.log(
-          'MACHINE STRATEGY AUTHENTICATE',
-          this.name,
-          this.configuration,
-          dbId
-        )
         const payloadErrorMsg =
           'Machine account authentication requires a hashId field'
         if (t.not(t.has('hashId')(payload))) {
           throw new z.FeathersErrors.Unprocessable(payloadErrorMsg)
         }
-        if (t.isZeroLen(payload.hashId)) {
+        if (t.noLen(payload.hashId)) {
           throw new z.FeathersErrors.Unprocessable(payloadErrorMsg)
         }
         const [loginError, loginResult] = await a.of(

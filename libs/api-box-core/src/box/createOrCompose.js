@@ -22,7 +22,7 @@ const create = task(t => ctx => {
 
 const mergeLifecycle = task(t => (collection, part) => {
   const partKeys = t.keys(part)
-  if (t.isZeroLen(partKeys)) {
+  if (t.noLen(partKeys)) {
     return collection
   }
   return t.reduce(
@@ -92,7 +92,7 @@ const compose = task(t => ctx => {
             )
           )
         },
-        lifecycle: t.isZeroLen(t.keys(combinedParts.lifecycle))
+        lifecycle: t.noLen(t.keys(combinedParts.lifecycle))
           ? undefined
           : t.fromPairs(
               t.map(([key, actionList]) => {

@@ -12,7 +12,7 @@ export const findNavItem = fn(t =>
       : unsafePath
     const path = t.startsWith('/', safePath) ? safePath : `/${safePath}`
     const schemaKeys = t.keys(schema)
-    if (t.isZeroLen(schemaKeys)) {
+    if (t.noLen(schemaKeys)) {
       return null
     }
     const pathKey = t.to.snakeCase(path)

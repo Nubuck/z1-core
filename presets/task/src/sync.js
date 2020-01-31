@@ -155,14 +155,14 @@ const atOr = (other, pathAt, subject = {}) => {
 }
 const to = {
   camelCase,
-  constantCase,
+  constantCase: pipe(constantCase, toUpper),
   dotCase,
   paramCase,
   pathCase,
   sentenceCase,
   snakeCase,
   lowerCase: toLower,
-  upperCase: toLower,
+  upperCase: toUpper,
   pairs: toPairs,
   string: toString,
 }

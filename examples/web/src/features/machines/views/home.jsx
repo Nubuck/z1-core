@@ -57,6 +57,7 @@ export const home = mx.fn((t, a) =>
     },
     ui(ctx) {
       return props => {
+        const items = t.atOr([], 'state.data.machines', props)
         return (
           <ctx.Page
             key="machines"
@@ -70,6 +71,59 @@ export const home = mx.fn((t, a) =>
                     fontSize: 'xl',
                   }}
                   margin={{ bottom: 4 }}
+                />
+                <ctx.VList
+                  items={items}
+                  rowHeight={({ index }) => {
+                    const item = items[index]
+                    return 50 + 50 * t.len(item.logins)
+                  }}
+                  render={(machine, rowProps) => {
+                    console.log('ROW PROPS', rowProps)
+                    return (
+                      <ctx.ListItem
+                        key={rowProps.key}
+                        style={rowProps.style}
+                        avatar={{ icon: 'laptop' }}
+                        title={{
+                          label: `${machine.manufacturer} - ${machine.model} - ${machine.serialnumber}`,
+                        }}
+                        stamp={{ label: machine.updatedAt }}
+                        nested={
+                          <ctx.MapIndexed
+                            items={machine.logins}
+                            render={(login, index) => {
+                              return (
+                                <ctx.ListItem
+                                  key={`nested_${index}`}
+                                  avatar={{ icon: 'user', size: 'xs' }}
+                                  title={{
+                                    label: {
+                                      text: `${login.hostname} - ${login.username}`,
+                                      fontSize: 'sm',
+                                    },
+                                  }}
+                                  subtitle={{
+                                    icon: { name: 'power-off', size: 'md' },
+                                    label: {
+                                      text: login.status,
+                                      fontSize: 'xs',
+                                    },
+                                    color: t.eq(login.status, 'online')
+                                      ? 'green-500'
+                                      : 'red-500',
+                                  }}
+                                  stamp={{ label: login.updatedAt }}
+                                  padding={{ left: 1, top: 2 }}
+                                  width="full"
+                                />
+                              )
+                            }}
+                          />
+                        }
+                      />
+                    )
+                  }}
                 />
               </React.Fragment>
             )}

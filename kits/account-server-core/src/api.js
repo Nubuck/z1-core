@@ -104,7 +104,7 @@ export const api = (z, props) => {
             }
           })
           app.on('disconnect', connection => {
-            if (isUser(connection.user)) {
+              if (isUser(connection.user)) {
               patchStatus(app, connection.user, 'offline')
                 .then(() => app.debug('user offline', connection.user[dbId]))
                 .catch(e => app.error('failed to updated user status', e))

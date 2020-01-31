@@ -359,13 +359,13 @@ const renderListItem = z.fn(t => props => {
           t.isNil(children) ? false : t.gt(React.Children.count(children), 0),
         ])}
         render={() => {
-          const nextChildren = <React.Fragment></React.Fragment>
+          const nextChildren = <React.Fragment>{nested}</React.Fragment>
           if (isRenderProp(nestedSlot)) {
             return nestedSlot({ children: nextChildren })
           }
           return (
             <Row key="row-nested">
-              <Col key="slot-nested" {...nestedSlot}>
+              <Col key="slot-nested" width="full" {...nestedSlot}>
                 {nextChildren}
               </Col>
             </Row>

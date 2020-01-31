@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-nano-service",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,7 +15,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.4.1",
+    "@z1/preset-task": "^0.4.2",
     "@z1/preset-tools": "^0.4.0",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",

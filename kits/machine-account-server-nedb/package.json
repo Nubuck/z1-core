@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-machine-account-server-nedb",
-  "version": "0.4.0",
+  "version": "0.4.2",
   "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/machine-account-server-nedb",
@@ -12,7 +12,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/kit-machine-account-server-core": "^0.4.0",
+    "@z1/kit-machine-account-server-core": "^0.4.2",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3"

@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-task",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -16,17 +16,17 @@
   },
   "dependencies": {
     "camel-case": "^4.1.1",
-    "snake-case": "^3.0.3",
-    "path-case": "^3.0.3",
-    "sentence-case": "^3.0.3",
-    "dot-case": "^3.0.3",
-    "constant-case": "^3.0.3",
     "common-tags": "^1.8.0",
+    "constant-case": "^3.0.3",
     "core-js": "^3.6.3",
+    "dot-case": "^3.0.3",
     "lodash.throttle": "^4.1.1",
     "param-case": "^3.0.3",
+    "path-case": "^3.0.3",
     "ramda": "^0.26.1",
     "regenerator-runtime": "^0.13.3",
+    "sentence-case": "^3.0.3",
+    "snake-case": "^3.0.3",
     "source-map-support": "0.4.3"
   },
   "devDependencies": {

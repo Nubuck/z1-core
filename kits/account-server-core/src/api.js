@@ -90,23 +90,23 @@ export const api = (z, props) => {
       lifecycle: {
         [z.featureBox.api.lifecycle.onSetup]: app => {
           app.on('login', (authResult, params, context) => {
-            if (isUser(authResult.user)) {
+            if (isUser(t.atOr({}, 'user', authResult))) {
               patchStatus(app, authResult.user, 'online')
-              .then(()=>{})
+                .then(() => {})
                 .catch(e => app.error('failed to updated user status', e))
             }
           })
           app.on('logout', (authResult, params, context) => {
-            if (isUser(authResult.user)) {
+            if (isUser(t.atOr({}, 'user', authResult))) {
               patchStatus(app, authResult.user, 'offline')
-              .then(()=>{})
+                .then(() => {})
                 .catch(e => app.error('failed to updated user status', e))
             }
           })
           app.on('disconnect', connection => {
-            if (isUser(connection.user)) {
+            if (isUser(t.atOr({}, 'user', connection))) {
               patchStatus(app, connection.user, 'offline')
-                .then(()=>{})
+                .then(() => {})
                 .catch(e => app.error('failed to updated user status', e))
             }
           })

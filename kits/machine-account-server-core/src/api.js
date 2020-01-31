@@ -244,23 +244,23 @@ export const api = (z, props) => {
           },
           [z.featureBox.api.lifecycle.onSetup]: app => {
             app.on('login', (authResult, params, context) => {
-              if (isLogin(authResult.user)) {
+              if (isLogin(t.atOr({}, 'user', authResult))) {
                 patchStatus(app, authResult.user, 'online')
-                .then(()=>{})
+                  .then(() => {})
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })
             app.on('logout', (authResult, params, context) => {
-              if (isLogin(authResult.user)) {
+              if (isLogin(t.atOr({}, 'user', authResult))) {
                 patchStatus(app, authResult.user, 'offline')
-                .then(()=>{})
+                  .then(() => {})
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })
             app.on('disconnect', connection => {
-              if (isLogin(connection.user)) {
+              if (isLogin(t.atOr({}, 'user', connection))) {
                 patchStatus(app, connection.user, 'offline')
-                .then(()=>{})
+                  .then(() => {})
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })

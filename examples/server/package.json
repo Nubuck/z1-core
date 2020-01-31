@@ -1,6 +1,6 @@
 {
   "name": "example-app-server",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Lib check",
   "main": "dist/index.js",
   "author": "@Nubuck",
@@ -11,12 +11,12 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
-    "@z1/kit-account-server": "^0.4.2",
-    "@z1/kit-account-server-nedb": "^0.4.2",
+    "@z1/kit-account-server": "^0.4.3",
+    "@z1/kit-account-server-nedb": "^0.4.3",
     "@z1/kit-bucket-storage-server": "^0.4.2",
     "@z1/kit-bucket-storage-server-nedb": "^0.4.2",
-    "@z1/kit-machine-account-server": "^0.4.2",
-    "@z1/kit-machine-account-server-nedb": "^0.4.2",
+    "@z1/kit-machine-account-server": "^0.4.3",
+    "@z1/kit-machine-account-server-nedb": "^0.4.3",
     "@z1/lib-feature-box-server": "^0.4.2",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",

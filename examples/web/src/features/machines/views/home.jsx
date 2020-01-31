@@ -1,21 +1,17 @@
 import React from 'react'
 import mx from '@z1/lib-feature-macros'
-import sc from '@z1/lib-ui-schema'
 
 // main
 export const home = mx.fn((t, a, rx) =>
   mx.view.create('home', {
     state(ctx) {
-      const { types } = mx.view
       return {
         initial: {
           data: {
             machines: [],
           },
-          form: {},
         },
         data(props) {
-          console.log('Machines VIEW DATA', props)
           return {
             status: props.status,
             data: t.match({
@@ -33,9 +29,29 @@ export const home = mx.fn((t, a, rx) =>
                   props.event
                 ),
               [ctx.event.dataChange]: () => {
-                const machines = t.at('data.machines', props)
-                const login = t.at('next.login', props)
+                const entity = t.at('next.entity', props)
                 const change = t.at('next.change', props)
+                const machines = t.at('data.machines', props)
+                if (t.eq('machine', entity)) {
+                  const machine = t.at('next.machine', props)
+                  return t.merge(props.data, {
+                    machines: t.match({
+                      _: () => machines,
+                      created: () => t.append(machine, machines),
+                      patched: () => {
+                        return t.update(
+                          t.findIndex(
+                            current => t.eq(current._id, machine._id),
+                            machines
+                          ),
+                          machine,
+                          machines
+                        )
+                      },
+                    })(change)(),
+                  })
+                }
+                const login = t.at('next.login', props)
                 const machineIndex = t.findIndex(
                   machine => t.eq(machine._id, login.machineId),
                   machines
@@ -48,25 +64,23 @@ export const home = mx.fn((t, a, rx) =>
                   'logins',
                   machines[machineIndex] || {}
                 )
-                const loginIndex = t.findIndex(
-                  machineLogin => t.eq(machineLogin._id, login._id),
-                  logins
-                )
-                if (t.eq(loginIndex, -1)) {
-                  return props.data
-                }
                 return t.merge(props.data, {
                   machines: t.adjust(
                     machineIndex,
-                    machine => {
-                      return t.merge(machine, {
+                    machine =>
+                      t.merge(machine, {
                         logins: t.match({
-                          _: machine.logins,
-                          patched: t.update(loginIndex, login, logins),
-                          created: t.append(logins, login),
-                        })(change),
-                      })
-                    },
+                          _: () => machine.logins,
+                          patched: () => {
+                            const loginIndex = t.findIndex(
+                              current => t.eq(current._id, login._id),
+                              logins
+                            )
+                            return t.update(loginIndex, login, logins)
+                          },
+                          created: () => t.append(login, logins),
+                        })(change)(),
+                      }),
                     machines
                   ),
                 })
@@ -101,30 +115,45 @@ export const home = mx.fn((t, a, rx) =>
           }
         },
         subscribe(props) {
-          const patched$ = rx.fromEvent(
+          const machineCreated$ = rx.fromEvent(
+            props.api.service('machines'),
+            'created'
+          )
+          const loginPatched$ = rx.fromEvent(
             props.api.service('machine-logins'),
             'patched'
           )
-          const created$ = rx.fromEvent(
+          const loginCreated$ = rx.fromEvent(
             props.api.service('machine-logins'),
             'created'
           )
-          return patched$.pipe(
+          return loginPatched$.pipe(
             rx.merge(
-              created$.pipe(
-                rx.map(login => ({
-                  login,
+              machineCreated$.pipe(
+                rx.map(machine => ({
+                  machine,
                   change: 'created',
+                  entity: 'machine',
                 }))
+              ),
+              loginCreated$.pipe(
+                rx.map(machineOrlogin =>
+                  t.eq('machine', t.at('entity', machineOrlogin))
+                    ? machineOrlogin
+                    : {
+                        login: machineOrlogin,
+                        change: 'created',
+                        entity: 'login',
+                      }
+                )
               )
             ),
             rx.map(login =>
-              t.eq(t.at('data.change', login), 'created')
-                ? props.mutators.dataChange(login)
-                : props.mutators.dataChange({
-                    login,
-                    change: 'patched',
-                  })
+              props.mutators.dataChange(
+                t.eq('created', t.at('change', login))
+                  ? login
+                  : { login, change: 'patched', entity: 'login' }
+              )
             )
           )
         },
@@ -154,7 +183,7 @@ export const home = mx.fn((t, a, rx) =>
                     if (t.isNil(item)) {
                       return 50
                     }
-                    return 50 + 70 * t.len(item.logins)
+                    return 50 + 70 * t.len(item.logins || [])
                   }}
                   render={(machine, rowProps) => {
                     return (
@@ -175,7 +204,7 @@ export const home = mx.fn((t, a, rx) =>
                         }}
                         nested={
                           <ctx.MapIndexed
-                            items={machine.logins}
+                            items={machine.logins || []}
                             render={(login, index) => {
                               return (
                                 <ctx.ListItem
@@ -209,8 +238,8 @@ export const home = mx.fn((t, a, rx) =>
                                   }}
                                   buttons={[
                                     {
-                                      icon: 'play',
-                                      shape: 'gear',
+                                      icon: 'gear',
+                                      shape: 'circle',
                                       fill: 'ghost-solid',
                                       size: 'xs',
                                       color: 'blue-500',

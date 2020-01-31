@@ -9,27 +9,26 @@ import views from './views'
 const name = 'machines'
 const routeProps = { authenticate: true }
 export const stateKit = parts =>
-  z.fn((t, a) =>
-    z.state.create(name, [
-      mx.view.configure(name, {
-        path: 'machines',
-        state: views.state({}),
-        routes: {
-          home: routeProps,
-          view: routeProps,
-          detail: routeProps,
-          more: routeProps,
-        },
-      }),
-      parts.registerNav({
-        secure: sc.nav.create(n => [
-          n('/machines', {
-            slot: 'nav',
-            label: 'Machines',
-            icon: 'laptop',
-          }),
-        ]),
-      }),
-    ])
-  )
+  z.state.create(name, [
+    mx.view.configure(name, {
+      path: 'machines',
+      state: views.state({}),
+      routes: {
+        home: routeProps,
+        view: routeProps,
+        detail: routeProps,
+        more: routeProps,
+      },
+    }),
+    parts.registerNav({
+      secure: sc.nav.create(n => [
+        n('/machines', {
+          slot: 'nav',
+          label: 'Machines',
+          icon: 'laptop',
+        }),
+      ]),
+    }),
+  ])
+
 export default stateKit

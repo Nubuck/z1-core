@@ -51,13 +51,15 @@ export const api = (z, props) => {
       login: t.head(loginResult.data),
     }
   })
-  const registerSupervisor = z.featureBox.fn((t, a) => async app => {
+  const registerMachine = z.featureBox.fn((t, a) => async app => {
     const [accountErr, account] = await a.of(
-      ma.machine.account({ role: 'supervisor' })
+      ma.machine.account({
+        role: t.atOr('machine', 'role', app.get('machine')),
+      })
     )
     if (accountErr) {
       app.set('machineAccount', null)
-      app.debug('create supervisor account failed')
+      app.debug('create machine account failed')
       return null
     }
     const [loginErr, loginResult] = await a.of(
@@ -81,6 +83,7 @@ export const api = (z, props) => {
       app.set('machineAccount', machAcc)
       return null
     }
+    // login doesnt exist
     const [machErr, machineResult] = await a.of(
       machineByHashId(app, account.machine.hashId)
     )
@@ -114,6 +117,7 @@ export const api = (z, props) => {
       app.set('machineAccount', machAcc)
       return null
     }
+    // machine exists but login doesnt
     const [nextLoginErr, nextLogin] = await a.of(
       app
         .service('machine-logins')
@@ -185,7 +189,7 @@ export const api = (z, props) => {
               }
             })
           )
-
+          // adapter services
           s([props.adapter, 'machines'], props.serviceFactory.machines, {
             hooks: {
               before: {
@@ -214,7 +218,7 @@ export const api = (z, props) => {
               },
             }
           )
-
+          // meta services
           s(
             'machine-account',
             app => {
@@ -239,7 +243,6 @@ export const api = (z, props) => {
                     app,
                     machine.hashId
                   )
-                  // create machine
                   if (t.not(machineResult.exists)) {
                     const [nextMachineErr, nextMachine] = await a.of(
                       app.service('machines').create(machine)
@@ -279,7 +282,7 @@ export const api = (z, props) => {
                       login: loginResult.login,
                     }
                   } else {
-                    // create login
+                    // login doesnt exist
                     const [nextLoginErr, nextLogin] = await a.of(
                       app.service('machine-logins').create(
                         withStatus(
@@ -340,6 +343,13 @@ export const api = (z, props) => {
           )
         },
         lifecycle: {
+          [z.featureBox.api.lifecycle.onConfig]: app => {
+            const machineConfig = app.get('machine')
+            app.set(
+              'machine',
+              t.merge({ role: 'machine' }, machineConfig || {})
+            )
+          },
           [z.featureBox.api.lifecycle.onAuthConfig]: app => {
             const { MachineStrategy } = strategy(
               t.merge(z, { loginByHashId }),
@@ -373,20 +383,17 @@ export const api = (z, props) => {
             })
           },
           [z.featureBox.api.lifecycle.onSync]: app => {
-            registerSupervisor(app)
+            registerMachine(app)
               .then(() => {
-                app.debug(
-                  'supervisor registered',
-                  app.get('machineAccount')[dbId]
-                )
+                app.debug('machine registered', app.get('machineAccount')[dbId])
               })
-              .catch(e => app.error('Register supervisor err:', e))
+              .catch(e => app.error('register machine err:', e))
           },
           [z.featureBox.api.lifecycle.onStop]: app => {
-            app.debug('Server stopping, going offline...')
+            app.debug('server stopping, going offline...')
             patchStatus(app, app.get('machineAccount'), 'offline')
-              .then(() => app.debug('Supervisor status offline'))
-              .catch(e => app.error('Supervisor status failed', e))
+              .then(() => app.debug('machine status offline'))
+              .catch(e => app.error('machine status failed', e))
           },
         },
       },

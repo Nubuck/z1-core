@@ -14,6 +14,7 @@ export const api = (z, props) => {
   )
   const patchStatus = z.featureBox.fn((t, a) => async (app, user, status) => {
     await a.of(app.service('machine-logins').patch(user[dbId], { status }))
+    return null
   })
   const machineByHashId = z.featureBox.fn((t, a) => async (app, hashId) => {
     const [machineErr, machineResult] = await a.of(
@@ -76,6 +77,7 @@ export const api = (z, props) => {
         app.debug('get machine account failed')
         return null
       }
+      await patchStatus(app, loginResult.login, 'online')
       app.set('machineAccount', machAcc)
       return null
     }
@@ -88,17 +90,18 @@ export const api = (z, props) => {
       return null
     }
     if (t.not(machineResult.exists)) {
+      app.debug('machine not registered - getting machine account sys info...')
       const [sysErr, machineWithSys] = await a.of(
-        ctx.machine.system(account.machine)
+        ma.machine.system(account.machine)
       )
       if (sysErr) {
         app.set('machineAccount', null)
-        app.debug('get  machine account sys info failed')
+        app.debug('get machine account sys info failed')
         return null
       }
       const [machAccErr, machAcc] = await a.of(
         app.service('machine-account').create({
-          login,
+          login: account.login,
           machine: machineWithSys,
         })
       )
@@ -107,6 +110,7 @@ export const api = (z, props) => {
         app.debug('create machine account failed')
         return null
       }
+      await patchStatus(app, machAcc.login, 'online')
       app.set('machineAccount', machAcc)
       return null
     }
@@ -115,8 +119,8 @@ export const api = (z, props) => {
         .service('machine-logins')
         .create(
           withStatus(
-            t.merge(login, { machineId: machineResult.machine[dbId] }),
-            'offline'
+            t.merge(account.login, { machineId: machineResult.machine[dbId] }),
+            'online'
           )
         )
     )
@@ -125,11 +129,13 @@ export const api = (z, props) => {
       app.debug('create machine login failed')
       return null
     }
+    await patchStatus(app, nextLogin, 'online')
     app.set('machineAccount', {
       [dbId]: nextLogin[dbId],
       machine: machineResult.machine,
       login: nextLogin,
     })
+    return null
   })
   return z.featureBox.fn((t, a) =>
     z.featureBox.api.create('machineAccount', [
@@ -369,9 +375,18 @@ export const api = (z, props) => {
           [z.featureBox.api.lifecycle.onSync]: app => {
             registerSupervisor(app)
               .then(() => {
-                app.debug('supervisor registered', app.get('machineAccount'))
+                app.debug(
+                  'supervisor registered',
+                  app.get('machineAccount')[dbId]
+                )
               })
               .catch(e => app.error('Register supervisor err:', e))
+          },
+          [z.featureBox.api.lifecycle.onStop]: app => {
+            app.debug('Server stopping, going offline...')
+            patchStatus(app, app.get('machineAccount'), 'offline')
+              .then(() => app.debug('Supervisor status offline'))
+              .catch(e => app.error('Supervisor status failed', e))
           },
         },
       },

@@ -22,7 +22,6 @@ export const api = task(t => ctx => {
             const safeNamespace = `/${ctx.safeServiceName(namespace)}`
             app.use(safeNamespace, FeathersExpress.static(root))
             app.use(safeNamespace, (req, res, next) => {
-              // app.log('APP REQUEST -> ', req.originalUrl, namespace)
               if (t.not(ctx.pathIncludeNamespace(req.originalUrl, namespace))) {
                 next()
               } else {

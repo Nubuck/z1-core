@@ -5,4 +5,5 @@ export const lifecycle = {
   afterConfig: 'afterConfig',
   onStart: 'onStart',
   onSync: 'onSync',
+  onStop: 'onStop',
 }

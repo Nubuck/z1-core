@@ -145,6 +145,16 @@ export const api = task(t => (ctx = {}) => {
       nextBoxes.lifecycle(lifecycle.onStart)(api)
     }
 
+    // Lifecycle onStop
+    // e.g. kill
+    process.on('SIGTERM', () => {
+      nextBoxes.lifecycle(lifecycle.onStop)(api)
+    })
+    // e.g. Ctrl + C
+    process.on('SIGINT', () => {
+      nextBoxes.lifecycle(lifecycle.onStop)(api)
+    })
+
     // yield
     return api
   }

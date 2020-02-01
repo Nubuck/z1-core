@@ -205,7 +205,7 @@ const renderListItem = z.fn(t => props => {
                       key: 'caption',
                       label: {
                         fontSize: 'xs',
-                        margin: hasAvatar ? { top: 1 } : null,
+                        margin: hasAvatar ? { top: 1, left: 0 } : 0,
                       },
                     })
                   }
@@ -213,7 +213,7 @@ const renderListItem = z.fn(t => props => {
               </React.Fragment>
             )
             const colProps = {
-              x: 'left',
+              x: 'center',
               y: 'center',
               flex: 'init',
             }

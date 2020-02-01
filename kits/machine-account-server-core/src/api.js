@@ -1,3 +1,4 @@
+import ma from '@z1/kit-machine-account-node'
 import { strategy } from './strategy'
 
 // main
@@ -8,8 +9,127 @@ export const api = (z, props) => {
   const isLogin = z.featureBox.fn(t => user =>
     t.allOf([t.has('login')(user), t.has('machine')(user)])
   )
+  const withStatus = z.featureBox.fn(t => (login, status) =>
+    t.merge(login, { status })
+  )
   const patchStatus = z.featureBox.fn((t, a) => async (app, user, status) => {
     await a.of(app.service('machine-logins').patch(user[dbId], { status }))
+  })
+  const machineByHashId = z.featureBox.fn((t, a) => async (app, hashId) => {
+    const [machineErr, machineResult] = await a.of(
+      app.service('machines').find(
+        {
+          query: {
+            hashId,
+          },
+        },
+        { excludeLogins: true }
+      )
+    )
+    if (machineErr) {
+      throw new z.FeathersErrors.GeneralError(machineErr.message)
+    }
+    return {
+      exists: t.gt(machineResult.total, 0),
+      machine: t.head(machineResult.data),
+    }
+  })
+  const loginByHashId = z.featureBox.fn((t, a) => async (app, hashId) => {
+    const [loginErr, loginResult] = await a.of(
+      app.service('machine-logins').find({
+        query: {
+          hashId,
+        },
+      })
+    )
+    if (loginErr) {
+      throw new z.FeathersErrors.GeneralError(loginErr.message)
+    }
+    return {
+      exists: t.gt(loginResult.total, 0),
+      login: t.head(loginResult.data),
+    }
+  })
+  const registerSupervisor = z.featureBox.fn((t, a) => async app => {
+    const [accountErr, account] = await a.of(
+      ma.machine.account({ role: 'supervisor' })
+    )
+    if (accountErr) {
+      app.set('machineAccount', null)
+      app.debug('create supervisor account failed')
+      return null
+    }
+    const [loginErr, loginResult] = await a.of(
+      loginByHashId(app, account.login.hashId)
+    )
+    if (loginErr) {
+      app.set('machineAccount', null)
+      app.debug('find machine login failed')
+      return null
+    }
+    if (loginResult.exists) {
+      const [machAccErr, machAcc] = await a.of(
+        app.service('machine-account').get(loginResult.login[dbId])
+      )
+      if (machAccErr) {
+        app.set('machineAccount', null)
+        app.debug('get machine account failed')
+        return null
+      }
+      app.set('machineAccount', machAcc)
+      return null
+    }
+    const [machErr, machineResult] = await a.of(
+      machineByHashId(app, account.machine.hashId)
+    )
+    if (machErr) {
+      app.set('machineAccount', null)
+      app.debug('find machine account failed')
+      return null
+    }
+    if (t.not(machineResult.exists)) {
+      const [sysErr, machineWithSys] = await a.of(
+        ctx.machine.system(account.machine)
+      )
+      if (sysErr) {
+        app.set('machineAccount', null)
+        app.debug('get  machine account sys info failed')
+        return null
+      }
+      const [machAccErr, machAcc] = await a.of(
+        app.service('machine-account').create({
+          login,
+          machine: machineWithSys,
+        })
+      )
+      if (machAccErr) {
+        app.set('machineAccount', null)
+        app.debug('create machine account failed')
+        return null
+      }
+      app.set('machineAccount', machAcc)
+      return null
+    }
+    const [nextLoginErr, nextLogin] = await a.of(
+      app
+        .service('machine-logins')
+        .create(
+          withStatus(
+            t.merge(login, { machineId: machineResult.machine[dbId] }),
+            'offline'
+          )
+        )
+    )
+    if (machAccErr) {
+      app.set('machineAccount', null)
+      app.debug('create machine login failed')
+      return null
+    }
+    app.set('machineAccount', {
+      [dbId]: nextLogin[dbId],
+      machine: machineResult.machine,
+      login: nextLogin,
+    })
   })
   return z.featureBox.fn((t, a) =>
     z.featureBox.api.create('machineAccount', [
@@ -59,7 +179,6 @@ export const api = (z, props) => {
               }
             })
           )
-          const withStatus = (login, status) => t.merge(login, { status })
 
           s([props.adapter, 'machines'], props.serviceFactory.machines, {
             hooks: {
@@ -110,21 +229,12 @@ export const api = (z, props) => {
                       'Machine accounts requires a hashId field for both machine and login'
                     )
                   }
-                  const [machineErr, machineResult] = await a.of(
-                    app.service('machines').find(
-                      {
-                        query: {
-                          hashId: machine.hashId,
-                        },
-                      },
-                      { excludeLogins: true }
-                    )
+                  const machineResult = await machineByHashId(
+                    app,
+                    machine.hashId
                   )
-                  if (machineErr) {
-                    throw new z.FeathersErrors.GeneralError(machineErr.message)
-                  }
                   // create machine
-                  if (t.eq(machineResult.total, 0)) {
+                  if (t.not(machineResult.exists)) {
                     const [nextMachineErr, nextMachine] = await a.of(
                       app.service('machines').create(machine)
                     )
@@ -155,28 +265,24 @@ export const api = (z, props) => {
                     }
                   }
                   // machine exists
-                  const [loginErr, loginResult] = await a.of(
-                    app.service('machine-logins').find({
-                      query: {
-                        hashId: login.hashId,
-                      },
-                    })
-                  )
-                  if (loginErr) {
-                    throw new z.FeathersErrors.GeneralError(loginErr.message)
-                  }
-                  const nextMachine = t.head(machineResult.data)
-                  // create login
-                  if (t.eq(loginResult.total, 0)) {
+                  const loginResult = await loginByHashId(app, login.hashId)
+                  if (loginResult.exists) {
+                    return {
+                      [dbId]: loginResult.login[dbId],
+                      machine: machineResult.machine,
+                      login: loginResult.login,
+                    }
+                  } else {
+                    // create login
                     const [nextLoginErr, nextLogin] = await a.of(
-                      app
-                        .service('machine-logins')
-                        .create(
-                          withStatus(
-                            t.merge(login, { machineId: nextMachine[dbId] }),
-                            'offline'
-                          )
+                      app.service('machine-logins').create(
+                        withStatus(
+                          t.merge(login, {
+                            machineId: machineResult.machine[dbId],
+                          }),
+                          'offline'
                         )
+                      )
                     )
                     if (nextLoginErr) {
                       throw new z.FeathersErrors.GeneralError(
@@ -185,16 +291,9 @@ export const api = (z, props) => {
                     }
                     return {
                       [dbId]: nextLogin[dbId],
-                      machine: nextMachine,
+                      machine: machineResult.machine,
                       login: nextLogin,
                     }
-                  }
-                  // login exists
-                  const nextLogin = t.head(loginResult.data)
-                  return {
-                    [dbId]: nextLogin[dbId],
-                    machine: nextMachine,
-                    login: nextLogin,
                   }
                 },
                 async get(id) {
@@ -236,7 +335,10 @@ export const api = (z, props) => {
         },
         lifecycle: {
           [z.featureBox.api.lifecycle.onAuthConfig]: app => {
-            const { MachineStrategy } = strategy(z, props.adapter)
+            const { MachineStrategy } = strategy(
+              t.merge(z, { loginByHashId }),
+              props.adapter
+            )
             app
               .get('authenticationService')
               .register('machine', new MachineStrategy())
@@ -264,7 +366,13 @@ export const api = (z, props) => {
               }
             })
           },
-          [z.featureBox.api.lifecycle.onSync]: app => {},
+          [z.featureBox.api.lifecycle.onSync]: app => {
+            registerSupervisor(app)
+              .then(() => {
+                app.debug('supervisor registered', app.get('machineAccount'))
+              })
+              .catch(e => app.error('Register supervisor err:', e))
+          },
         },
       },
     ])

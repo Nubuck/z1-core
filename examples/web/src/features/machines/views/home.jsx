@@ -158,6 +158,13 @@ export const home = mx.fn((t, a, rx) =>
       }
     },
     ui(ctx) {
+      const loginIcon = t.match({
+        _: 'user-astronaut',
+        agent: 'user-secret',
+        bot: 'robot',
+        service: 'terminal',
+        supervisor: 'crown',
+      })
       return props => {
         const items = t.atOr([], 'state.data.machines', props)
         return (
@@ -207,7 +214,10 @@ export const home = mx.fn((t, a, rx) =>
                             return (
                               <ctx.ListItem
                                 key={`nested_login_${login._id}_${index}`}
-                                avatar={{ icon: 'user', size: 'xs' }}
+                                avatar={{
+                                  icon: loginIcon(login.role),
+                                  size: 'xs',
+                                }}
                                 caption={{
                                   label: {
                                     text: t.at('role', login),

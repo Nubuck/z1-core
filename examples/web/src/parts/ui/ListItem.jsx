@@ -63,8 +63,8 @@ const renderItemLabel = z.fn(t => (props, baseProps = {}) => {
   if (isRenderProp(props)) {
     return props(defaultProps)
   }
-  const icon = t.atOr(null, 'icon', props)
-  const label = t.atOr(null, 'label', props)
+  const icon = t.at('icon', props)
+  const label = t.at('label', props)
   return renderIconLabel(
     t.merge(
       defaultProps,
@@ -94,36 +94,37 @@ const renderListItem = z.fn(t => props => {
   const onSelect = t.atOr(() => null, 'onSelect', props)
   // layout:
   const slots = t.atOr({}, 'slots', props)
-  const selectSlot = t.atOr(null, 'select', slots)
-  const avatarSlot = t.atOr(null, 'avatar', slots)
-  const titleSlot = t.atOr(null, 'title', slots)
-  const contentSlot = t.atOr(null, 'content', slots)
-  const lastSlot = t.atOr(null, 'last', slots)
-  const nestedSlot = t.atOr(null, 'nested', slots)
+  const selectSlot = t.at('select', slots)
+  const avatarSlot = t.at('avatar', slots)
+  const titleSlot = t.at('title', slots)
+  const contentSlot = t.at('content', slots)
+  const lastSlot = t.at('last', slots)
+  const nestedSlot = t.at('nested', slots)
   // select col:
-  const select = t.atOr(null, 'select', props)
+  const select = t.at('select', props)
   // avatar col:
-  const avatar = t.atOr(null, 'avatar', props)
-  const caption = t.atOr(null, 'caption', props)
+  const avatar = t.at('avatar', props)
+  const caption = t.at('caption', props)
   const hasAvatar = t.notNil(avatar)
   const hasCaption = t.notNil(caption)
   // title col:
-  const title = t.atOr(null, 'title', props)
-  const subtitle = t.atOr(null, 'subtitle', props)
+  const title = t.at('title', props)
+  const subtitle = t.at('subtitle', props)
   const hasTitle = t.notNil(title)
   const hasSubtitle = t.notNil(subtitle)
   // content col:
-  const content = t.atOr(null, 'content', props)
+  const content = t.at('content', props)
   const hasContent = t.notNil(content)
   // last col:
-  const stamp = t.atOr(null, 'stamp', props)
+  const stamp = t.at('stamp', props)
   const buttons = t.atOr([], 'buttons', props)
   const hasStamp = t.notNil(stamp)
   const hasButtons = t.hasLen(buttons)
   // nested
-  const nested = t.atOr(null, 'nested', props)
-  const children = t.atOr(null, 'children', props)
+  const nested = t.at('nested', props)
+  const children = t.at('children', props)
   const hasNested = t.notNil(nested)
+  // element
   const nextProps = t.omit(
     [
       'selectable',

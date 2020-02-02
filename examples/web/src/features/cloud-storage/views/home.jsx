@@ -88,6 +88,9 @@ export const home = mx.fn((t, a, rx) =>
             error: null,
           }
         },
+        subscribe(props) {
+          return null
+        },
         form(props) {
           return t.runMatch({
             _: null,
@@ -118,7 +121,7 @@ export const home = mx.fn((t, a, rx) =>
           const body = new FormData()
           body.append('uri', data.uri)
           body.append('meta', JSON.stringify({ alias: data.alias }))
-          const [bucketErr, bucketResult] = await a.of(
+          const [bucketErr] = await a.of(
             props.api.get('rest').post('bucket-storage', {
               body,
               headers: {
@@ -126,10 +129,16 @@ export const home = mx.fn((t, a, rx) =>
               },
             })
           )
-          console.log('BUCKET RESULT', bucketErr, bucketResult)
+          if (bucketErr) {
+            return {
+              status: ctx.status.fail,
+              data,
+              error: bucketErr,
+            }
+          }
           return {
             status: props.status,
-            data,
+            data: {},
             error: null,
           }
         },

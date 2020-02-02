@@ -5,6 +5,26 @@ import Multer from 'multer'
 
 // ctx
 import { SERVICES, PATHS } from './context'
+const dataURIName = dataURI => {
+  // Split metadata from data
+  const splitted = dataURI.split(',')
+  // Split params
+  const params = splitted[0].split(';')
+  // Filter the name property from params
+  const properties = params.filter(param => {
+    return param.split('=')[0] === 'name'
+  })
+  // Look for the name and use unknown if no name property.
+  let name
+  if (properties.length !== 1) {
+    name = 'unknown'
+  } else {
+    // Because we filtered out the other property,
+    // we only have the name case here.
+    name = properties[0].split('=')[1]
+  }
+  return decodeURIComponent(name)
+}
 
 // main
 export const api = (z, props) =>
@@ -81,13 +101,9 @@ export const api = (z, props) =>
                 create: [
                   auth.authenticate('jwt'),
                   ctx => {
-                    console.log('PARAM + Data', ctx.params, ctx.data)
-                    if (
-                      t.and(
-                        t.not(t.path(PATHS.DATA_URI, ctx)),
-                        t.path(PATHS.PARAMS_FILE, ctx)
-                      )
-                    ) {
+                    console.log('PARAMS', ctx.params)
+                    const dataUri = t.path(PATHS.DATA_URI, ctx)
+                    if (t.and(t.not(dataUri), t.path(PATHS.PARAMS_FILE, ctx))) {
                       ctx.data = {
                         uri: Dauria.getBase64DataURI(
                           t.path(PATHS.PARAMS_FILE_BUFFER, ctx),
@@ -100,14 +116,15 @@ export const api = (z, props) =>
                           size: t.path(PATHS.PARAMS_FILE_SIZE, ctx),
                         },
                       }
-                    } else if (t.path(PATHS.PARAMS_FILE, ctx)) {
+                    } else if (dataUri) {
                       const meta = safeMeta(ctx)
+                      const content = Dauria.parseDataURI(dataUri)
                       ctx.data = t.merge(ctx.data, {
                         meta: t.merge(meta, {
-                          mimeType: t.path(PATHS.PARAMS_FILE_MIME, ctx),
-                          originalName: t.path(PATHS.PARAMS_FILE_ORIGINAL, ctx),
-                          encoding: t.path(PATHS.PARAMS_FILE_ENCODING, ctx),
-                          size: t.path(PATHS.PARAMS_FILE_SIZE, ctx),
+                          mimeType: content.MIME,
+                          originalName: dataURIName(dataUri),
+                          encoding: content.mediaType,
+                          size: content.buffer.length,
                         }),
                       })
                     }
@@ -147,7 +164,11 @@ export const api = (z, props) =>
                       return ctx
                     }
                     const registryFile = t.head(foundFiles.data)
-                    const nextMeta = t.merge(meta, { fileId: id })
+                    const nextMeta = t.merge(meta, {
+                      fileId: id,
+                      userId: t.pathOr(null, ['params', 'user', dbId], ctx),
+                      role: t.at('params.user.role', ctx),
+                    })
                     if (registryFile) {
                       const [patchError, result] = await a.of(
                         ctx.app

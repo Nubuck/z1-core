@@ -136,6 +136,7 @@ export const api = (z, props) => {
     await patchStatus(app, nextLogin, 'online')
     app.set('machineAccount', {
       [dbId]: nextLogin[dbId],
+      role: nextLogin.role,
       machine: machineResult.machine,
       login: nextLogin,
     })
@@ -269,6 +270,7 @@ export const api = (z, props) => {
                     }
                     return {
                       [dbId]: nextLogin[dbId],
+                      role: nextLogin.role,
                       machine: nextMachine,
                       login: nextLogin,
                     }
@@ -278,6 +280,7 @@ export const api = (z, props) => {
                   if (loginResult.exists) {
                     return {
                       [dbId]: loginResult.login[dbId],
+                      role: loginResult.login.role,
                       machine: machineResult.machine,
                       login: loginResult.login,
                     }
@@ -300,6 +303,7 @@ export const api = (z, props) => {
                     }
                     return {
                       [dbId]: nextLogin[dbId],
+                      role: nextLogin.role,
                       machine: machineResult.machine,
                       login: nextLogin,
                     }
@@ -311,6 +315,7 @@ export const api = (z, props) => {
                     .get(id, { includeMachine: true })
                   return {
                     [dbId]: login[dbId],
+                    role: login.role,
                     login: t.omit(['machine'], login),
                     machine: t.at('machine', login),
                   }
@@ -323,6 +328,7 @@ export const api = (z, props) => {
                     data: t.map(login => {
                       return {
                         [dbId]: login[dbId],
+                        role: login.role,
                         login: t.omit(['machine'], login),
                         machine: t.at('machine', login),
                       }

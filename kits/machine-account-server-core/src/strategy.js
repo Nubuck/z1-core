@@ -34,6 +34,7 @@ export function strategy(z, adapter) {
           authentication: { strategy: 'machine' },
           user: {
             [dbId]: loginResult.login[dbId],
+            role: loginResult.login.role,
             machine,
             login: loginResult.login,
           },

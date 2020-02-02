@@ -8,8 +8,21 @@ import { SERVICES, PATHS } from './context'
 
 // main
 export const api = (z, props) =>
-  z.featureBox.fn((t, a) =>
-    z.featureBox.api.create('bucketStorage', {
+  z.featureBox.fn((t, a) => {
+    const safeMeta = ctx => {
+      const rawMeta = t.path(PATHS.DATA_META, ctx)
+      return t.isType(rawMeta, 'string')
+        ? t.tryCatch(
+            () => {
+              return JSON.parse(rawMeta)
+            },
+            () => {
+              return {}
+            }
+          )()
+        : rawMeta
+    }
+    return z.featureBox.api.create('bucketStorage', {
       models: props.models,
       services(s, { auth, common, data }) {
         const stripUri = ctx => {
@@ -43,7 +56,12 @@ export const api = (z, props) =>
               if (Model) {
                 app.use(
                   `/${SERVICES.STORAGE}`,
-                  Multer().single('uri'),
+                  Multer({
+                    limits: {
+                      fileSize: 25 * 1024 * 1024,
+                      fieldSize: 25 * 1024 * 1024,
+                    },
+                  }).single('uri'),
                   function(req, res, next) {
                     req.feathers.file = req.file
                     next()
@@ -63,6 +81,7 @@ export const api = (z, props) =>
                 create: [
                   auth.authenticate('jwt'),
                   ctx => {
+                    console.log('PARAM + Data', ctx.params, ctx.data)
                     if (
                       t.and(
                         t.not(t.path(PATHS.DATA_URI, ctx)),
@@ -81,6 +100,16 @@ export const api = (z, props) =>
                           size: t.path(PATHS.PARAMS_FILE_SIZE, ctx),
                         },
                       }
+                    } else if (t.path(PATHS.PARAMS_FILE, ctx)) {
+                      const meta = safeMeta(ctx)
+                      ctx.data = t.merge(ctx.data, {
+                        meta: t.merge(meta, {
+                          mimeType: t.path(PATHS.PARAMS_FILE_MIME, ctx),
+                          originalName: t.path(PATHS.PARAMS_FILE_ORIGINAL, ctx),
+                          encoding: t.path(PATHS.PARAMS_FILE_ENCODING, ctx),
+                          size: t.path(PATHS.PARAMS_FILE_SIZE, ctx),
+                        }),
+                      })
                     }
                     return ctx
                   },
@@ -93,7 +122,17 @@ export const api = (z, props) =>
                   async ctx => {
                     ctx.result.meta = null
                     const id = t.path(PATHS.RESULT_ID, ctx)
-                    const meta = t.path(PATHS.DATA_META, ctx)
+                    const rawMeta = t.path(PATHS.DATA_META, ctx)
+                    const meta = t.isType(rawMeta, 'string')
+                      ? t.tryCatch(
+                          () => {
+                            return JSON.parse(rawMeta)
+                          },
+                          () => {
+                            return {}
+                          }
+                        )()
+                      : rawMeta
                     if (t.or(t.not(id), t.not(meta))) {
                       return ctx
                     }
@@ -213,4 +252,4 @@ export const api = (z, props) =>
         })
       },
     })
-  )
+  })

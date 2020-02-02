@@ -5,9 +5,10 @@ export const withRest = api => {
   const rest = ky.extend({
     hooks: {
       beforeRequest: [
-        async request => {
-          const { accessToken } = await api.get('authentication')
-          request.headers.set('Authorization', `Bearer ${accessToken}`)
+         request => {
+          // const { accessToken } = await api.get('authentication')
+          // console.log('REQEST', accessToken)
+          // request.headers.set('Authorization', `Bearer Derp`)
         },
       ],
     },

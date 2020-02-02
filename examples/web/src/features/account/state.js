@@ -138,7 +138,6 @@ export const stateKit = parts =>
                   }
                 }
               }
-              // end logic
             }),
             // prevent public account view access when authenticated
             g(box.actions.routeView, (ctx, allow, reject) => {
@@ -165,6 +164,15 @@ export const stateKit = parts =>
         },
         effects(fx, box) {
           return [
+            fx([box.actions.routeView], (ctx, dispatch, done) => {
+              const redirectBackTo = t.at('action.payload.redirectBackTo', ctx)
+              if (t.isNil(redirectBackTo)) {
+                done()
+              } else {
+                dispatch(box.mutators.redirectChange(redirectBackTo))
+                done()
+              }
+            }),
             fx(
               [box.actions.boot, box.actions.connection],
               (ctx, dispatch, done) => {

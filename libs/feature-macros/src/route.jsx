@@ -5,10 +5,18 @@ import z from '@z1/lib-feature-box'
 import { render } from './render'
 
 // main
-export const route = ctx => {
+export const route = z.fn(t => ctx => {
+  const query = z.ui.query(ctx.query, true)
+  const stateKey = t.atOr('state', 'stateKey', ctx)
+  const nextState = props => t.pick(query.keys.to, props)
   function Route(props) {
-    return render(ctx.views.ui(ctx.ui), props.state, props.mutations)
+    return render(
+      ctx.views.ui(ctx.ui),
+      nextState(props),
+      props.mutations,
+      stateKey
+    )
   }
   Route.displayName = 'Route'
-  return z.ui.connect(ctx.query, ctx.mutators, Route)
-}
+  return z.ui.connect(query.selector, ctx.mutators, Route)
+})

@@ -12,7 +12,7 @@ export const stateKit = parts =>
   z.state.create(name, [
     mx.view.configure(name, {
       path: 'cloud-storage',
-      state: views.state({}),
+      state: views.state(parts),
       routes: {
         home: routeProps,
         view: routeProps,

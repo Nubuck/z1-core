@@ -6,8 +6,9 @@ import stateKit from './state'
 import views from './views'
 
 // main
+const name = 'cloudStorage'
 export const feature = z.create(
-  'cloudStorage',
+  name,
   parts => {
     const state = stateKit(parts.state)
     return {
@@ -17,7 +18,8 @@ export const feature = z.create(
           actions: mx.view.routeActions(state),
           ui: mx.view.route({
             views,
-            query: { cloudStorage: 'state' },
+            query: [name, 'account'],
+            stateKey: name,
             ui: parts.ui,
             mutators: state.mutators,
           }),

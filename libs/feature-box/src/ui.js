@@ -4,7 +4,7 @@ import { Provider, connect } from 'react-redux'
 import { NavLink, default as Link } from 'redux-first-router-link'
 
 // parts
-const query = fn(t => (queryMapping = []) => {
+const query = fn(t => (queryMapping = [], withKeys = false) => {
   const mapping = t.isType(queryMapping, 'array')
     ? queryMapping
     : [queryMapping]
@@ -25,7 +25,7 @@ const query = fn(t => (queryMapping = []) => {
           }, t.keys(query))
     }, mapping)
   )
-  return state =>
+  const selector = state =>
     t.reduce(
       (nextState, queryMap) => {
         return t.merge(nextState, {
@@ -35,6 +35,15 @@ const query = fn(t => (queryMapping = []) => {
       {},
       nextMapping
     )
+  return withKeys
+    ? {
+        selector,
+        keys: {
+          from: t.map(queryMap => queryMap.from, nextMapping),
+          to: t.map(queryMap => queryMap.to, nextMapping),
+        },
+      }
+    : selector
 })
 
 // main

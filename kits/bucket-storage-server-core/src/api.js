@@ -2,6 +2,7 @@ import FeathersBlogService from 'feathers-blob'
 import FsBlobStore from 'fs-blob-store'
 import Dauria from 'dauria'
 import Multer from 'multer'
+import mime from 'mime-types'
 
 // ctx
 import { SERVICES, PATHS } from './context'
@@ -101,16 +102,17 @@ export const api = (z, props) =>
                 create: [
                   auth.authenticate('jwt'),
                   ctx => {
-                    console.log('PARAMS', ctx.params)
                     const dataUri = t.path(PATHS.DATA_URI, ctx)
                     if (t.and(t.not(dataUri), t.path(PATHS.PARAMS_FILE, ctx))) {
+                      const mimeType = t.path(PATHS.PARAMS_FILE_MIME, ctx)
                       ctx.data = {
                         uri: Dauria.getBase64DataURI(
                           t.path(PATHS.PARAMS_FILE_BUFFER, ctx),
-                          t.path(PATHS.PARAMS_FILE_MIME, ctx)
+                          mimeType
                         ),
                         meta: {
-                          mimeType: t.path(PATHS.PARAMS_FILE_MIME, ctx),
+                          mimeType,
+                          ext: mimeType ? mime.extension(mimeType) : null,
                           originalName: t.path(PATHS.PARAMS_FILE_ORIGINAL, ctx),
                           encoding: t.path(PATHS.PARAMS_FILE_ENCODING, ctx),
                           size: t.path(PATHS.PARAMS_FILE_SIZE, ctx),
@@ -122,6 +124,9 @@ export const api = (z, props) =>
                       ctx.data = t.merge(ctx.data, {
                         meta: t.merge(meta, {
                           mimeType: content.MIME,
+                          ext: content.MIME
+                            ? mime.extension(content.MIME)
+                            : null,
                           originalName: dataURIName(dataUri),
                           encoding: content.mediaType,
                           size: content.buffer.length,

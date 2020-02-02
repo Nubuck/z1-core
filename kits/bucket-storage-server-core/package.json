@@ -20,6 +20,7 @@
     "feathers-blob": "^2.2.0",
     "fs-blob-store": "^5.2.1",
     "multer": "^1.4.2",
+    "mime-types": "^2.1.26",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3"
   },

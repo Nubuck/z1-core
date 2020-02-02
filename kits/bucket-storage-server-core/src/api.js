@@ -166,21 +166,36 @@ export const api = (z, props) =>
                     const registryFile = t.head(foundFiles.data)
                     const nextMeta = t.merge(meta, {
                       fileId: id,
-                      userId: t.pathOr(null, ['params', 'user', dbId], ctx),
-                      role: t.at('params.user.role', ctx),
                     })
                     if (registryFile) {
                       const [patchError, result] = await a.of(
-                        ctx.app
-                          .service(SERVICES.REGISTRY)
-                          .patch(registryFile[dbId], nextMeta)
+                        ctx.app.service(SERVICES.REGISTRY).patch(
+                          registryFile[dbId],
+                          t.merge(nextMeta, {
+                            updatedBy: t.pathOr(
+                              null,
+                              ['params', 'user', dbId],
+                              ctx
+                            ),
+                            updaterRole: t.at('params.user.role', ctx),
+                          })
+                        )
                       )
                       if (t.not(patchError)) {
                         ctx.result.meta = result
                       }
                     } else {
                       const [createError, result] = await a.of(
-                        ctx.app.service(SERVICES.REGISTRY).create(nextMeta)
+                        ctx.app.service(SERVICES.REGISTRY).create(
+                          t.merge(nextMeta, {
+                            createdBy: t.pathOr(
+                              null,
+                              ['params', 'user', dbId],
+                              ctx
+                            ),
+                            creatorRole: t.at('params.user.role', ctx),
+                          })
+                        )
                       )
                       if (t.not(createError)) {
                         ctx.result.meta = result

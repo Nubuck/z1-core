@@ -1,11 +1,8 @@
-/* @tailwind base; */
 @import 'tailwindcss/base.css';
 
-/* @tailwind components; */
 @import 'tailwindcss/components.css';
 
-/* @tailwind utilities; */
 @import 'tailwindcss/utilities.css';
 
-@import './elements.css';
+@import '@z1/lib-ui-box-tailwind/elements.css';
 

@@ -1,12 +1,12 @@
 {
-  "name": "@z1/kit-bucket-storage-web",
+  "name": "@z1/kit-account-web",
   "version": "0.4.4",
   "main": "dist/index.js",
   "files": [
     "dist"
   ],
   "license": "MIT",
-  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/bucket-storage-web",
+  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/account-web",
   "publishConfig": {
     "access": "public"
   },
@@ -15,7 +15,6 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "ky": "^0.16.2",
     "core-js": "^3.6.3",
     "localforage": "^1.7.3",
     "regenerator-runtime": "^0.13.3",

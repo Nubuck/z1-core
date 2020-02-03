@@ -9,6 +9,7 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
+    "@z1/kit-account-web": "^0.4.4",
     "@z1/kit-bucket-storage-web": "^0.4.4",
     "@z1/lib-api-box-client": "^0.4.4",
     "@z1/lib-feature-box": "^0.4.4",

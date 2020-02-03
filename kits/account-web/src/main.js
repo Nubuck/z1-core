@@ -22,7 +22,7 @@ export const skipViewsExcept401 = z.fn(t => (actions, actionType, state) =>
 )
 
 // main
-export const authState = z.fn((t, a) => (boxName = 'account', props) => {
+export const authState = z.fn((t, a) => (boxName = 'account', props = {}) => {
   const apiAt = t.atOr('api', 'apiAt', props)
   return {
     initial: {

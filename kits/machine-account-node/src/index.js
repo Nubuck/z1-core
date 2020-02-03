@@ -1,9 +1,10 @@
 import sysInfo from 'systeminformation'
 import hasha from 'hasha'
 import { machine } from './main'
-export const ma = {
+const ma = {
   machine,
   sysInfo,
   hasha,
 }
+export { accountState } from './main'
 export default ma

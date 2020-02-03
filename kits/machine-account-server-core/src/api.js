@@ -147,6 +147,26 @@ export const api = (z, props) => {
       {
         models: props.models,
         services(s, h) {
+          const withAlias = type => ctx => {
+            ctx.data = t.runMatch({
+              _: () => ctx.data,
+              machine: () =>
+                t.merge(ctx.data, {
+                  alias: t.tags.oneLineTrim`
+                  ${ctx.data.manufacturer}:
+                  ${ctx.data.model}/
+                  ${ctx.data.serialnumber}`,
+                }),
+              login: () =>
+                t.merge(ctx.data, {
+                  alias: t.to.lowerCase(t.tags.oneLineTrim`
+                  ${ctx.data.role}:
+                  ${ctx.data.hostname}/
+                  ${ctx.data.username}`),
+                }),
+            })(type)
+            return ctx
+          }
           const withLogins = h.common.when(
             ctx => {
               return t.not(t.atOr(false, 'params.excludeLogins', ctx))
@@ -195,7 +215,7 @@ export const api = (z, props) => {
             hooks: {
               before: {
                 all: [h.auth.authenticate('jwt')],
-                create: [h.common.disallow('external')],
+                create: [h.common.disallow('external'), withAlias('machine')],
               },
               after: {
                 find: [withLogins],
@@ -210,7 +230,7 @@ export const api = (z, props) => {
               hooks: {
                 before: {
                   all: [h.auth.authenticate('jwt')],
-                  create: [h.common.disallow('external')],
+                  create: [h.common.disallow('external'), withAlias('login')],
                 },
                 after: {
                   find: [withMachine],

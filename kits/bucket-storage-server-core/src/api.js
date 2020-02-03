@@ -64,6 +64,10 @@ export const api = (z, props) =>
         }
         const withAuthors = common.when(
           ctx => {
+            console.log(
+              'WITH AUTHORS',
+              t.atOr(false, 'params.includeAuthors', ctx)
+            )
             return t.atOr(false, 'params.includeAuthors', ctx)
           },
           common.fastJoin(ctx => {
@@ -141,6 +145,8 @@ export const api = (z, props) =>
             after: {
               get: [withAuthors],
               find: [withAuthors],
+              create: [withAuthors],
+              patch: [withAuthors],
             },
           },
         })
@@ -184,6 +190,7 @@ export const api = (z, props) =>
                   auth.authenticate('jwt'),
                   ctx => {
                     const dataUri = t.path(PATHS.DATA_URI, ctx)
+                    const meta = safeMeta(ctx)
                     if (t.and(t.not(dataUri), t.path(PATHS.PARAMS_FILE, ctx))) {
                       const mimeType = t.path(PATHS.PARAMS_FILE_MIME, ctx)
                       ctx.data = {
@@ -191,16 +198,17 @@ export const api = (z, props) =>
                           t.path(PATHS.PARAMS_FILE_BUFFER, ctx),
                           mimeType
                         ),
-                        meta: {
+                        meta: t.merge(meta, {
                           mimeType,
                           ext: mimeType ? mime.extension(mimeType) : null,
-                          originalName: t.path(PATHS.PARAMS_FILE_ORIGINAL, ctx),
+                          originalName: decodeURIComponent(
+                            t.pathOr('', PATHS.PARAMS_FILE_ORIGINAL, ctx)
+                          ),
                           encoding: t.path(PATHS.PARAMS_FILE_ENCODING, ctx),
                           size: t.path(PATHS.PARAMS_FILE_SIZE, ctx),
-                        },
+                        }),
                       }
                     } else if (dataUri) {
-                      const meta = safeMeta(ctx)
                       const content = Dauria.parseDataURI(dataUri)
                       ctx.data = t.merge(ctx.data, {
                         meta: t.merge(meta, {
@@ -226,16 +234,7 @@ export const api = (z, props) =>
                     ctx.result.meta = null
                     const id = t.path(PATHS.RESULT_ID, ctx)
                     const rawMeta = t.path(PATHS.DATA_META, ctx)
-                    const meta = t.isType(rawMeta, 'string')
-                      ? t.tryCatch(
-                          () => {
-                            return JSON.parse(rawMeta)
-                          },
-                          () => {
-                            return {}
-                          }
-                        )()
-                      : rawMeta
+                    const meta = safeMeta(ctx)
                     if (t.or(t.not(id), t.not(meta))) {
                       return ctx
                     }
@@ -264,7 +263,8 @@ export const api = (z, props) =>
                               ctx
                             ),
                             updaterRole: t.at('params.user.role', ctx),
-                          })
+                          }),
+                          { includeAuthors: true }
                         )
                       )
                       if (t.not(patchError)) {
@@ -280,7 +280,8 @@ export const api = (z, props) =>
                               ctx
                             ),
                             creatorRole: t.at('params.user.role', ctx),
-                          })
+                          }),
+                          { includeAuthors: true }
                         )
                       )
                       if (t.not(createError)) {

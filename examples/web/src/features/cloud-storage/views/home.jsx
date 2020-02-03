@@ -93,7 +93,13 @@ export const home = mx.fn((t, a, rx) =>
                 })(change)
               },
             })(props.event),
-            error: props.error,
+            error: t.runMatch({
+              _: () => props.error,
+              [ctx.event.dataLoadComplete]: () =>
+                t.atOr(null, 'next.error', props),
+              [ctx.event.formTransmitComplete]: () =>
+                t.atOr(null, 'next.error', props),
+            })(props.event),
           }
         },
         async load(props) {
@@ -176,7 +182,7 @@ export const home = mx.fn((t, a, rx) =>
         },
         async transmit(props) {
           const data = t.at('form.upload.data', props)
-          const [bucketErr] = await props.api.upload(data)
+          const [bucketErr] = await a.of(props.api.upload(data))
           if (bucketErr) {
             return {
               status: ctx.status.fail,

@@ -227,7 +227,6 @@ export const api = (z, props) =>
                   async ctx => {
                     ctx.result.meta = null
                     const id = t.path(PATHS.RESULT_ID, ctx)
-                    const rawMeta = t.path(PATHS.DATA_META, ctx)
                     const meta = safeMeta(ctx)
                     if (t.or(t.not(id), t.not(meta))) {
                       return ctx

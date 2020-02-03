@@ -1,4 +1,4 @@
-# Z1 Kit Machine Account Node
+# Z1 Kit Bucket Storage Node
 
 Documentation under construction.
 
@@ -7,13 +7,6 @@ Documentation under construction.
 Install
 
 ```
-yarn add @z1/kit-machine-account-node
+yarn add @z1/kit-bucket-storage-node
 ```
 
-Import
-
-```JavaScript
-
-import * from '@z1/kit-machine-account-node'
-
-```

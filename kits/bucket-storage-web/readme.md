@@ -1,4 +1,4 @@
-# Z1 Lib Api Box Client
+# Z1 Kit Bucket Storage web
 
 Documentation under construction.
 
@@ -7,5 +7,6 @@ Documentation under construction.
 Install
 
 ```
-yarn add @z1/lib-api-box-client
+yarn add @z1/kit-bucket-storage-web
 ```
+

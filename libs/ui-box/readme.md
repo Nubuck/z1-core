@@ -45,7 +45,7 @@ declare function toCss(box: CssProps): string {}
 
 ```JavaScript
 
-import { toCss, uiBox } from '@z1/lib-ui-box-tailwind'
+import { toCss, uiBox } from '@z1/lib-ui-box'
 
 const baseElement = uiBox.create({
   display: 'flex',

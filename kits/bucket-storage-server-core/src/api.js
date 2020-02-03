@@ -111,7 +111,7 @@ export const api = (z, props) =>
                     const result = await ctx.app
                       .service(updaterService)
                       .get(file.updatedBy)
-                    file.updater = t.eq('users', creatorService)
+                    file.updater = t.eq('users', updaterService)
                       ? t.merge(
                           t.pick(
                             ['name', 'surname', 'email', 'role', 'status'],

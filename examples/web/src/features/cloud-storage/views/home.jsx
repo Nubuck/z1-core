@@ -59,6 +59,39 @@ export const home = mx.fn((t, a, rx) =>
                   files: t.atOr([], 'next.data.files', props),
                 }
               },
+              [ctx.event.dataChange]: () => {
+                const change = t.at('next.change', props)
+                const file = t.at('next.file', props)
+                const files = t.at('data.files', props)
+                if (t.or(t.isNil(change), t.isNil(file))) {
+                  return props.data
+                }
+                return t.runMatch({
+                  _: () => props.data,
+                  created: () =>
+                    t.merge(props.data, {
+                      files: t.append(file, files),
+                    }),
+                  patched: () =>
+                    t.merge(props.data, {
+                      files: t.update(
+                        t.findIndex(
+                          current => t.eq(current._id, file._id),
+                          files
+                        ),
+                        file,
+                        files
+                      ),
+                    }),
+                  removed: () =>
+                    t.merge(props.data, {
+                      files: t.filter(
+                        current => t.not(t.eq(current._id, file._id)),
+                        files
+                      ),
+                    }),
+                })(change)
+              },
             })(props.event),
             error: props.error,
           }
@@ -90,7 +123,32 @@ export const home = mx.fn((t, a, rx) =>
           }
         },
         subscribe(props) {
-          return null
+          const bucketService = props.api.service('bucket-registry')
+          return rx.fromEvent(bucketService, 'created').pipe(
+            rx.merge(
+              rx.fromEvent(bucketService, 'patched').pipe(
+                rx.map(file => ({
+                  file,
+                  change: 'patched',
+                }))
+              ),
+              rx.fromEvent(bucketService, 'removed').pipe(
+                rx.map(file =>
+                  t.eq('patched', t.at('change', file))
+                    ? file
+                    : {
+                        file,
+                        change: 'removed',
+                      }
+                )
+              )
+            ),
+            rx.map(file =>
+              props.mutators.dataChange(
+                t.not(t.has('file')(file)) ? { file, change: 'created' } : file
+              )
+            )
+          )
         },
         form(props) {
           return t.runMatch({
@@ -123,7 +181,7 @@ export const home = mx.fn((t, a, rx) =>
           body.append('uri', data.uri)
           body.append('meta', JSON.stringify({ alias: data.alias }))
           const [bucketErr] = await a.of(
-            props.api.get('rest').post('bucket-storage', {
+            props.api.rest.post('bucket-storage', {
               body,
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -168,7 +226,7 @@ export const home = mx.fn((t, a, rx) =>
             key="cloud-storage"
             render={() => (
               <React.Fragment>
-                <ctx.Row>
+                <ctx.Row key="title-bar" margin={{ bottom: 4 }}>
                   <ctx.IconLabel
                     icon={{
                       name: 'cloud-upload-alt',
@@ -201,6 +259,30 @@ export const home = mx.fn((t, a, rx) =>
                     onClick={() => props.mutations.modalChange({ open: true })}
                   />
                 </ctx.Row>
+                <ctx.VList
+                  items={t.atOr([], 'state.data.files', props)}
+                  rowHeight={80}
+                  render={(file, rowProps) => {
+                    return (
+                      <ctx.ListItem
+                        key={rowProps.key}
+                        style={rowProps.style}
+                        avatar={{ icon: 'file' }}
+                        title={{
+                          label: file.originalName,
+                        }}
+                        stamp={{
+                          label: {
+                            text: ctx
+                              .dateFn(file.updatedAt)
+                              .format('YYYY MM-DD HH:mm:ss A'),
+                            fontSize: 'xs',
+                          },
+                        }}
+                      />
+                    )
+                  }}
+                />
                 <ctx.Modal
                   title={{
                     label: {

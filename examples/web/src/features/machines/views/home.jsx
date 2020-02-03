@@ -114,46 +114,44 @@ export const home = mx.fn((t, a, rx) =>
           }
         },
         subscribe(props) {
-          return rx
-            .fromEvent(props.api.service('machine-logins'), 'patched')
-            .pipe(
-              rx.merge(
-                rx.fromEvent(props.api.service('machines'), 'created').pipe(
-                  rx.map(machine => ({
-                    machine,
-                    change: 'created',
-                    entity: 'machine',
-                  }))
-                ),
-                rx
-                  .fromEvent(props.api.service('machine-logins'), 'created')
-                  .pipe(
-                    rx.map(machineOrlogin =>
-                      t.eq('machine', t.at('entity', machineOrlogin))
-                        ? machineOrlogin
-                        : {
-                            login: machineOrlogin,
-                            change: 'created',
-                            entity: 'login',
-                          }
-                    )
-                  )
+          const loginService = props.api.service('machine-logins')
+          const machineService = props.api.service('machines')
+          return rx.fromEvent(loginService, 'patched').pipe(
+            rx.merge(
+              rx.fromEvent(machineService, 'created').pipe(
+                rx.map(machine => ({
+                  machine,
+                  change: 'created',
+                  entity: 'machine',
+                }))
               ),
-              rx.map(machineOrlogin =>
-                props.mutators.dataChange(
-                  t.or(
-                    t.eq('created', t.at('change', machineOrlogin)),
-                    t.eq('machine', t.at('entity', machineOrlogin))
-                  )
+              rx.fromEvent(loginService, 'created').pipe(
+                rx.map(machineOrlogin =>
+                  t.eq('machine', t.at('entity', machineOrlogin))
                     ? machineOrlogin
                     : {
                         login: machineOrlogin,
-                        change: 'patched',
+                        change: 'created',
                         entity: 'login',
                       }
                 )
               )
+            ),
+            rx.map(machineOrlogin =>
+              props.mutators.dataChange(
+                t.or(
+                  t.eq('created', t.at('change', machineOrlogin)),
+                  t.eq('machine', t.at('entity', machineOrlogin))
+                )
+                  ? machineOrlogin
+                  : {
+                      login: machineOrlogin,
+                      change: 'patched',
+                      entity: 'login',
+                    }
+              )
             )
+          )
         },
       }
     },
@@ -166,7 +164,7 @@ export const home = mx.fn((t, a, rx) =>
         supervisor: 'crown',
       })
       return props => {
-        const items = t.atOr([], 'state.data.machines', props)
+        const machines = t.atOr([], 'state.data.machines', props)
         return (
           <ctx.Page
             key="machines"
@@ -182,13 +180,13 @@ export const home = mx.fn((t, a, rx) =>
                   margin={{ bottom: 4 }}
                 />
                 <ctx.VList
-                  items={items}
+                  items={machines}
                   rowHeight={({ index }) => {
-                    const item = items[index]
-                    if (t.isNil(item)) {
+                    const machine = machines[index]
+                    if (t.isNil(machine)) {
                       return 50
                     }
-                    return 70 * t.len(t.atOr([], 'logins', item)) + 50
+                    return 70 * t.len(t.atOr([], 'logins', machine)) + 50
                   }}
                   render={(machine, rowProps) => {
                     return (

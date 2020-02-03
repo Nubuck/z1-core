@@ -5,7 +5,7 @@ export const withRest = api => {
   const rest = ky.extend({
     hooks: {
       beforeRequest: [
-         request => {
+        request => {
           // const { accessToken } = await api.get('authentication')
           // console.log('REQEST', accessToken)
           // request.headers.set('Authorization', `Bearer Derp`)
@@ -13,11 +13,10 @@ export const withRest = api => {
       ],
     },
   })
-  api.set(
-    'rest',
-    rest.create({
-      prefixUrl: 'http://localhost:3035/api',
-    })
-  )
+  api.rest = rest.create({
+    prefixUrl: 'http://localhost:3035/api',
+  })
+
+  api.upload = async payload => {}
   return api
 }

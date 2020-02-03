@@ -7,7 +7,7 @@ import { render } from './render'
 // main
 export const route = z.fn(t => ctx => {
   const query = z.ui.query(ctx.query, true)
-  const stateKey = t.atOr('state', 'stateKey', ctx)
+  const stateKey = t.atOr('state', 'branch', ctx)
   const nextState = props => t.pick(query.keys.to, props)
   function Route(props) {
     return render(

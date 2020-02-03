@@ -19,7 +19,7 @@ export const feature = z.create(
           ui: mx.view.route({
             views,
             query: [name, 'account'],
-            stateKey: name,
+            branch: name,
             ui: parts.ui,
             mutators: state.mutators,
           }),

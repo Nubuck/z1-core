@@ -175,19 +175,8 @@ export const home = mx.fn((t, a, rx) =>
           })(props.event)
         },
         async transmit(props) {
-          const { accessToken } = await props.api.get('authentication')
           const data = t.at('form.upload.data', props)
-          const body = new FormData()
-          body.append('uri', data.uri)
-          body.append('meta', JSON.stringify({ alias: data.alias }))
-          const [bucketErr] = await a.of(
-            props.api.rest.post('bucket-storage', {
-              body,
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            })
-          )
+          const [bucketErr] = await props.api.upload(data)
           if (bucketErr) {
             return {
               status: ctx.status.fail,

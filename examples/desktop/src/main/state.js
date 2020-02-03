@@ -21,6 +21,7 @@ const appState = z.fn((t, a) =>
     accountState('app', {
       apiAt: 'api',
       machineAt: 'machine',
+      role: 'agent',
     }),
     {
       initial: {

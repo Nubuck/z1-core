@@ -59,7 +59,6 @@ export const withRest = z.fn(t => api => {
   api.upload = async payload => {
     const body = new FormData()
     const uri = t.at('uri', payload)
-    console.log('URI TYPE', t.type(uri))
     const fileBlob = t.isType(uri, 'string') ? toBlob(uri) : uri
     body.append('uri', fileBlob.blob, fileBlob.name)
     body.append('meta', JSON.stringify(t.omit(['uri'], payload)))

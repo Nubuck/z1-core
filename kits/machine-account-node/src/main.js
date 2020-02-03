@@ -110,6 +110,7 @@ const authStatus = {
 export const accountState = fn((t, a) => (boxName, props = {}) => {
   const apiAt = t.atOr('api', 'apiAt', props)
   const machineAt = t.atOr('machine', 'machineAt', props)
+  const role = t.atOr('machine', 'role', props)
   return {
     initial: {
       connected: false,
@@ -186,7 +187,7 @@ export const accountState = fn((t, a) => (boxName, props = {}) => {
                 // )
                 const machine = t.at(machineAt, ctx)
                 const [accountErr, account] = await a.of(
-                  machine.account({ role: 'agent' })
+                  machine.account({ role })
                 )
                 if (accountErr) {
                   // log.debug('create local machine account failed')

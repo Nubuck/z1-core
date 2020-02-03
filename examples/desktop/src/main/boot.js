@@ -11,7 +11,7 @@ import { withRest } from './parts'
 import { state } from './state'
 
 // main
-export const boot = async (apiPath = 'http://127.0.0.1:3035') => {
+export const boot = async (apiPath = 'http://localhost:3035') => {
   const client = await api(apiPath, {
     storageOptions: { dir: path.join(app.getPath('home'), '.z1') },
   })

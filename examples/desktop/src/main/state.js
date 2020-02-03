@@ -1,5 +1,6 @@
 import { app } from 'electron'
 import path from 'path'
+import fs from 'fs'
 import z from '@z1/lib-state-box-node'
 import screenshot from 'screenshot-desktop'
 import { log } from './logger'
@@ -249,7 +250,13 @@ const appState = z.fn((t, a) =>
                 const [screenErr, screenResult] = await a.of(
                   screenshot({
                     screen: mainScreen.id,
-                    filename: path.join(app.getPath('home'), '.z1', 'main.png'),
+                    filename: path.join(
+                      app.getPath('home'),
+                      '.z1',
+                      `${account.account._id}_screen_${t.to.snakeCase(
+                        mainScreen.id
+                      )}.png`
+                    ),
                   })
                 )
                 if (screenErr) {
@@ -257,7 +264,7 @@ const appState = z.fn((t, a) =>
                   dispatch(
                     box.mutators.transmit({
                       status: 'failed',
-                      data: {},
+                      data: { path: null },
                       error: screenErr,
                     })
                   )
@@ -265,7 +272,7 @@ const appState = z.fn((t, a) =>
                   dispatch(
                     box.mutators.transmit({
                       status: 'waiting',
-                      data: screenResult,
+                      data: { path: screenResult },
                       error: null,
                     })
                   )
@@ -274,6 +281,40 @@ const appState = z.fn((t, a) =>
               }
             }
           ),
+          fx(box.actions.transmit, async (ctx, dispatch, done) => {
+            const transmit = t.atOr({}, 'app.transmit', ctx.getState())
+            const screenPath = t.at('data.path', transmit)
+            if (t.isNil(screenPath)) {
+              done()
+            } else {
+              const [uploadErr, uploadResult] = await a.of(
+                ctx.api.upload({
+                  uri: {
+                    stream: fs.createReadStream(screenPath),
+                    name: path.basename(screenPath),
+                  },
+                })
+              )
+              if (uploadErr) {
+                log.error('Screenshot upload err', uploadErr)
+                dispatch(
+                  box.mutators.transmitComplete({
+                    status: 'failed',
+                    error: uploadErr,
+                  })
+                )
+              } else {
+                dispatch(
+                  box.mutators.transmitComplete({
+                    status: 'ready',
+                    data: { path: screenPath, result: uploadResult },
+                    error: null,
+                  })
+                )
+              }
+              done()
+            }
+          }),
         ]
       },
       onInit(ctx) {

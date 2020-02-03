@@ -128,7 +128,7 @@ export const api = (z, props) => {
           )
         )
     )
-    if (machAccErr) {
+    if (nextLoginErr) {
       app.set('machineAccount', null)
       app.debug('create machine login failed')
       return null
@@ -153,14 +153,13 @@ export const api = (z, props) => {
               machine: () =>
                 t.merge(ctx.data, {
                   alias: t.tags.oneLineTrim`
-                  ${ctx.data.manufacturer}:
+                  ${ctx.data.manufacturer}/
                   ${ctx.data.model}/
                   ${ctx.data.serialnumber}`,
                 }),
               login: () =>
                 t.merge(ctx.data, {
                   alias: t.to.lowerCase(t.tags.oneLineTrim`
-                  ${ctx.data.role}:
                   ${ctx.data.hostname}/
                   ${ctx.data.username}`),
                 }),

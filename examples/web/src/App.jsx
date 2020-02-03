@@ -1,5 +1,5 @@
+import 'react-hot-loader/patch'
 import { hot } from 'react-hot-loader'
-import React from 'react'
 import features from './features'
 
 // outs

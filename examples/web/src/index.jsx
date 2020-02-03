@@ -1,12 +1,12 @@
-// hot code
+// hot code before deps
 import App from './App'
 import features, { api } from './features'
 import './index.css'
-import 'react-virtualized/styles.css'
 // deps
 import React from 'react'
 import ReactDom from 'react-dom'
 import z from '@z1/lib-feature-box'
+import 'react-virtualized/styles.css'
 // configure
 const dev = process.env.NODE_ENV === 'development'
 const store = z.store.create({
@@ -16,16 +16,20 @@ const store = z.store.create({
   },
   logging: dev,
 })
-// reload state
+const run = () => {
+  ReactDom.render(
+    <z.ui.Provider store={store}>
+      <App routing={features.routing} />
+    </z.ui.Provider>,
+    document.getElementById('root')
+  )
+}
+// reload
 if (module.hot) {
   module.hot.accept(['./features', './App'], () => {
     z.store.reload(store, features.state)
+    run()
   })
 }
 // run
-ReactDom.render(
-  <z.ui.Provider store={store}>
-    <App routing={features.routing} />
-  </z.ui.Provider>,
-  document.getElementById('root')
-)
+run()

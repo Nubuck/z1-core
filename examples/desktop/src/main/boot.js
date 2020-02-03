@@ -2,9 +2,7 @@ import z from '@z1/lib-state-box-node'
 import ma from '@z1/kit-machine-account-node'
 
 // parts
-import { api } from './parts'
-
-// features
+import { api } from './api'
 import { state } from './state'
 
 // main

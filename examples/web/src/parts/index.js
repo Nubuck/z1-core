@@ -1,8 +1,8 @@
 import { ui } from './ui'
 import { state } from './state'
-import _api from './api'
+import client from './api'
 
 // main
-export const api = _api
+export const api = client
 export const parts = { ui, state }
 export default parts

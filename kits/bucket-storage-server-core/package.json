@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-bucket-storage-server-core",
-  "version": "0.4.2",
+  "version": "0.4.5",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -19,8 +19,8 @@
     "dauria": "^2.0.0",
     "feathers-blob": "^2.2.0",
     "fs-blob-store": "^5.2.1",
-    "multer": "^1.4.2",
     "mime-types": "^2.1.26",
+    "multer": "^1.4.2",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3"
   },

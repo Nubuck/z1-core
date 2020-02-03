@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-state-box",
   "description": "The Z1 standard state management solution for web apps, implemented as a macro interface over Redux, Redux-logic and Redux-toolbelt",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -16,7 +16,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-state-box-core": "^0.4.4",
+    "@z1/lib-state-box-core": "^0.4.5",
     "core-js": "^3.6.3",
     "redux-logger": "^3.0.6",
     "regenerator-runtime": "^0.13.3",

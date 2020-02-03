@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-bucket-storage-node",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/bucket-storage-node",
@@ -12,12 +12,12 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.4.4",
-    "got": "^10.4.0",
-    "form-data": "^3.0.0",
-    "node-downloader-helper": "^1.0.11",
+    "@z1/preset-task": "^0.4.5",
     "core-js": "^3.6.3",
+    "form-data": "^3.0.0",
+    "got": "^10.4.0",
     "hasha": "^5.1.0",
+    "node-downloader-helper": "^1.0.11",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3",
     "systeminformation": "^4.19.1"

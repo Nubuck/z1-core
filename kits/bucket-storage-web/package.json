@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-bucket-storage-web",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,8 +15,8 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "ky": "^0.16.2",
     "core-js": "^3.6.3",
+    "ky": "^0.16.2",
     "localforage": "^1.7.3",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3"
@@ -25,8 +25,8 @@
     "@z1/lib-feature-box": "^0.4"
   },
   "devDependencies": {
-    "@z1/lib-feature-box": "^0.4",
     "@neutrinojs/library": "^9.0.0",
+    "@z1/lib-feature-box": "^0.4.5",
     "neutrino": "^9.0.0",
     "webpack": "^4",
     "webpack-cli": "^3"

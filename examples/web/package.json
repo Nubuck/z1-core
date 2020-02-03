@@ -1,6 +1,6 @@
 {
   "name": "example-app-web",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "main": "dist/index.js",
   "license": "MIT",
   "private": true,
@@ -9,13 +9,13 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
-    "@z1/kit-account-web": "^0.4.4",
-    "@z1/kit-bucket-storage-web": "^0.4.4",
-    "@z1/lib-api-box-client": "^0.4.4",
-    "@z1/lib-feature-box": "^0.4.4",
-    "@z1/lib-feature-macros": "^0.4.4",
-    "@z1/lib-ui-box-elements": "^0.4.4",
-    "@z1/lib-ui-schema": "^0.4.4",
+    "@z1/kit-account-web": "^0.4.5",
+    "@z1/kit-bucket-storage-web": "^0.4.5",
+    "@z1/lib-api-box-client": "^0.4.5",
+    "@z1/lib-feature-box": "^0.4.5",
+    "@z1/lib-feature-macros": "^0.4.5",
+    "@z1/lib-ui-box-elements": "^0.4.5",
+    "@z1/lib-ui-schema": "^0.4.5",
     "core-js": "^3.6.3",
     "dayjs": "^1.8.19",
     "react": "^16.12.0",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "@neutrinojs/copy": "^9.0.0",
     "@neutrinojs/react": "^9.0.0",
-    "@z1/lib-ui-box-tailwind": "^0.4.4",
+    "@z1/lib-ui-box-tailwind": "^0.4.5",
     "autoprefixer": "^9.6.0",
     "neutrino": "^9.0.0",
     "postcss-extend": "^1.0.5",

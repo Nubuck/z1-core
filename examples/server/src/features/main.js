@@ -11,7 +11,7 @@ import bucketStorage from '@z1/kit-bucket-storage-server-nedb'
 import machineAccount from '@z1/kit-machine-account-server-nedb'
 
 // feature ctx
-const ctx = {
+const core = {
   featureBox: z,
   FeathersErrors,
   FeathersAuth,
@@ -19,7 +19,7 @@ const ctx = {
 
 // exports
 export const features = z.combine([
-  account(ctx),
-  bucketStorage(ctx),
-  machineAccount(ctx),
+  account(core),
+  bucketStorage(core),
+  machineAccount(core),
 ])

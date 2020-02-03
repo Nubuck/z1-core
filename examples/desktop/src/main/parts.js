@@ -1,6 +1,5 @@
-import z from '@z1/lib-feature-box'
-import ky from 'ky'
-import { toBlob } from './toBlob'
+import z from '@z1/lib-state-box-node'
+import got from 'got'
 
 export const withRest = z.fn(t => api => {
   api.on('login', payload => {
@@ -10,7 +9,8 @@ export const withRest = z.fn(t => api => {
     api.set('accessToken', null)
   })
   const apiUri = t.at('io.io.uri', api)
-  api.rest = ky.create({
+  console.log('API URI', apiUri)
+  api.rest = got.extend({
     prefixUrl: `${
       t.endsWith('/', apiUri) ? t.dropLast(1, apiUri) : apiUri
     }/api`,
@@ -28,8 +28,7 @@ export const withRest = z.fn(t => api => {
   api.upload = async payload => {
     const body = new FormData()
     const uri = t.at('uri', payload)
-    const fileBlob = toBlob(uri)
-    body.append('uri', fileBlob.blob, fileBlob.name)
+    body.append('uri', uri.stream, ui.originalName)
     body.append('meta', JSON.stringify(t.omit(['uri'], payload)))
     return await api.rest
       .post('bucket-storage', {
@@ -37,5 +36,6 @@ export const withRest = z.fn(t => api => {
       })
       .json()
   }
+
   return api
 })

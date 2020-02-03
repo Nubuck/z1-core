@@ -1,4 +1,7 @@
+import { app } from 'electron'
+import path from 'path'
 import z from '@z1/lib-state-box-node'
+import screenshot from 'screenshot-desktop'
 import { log } from './logger'
 
 // types
@@ -19,6 +22,12 @@ const appState = z.fn((t, a) =>
         status: authStatus.init,
         error: null,
         account: null,
+        displays: [],
+        transmit: {
+          status: 'init',
+          data: {},
+          error: null,
+        },
       },
       mutations(m) {
         return [
@@ -36,6 +45,16 @@ const appState = z.fn((t, a) =>
           }),
           m('authenticateComplete', (state, action) => {
             return t.merge(state, action.payload)
+          }),
+          m('displayChange', (state, action) => {
+            return t.merge(state, {
+              displays: t.atOr(state.displays, 'payload.displays', action),
+            })
+          }),
+          m(['transmit', 'transmitComplete'], (state, action) => {
+            return t.merge(state, {
+              transmit: t.merge(state.transmit, action.payload),
+            })
           }),
         ]
       },
@@ -207,6 +226,54 @@ const appState = z.fn((t, a) =>
               done()
             }
           }),
+          fx(
+            [box.actions.authenticateComplete],
+            async (ctx, dispatch, done) => {
+              const account = t.at('app', ctx.getState())
+              if (t.not(authStatus.success, account.status)) {
+                done()
+              } else {
+                const [displayErr, displayResult] = await a.of(
+                  screenshot.listDisplays()
+                )
+                if (displayErr) {
+                  log.error('List displays err', displayResult)
+                } else {
+                  dispatch(
+                    box.mutators.displayChange({
+                      displays: displayResult,
+                    })
+                  )
+                }
+                const mainScreen = t.head(displayResult)
+                const [screenErr, screenResult] = await a.of(
+                  screenshot({
+                    screen: mainScreen.id,
+                    filename: path.join(app.getPath('home'), '.z1', 'main.png'),
+                  })
+                )
+                if (screenErr) {
+                  log.error('Screenshot main err', screenErr)
+                  dispatch(
+                    box.mutators.transmit({
+                      status: 'failed',
+                      data: {},
+                      error: screenErr,
+                    })
+                  )
+                } else {
+                  dispatch(
+                    box.mutators.transmit({
+                      status: 'waiting',
+                      data: screenResult,
+                      error: null,
+                    })
+                  )
+                }
+                done()
+              }
+            }
+          ),
         ]
       },
       onInit(ctx) {

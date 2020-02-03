@@ -324,7 +324,6 @@ export const home = mx.fn((t, a, rx) =>
                         color="orange-500"
                         margin={{ top: 5 }}
                         x="center"
-                        {...cm.sizes}
                       />
                     )}
                   />

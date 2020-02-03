@@ -29,23 +29,23 @@ const dataURIName = dataURI => {
 
 // main
 export const api = (z, props) =>
-  z.featureBox.fn((t, a) => {
-    const safeMeta = ctx => {
-      const rawMeta = t.path(PATHS.DATA_META, ctx)
-      return t.isType(rawMeta, 'string')
-        ? t.tryCatch(
-            () => {
-              return JSON.parse(rawMeta)
-            },
-            () => {
-              return {}
-            }
-          )()
-        : rawMeta
-    }
-    return z.featureBox.api.create('bucketStorage', {
+  z.featureBox.fn((t, a) =>
+    z.featureBox.api.create('bucketStorage', {
       models: props.models,
       services(s, { auth, common, data }) {
+        const safeMeta = ctx => {
+          const rawMeta = t.path(PATHS.DATA_META, ctx)
+          return t.isType(rawMeta, 'string')
+            ? t.tryCatch(
+                () => {
+                  return JSON.parse(rawMeta)
+                },
+                () => {
+                  return {}
+                }
+              )()
+            : rawMeta
+        }
         const stripUri = ctx => {
           if (t.has('result')(ctx)) {
             ctx.result = t.omit(['uri'], ctx.result)
@@ -63,13 +63,7 @@ export const api = (z, props) =>
           return ctx
         }
         const withAuthors = common.when(
-          ctx => {
-            console.log(
-              'WITH AUTHORS',
-              t.atOr(false, 'params.includeAuthors', ctx)
-            )
-            return t.atOr(false, 'params.includeAuthors', ctx)
-          },
+          ctx => t.atOr(false, 'params.includeAuthors', ctx),
           common.fastJoin(ctx => {
             return {
               joins: {
@@ -375,4 +369,4 @@ export const api = (z, props) =>
         })
       },
     })
-  })
+  )

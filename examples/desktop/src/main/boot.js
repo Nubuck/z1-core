@@ -5,6 +5,9 @@ import api from '@z1/lib-api-box-client-node'
 import ma from '@z1/kit-machine-account-node'
 
 // parts
+import { withRest } from './parts'
+
+// features
 import { state } from './state'
 
 // main
@@ -15,7 +18,7 @@ export const boot = async (apiPath = 'http://127.0.0.1:3035') => {
   const store = z.store.create({
     boxes: state,
     context: {
-      api: client,
+      api: withRest(client),
       machine: ma.machine,
       sysInfo: ma.sysInfo,
     },

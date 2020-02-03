@@ -1,19 +1,18 @@
 // hot code
 import App from './App'
-import features, { withRest } from './features'
+import features, { api } from './features'
 import './index.css'
 import 'react-virtualized/styles.css'
 // deps
 import React from 'react'
 import ReactDom from 'react-dom'
 import z from '@z1/lib-feature-box'
-import api from '@z1/lib-api-box-client'
 // configure
 const dev = process.env.NODE_ENV === 'development'
 const store = z.store.create({
   boxes: features.state,
   context: {
-    api: withRest(api(dev ? 'http://localhost:3035' : '/')),
+    api: api(dev ? 'http://localhost:3035' : '/'),
   },
   logging: dev,
 })

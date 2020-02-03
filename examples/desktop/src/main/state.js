@@ -253,8 +253,8 @@ const appState = z.fn((t, a) =>
                     filename: path.join(
                       app.getPath('home'),
                       '.z1',
-                      `${account.account._id}_screen_${t.to.snakeCase(
-                        mainScreen.id
+                      `screen_${account.account._id}_${t.to.snakeCase(
+                        `${mainScreen.id}`
                       )}.png`
                     ),
                   })

@@ -1,1 +1,1 @@
-export { features as default, withRest } from './main'
+export { features as default, api } from './main'

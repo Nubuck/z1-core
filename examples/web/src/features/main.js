@@ -31,7 +31,7 @@ const ctx = {
 }
 
 // main
-export const withRest = parts.state.withRest
+export { api } from '../parts'
 export const features = z.combine([
   layout,
   account,

@@ -13,14 +13,12 @@
     "renderer": null
   },
   "dependencies": {
+    "@z1/kit-bucket-storage-node": "^0.4.4",
     "@z1/kit-machine-account-node": "^0.4.4",
     "@z1/lib-api-box-client-node": "^0.4.4",
     "@z1/lib-state-box-node": "^0.4.4",
     "core-js": "^3.6.3",
     "electron-log": "^4.0.4",
-    "got": "^10.4.0",
-    "form-data": "^3.0.0",
-    "node-downloader-helper": "^1.0.11",
     "redux": "^4.0.4",
     "screenshot-desktop": "^1.11.0",
     "regenerator-runtime": "^0.13.3",

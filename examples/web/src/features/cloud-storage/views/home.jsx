@@ -67,6 +67,7 @@ export const home = mx.fn((t, a, rx) =>
           const [filesErr, files] = await a.of(
             props.api.service('bucket-registry').find({
               query: {
+                includeAuthors: true,
                 $limit: 10000,
               },
             })

@@ -51,10 +51,10 @@ export const api = (z, props) => {
       login: t.head(loginResult.data),
     }
   })
-  const registerMachine = z.featureBox.fn((t, a) => async app => {
+  const registerMachine = z.featureBox.fn((t, a) => async (app, configKey) => {
     const [accountErr, account] = await a.of(
       ma.machine.account({
-        role: t.atOr('machine', 'role', app.get('machine')),
+        role: t.atOr('machine', 'role', app.get(configKey)),
       })
     )
     if (accountErr) {
@@ -355,6 +355,12 @@ export const api = (z, props) => {
               'machine',
               t.merge({ role: 'machine' }, machineConfig || {})
             )
+            app.set('registerMachine', configKey =>
+              registerMachine(app, configKey)
+            )
+            app.set('changeMachineStatus', (user, status) =>
+              patchStatus(app, user, status)
+            )
           },
           [z.featureBox.api.lifecycle.onAuthConfig]: app => {
             const { MachineStrategy } = strategy(
@@ -368,28 +374,32 @@ export const api = (z, props) => {
           [z.featureBox.api.lifecycle.onSetup]: app => {
             app.on('login', (authResult, params, context) => {
               if (isLogin(t.atOr({}, 'user', authResult))) {
-                patchStatus(app, authResult.user, 'online')
+                app
+                  .get('changeMachineStatus')(authResult.user, 'online')
                   .then(() => {})
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })
             app.on('logout', (authResult, params, context) => {
               if (isLogin(t.atOr({}, 'user', authResult))) {
-                patchStatus(app, authResult.user, 'offline')
+                app
+                  .get('changeMachineStatus')(authResult.user, 'offline')
                   .then(() => {})
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })
             app.on('disconnect', connection => {
               if (isLogin(t.atOr({}, 'user', connection))) {
-                patchStatus(app, connection.user, 'offline')
+                app
+                  .get('changeMachineStatus')(connection.user, 'offline')
                   .then(() => {})
                   .catch(e => app.error('failed to updated machine status', e))
               }
             })
           },
           [z.featureBox.api.lifecycle.onSync]: app => {
-            registerMachine(app)
+            app
+              .get('registerMachine')('machine')
               .then(() => {
                 app.debug('machine registered', app.get('machineAccount')[dbId])
               })
@@ -397,7 +407,8 @@ export const api = (z, props) => {
           },
           [z.featureBox.api.lifecycle.onStop]: app => {
             app.debug('server stopping, going offline...')
-            patchStatus(app, app.get('machineAccount'), 'offline')
+            app
+              .get('changeMachineStatus')(app.get('machineAccount'), 'offline')
               .then(() => app.debug('machine status offline'))
               .catch(e => app.error('machine status failed', e))
           },

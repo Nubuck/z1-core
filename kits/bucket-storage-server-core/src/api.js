@@ -53,13 +53,94 @@ export const api = (z, props) =>
           return ctx
         }
         const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
+        const addFlagToParams = ctx => {
+          const includeAuthors = t.at('params.query.includeAuthors', ctx)
+          if (t.isNil(includeAuthors)) {
+            return ctx
+          }
+          ctx.params.query = t.omit(['includeAuthors'], ctx.params.query)
+          ctx.params.includeAuthors = includeAuthors
+          return ctx
+        }
+        const withAuthors = common.when(
+          ctx => {
+            return t.atOr(false, 'params.includeAuthors', ctx)
+          },
+          common.fastJoin(ctx => {
+            return {
+              joins: {
+                creator() {
+                  return async file => {
+                    if (t.isNil(file.createdBy)) {
+                      return file
+                    }
+                    const creatorService = t.or(
+                      t.eq('user', file.creatorRole),
+                      t.eq('admin', file.creatorRole)
+                    )
+                      ? 'users'
+                      : 'machine-logins'
+                    const result = await ctx.app
+                      .service(creatorService)
+                      .get(file.createdBy)
+                    file.creator = t.eq('users', creatorService)
+                      ? t.merge(
+                          t.pick(
+                            ['name', 'surname', 'email', 'role', 'status'],
+                            result || {}
+                          ),
+                          { type: 'user' }
+                        )
+                      : t.merge(t.pick(['login'], result || {}), {
+                          type: 'machine',
+                        })
+                    return file
+                  }
+                },
+                updater() {
+                  return async file => {
+                    if (t.isNil(file.updatedBy)) {
+                      return file
+                    }
+                    const updaterService = t.or(
+                      t.eq('user', file.updaterRole),
+                      t.eq('admin', file.updaterRole)
+                    )
+                      ? 'users'
+                      : 'machine-logins'
+                    const result = await ctx.app
+                      .service(updaterService)
+                      .get(file.updatedBy)
+                    file.updater = t.eq('users', creatorService)
+                      ? t.merge(
+                          t.pick(
+                            ['name', 'surname', 'email', 'role', 'status'],
+                            result || {}
+                          ),
+                          { type: 'user' }
+                        )
+                      : t.merge(t.pick(['login'], result || {}), {
+                          type: 'machine',
+                        })
+                    return file
+                  }
+                },
+              },
+            }
+          })
+        )
         // registry
         s([props.adapter, SERVICES.REGISTRY], props.serviceFactory, {
           hooks: {
             before: {
               all: [auth.authenticate('jwt')],
-              find: [data.safeFindMSSQL],
+              get: [addFlagToParams],
+              find: [data.safeFindMSSQL, addFlagToParams],
               create: [data.withIdUUIDV4],
+            },
+            after: {
+              get: [withAuthors],
+              find: [withAuthors],
             },
           },
         })

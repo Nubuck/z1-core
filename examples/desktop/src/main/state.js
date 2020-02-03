@@ -287,6 +287,7 @@ const appState = z.fn((t, a) =>
             if (t.isNil(screenPath)) {
               done()
             } else {
+               // check upload
               const [uploadErr, uploadResult] = await a.of(
                 ctx.api.upload({
                   uri: {
@@ -311,6 +312,21 @@ const appState = z.fn((t, a) =>
                     error: null,
                   })
                 )
+              }
+              // check download
+              const [downloadErr, downloadResult] = await a.of(
+                ctx.api.download(
+                  'https://rawcdn.githack.com/SaucecodeOfficial/zero-one-core/3f742a6743988ca9c1a3019b0e1c08aa222725c3/logo.png',
+                  path.join(app.getPath('home'), '.z1'),
+                  {
+                    fileName: 'z1.png',
+                  }
+                )
+              )
+              if (downloadErr) {
+                log.error('Download err', downloadErr)
+              } else {
+                log.debug('Download result', downloadResult)
               }
               done()
             }

@@ -1,13 +1,12 @@
 {
-  "name": "@z1/lib-ui-box-tailwind",
+  "name": "@z1/kit-bucket-storage-web",
   "version": "0.4.4",
   "main": "dist/index.js",
   "files": [
-    "dist",
-    "elements.css"
+    "dist"
   ],
   "license": "MIT",
-  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/ui-box-tailwind",
+  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/bucket-storage-web",
   "publishConfig": {
     "access": "public"
   },
@@ -16,19 +15,21 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@tailwindcss/custom-forms": "^0.1.4",
-    "@z1/preset-task": "^0.4.4",
+    "ky": "^0.16.2",
     "core-js": "^3.6.3",
+    "localforage": "^1.7.3",
     "regenerator-runtime": "^0.13.3",
-    "source-map-support": "0.4.3",
-    "tailwindcss": "^1.0.4",
-    "tailwindcss-spinner": "^1.0.0",
-    "tailwindcss-transitions": "^2.1.0"
+    "source-map-support": "0.4.3"
+  },
+  "peerDependencies": {
+    "@z1/lib-feature-box": "^0.4"
   },
   "devDependencies": {
+    "@z1/lib-feature-box": "^0.4",
     "@neutrinojs/library": "^9.0.0",
     "neutrino": "^9.0.0",
     "webpack": "^4",
     "webpack-cli": "^3"
-  }
+  },
+  "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
 }

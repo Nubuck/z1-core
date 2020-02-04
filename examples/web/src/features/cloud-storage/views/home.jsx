@@ -218,34 +218,33 @@ export const home = mx.fn((t, a, rx) =>
       }
     },
     ui(ctx) {
-      const fileIcon = t.match({
-        png: 'file-image',
-        jpg: 'file-image',
-        jpeg: 'file-image',
-        gif: 'file-image',
-        svg: 'file-code',
-        js: 'file-code',
-        json: 'file-code',
-        css: 'file-code',
-        html: 'file-code',
-        py: 'file-code',
-        pdf: 'file-pdf',
-        doc: 'file-word',
-        docx: 'file-word',
-        word: 'file-word',
-        xls: 'file-excel',
-        xlsx: 'file-excel',
-        excel: 'file-excel',
-        ppt: 'file-powerpoint',
-        pptx: 'file-powerpoint',
-        powerpoint: 'file-powerpoint',
-        csv: 'file-csv',
-        zip: 'file-archive',
-        rar: 'file-archive',
-        gzip: 'file-archive',
-        '7zip': 'file-archive',
-        _: 'file-alt',
-      })
+      const fileIcon = ext => {
+        if (t.includes(ext, ['png', 'jpg', 'jpeg', 'gif'])) {
+          return 'file-image'
+        }
+        if (t.includes(ext, ['svg', 'js', 'json', 'css', 'html', 'py'])) {
+          return 'file-code'
+        }
+        if (t.eq(ext, 'pdf')) {
+          return 'file-pdf'
+        }
+        if (t.eq(ext, 'csv')) {
+          return 'file-csv'
+        }
+        if (t.includes(ext, ['doc', 'docx', 'word'])) {
+          return 'file-word'
+        }
+        if (t.includes(ext, ['xls', 'xlsx', 'excel'])) {
+          return 'file-excel'
+        }
+        if (t.includes(ext, ['ppt', 'pptx', 'powerpoint'])) {
+          return 'file-powerpoint'
+        }
+        if (t.includes(ext, ['zip', 'rar', 'gzip', '7zip'])) {
+          return 'file-archive'
+        }
+        return 'file-alt'
+      }
       const creatorProps = (creator = {}) =>
         t.runMatch({
           user: () => ({
@@ -329,7 +328,7 @@ export const home = mx.fn((t, a, rx) =>
                           icon: fileIcon(file.ext),
                           size: 'md',
                           fill: 'ghost',
-                          color: 'yellow-500',
+                          color: 'blue-500',
                         }}
                         caption={{
                           label: {
@@ -337,7 +336,7 @@ export const home = mx.fn((t, a, rx) =>
                             fontSize: 'xs',
                             fontWeight: 'light',
                             letterSpacing: 'wide',
-                            color: 'yellow-500',
+                            color: 'blue-500',
                           },
                         }}
                         title={{

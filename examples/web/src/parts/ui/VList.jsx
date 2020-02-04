@@ -1,7 +1,8 @@
 import React from 'react'
 import z from '@z1/lib-feature-box'
 import { VStack } from '@z1/lib-ui-box-elements'
-import { AutoSizer, List } from 'react-virtualized'
+import { AutoSizer } from 'react-virtualized/dist/es/AutoSizer'
+import { List } from 'react-virtualized/dist/es/List'
 import { isRenderProp } from './common'
 
 // main

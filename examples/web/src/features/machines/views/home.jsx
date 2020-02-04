@@ -347,7 +347,7 @@ export const home = mx.fn((t, a, rx) =>
                                     fontWeight: online ? 'medium' : 'light',
                                     letterSpacing: 'wide',
                                   },
-                                  color: online ? 'green-500' : 'red-500',
+                                  color: online ? 'green-500' : 'gray-500',
                                 }}
                                 buttons={[
                                   {

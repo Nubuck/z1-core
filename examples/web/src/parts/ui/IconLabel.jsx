@@ -90,7 +90,7 @@ export const renderIconLabel = z.fn(t => props => {
           }
           const nextProps = t.notNil(iconSlot) ? iconSlot : {}
           return (
-            <Col key="col-icon-slot" {...colProps} {...nextProps}>
+            <Col key="slot-icon" {...colProps} {...nextProps}>
               {nextChildren}
             </Col>
           )
@@ -136,7 +136,7 @@ export const renderIconLabel = z.fn(t => props => {
           }
           const nextProps = t.notNil(labelSlot) ? labelSlot : {}
           return (
-            <Col key="col-label-slot" {...colProps} {...nextProps}>
+            <Col key="slot-label" {...colProps} {...nextProps}>
               {nextChildren}
             </Col>
           )

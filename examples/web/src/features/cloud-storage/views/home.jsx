@@ -311,6 +311,7 @@ export const home = mx.fn((t, a, rx) =>
                   rowHeight={76}
                   render={(file, rowProps) => {
                     const creator = creatorProps(t.atOr({}, 'creator', file))
+                    const hasAlias = t.notNil(file.alias)
                     return (
                       <ctx.ListItem
                         key={rowProps.key}
@@ -340,11 +341,36 @@ export const home = mx.fn((t, a, rx) =>
                           },
                         }}
                         title={{
-                          label: {
+                          slots: {
+                            label: {
+                              display: 'flex',
+                              flexDirection: 'row',
+                              margin: { bottom: 2 },
+                              y: 'center',
+                            },
+                          },
+                          label: hasAlias
+                            ? {
+                                text: file.alias,
+                                display: 'flex',
+                                flexDirection: 'col',
+                                fontSize: 'md',
+                                fontWeight: 'medium',
+                                margin: { right: 2, left: 0 },
+                              }
+                            : null,
+                          info: {
                             text: file.originalName,
-                            fontSize: 'md',
-                            fontWeight: 'medium',
-                            margin: { bottom: 2 },
+                            display: 'flex',
+                            flexDirection: 'col',
+                            y: 'center',
+                            x: 'center',
+                            alignSelf: 'stretch',
+                            fontSize: hasAlias ? 'sm' : 'md',
+                            fontWeight: hasAlias ? 'light' : 'nornal',
+                            letterSpacing: 'wide',
+                            color: hasAlias ? 'gray-300' : null,
+                            margin: { left: 0 },
                           },
                         }}
                         subtitle={{
@@ -356,7 +382,7 @@ export const home = mx.fn((t, a, rx) =>
                             letterSpacing: 'wide',
                             margin: { bottom: 1 },
                           },
-                          color: 'gray-400',
+                          color: 'gray-500',
                         }}
                         stamp={{
                           icon: 'clock',
@@ -373,7 +399,7 @@ export const home = mx.fn((t, a, rx) =>
                             fontSize: 'sm',
                             fontWeight: 'medium',
                           },
-                          color: 'gray-400',
+                          color: 'gray-300',
                         }}
                         buttons={[
                           {

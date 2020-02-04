@@ -224,13 +224,13 @@ export const home = mx.fn((t, a, rx) =>
                   <ctx.IconLabel
                     icon={{
                       name: 'cloud-upload-alt',
-                      size: '2xl',
+                      size: '3xl',
                       color: 'blue-500',
                     }}
                     label={{
                       fontWeight: 'bold',
                       text: 'Cloud Storage',
-                      fontSize: 'lg',
+                      fontSize: 'xl',
                     }}
                     margin={{ bottom: 4 }}
                   />

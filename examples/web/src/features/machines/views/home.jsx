@@ -164,11 +164,16 @@ export const home = mx.fn((t, a, rx) =>
         service: 'terminal',
         supervisor: 'user-shield',
       })
-      const machineIcon = (distro = '') => {
+      const machineIcon = (distro = '', manufacturer = '') => {
         if (t.includes('windows', t.to.lowerCase(distro))) {
           return 'windows'
         }
-        if (t.includes('apple', t.to.lowerCase(distro))) {
+        if (
+          t.or(
+            t.includes('apple', t.to.lowerCase(manufacturer)),
+            t.includes('mac', t.to.lowerCase(distro))
+          )
+        ) {
           return 'apple'
         }
         if (t.includes('linux', t.to.lowerCase(distro))) {
@@ -177,8 +182,8 @@ export const home = mx.fn((t, a, rx) =>
         return 'laptop'
       }
       const itemHeight = {
-        main: 76,
-        nested: 68,
+        main: 86,
+        nested: 72,
       }
       return props => {
         const machines = t.atOr([], 'state.data.machines', props)
@@ -213,37 +218,51 @@ export const home = mx.fn((t, a, rx) =>
                       <ctx.ListItem
                         key={rowProps.key}
                         style={rowProps.style}
+                        bgColor={[null, { hover: 'gray-800' }]}
+                        borderRadius="sm"
+                        className="transition-bg"
                         slots={{
-                          avatar: {
-                            padding: { left: 2, y: 3 },
-                          },
-                          last: {
-                            padding: { right: 2, y: 3 },
+                          main: {
+                            padding: { x: 2, y: 3 },
                           },
                         }}
                         avatar={{
-                          icon: machineIcon(machine.distro),
+                          icon: machineIcon(
+                            machine.distro,
+                            machine.manufacturer
+                          ),
                           fill: 'solid',
                           color: 'blue-500',
                         }}
                         title={{
                           label: {
                             text: machine.alias,
-                            fontSize: 'md',
+                            fontSize: 'lg',
                             margin: { bottom: 2 },
                           },
                           info: {
-                            text: `${machine.distro} v${machine.release}`,
+                            text: `${machine.distro} v${machine.release} ${machine.arch}`,
                             fontSize: 'sm',
                             color: 'gray-400',
                           },
                         }}
+                        subtitle={{
+                          icon: { name: 'laptop', size: 'lg' },
+                          label: {
+                            text: machine.hardwareuuid,
+                            fontSize: 'xs',
+                            fontWeight: 'light',
+                          },
+                          color: 'gray-400',
+                        }}
                         stamp={{
+                          icon: 'clock',
                           label: {
                             text: ctx
                               .dateFn(machine.updatedAt)
                               .format('YYYY MM-DD HH:mm:ss A'),
                             fontSize: 'xs',
+                            fontWeight: 'light',
                           },
                           margin: { bottom: 2 },
                         }}
@@ -255,9 +274,14 @@ export const home = mx.fn((t, a, rx) =>
                             size: 'xs',
                             color: 'blue-500',
                           },
+                          {
+                            icon: 'arrow-circle-right',
+                            shape: 'circle',
+                            fill: 'ghost-solid',
+                            size: 'xs',
+                            color: 'blue-500',
+                          },
                         ]}
-                        bgColor={'gray-800'}
-                        borderRadius="sm"
                       >
                         <ctx.MapIndexed
                           items={t.atOr([], 'logins', machine)}
@@ -265,12 +289,12 @@ export const home = mx.fn((t, a, rx) =>
                             return (
                               <ctx.ListItem
                                 key={`nested_login_${login._id}_${index}`}
+                                width="full"
+                                bgColor={[null, { hover: 'gray-700' }]}
+                                className="transition-bg"
                                 slots={{
-                                  avatar: {
-                                    padding: { left: 4, y: 2 },
-                                  },
-                                  last: {
-                                    padding: { right: 2, y: 2 },
+                                  main: {
+                                    padding: { x: 2, y: 2 },
                                   },
                                 }}
                                 avatar={{
@@ -289,40 +313,38 @@ export const home = mx.fn((t, a, rx) =>
                                 title={{
                                   label: {
                                     text: login.alias,
-                                    fontSize: 'sm',
+                                    fontSize: 'md',
+                                    fontWeight: 'light',
                                     margin: { bottom: 2 },
                                   },
-
                                   info: {
                                     text: login.role,
-                                    fontSize: 'md',
+                                    fontSize: 'sm',
+                                    fontWeight: 'medium',
                                     color: 'yellow-500',
                                   },
-
-                                  // icon: { name: 'power-off', size: 'md' },
-                                  // label: {
-                                  //   text: login.status,
-                                  //   fontSize: 'sm',
-                                  // },
-                                  // color: t.eq(login.status, 'online')
-                                  //   ? 'green-500'
-                                  //   : 'red-500',
-                                }}
-                                content={() => {
-                                  return (
-                                    <React.Fragment>
-                                      <ctx.IconLabel />
-                                    </React.Fragment>
-                                  )
                                 }}
                                 stamp={{
+                                  icon: 'clock',
                                   label: {
                                     text: ctx
                                       .dateFn(login.updatedAt)
                                       .format('YYYY MM-DD HH:mm:ss A'),
                                     fontSize: 'xs',
+                                    fontWeight: 'light',
                                   },
                                   margin: { bottom: 2 },
+                                }}
+                                status={{
+                                  icon: { name: 'power-off', size: 'md' },
+                                  label: {
+                                    text: login.status,
+                                    fontSize: 'sm',
+                                    fontWeight: 'medium',
+                                  },
+                                  color: t.eq(login.status, 'online')
+                                    ? 'green-500'
+                                    : 'red-500',
                                 }}
                                 buttons={[
                                   {
@@ -333,8 +355,6 @@ export const home = mx.fn((t, a, rx) =>
                                     color: 'blue-500',
                                   },
                                 ]}
-                                width="full"
-                                bgColor={'gray-700'}
                               />
                             )
                           }}

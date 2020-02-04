@@ -94,11 +94,15 @@ const renderListItem = z.fn(t => props => {
   const onSelect = t.atOr(() => null, 'onSelect', props)
   // layout:
   const slots = t.atOr({}, 'slots', props)
+  const mainSlot = t.atOr({}, 'main', slots)
+  const auxSlot = t.atOr({}, 'aux', slots)
   const selectSlot = t.at('select', slots)
   const avatarSlot = t.at('avatar', slots)
   const titleSlot = t.at('title', slots)
   const contentSlot = t.at('content', slots)
+  const innerSlot = t.at('inner', slots)
   const lastSlot = t.at('last', slots)
+  const buttonSlot = t.at('buttons', slots)
   const nestedSlot = t.at('nested', slots)
   // select col:
   const select = t.at('select', props)
@@ -117,8 +121,10 @@ const renderListItem = z.fn(t => props => {
   const hasContent = t.notNil(content)
   // last col:
   const stamp = t.at('stamp', props)
+  const status = t.at('status', props)
   const buttons = t.atOr([], 'buttons', props)
   const hasStamp = t.notNil(stamp)
+  const hasStatus = t.notNil(status)
   const hasButtons = t.hasLen(buttons)
   // nested
   const nested = t.at('nested', props)
@@ -140,15 +146,18 @@ const renderListItem = z.fn(t => props => {
       'subtitle',
       'content',
       'stamp',
+      'status',
       'buttons',
       'nested',
       'children',
+      'box',
     ],
     props
   )
+  const box = t.atOr({}, 'box', props)
   return (
-    <Col box={{ overflowX: 'hidden', overflowY: 'hidden' }} {...nextProps}>
-      <Row key="row-main" y="center">
+    <Col box={{ overflow: 'hidden', ...box }} {...nextProps}>
+      <Row key="slot-main" y="center" {...mainSlot}>
         <When
           is={t.anyOf([t.notNil(selectSlot), selectable])}
           render={() => {
@@ -284,8 +293,8 @@ const renderListItem = z.fn(t => props => {
               <When
                 is={hasContent}
                 render={() => (
-                  <HStack key="content" y="center" x="left" stretch>
-                    {isRenderProp(content) ? content() : content}
+                  <HStack key="content" y="top" x="left" stretch {...innerSlot}>
+                    {isRenderProp(content) ? content({}) : content}
                   </HStack>
                 )}
               />
@@ -294,7 +303,7 @@ const renderListItem = z.fn(t => props => {
               return contentSlot({ children: nextChildren })
             }
             return (
-              <Col key="slot-content" y="center" flex={1} {...titleSlot}>
+              <Col key="slot-content" y="center" flex={1} {...contentSlot}>
                 {nextChildren}
               </Col>
             )
@@ -319,19 +328,30 @@ const renderListItem = z.fn(t => props => {
                     })
                   }
                 />
-                <When
-                  is={hasButtons}
-                  render={() => (
-                    <Row key="buttons" x="right">
+                <Row key="slot-buttons" x="right" {...buttonSlot}>
+                  <When
+                    is={hasStatus}
+                    render={() =>
+                      renderItemLabel(status, {
+                        key: 'status',
+                        icon: { size: 'md' },
+                        label: { fontSize: 'xs' },
+                        padding: hasButtons ? { right: 2 } : null,
+                      })
+                    }
+                  />
+                  <When
+                    is={hasButtons}
+                    render={() => (
                       <MapIndexed
                         items={buttons}
                         render={(button, index) => (
                           <Button key={`li-btn-${index}`} {...button} />
                         )}
                       />
-                    </Row>
-                  )}
-                />
+                    )}
+                  />
+                </Row>
               </React.Fragment>
             )
             const colProps = {
@@ -362,7 +382,11 @@ const renderListItem = z.fn(t => props => {
         render={() => {
           const nextChildren = (
             <React.Fragment>
-              <When key="nested" is={hasNested} render={() => nested} />
+              <When
+                key="nested"
+                is={hasNested}
+                render={() => (isRenderProp(nested) ? nested({}) : nested)}
+              />
               <When
                 key="children"
                 is={
@@ -378,7 +402,7 @@ const renderListItem = z.fn(t => props => {
             return nestedSlot({ children: nextChildren })
           }
           return (
-            <Row key="row-nested">
+            <Row key="slot-aux" y="center" {...auxSlot}>
               <Col key="slot-nested" width="full" {...nestedSlot}>
                 {nextChildren}
               </Col>

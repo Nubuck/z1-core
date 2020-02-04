@@ -147,7 +147,7 @@ const renderListItem = z.fn(t => props => {
     props
   )
   return (
-    <Col {...nextProps}>
+    <Col box={{ overflowX: 'hidden', overflowY: 'hidden' }} {...nextProps}>
       <Row key="row-main" y="center">
         <When
           is={t.anyOf([t.notNil(selectSlot), selectable])}
@@ -159,7 +159,7 @@ const renderListItem = z.fn(t => props => {
                   renderSelector(select, {
                     loading,
                     disabled,
-                    selected: false,
+                    selected,
                     onSelect,
                   })
                 }

@@ -176,6 +176,10 @@ export const home = mx.fn((t, a, rx) =>
         }
         return 'laptop'
       }
+      const itemHeight = {
+        main: 76,
+        nested: 68,
+      }
       return props => {
         const machines = t.atOr([], 'state.data.machines', props)
         return (
@@ -197,15 +201,26 @@ export const home = mx.fn((t, a, rx) =>
                   rowHeight={({ index }) => {
                     const machine = machines[index]
                     if (t.isNil(machine)) {
-                      return 50
+                      return itemHeight.main
                     }
-                    return 70 * t.len(t.atOr([], 'logins', machine)) + 50
+                    return (
+                      itemHeight.nested * t.len(t.atOr([], 'logins', machine)) +
+                      itemHeight.main
+                    )
                   }}
                   render={(machine, rowProps) => {
                     return (
                       <ctx.ListItem
                         key={rowProps.key}
                         style={rowProps.style}
+                        slots={{
+                          avatar: {
+                            padding: { left: 2, y: 3 },
+                          },
+                          last: {
+                            padding: { right: 2, y: 3 },
+                          },
+                        }}
                         avatar={{
                           icon: machineIcon(machine.distro),
                           fill: 'solid',
@@ -241,7 +256,8 @@ export const home = mx.fn((t, a, rx) =>
                             color: 'blue-500',
                           },
                         ]}
-                        bgColor={[null, { hover: 'gray-800' }]}
+                        bgColor={'gray-800'}
+                        borderRadius="sm"
                       >
                         <ctx.MapIndexed
                           items={t.atOr([], 'logins', machine)}
@@ -249,9 +265,19 @@ export const home = mx.fn((t, a, rx) =>
                             return (
                               <ctx.ListItem
                                 key={`nested_login_${login._id}_${index}`}
+                                slots={{
+                                  avatar: {
+                                    padding: { left: 4, y: 2 },
+                                  },
+                                  last: {
+                                    padding: { right: 2, y: 2 },
+                                  },
+                                }}
                                 avatar={{
-                                  icon: loginIcon(login.role),
-                                  size: 'xs',
+                                  icon: {
+                                    name: loginIcon(login.role),
+                                  },
+                                  size: 'sm',
                                   fill: 'solid',
                                   colors: {
                                     on: {
@@ -262,14 +288,15 @@ export const home = mx.fn((t, a, rx) =>
                                 }}
                                 title={{
                                   label: {
+                                    text: login.alias,
+                                    fontSize: 'sm',
+                                    margin: { bottom: 2 },
+                                  },
+
+                                  info: {
                                     text: login.role,
                                     fontSize: 'md',
                                     color: 'yellow-500',
-                                    margin: { bottom: 2 },
-                                  },
-                                  info: {
-                                    text: login.alias,
-                                    fontSize: 'sm',
                                   },
 
                                   // icon: { name: 'power-off', size: 'md' },
@@ -280,6 +307,13 @@ export const home = mx.fn((t, a, rx) =>
                                   // color: t.eq(login.status, 'online')
                                   //   ? 'green-500'
                                   //   : 'red-500',
+                                }}
+                                content={() => {
+                                  return (
+                                    <React.Fragment>
+                                      <ctx.IconLabel />
+                                    </React.Fragment>
+                                  )
                                 }}
                                 stamp={{
                                   label: {
@@ -299,8 +333,8 @@ export const home = mx.fn((t, a, rx) =>
                                     color: 'blue-500',
                                   },
                                 ]}
-                                padding={{ left: 1, top: 2 }}
                                 width="full"
+                                bgColor={'gray-700'}
                               />
                             )
                           }}

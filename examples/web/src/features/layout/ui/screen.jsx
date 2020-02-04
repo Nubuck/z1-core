@@ -35,6 +35,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                   )}
                   render={() => {
                     const navClosed = t.eq(props.nav.status, 'closed')
+                    const spacing = navClosed ? { x: 3 } : { y: 3 }
                     return (
                       <ui.Stack
                         key="primary-nav"
@@ -74,7 +75,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                           fill="ghost-solid"
                           color="blue-500"
                           fontWeight="bold"
-                          margin={navClosed ? { x: 3 } : { y: 3 }}
+                          margin={spacing}
                         />
 
                         <ui.MapIndexed
@@ -91,7 +92,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                                 to={navItem.path}
                                 size="xl"
                                 color={[null, { hover: 'blue-500' }]}
-                                padding={navClosed ? { x: 3 } : { y: 3 }}
+                                padding={spacing}
                                 activeClassName="text-yellow-500"
                                 {...elProps}
                               />
@@ -134,13 +135,12 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                                     activeClassName: 'text-yellow-500',
                                   },
                             ])
-                            // console.log('Next props', nextProps)
                             return (
                               <ui.IconLabel
                                 key={`${navKey}_${index}`}
                                 size="xl"
                                 color={[null, { hover: 'blue-500' }]}
-                                padding={navClosed ? { x: 3 } : { y: 3 }}
+                                padding={spacing}
                                 {...nextProps}
                               />
                             )

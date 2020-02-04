@@ -75,7 +75,7 @@ fieldset {
 
   & .form-control {
     @extend .form-input;
-    @apply bg-transparent border !important;
+    @apply bg-transparent border border-white;
     &:disabled {
       @apply opacity-50 cursor-not-allowed;
     }

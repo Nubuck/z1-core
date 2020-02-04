@@ -298,12 +298,17 @@ export const home = mx.fn((t, a, rx) =>
                     }}
                     height={8}
                     loading={t.eq(status, ctx.status.loading)}
-                    onClick={() => props.mutations.modalChange({ open: true })}
+                    onClick={() =>
+                      props.mutations.modalChange({
+                        open: true,
+                        modal: 'upload',
+                      })
+                    }
                   />
                 </ctx.Row>
                 <ctx.VList
                   items={t.atOr([], 'state.data.files', props)}
-                  rowHeight={80}
+                  rowHeight={76}
                   render={(file, rowProps) => {
                     const creator = creatorProps(t.atOr({}, 'creator', file))
                     return (
@@ -322,16 +327,16 @@ export const home = mx.fn((t, a, rx) =>
                         avatar={{
                           icon: fileIcon(file.ext),
                           size: 'md',
-                          fill: 'solid',
-                          color: 'blue-500',
-                          margin: { bottom: 1 },
+                          fill: 'ghost',
+                          color: 'yellow-500',
                         }}
                         caption={{
                           label: {
                             text: file.ext,
                             fontSize: 'xs',
-                            fontWeight: 'thin',
-                            color: 'blue-500',
+                            fontWeight: 'light',
+                            letterSpacing: 'wide',
+                            color: 'yellow-500',
                           },
                         }}
                         title={{
@@ -390,6 +395,12 @@ export const home = mx.fn((t, a, rx) =>
                             fill: 'ghost-solid',
                             size: 'xs',
                             color: 'blue-500',
+                            onClick: () =>
+                              props.mutations.modalChange({
+                                open: true,
+                                modal: 'file',
+                                id: file._id,
+                              }),
                           },
                           {
                             icon: 'trash',
@@ -397,6 +408,13 @@ export const home = mx.fn((t, a, rx) =>
                             fill: 'ghost-solid',
                             size: 'xs',
                             color: 'red-500',
+                            onClick: () =>
+                              props.mutations.modalChange({
+                                open: true,
+                                modal: 'remove',
+                                id: file._id,
+                                name: file.originalName,
+                              }),
                           },
                         ]}
                       />
@@ -405,6 +423,11 @@ export const home = mx.fn((t, a, rx) =>
                 />
                 <ctx.Modal
                   title={{
+                    icon: {
+                      name: 'cloud-upload',
+                      color: 'blue-500',
+                      fontSize: '2xl',
+                    },
                     label: {
                       text: 'File Upload',
                       color: 'blue-500',
@@ -416,25 +439,15 @@ export const home = mx.fn((t, a, rx) =>
                 >
                   <ctx.IconLabel
                     slots={{
-                      icon: { x: 'center' },
                       label: { x: 'center' },
                     }}
-                    icon={{
-                      name: 'upload',
-                      size: '5xl',
-                      color: 'yellow-500',
-                    }}
                     label={{
-                      text: 'File Upload',
-                      fontSize: '2xl',
-                    }}
-                    info={{
                       text:
                         'Enter your file alias below and select a file to upload to continue.',
                       fontSize: 'lg',
-                      padding: { left: 1, y: 3 },
+                      fontWeight: 'medium',
+                      letterSpacing: 'wide',
                     }}
-                    flexDirection="col"
                   />
                   <ctx.When
                     is={t.notNil(props.state.error)}

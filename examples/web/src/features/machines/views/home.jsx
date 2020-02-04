@@ -231,8 +231,9 @@ export const home = mx.fn((t, a, rx) =>
                             machine.distro,
                             machine.manufacturer
                           ),
-                          fill: 'solid',
+                          fill: 'ghost',
                           color: 'blue-500',
+                          size: 'lg',
                         }}
                         title={{
                           label: {
@@ -244,7 +245,7 @@ export const home = mx.fn((t, a, rx) =>
                           info: {
                             text: `${machine.distro} v${machine.release} ${machine.arch}`,
                             fontSize: 'sm',
-                            color: 'gray-400',
+                            color: 'blue-500',
                           },
                         }}
                         subtitle={{
@@ -287,6 +288,7 @@ export const home = mx.fn((t, a, rx) =>
                         <ctx.MapIndexed
                           items={t.atOr([], 'logins', machine)}
                           render={(login, index) => {
+                            const online = t.eq(login.status, 'online')
                             return (
                               <ctx.ListItem
                                 key={`nested_login_${login._id}_${index}`}
@@ -306,21 +308,16 @@ export const home = mx.fn((t, a, rx) =>
                                   icon: {
                                     name: loginIcon(login.role),
                                   },
-                                  size: 'sm',
-                                  fill: 'solid',
-                                  colors: {
-                                    on: {
-                                      bg: 'yellow-500',
-                                      content: 'gray-900',
-                                    },
-                                  },
+                                  size: 'md',
+                                  fill: 'ghost',
+                                  color: 'yellow-500',
                                 }}
                                 title={{
                                   label: {
                                     text: login.alias,
                                     fontSize: 'md',
                                     fontWeight: 'light',
-                                    letterSpacing: 'wide',
+                                    letterSpacing: 'wider',
                                     margin: { bottom: 2 },
                                   },
                                   info: {
@@ -347,11 +344,10 @@ export const home = mx.fn((t, a, rx) =>
                                   label: {
                                     text: login.status,
                                     fontSize: 'sm',
-                                    fontWeight: 'medium',
+                                    fontWeight: online ? 'medium' : 'light',
+                                    letterSpacing: 'wide',
                                   },
-                                  color: t.eq(login.status, 'online')
-                                    ? 'green-500'
-                                    : 'red-500',
+                                  color: online ? 'green-500' : 'red-500',
                                 }}
                                 buttons={[
                                   {

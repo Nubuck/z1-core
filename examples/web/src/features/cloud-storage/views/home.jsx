@@ -380,7 +380,7 @@ export const home = mx.fn((t, a, rx) =>
                             fontSize: 'sm',
                             fontWeight: 'light',
                             letterSpacing: 'wide',
-                            margin: { bottom: 1 },
+                            margin: { bottom: 1, left: 2 },
                           },
                           color: 'gray-500',
                         }}

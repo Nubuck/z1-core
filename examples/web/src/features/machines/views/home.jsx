@@ -271,21 +271,22 @@ export const home = mx.fn((t, a, rx) =>
                                     text: login.alias,
                                     fontSize: 'sm',
                                   },
+
+                                  // icon: { name: 'power-off', size: 'md' },
+                                  // label: {
+                                  //   text: login.status,
+                                  //   fontSize: 'sm',
+                                  // },
+                                  // color: t.eq(login.status, 'online')
+                                  //   ? 'green-500'
+                                  //   : 'red-500',
                                 }}
                                 stamp={{
-                                  icon: { name: 'power-off', size: 'md' },
                                   label: {
-                                    text: login.status,
-                                    fontSize: 'sm',
-                                  },
-                                  color: t.eq(login.status, 'online')
-                                    ? 'green-500'
-                                    : 'red-500',
-                                  info: {
-                                    // text: ctx
-                                    //   .dateFn(login.updatedAt)
-                                    //   .format('YYYY MM-DD HH:mm:ss A'),
-                                    // fontSize: 'xs',
+                                    text: ctx
+                                      .dateFn(login.updatedAt)
+                                      .format('YYYY MM-DD HH:mm:ss A'),
+                                    fontSize: 'xs',
                                   },
                                   margin: { bottom: 2 },
                                 }}

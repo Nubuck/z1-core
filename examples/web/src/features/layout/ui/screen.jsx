@@ -75,9 +75,8 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                           fill="ghost-solid"
                           color="blue-500"
                           fontWeight="bold"
-                          margin={spacing}
+                          margin={ navClosed ? null : { y: 2 }}
                         />
-
                         <ui.MapIndexed
                           items={t.to.pairs(props.nav.primary.items)}
                           render={([navKey, navItem], index) => {

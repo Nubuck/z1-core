@@ -89,7 +89,7 @@ export const api = (z, props) =>
                           ),
                           { type: 'user' }
                         )
-                      : t.merge(t.pick(['login'], result || {}), {
+                      : t.merge(result || {}, {
                           type: 'machine',
                         })
                     return file

@@ -327,16 +327,16 @@ export const home = mx.fn((t, a, rx) =>
                                 stamp={{
                                   icon: 'clock',
                                   label: {
-                                    text: ctx
-                                      .dateFn(login.updatedAt)
-                                      .format('YYYY MM-DD HH:mm:ss A'),
+                                    text: ctx.dateFn().to(
+                                      ctx.dateFn(login.updatedAt)
+                                    ),
                                     fontSize: 'xs',
                                     fontWeight: 'light',
                                   },
                                   margin: { bottom: 2 },
                                 }}
                                 status={{
-                                  icon: { name: 'power-off', size: 'md' },
+                                  icon: { name: 'power-off', size: 'lg' },
                                   label: {
                                     text: login.status,
                                     fontSize: 'sm',
@@ -349,6 +349,13 @@ export const home = mx.fn((t, a, rx) =>
                                 buttons={[
                                   {
                                     icon: 'gear',
+                                    shape: 'circle',
+                                    fill: 'ghost-solid',
+                                    size: 'xs',
+                                    color: 'blue-500',
+                                  },
+                                  {
+                                    icon: 'arrow-circle-right',
                                     shape: 'circle',
                                     fill: 'ghost-solid',
                                     size: 'xs',

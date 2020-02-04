@@ -214,6 +214,50 @@ export const home = mx.fn((t, a, rx) =>
       }
     },
     ui(ctx) {
+      const fileIcon = t.match({
+        png: 'file-image',
+        jpg: 'file-image',
+        jpeg: 'file-image',
+        gif: 'file-image',
+        svg: 'file-code',
+        js: 'file-code',
+        json: 'file-code',
+        css: 'file-code',
+        html: 'file-code',
+        py: 'file-code',
+        pdf: 'file-pdf',
+        doc: 'file-word',
+        docx: 'file-word',
+        word: 'file-word',
+        xls: 'file-excel',
+        xlsx: 'file-excel',
+        excel: 'file-excel',
+        ppt: 'file-powerpoint',
+        pptx: 'file-powerpoint',
+        powerpoint: 'file-powerpoint',
+        csv: 'file-csv',
+        zip: 'file-archive',
+        rar: 'file-archive',
+        gzip: 'file-archive',
+        '7zip': 'file-archive',
+        _: 'file-alt',
+      })
+      const creatorProps = (creator = {}) =>
+        t.runMatch({
+          user: () => ({
+            name: `${t.atOr('Unknown', 'name', creator)} ${t.atOr(
+              '',
+              'surname',
+              creator
+            )}`,
+            icon: 'user-plus',
+          }),
+          machine: () => ({
+            name: t.atOr('Unknown', 'alias', creator),
+            icon: 'robot',
+          }),
+          _: () => ({ name: 'Unknown', icon: 'user' }),
+        })(t.atOr('user', 'type', creator))
       return props => {
         return (
           <ctx.Page
@@ -232,7 +276,6 @@ export const home = mx.fn((t, a, rx) =>
                       text: 'Cloud Storage',
                       fontSize: 'xl',
                     }}
-                    margin={{ bottom: 4 }}
                   />
                   <ctx.Spacer />
                   <ctx.Button
@@ -249,6 +292,7 @@ export const home = mx.fn((t, a, rx) =>
                         content: 'gray-900',
                       },
                     }}
+                    height={8}
                     loading={t.eq(status, ctx.status.loading)}
                     onClick={() => props.mutations.modalChange({ open: true })}
                   />
@@ -257,22 +301,82 @@ export const home = mx.fn((t, a, rx) =>
                   items={t.atOr([], 'state.data.files', props)}
                   rowHeight={80}
                   render={(file, rowProps) => {
+                    const creator = creatorProps(t.atOr({}, 'creator', file))
                     return (
                       <ctx.ListItem
                         key={rowProps.key}
                         style={rowProps.style}
-                        avatar={{ icon: 'file' }}
-                        title={{
-                          label: file.originalName,
-                        }}
-                        stamp={{
-                          label: {
-                            text: ctx
-                              .dateFn(file.updatedAt)
-                              .format('YYYY MM-DD HH:mm:ss A'),
-                            fontSize: 'xs',
+                        bgColor={[null, { hover: 'gray-800' }]}
+                        borderRadius="sm"
+                        className="transition-bg"
+                        slots={{
+                          main: {
+                            padding: { x: 2, y: 3 },
                           },
                         }}
+                        avatar={{
+                          icon: fileIcon(file.ext),
+                          size: 'md',
+                          fill: 'solid',
+                          color: 'blue-500',
+                        }}
+                        title={{
+                          label: {
+                            text: file.originalName,
+                            fontSize: 'md',
+                            fontWeight: 'medium',
+                            margin: { bottom: 2 },
+                          },
+                        }}
+                        subtitle={{
+                          icon: { name: creator.icon, size: 'lg' },
+                          label: {
+                            text: creator.name,
+                            fontSize: 'xs',
+                            fontWeight: 'medium',
+                          },
+                          color: 'gray-400',
+                        }}
+                        stamp={{
+                          icon: 'clock',
+                          label: {
+                            text: ctx.dateFn().to(ctx.dateFn(file.updatedAt)),
+                            fontSize: 'xs',
+                            fontWeight: 'light',
+                          },
+                          margin: { bottom: 2 },
+                        }}
+                        status={{
+                          label: {
+                            text: ctx.bytes(file.size),
+                            fontSize: 'xs',
+                            fontWeight: 'medium',
+                          },
+                          color: 'gray-400',
+                        }}
+                        buttons={[
+                          {
+                            icon: 'download',
+                            shape: 'circle',
+                            fill: 'ghost-solid',
+                            size: 'xs',
+                            color: 'blue-500',
+                          },
+                          {
+                            icon: 'gear',
+                            shape: 'circle',
+                            fill: 'ghost-solid',
+                            size: 'xs',
+                            color: 'blue-500',
+                          },
+                          {
+                            icon: 'trash',
+                            shape: 'circle',
+                            fill: 'ghost-solid',
+                            size: 'xs',
+                            color: 'red-500',
+                          },
+                        ]}
                       />
                     )
                   }}

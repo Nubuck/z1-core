@@ -311,7 +311,7 @@ export const home = mx.fn((t, a, rx) =>
                         className="transition-bg"
                         slots={{
                           main: {
-                            padding: { x: 2, y: 3 },
+                            padding: { x: 3, y: 3 },
                           },
                         }}
                         avatar={{
@@ -325,7 +325,7 @@ export const home = mx.fn((t, a, rx) =>
                             text: file.originalName,
                             fontSize: 'md',
                             fontWeight: 'medium',
-                            margin: { bottom: 2 },
+                            margin: { bottom: 1 },
                           },
                         }}
                         subtitle={{
@@ -334,6 +334,7 @@ export const home = mx.fn((t, a, rx) =>
                             text: creator.name,
                             fontSize: 'xs',
                             fontWeight: 'medium',
+                            letterSpacing: 'wide',
                           },
                           color: 'gray-400',
                         }}
@@ -349,7 +350,7 @@ export const home = mx.fn((t, a, rx) =>
                         status={{
                           label: {
                             text: ctx.bytes(file.size),
-                            fontSize: 'xs',
+                            fontSize: 'sm',
                             fontWeight: 'medium',
                           },
                           color: 'gray-400',

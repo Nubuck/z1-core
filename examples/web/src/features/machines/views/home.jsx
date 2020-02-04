@@ -223,7 +223,7 @@ export const home = mx.fn((t, a, rx) =>
                         className="transition-bg"
                         slots={{
                           main: {
-                            padding: { x: 2, y: 3 },
+                            padding: { x: 3, y: 3 },
                           },
                         }}
                         avatar={{
@@ -238,6 +238,7 @@ export const home = mx.fn((t, a, rx) =>
                           label: {
                             text: machine.alias,
                             fontSize: 'lg',
+                            letterSpacing: 'wide',
                             margin: { bottom: 2 },
                           },
                           info: {
@@ -294,7 +295,7 @@ export const home = mx.fn((t, a, rx) =>
                                 className="transition-bg"
                                 slots={{
                                   main: {
-                                    padding: { x: 2, y: 2 },
+                                    padding: { x: 3, y: 2 },
                                   },
                                 }}
                                 avatar={{
@@ -315,21 +316,23 @@ export const home = mx.fn((t, a, rx) =>
                                     text: login.alias,
                                     fontSize: 'md',
                                     fontWeight: 'light',
+                                    letterSpacing: 'wide',
                                     margin: { bottom: 2 },
                                   },
                                   info: {
                                     text: login.role,
                                     fontSize: 'sm',
                                     fontWeight: 'medium',
+                                    letterSpacing: 'wide',
                                     color: 'yellow-500',
                                   },
                                 }}
                                 stamp={{
                                   icon: 'clock',
                                   label: {
-                                    text: ctx.dateFn().to(
-                                      ctx.dateFn(login.updatedAt)
-                                    ),
+                                    text: ctx
+                                      .dateFn()
+                                      .to(ctx.dateFn(login.updatedAt)),
                                     fontSize: 'xs',
                                     fontWeight: 'light',
                                   },

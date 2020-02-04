@@ -74,7 +74,7 @@ export const nav = z.fn(t =>
           const level = t.atOr('anon', 'payload.level', action)
           const schema = t.atOr(null, 'payload.schema', action)
           return t.merge(state, {
-            status: 'ready',
+            // status: 'ready',
             level,
             schema: t.isNil(schema)
               ? state.schema
@@ -87,7 +87,7 @@ export const nav = z.fn(t =>
           if (t.isEmpty(action.payload)) {
             return state
           }
-          const status = t.atOr('ready', 'payload.status', action)
+          const status = t.atOr(state.status, 'payload.status', action)
           const bodyHeight = t.atOr(state.body.height, 'payload.height', action)
           const size = t.atOr(state.size, 'payload.size', action)
           const width = t.atOr(state.width, 'payload.width', action)
@@ -340,7 +340,7 @@ export const nav = z.fn(t =>
             ? t.eq(status, navStatus.init)
               ? navStatus.closed
               : status
-            : navStatus.ready
+            : navStatus.init
           if (t.or(t.neq(status, nextStatus), t.neq(size, currentNavSize))) {
             dispatch(
               box.mutations.navChange({
@@ -348,7 +348,6 @@ export const nav = z.fn(t =>
                   ? navSize.bodySm
                   : navSize.body,
                 status: nextStatus,
-                pageSize: nextStatus,
                 size,
               })
             )

@@ -33,105 +33,122 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                     t.notEmpty(props.nav.primary.items),
                     t.notEmpty(props.nav.primary.actions)
                   )}
-                  render={() => (
-                    <ui.VStack
-                      key="primary-nav"
-                      x="center"
-                      y="top"
-                      box={{
-                        position: 'fixed',
-                        pin: { top: true, bottom: true, left: true },
-                        zIndex: 30,
-                        overflowY: 'auto',
-                        overflowX: 'hidden',
-                        padding: { bottom: 3 },
-                      }}
-                      className="scroll-hide"
-                      style={t.pick(
-                        ['width', 'left', 'bottom'],
-                        props.nav.primary
-                      )}
-                    >
-                      <ui.Avatar
-                        as={ui.Link}
-                        to="/"
-                        icon="superpowers"
-                        size="lg"
-                        fill="ghost-solid"
-                        color="blue-500"
-                        fontWeight="bold"
-                        margin={{ y: 3 }}
-                      />
+                  render={() => {
+                    const navClosed = t.eq(props.nav.status, 'closed')
+                    return (
+                      <ui.Stack
+                        key="primary-nav"
+                        direction={navClosed ? 'horizontal' : 'vertical'}
+                        x={navClosed ? 'left' : 'center'}
+                        y={navClosed ? 'center' : 'top'}
+                        box={{
+                          position: 'fixed',
+                          pin: navClosed
+                            ? {
+                                top: false,
+                                bottom: true,
+                                left: true,
+                                right: true,
+                              }
+                            : { top: true, bottom: true, left: true },
+                          zIndex: 30,
+                          overflowY: navClosed ? 'hidden' : 'auto',
+                          overflowX: navClosed ? 'auto' : 'hidden',
+                          padding: navClosed ? { x: 3 } : { bottom: 3 },
+                        }}
+                        className="scrollbar-hide"
+                        style={
+                          navClosed
+                            ? {}
+                            : t.pick(
+                                ['width', 'left', 'bottom'],
+                                props.nav.primary
+                              )
+                        }
+                      >
+                        <ui.Avatar
+                          as={ui.Link}
+                          to="/"
+                          icon="superpowers"
+                          size="lg"
+                          fill="ghost-solid"
+                          color="blue-500"
+                          fontWeight="bold"
+                          margin={navClosed ? { x: 3 } : { y: 3 }}
+                        />
 
-                      <ui.MapIndexed
-                        items={t.to.pairs(props.nav.primary.items)}
-                        render={([navKey, navItem], index) => {
-                          const elProps = t.omit(
-                            ['slot', 'label'],
-                            navItem.options
-                          )
-                          return (
-                            <ui.IconLabel
-                              key={`${navKey}_${index}`}
-                              as={ui.NavLink}
-                              to={navItem.path}
-                              size="xl"
-                              color={[null, { hover: 'blue-500' }]}
-                              padding={{ y: 3 }}
-                              activeClassName="text-yellow-500"
-                              {...elProps}
-                            />
-                          )
-                        }}
-                      />
-                      <ui.When
-                        is={t.notEmpty(props.nav.primary.actions)}
-                        render={() => <ui.Spacer />}
-                      />
-                      <ui.MapIndexed
-                        items={t.to.pairs(props.nav.primary.actions)}
-                        render={([navKey, navItem], index) => {
-                          const elProps = t.omit(
-                            ['slot', 'label'],
-                            navItem.options
-                          )
-                          const icon = t.atOr({}, 'icon', elProps)
-                          const nextProps = t.mergeAll([
-                            t.omit(['action', 'to'], elProps),
-                            {
-                              icon: t.merge(
-                                { size: '3xl' },
-                                t.isType(icon, 'string') ? { name: icon } : icon
-                              ),
-                            },
-                            t.notNil(t.at('action.type', elProps))
-                              ? {
-                                  as: 'button',
-                                  onClick() {
-                                    props.dispatch(elProps.action)
+                        <ui.MapIndexed
+                          items={t.to.pairs(props.nav.primary.items)}
+                          render={([navKey, navItem], index) => {
+                            const elProps = t.omit(
+                              ['slot', 'label'],
+                              navItem.options
+                            )
+                            return (
+                              <ui.IconLabel
+                                key={`${navKey}_${index}`}
+                                as={ui.NavLink}
+                                to={navItem.path}
+                                size="xl"
+                                color={[null, { hover: 'blue-500' }]}
+                                padding={navClosed ? { x: 3 } : { y: 3 }}
+                                activeClassName="text-yellow-500"
+                                {...elProps}
+                              />
+                            )
+                          }}
+                        />
+                        <ui.When
+                          is={t.notEmpty(props.nav.primary.actions)}
+                          render={() => <ui.Spacer />}
+                        />
+                        <ui.MapIndexed
+                          items={t.to.pairs(props.nav.primary.actions)}
+                          render={([navKey, navItem], index) => {
+                            const elProps = t.omit(
+                              ['slot', 'label'],
+                              navItem.options
+                            )
+                            const icon = t.atOr({}, 'icon', elProps)
+                            const nextProps = t.mergeAll([
+                              t.omit(['action', 'to'], elProps),
+                              {
+                                icon: t.merge(
+                                  { size: '3xl' },
+                                  t.isType(icon, 'string')
+                                    ? { name: icon }
+                                    : icon
+                                ),
+                              },
+                              t.notNil(t.at('action.type', elProps))
+                                ? {
+                                    as: 'button',
+                                    onClick() {
+                                      props.dispatch(elProps.action)
+                                    },
+                                    cursor: 'pointer',
+                                  }
+                                : {
+                                    as: ui.NavLink,
+                                    to: navItem.path,
+                                    activeClassName: 'text-yellow-500',
                                   },
-                                  cursor: 'pointer',
-                                }
-                              : {
-                                  as: ui.NavLink,
-                                  to: navItem.path,
-                                  activeClassName: 'text-yellow-500',
-                                },
-                          ])
-                          // console.log('Next props', nextProps)
-                          return (
-                            <ui.IconLabel
-                              key={`${navKey}_${index}`}
-                              size="xl"
-                              color={[null, { hover: 'blue-500' }]}
-                              padding={{ y: 3 }}
-                              {...nextProps}
-                            />
-                          )
-                        }}
-                      />
-                    </ui.VStack>
-                  )}
+                            ])
+                            // console.log('Next props', nextProps)
+                            return (
+                              <ui.IconLabel
+                                key={`${navKey}_${index}`}
+                                size="xl"
+                                color={[null, { hover: 'blue-500' }]}
+                                padding={navClosed ? { x: 3 } : { y: 3 }}
+                                {...nextProps}
+                              />
+                            )
+                          }}
+                        />
+                      </ui.Stack>
+                    )
+                  }}
                 />
                 <ui.When
                   is={t.notEmpty(props.nav.secondary.items)}
@@ -148,7 +165,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         overflowY: 'auto',
                         overflowX: 'hidden',
                       }}
-                      className="scroll-hide"
+                      className="scrollbar-hide"
                       style={t.pick(
                         ['width', 'left', 'bottom'],
                         props.nav.secondary
@@ -265,7 +282,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         overflowY: 'auto',
                         overflowX: 'hidden',
                       }}
-                      className="scroll-hide"
+                      className="scrollbar-hide"
                       style={t.pick(
                         ['width', 'top', 'left', 'bottom'],
                         props.nav.page

@@ -35,6 +35,7 @@ export const home = mx.fn((t, a, rx) =>
       return {
         initial: {
           data: {
+            url: null,
             files: [],
           },
           form: {
@@ -55,6 +56,7 @@ export const home = mx.fn((t, a, rx) =>
               _: () => props.data,
               [ctx.event.dataLoadComplete]: () => {
                 return {
+                  url: t.atOr('/api', 'next.data.url', props),
                   files: t.atOr([], 'next.data.files', props),
                 }
               },
@@ -114,6 +116,7 @@ export const home = mx.fn((t, a, rx) =>
             return {
               status: props.status,
               data: {
+                url: props.api.url,
                 files: [],
               },
               error: filesErr,
@@ -122,6 +125,7 @@ export const home = mx.fn((t, a, rx) =>
           return {
             status: props.status,
             data: {
+              url: props.api.url,
               files: files.data,
             },
             error: null,
@@ -306,12 +310,13 @@ export const home = mx.fn((t, a, rx) =>
                       <ctx.ListItem
                         key={rowProps.key}
                         style={rowProps.style}
-                        bgColor={[null, { hover: 'gray-800' }]}
                         borderRadius="sm"
                         className="transition-bg"
+                        margin={{ bottom: 1 }}
                         slots={{
                           main: {
-                            padding: { x: 3, y: 3 },
+                            padding: { x: 3, y: 2 },
+                            bgColor: ['gray-800', { hover: 'gray-700' }],
                           },
                         }}
                         avatar={{
@@ -319,22 +324,32 @@ export const home = mx.fn((t, a, rx) =>
                           size: 'md',
                           fill: 'solid',
                           color: 'blue-500',
+                          margin: { bottom: 1 },
+                        }}
+                        caption={{
+                          label: {
+                            text: file.ext,
+                            fontSize: 'xs',
+                            fontWeight: 'thin',
+                            color: 'blue-500',
+                          },
                         }}
                         title={{
                           label: {
                             text: file.originalName,
                             fontSize: 'md',
                             fontWeight: 'medium',
-                            margin: { bottom: 1 },
+                            margin: { bottom: 2 },
                           },
                         }}
                         subtitle={{
-                          icon: { name: creator.icon, size: 'lg' },
+                          icon: { name: creator.icon, size: 'xl' },
                           label: {
                             text: creator.name,
-                            fontSize: 'xs',
-                            fontWeight: 'medium',
+                            fontSize: 'sm',
+                            fontWeight: 'light',
                             letterSpacing: 'wide',
+                            margin: { bottom: 1 },
                           },
                           color: 'gray-400',
                         }}
@@ -362,6 +377,12 @@ export const home = mx.fn((t, a, rx) =>
                             fill: 'ghost-solid',
                             size: 'xs',
                             color: 'blue-500',
+                            as: 'a',
+                            href: `${t.at(
+                              'state.data.url',
+                              props
+                            )}/bucket-content/${file.fileId}`,
+                            target: '_blank',
                           },
                           {
                             icon: 'gear',

@@ -41,10 +41,11 @@ export const withRest = z.fn(t => api => {
     api.set('accessToken', null)
   })
   const apiUri = t.at('io.io.uri', api)
+  const prefixUrl = `${
+    t.endsWith('/', apiUri) ? t.dropLast(1, apiUri) : apiUri
+  }/api`
   api.rest = ky.create({
-    prefixUrl: `${
-      t.endsWith('/', apiUri) ? t.dropLast(1, apiUri) : apiUri
-    }/api`,
+    prefixUrl,
     hooks: {
       beforeRequest: [
         request => {
@@ -68,5 +69,6 @@ export const withRest = z.fn(t => api => {
       })
       .json()
   }
+  api.url = prefixUrl
   return api
 })

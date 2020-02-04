@@ -182,8 +182,8 @@ export const home = mx.fn((t, a, rx) =>
         return 'laptop'
       }
       const itemHeight = {
-        main: 86,
-        nested: 72,
+        main: 90,
+        nested: 76,
       }
       return props => {
         const machines = t.atOr([], 'state.data.machines', props)
@@ -218,9 +218,9 @@ export const home = mx.fn((t, a, rx) =>
                       <ctx.ListItem
                         key={rowProps.key}
                         style={rowProps.style}
-                        bgColor={[null, { hover: 'gray-800' }]}
                         borderRadius="sm"
                         className="transition-bg"
+                        margin={{ bottom: 1 }}
                         slots={{
                           main: {
                             padding: { x: 3, y: 3 },
@@ -261,7 +261,7 @@ export const home = mx.fn((t, a, rx) =>
                           label: {
                             text: ctx
                               .dateFn(machine.updatedAt)
-                              .format('YYYY MM-DD HH:mm:ss A'),
+                              .format('YYYY MM DD HH:mm:ss A'),
                             fontSize: 'xs',
                             fontWeight: 'light',
                           },
@@ -291,11 +291,15 @@ export const home = mx.fn((t, a, rx) =>
                               <ctx.ListItem
                                 key={`nested_login_${login._id}_${index}`}
                                 width="full"
-                                bgColor={[null, { hover: 'gray-700' }]}
                                 className="transition-bg"
+                                margin={{ bottom: 1 }}
                                 slots={{
                                   main: {
                                     padding: { x: 3, y: 2 },
+                                    bgColor: [
+                                      'gray-800',
+                                      { hover: 'gray-700' },
+                                    ],
                                   },
                                 }}
                                 avatar={{

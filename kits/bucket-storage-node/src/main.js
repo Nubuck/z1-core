@@ -73,5 +73,6 @@ export const withRest = fn(t => api => {
       }
     })
   }
+  api.url = prefixUrl
   return api
 })

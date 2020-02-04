@@ -26,6 +26,7 @@ export const nav = z.fn(t =>
         anon: {},
         secure: {},
       },
+      schemaStatus: 'init',
       matched: null,
       width: 0,
       size: 'xs',
@@ -74,7 +75,7 @@ export const nav = z.fn(t =>
           const level = t.atOr('anon', 'payload.level', action)
           const schema = t.atOr(null, 'payload.schema', action)
           return t.merge(state, {
-            // status: 'ready',
+            schemaStatus: 'ready',
             level,
             schema: t.isNil(schema)
               ? state.schema
@@ -362,8 +363,7 @@ export const nav = z.fn(t =>
           ],
           (ctx, dispatch, done) => {
             const state = ctx.getState()
-            const status = t.at('nav.status', state)
-            if (t.eq(status, navStatus.init)) {
+            if (t.eq(t.at('nav.schemaStatus', state), 'init')) {
               done()
             } else {
               const level = t.at('nav.level', state)

@@ -160,9 +160,22 @@ export const home = mx.fn((t, a, rx) =>
         _: 'user-astronaut',
         agent: 'user-secret',
         bot: 'robot',
+        robot: 'robot',
         service: 'terminal',
-        supervisor: 'crown',
+        supervisor: 'user-shield',
       })
+      const machineIcon = (distro = '') => {
+        if (t.includes('windows', t.to.lowerCase(distro))) {
+          return 'windows'
+        }
+        if (t.includes('apple', t.to.lowerCase(distro))) {
+          return 'apple'
+        }
+        if (t.includes('linux', t.to.lowerCase(distro))) {
+          return 'linux'
+        }
+        return 'laptop'
+      }
       return props => {
         const machines = t.atOr([], 'state.data.machines', props)
         return (
@@ -193,9 +206,22 @@ export const home = mx.fn((t, a, rx) =>
                       <ctx.ListItem
                         key={rowProps.key}
                         style={rowProps.style}
-                        avatar={{ icon: 'laptop' }}
+                        avatar={{
+                          icon: machineIcon(machine.distro),
+                          fill: 'solid',
+                          color: 'blue-500',
+                        }}
                         title={{
-                          label: `${machine.manufacturer} - ${machine.model} - ${machine.serialnumber}`,
+                          label: {
+                            text: machine.alias,
+                            fontSize: 'md',
+                            margin: { bottom: 2 },
+                          },
+                          info: {
+                            text: `${machine.distro} v${machine.release}`,
+                            fontSize: 'sm',
+                            color: 'gray-400',
+                          },
                         }}
                         stamp={{
                           label: {
@@ -204,7 +230,18 @@ export const home = mx.fn((t, a, rx) =>
                               .format('YYYY MM-DD HH:mm:ss A'),
                             fontSize: 'xs',
                           },
+                          margin: { bottom: 2 },
                         }}
+                        buttons={[
+                          {
+                            icon: 'gear',
+                            shape: 'circle',
+                            fill: 'ghost-solid',
+                            size: 'xs',
+                            color: 'blue-500',
+                          },
+                        ]}
+                        bgColor={[null, { hover: 'gray-800' }]}
                       >
                         <ctx.MapIndexed
                           items={t.atOr([], 'logins', machine)}
@@ -215,36 +252,40 @@ export const home = mx.fn((t, a, rx) =>
                                 avatar={{
                                   icon: loginIcon(login.role),
                                   size: 'xs',
-                                }}
-                                caption={{
-                                  label: {
-                                    text: t.at('role', login),
-                                    fontSize: 'xs',
+                                  fill: 'solid',
+                                  colors: {
+                                    on: {
+                                      bg: 'yellow-500',
+                                      content: 'gray-900',
+                                    },
                                   },
                                 }}
                                 title={{
                                   label: {
-                                    text: `${login.hostname} - ${login.username}`,
-                                    fontSize: 'sm',
+                                    text: login.role,
+                                    fontSize: 'md',
+                                    color: 'yellow-500',
                                     margin: { bottom: 2 },
                                   },
+                                  info: {
+                                    text: login.alias,
+                                    fontSize: 'sm',
+                                  },
                                 }}
-                                subtitle={{
+                                stamp={{
                                   icon: { name: 'power-off', size: 'md' },
                                   label: {
                                     text: login.status,
-                                    fontSize: 'xs',
+                                    fontSize: 'sm',
                                   },
                                   color: t.eq(login.status, 'online')
                                     ? 'green-500'
                                     : 'red-500',
-                                }}
-                                stamp={{
-                                  label: {
-                                    text: ctx
-                                      .dateFn(login.updatedAt)
-                                      .format('YYYY MM-DD HH:mm:ss A'),
-                                    fontSize: 'xs',
+                                  info: {
+                                    // text: ctx
+                                    //   .dateFn(login.updatedAt)
+                                    //   .format('YYYY MM-DD HH:mm:ss A'),
+                                    // fontSize: 'xs',
                                   },
                                   margin: { bottom: 2 },
                                 }}

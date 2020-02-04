@@ -113,7 +113,8 @@ export const renderIconLabel = z.fn(t => props => {
                 render={() =>
                   renderText(info, {
                     key: 'info',
-                    box: { fontSize: 'xs', ...spacing },
+                    box: { fontSize: 'xs' },
+                    ...spacing,
                   })
                 }
               />

@@ -9,10 +9,16 @@ export const routeLanding = ui => () => (
       <React.Fragment>
         <ui.IconLabel
           icon={{ name: 'superpowers', size: '6xl', color: 'blue-500' }}
-          label={{ fontWeight: 'bold', text: 'Z1 System', fontSize: '4xl' }}
+          label={{
+            fontWeight: 'light',
+            text: 'Z1 System',
+            fontSize: '4xl',
+            letterSpacing: 'widest',
+          }}
           info={{
             text: 'Macro driven development',
             fontSize: 'xl',
+
             margin: { y: 4 },
           }}
           margin={{ bottom: 4 }}

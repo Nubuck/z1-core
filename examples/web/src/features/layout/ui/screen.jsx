@@ -75,7 +75,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                           fill="ghost-solid"
                           color="blue-500"
                           fontWeight="bold"
-                          margin={ navClosed ? null : { y: 2 }}
+                          margin={navClosed ? null : { y: 2 }}
                         />
                         <ui.MapIndexed
                           items={t.to.pairs(props.nav.primary.items)}
@@ -216,15 +216,30 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                           t.isEmpty(props.nav.primary.actions)
                         )}
                         render={() => (
-                          <ui.Avatar
+                          <ui.Row
+                            y="center"
+                            flex="none"
                             as={ui.Link}
                             to="/"
-                            icon="superpowers"
-                            size="lg"
-                            fill="ghost-solid"
-                            color="blue-500"
-                            fontWeight="bold"
-                          />
+                            color={['blue-500', { hover: 'yellow-500' }]}
+                          >
+                            <ui.Avatar
+                              icon="superpowers"
+                              size="lg"
+                              fill="ghost"
+                              fontWeight="bold"
+                              cursor="pointer"
+                            />
+                            <ui.Col
+                              y="center"
+                              fontWeight="light"
+                              fontSize="xl"
+                              letterSpacing='wider'
+                              className="transition-colors"
+                            >
+                              Z1 System
+                            </ui.Col>
+                          </ui.Row>
                         )}
                       />
                       <ui.MapIndexed

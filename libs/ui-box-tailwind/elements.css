@@ -66,6 +66,9 @@ fieldset {
   &.field {
     @apply my-3;
   }
+  &.field-object {
+    @apply my-0;
+  }
   & .control-label {
     @apply inline-block mb-2;
     & .required {

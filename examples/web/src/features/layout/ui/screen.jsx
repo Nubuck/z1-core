@@ -221,7 +221,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                             to="/"
                             icon="superpowers"
                             size="lg"
-                            fill="solid"
+                            fill="ghost-solid"
                             color="blue-500"
                             fontWeight="bold"
                           />

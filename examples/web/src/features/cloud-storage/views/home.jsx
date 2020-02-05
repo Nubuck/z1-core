@@ -323,6 +323,9 @@ export const home = mx.fn((t, a, rx) =>
                             padding: { x: 3, y: 2 },
                             bgColor: ['gray-800', { hover: 'gray-700' }],
                           },
+                          title: {
+                            justifyContent: 'between',
+                          },
                         }}
                         avatar={{
                           icon: fileIcon(file.ext),
@@ -336,7 +339,7 @@ export const home = mx.fn((t, a, rx) =>
                             fontSize: 'xs',
                             fontWeight: 'light',
                             letterSpacing: 'wide',
-                            color: 'blue-500',
+                            color: 'gray-300',
                           },
                         }}
                         title={{
@@ -344,7 +347,7 @@ export const home = mx.fn((t, a, rx) =>
                             label: {
                               display: 'flex',
                               flexDirection: 'row',
-                              margin: { bottom: 2 },
+                              margin: { top: 1 },
                               y: 'center',
                             },
                           },
@@ -377,9 +380,8 @@ export const home = mx.fn((t, a, rx) =>
                           label: {
                             text: creator.name,
                             fontSize: 'sm',
-                            fontWeight: 'light',
                             letterSpacing: 'wide',
-                            margin: { bottom: 1, left: 2 },
+                            margin: { left: 2 },
                           },
                           color: 'gray-500',
                         }}

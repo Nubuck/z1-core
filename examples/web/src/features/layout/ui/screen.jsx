@@ -73,7 +73,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                           icon="superpowers"
                           size="lg"
                           fill="ghost-solid"
-                          color="blue-500"
+                          colors="blue-500"
                           fontWeight="bold"
                           margin={navClosed ? null : { y: 2 }}
                         />

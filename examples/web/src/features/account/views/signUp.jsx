@@ -65,10 +65,10 @@ export const signUp = mx.fn((t, a) =>
         data(props) {
           return {
             status: props.status,
+            error: t.atOr(null, 'next.error', props),
             data: t.merge(props.data, {
               mode: cm.transmitOk(props) ? 'view' : 'form',
             }),
-            error: t.atOr(null, 'next.error', props),
           }
         },
         form(props) {
@@ -97,8 +97,8 @@ export const signUp = mx.fn((t, a) =>
           if (checkError) {
             return {
               status: ctx.status.fail,
-              data,
               error: checkError,
+              data,
             }
           }
           const [userError, userResult] = await a.of(
@@ -115,8 +115,8 @@ export const signUp = mx.fn((t, a) =>
           if (userError) {
             return {
               status: ctx.status.fail,
-              data,
               error: userError,
+              data,
             }
           }
           return {

@@ -92,6 +92,9 @@ export const home = mx.fn((t, a, rx) =>
           const [machErr, machines] = await a.of(
             props.api.service('machines').find({
               query: {
+                $sort: {
+                  updatedAt: -1,
+                },
                 $limit: 10000,
               },
             })
@@ -99,18 +102,18 @@ export const home = mx.fn((t, a, rx) =>
           if (machErr) {
             return {
               status: props.status,
+              error: machErr,
               data: {
                 machines: [],
               },
-              error: machErr,
             }
           }
           return {
             status: props.status,
+            error: null,
             data: {
               machines: machines.data,
             },
-            error: null,
           }
         },
         subscribe(props) {
@@ -124,6 +127,17 @@ export const home = mx.fn((t, a, rx) =>
                   change: 'created',
                   entity: 'machine',
                 }))
+              ),
+              rx.fromEvent(machineService, 'patched').pipe(
+                rx.map(machineOrlogin =>
+                  t.eq('created', t.at('change', machineOrlogin))
+                    ? machineOrlogin
+                    : {
+                        machine: machineOrlogin,
+                        change: 'patched',
+                        entity: 'machine',
+                      }
+                )
               ),
               rx.fromEvent(loginService, 'created').pipe(
                 rx.map(machineOrlogin =>
@@ -180,13 +194,11 @@ export const home = mx.fn((t, a, rx) =>
                   items={machines}
                   rowHeight={({ index }) => {
                     const machine = machines[index]
-                    if (t.isNil(machine)) {
-                      return itemHeight.main
-                    }
-                    return (
-                      itemHeight.nested * t.len(t.atOr([], 'logins', machine)) +
-                      itemHeight.main
-                    )
+                    return t.isNil(machine)
+                      ? itemHeight.main
+                      : itemHeight.nested *
+                          t.len(t.atOr([], 'logins', machine)) +
+                          itemHeight.main
                   }}
                   render={(machine, rowProps) => {
                     return (
@@ -277,9 +289,7 @@ export const home = mx.fn((t, a, rx) =>
                                   },
                                 }}
                                 avatar={{
-                                  icon: {
-                                    name: ctx.icons.login(login.role),
-                                  },
+                                  icon: ctx.icons.login(login.role),
                                   size: 'md',
                                   fill: 'ghost',
                                   color: 'yellow-500',

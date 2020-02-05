@@ -45,8 +45,8 @@ export const signIn = mx.fn((t, a) =>
         data(props) {
           return {
             status: props.status,
-            data: props.data,
             error: t.atOr(null, 'next.error', props),
+            data: props.data,
           }
         },
         form(props) {
@@ -74,27 +74,27 @@ export const signIn = mx.fn((t, a) =>
             props.dispatch(
               props.mutators.authenticateComplete({
                 authStatus: ctx.authStatus.fail,
-                user: null,
                 error: authErr,
+                user: null,
               })
             )
             return {
               status: props.status,
-              data: t.at('form.data', props),
               error: authErr,
+              data: t.at('form.data', props),
             }
           }
           props.dispatch(
             props.mutators.authenticateComplete({
               authStatus: ctx.authStatus.success,
-              user: authResult.user,
               error: null,
+              user: authResult.user,
             })
           )
           return {
             status: ctx.status.waiting,
-            data: {},
             error: null,
+            data: {},
           }
         },
       }

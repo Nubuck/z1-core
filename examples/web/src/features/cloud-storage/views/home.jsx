@@ -52,6 +52,7 @@ export const home = mx.fn((t, a, rx) =>
         data(props) {
           return {
             status: props.status,
+            error: t.atOr(props.error, 'next.error', props),
             data: t.runMatch({
               _: () => props.data,
               [ctx.event.dataLoadComplete]: () => {
@@ -94,13 +95,6 @@ export const home = mx.fn((t, a, rx) =>
                 })(change)
               },
             })(props.event),
-            error: t.runMatch({
-              _: () => props.error,
-              [ctx.event.dataLoadComplete]: () =>
-                t.atOr(null, 'next.error', props),
-              [ctx.event.formTransmitComplete]: () =>
-                t.atOr(null, 'next.error', props),
-            })(props.event),
           }
         },
         async load(props) {
@@ -108,6 +102,9 @@ export const home = mx.fn((t, a, rx) =>
             props.api.service('bucket-registry').find({
               query: {
                 includeAuthors: true,
+                $sort: {
+                  updatedAt: -1,
+                },
                 $limit: 10000,
               },
             })
@@ -115,20 +112,20 @@ export const home = mx.fn((t, a, rx) =>
           if (filesErr) {
             return {
               status: props.status,
+              error: filesErr,
               data: {
                 url: props.api.url,
                 files: [],
               },
-              error: filesErr,
             }
           }
           return {
             status: props.status,
+            error: null,
             data: {
               url: props.api.url,
               files: files.data,
             },
-            error: null,
           }
         },
         subscribe(props) {
@@ -161,7 +158,7 @@ export const home = mx.fn((t, a, rx) =>
         },
         form(props) {
           return t.runMatch({
-            _: null,
+            _: () => null,
             [ctx.event.formTransmit]: () => {
               return {
                 upload: {
@@ -171,10 +168,9 @@ export const home = mx.fn((t, a, rx) =>
               }
             },
             [ctx.event.formTransmitComplete]: () => {
-              const error = t.at('next.error', props)
               return {
                 upload: {
-                  data: t.notNil(error)
+                  data: t.notNil(t.at('next.error', props))
                     ? t.atOr({}, 'form.upload.data', props)
                     : {},
                   ui: uploadForm({ disabled: false }),
@@ -189,14 +185,14 @@ export const home = mx.fn((t, a, rx) =>
           if (bucketErr) {
             return {
               status: ctx.status.fail,
-              data,
               error: bucketErr,
+              data,
             }
           }
           return {
             status: props.status,
-            data: {},
             error: null,
+            data: {},
           }
         },
         modal(props) {

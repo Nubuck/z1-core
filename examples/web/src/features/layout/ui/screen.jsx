@@ -60,7 +60,9 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                         className="scrollbar-hide"
                         style={
                           navClosed
-                            ? {}
+                            ? {
+                                height: props.nav.primary.width,
+                              }
                             : t.pick(
                                 ['width', 'left', 'bottom'],
                                 props.nav.primary
@@ -254,9 +256,9 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               key={`${navKey}_${index}`}
                               as={ui.NavLink}
                               to={navItem.path}
-                              size="xl"
                               color={[null, { hover: 'blue-500' }]}
-                              padding={{ x: 3 }}
+                              padding={[{ x: 1 }, { md: 3 }]}
+                              fontSize={['xs', { md: 'sm', lg: 'base' }]}
                               activeClassName="text-yellow-500"
                               {...elProps}
                             />
@@ -278,7 +280,8 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               to={navItem.path}
                               size="xl"
                               color={[null, { hover: 'blue-500' }]}
-                              padding={{ x: 3 }}
+                              padding={[{ x: 1 }, { md: 3 }]}
+                              fontSize={['xs', { md: 'sm', lg: 'base' }]}
                               activeClassName="text-yellow-500"
                               {...elProps}
                             />

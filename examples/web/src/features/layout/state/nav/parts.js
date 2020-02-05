@@ -14,10 +14,10 @@ export const navStatus = {
 }
 
 export const navSize = {
-  primary: 62,
+  primary: 58,
   secondary: 240,
-  body: 62,
-  bodySm: 66,
+  body: 58,
+  bodySm: 48,
   page: 240,
 }
 

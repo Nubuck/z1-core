@@ -157,7 +157,7 @@ const renderListItem = z.fn(t => props => {
   const box = t.atOr({}, 'box', props)
   return (
     <Col box={{ overflow: 'hidden', ...box }} {...nextProps}>
-      <Row key="slot-main" y="center" {...mainSlot}>
+      <Row key="slot-main" y="center" flexWrap="none" {...mainSlot}>
         <When
           is={t.anyOf([t.notNil(selectSlot), selectable])}
           render={() => {
@@ -225,7 +225,8 @@ const renderListItem = z.fn(t => props => {
             const colProps = {
               x: 'center',
               y: 'center',
-              flex: 'init',
+              flex: 'initial',
+              flexShrink: true,
             }
             if (isRenderProp(avatarSlot)) {
               return avatarSlot({
@@ -270,8 +271,10 @@ const renderListItem = z.fn(t => props => {
             const colProps = {
               x: 'left',
               y: 'center',
-              flex: 'init',
+              flex: 'initial',
+              flexShrink: true,
               padding: { x: 2 },
+              wordBreak: 'truncate',
             }
             if (isRenderProp(titleSlot)) {
               return titleSlot({
@@ -328,7 +331,7 @@ const renderListItem = z.fn(t => props => {
                     })
                   }
                 />
-                <Row key="slot-buttons" x="right" {...buttonSlot}>
+                <Row key="slot-buttons" x="right" flexWrap='none' {...buttonSlot}>
                   <When
                     is={hasStatus}
                     render={() =>
@@ -357,7 +360,7 @@ const renderListItem = z.fn(t => props => {
             const colProps = {
               x: 'right',
               justifyContent: 'between',
-              flex: 'init',
+              flex: 'initial',
             }
             if (isRenderProp(lastSlot)) {
               return lastSlot({

@@ -15,7 +15,7 @@ const renderPage = z.fn(t => props => {
       x: shouldCenter ? 'center' : 'left',
       y: shouldCenter ? 'center' : 'top',
       box: {
-        padding: [3, { lg: 4 }],
+        padding: [{ x: 3, top: 3, bottom: 1 }, { lg: 4 }],
         position: 'relative',
         flex: 1,
         width: 'full',

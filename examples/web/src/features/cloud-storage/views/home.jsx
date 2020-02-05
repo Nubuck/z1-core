@@ -280,7 +280,7 @@ export const home = mx.fn((t, a, rx) =>
                 </ctx.Row>
                 <ctx.VList
                   items={t.atOr([], 'state.data.files', props)}
-                  rowHeight={76}
+                  rowHeight={79}
                   render={(file, rowProps) => {
                     const creator = creatorProps(t.atOr({}, 'creator', file))
                     const hasAlias = t.notNil(file.alias)
@@ -298,6 +298,7 @@ export const home = mx.fn((t, a, rx) =>
                           },
                           title: {
                             justifyContent: 'between',
+                           
                           },
                         }}
                         avatar={{

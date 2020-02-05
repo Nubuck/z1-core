@@ -50,6 +50,7 @@ export const renderIconLabel = z.fn(t => props => {
         {
           display: 'inline-flex',
           alignSelf: 'auto',
+          wordBreak: 'truncate',
         },
         t.atOr({}, 'box', props)
       ),
@@ -127,6 +128,7 @@ export const renderIconLabel = z.fn(t => props => {
           const colProps = {
             y: 'center',
             x: 'left',
+            wordBreak: 'truncate',
           }
           if (isRenderProp(labelSlot)) {
             return labelSlot({

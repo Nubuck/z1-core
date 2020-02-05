@@ -92,6 +92,10 @@ export const nav = z.fn(t =>
           const bodyHeight = t.atOr(state.body.height, 'payload.height', action)
           const size = t.atOr(state.size, 'payload.size', action)
           const width = t.atOr(state.width, 'payload.width', action)
+          const primaryItems = t.merge(
+            state.primary.items,
+            state.primary.actions
+          )
           const secondaryItems = t.atOr({}, 'secondary.items', state)
           const pageItems = t.atOr({}, 'page.items', state)
           const bodyItems = t.atOr({}, 'body.items', state)
@@ -102,7 +106,13 @@ export const nav = z.fn(t =>
             'payload.pageStatus',
             action
           )
-          const bottom = calcBodySpacing('bottom', body, size, bodyHeight)
+          const baseBottom = calcBodySpacing('bottom', body, size, bodyHeight)
+          const bottom = t.and(
+            t.eq(state.status, 'closed'),
+            t.notEmpty(primaryItems)
+          )
+            ? baseBottom + navSize.primary
+            : baseBottom
           const top = calcBodySpacing('top', body, size, bodyHeight)
           return t.merge(state, {
             status,
@@ -111,10 +121,7 @@ export const nav = z.fn(t =>
             title: t.atOr(state.title, 'payload.title', action),
             mode: t.atOr(state.mode, 'payload.mode', action),
             primary: t.merge(state.primary, {
-              left: calcPrimaryLeft(
-                status,
-                t.merge(state.primary.items, state.primary.actions)
-              ),
+              left: calcPrimaryLeft(status, primaryItems),
               bottom,
             }),
             secondary: t.merge(state.secondary, {
@@ -170,12 +177,19 @@ export const nav = z.fn(t =>
             action
           )
           const pageStatus = t.isEmpty(pageItems) ? 'closed' : state.page.status
-          const bottom = calcBodySpacing(
+          const baseBottom = calcBodySpacing(
             'bottom',
             body,
             state.size,
             state.body.height
           )
+          const primaryGear = t.merge(primaryItems, primaryActions)
+          const bottom = t.and(
+            t.eq(state.status, 'closed'),
+            t.notEmpty(primaryGear)
+          )
+            ? baseBottom + navSize.primary
+            : baseBottom
           const top = calcBodySpacing(
             'top',
             body,
@@ -188,10 +202,7 @@ export const nav = z.fn(t =>
             mode: t.atOr(state.mode, 'payload.mode', action),
             matched: t.atOr(state.matched, 'payload.matched', action),
             primary: t.merge(state.primary, {
-              left: calcPrimaryLeft(
-                state.status,
-                t.merge(primaryItems, primaryActions)
-              ),
+              left: calcPrimaryLeft(state.status, primaryGear),
               bottom,
               items: primaryItems,
               actions: primaryActions,
@@ -246,12 +257,22 @@ export const nav = z.fn(t =>
             : status
           const pageItems = t.atOr({}, 'page.items', state)
           const body = t.merge(state.body.items, state.body.actions)
-          const bottom = calcBodySpacing(
+          const baseBottom = calcBodySpacing(
             'bottom',
             body,
             state.size,
             state.body.height
           )
+          const primaryGear = t.merge(
+            state.primary.items,
+            state.primary.actions
+          )
+          const bottom = t.and(
+            t.eq(state.status, 'closed'),
+            t.notEmpty(primaryGear)
+          )
+            ? baseBottom + navSize.primary
+            : baseBottom
           const top = calcBodySpacing(
             'top',
             body,
@@ -261,10 +282,7 @@ export const nav = z.fn(t =>
           return t.merge(state, {
             status: nextStatus,
             primary: t.merge(state.primary, {
-              left: calcPrimaryLeft(
-                nextStatus,
-                t.merge(state.primary.items, state.primary.actions)
-              ),
+              left: calcPrimaryLeft(nextStatus, primaryGear),
               bottom,
             }),
             secondary: t.merge(state.secondary, {

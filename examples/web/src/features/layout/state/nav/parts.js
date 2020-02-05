@@ -17,7 +17,7 @@ export const navSize = {
   primary: 58,
   secondary: 240,
   body: 58,
-  bodySm: 48,
+  bodySm: 58,
   page: 240,
 }
 

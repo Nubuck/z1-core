@@ -351,6 +351,7 @@ export const renderButton = fn(t => props => {
       'className',
       'transition',
       'reverse',
+      'slots',
     ],
     props
   )
@@ -363,7 +364,7 @@ export const renderButton = fn(t => props => {
   const fill = t.to.camelCase(t.atOr('ghost', 'fill', props))
   const style = t.atOr({}, 'style', props)
   const className = t.atOr('', 'className', props)
-  const transition = t.atOr('transition-all', 'transition', props)
+  const transition = t.atOr('colors', 'transition', props)
   const isCircle = t.eq(shape, 'circle')
   // brand
   const colors = t.atOr(null, 'colors', props)
@@ -376,6 +377,10 @@ export const renderButton = fn(t => props => {
   const inactive = t.neq(mode, 'active')
   // modifiers
   const reverse = t.atOr(false, 'reverse', props)
+  // slots
+  const slots = t.atOr({}, 'slots', props)
+  const contentSlot = t.atOr({}, 'content', slots)
+  const spinnerSlot = t.atOr({}, 'spinner', slots)
   // boxes
   const layout = {
     container: t.mergeAll([
@@ -389,17 +394,26 @@ export const renderButton = fn(t => props => {
           ? 'default'
           : 'pointer',
         opacity: t.and(disabled, t.not(loading)) ? 50 : 100,
+        transition,
       },
     ]),
-    content: t.merge(buttonBox.content, {
-      opacity: t.not(loading) ? 100 : 0,
-      visible: t.not(loading),
-      flexDirection: isCircle ? 'col' : reverse ? 'row-reverse' : 'row',
-    }),
-    spinner: t.merge(buttonBox.spinner, {
-      opacity: loading ? 100 : 0,
-      visible: loading,
-    }),
+    content: t.mergeAll([
+      buttonBox.content,
+      {
+        opacity: t.not(loading) ? 100 : 0,
+        visible: t.not(loading),
+        flexDirection: isCircle ? 'col' : reverse ? 'row-reverse' : 'row',
+      },
+      contentSlot,
+    ]),
+    spinner: t.mergeAll([
+      buttonBox.spinner,
+      {
+        opacity: loading ? 100 : 0,
+        visible: loading,
+      },
+      spinnerSlot,
+    ]),
   }
   // elements
   const icon = t.atOr(null, 'icon', props)
@@ -464,9 +478,7 @@ export const renderButton = fn(t => props => {
         ),
       ]),
       next: b => b.next(box).next(next),
-      className: `${
-        t.noLen(className) ? '' : `${className} `
-      }${transition} ${shape} ${fill}`,
+      className: `${t.noLen(className) ? '' : `${className} `}${shape} ${fill}`,
       style: isCircle ? t.merge(circleSize(size), style) : style,
       disabled: loading ? true : disabled,
     }),

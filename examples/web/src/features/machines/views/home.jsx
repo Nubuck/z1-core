@@ -194,7 +194,7 @@ export const home = mx.fn((t, a, rx) =>
                         key={rowProps.key}
                         style={rowProps.style}
                         borderRadius="sm"
-                        className="transition-bg"
+                        transition="bg"
                         margin={{ bottom: 1 }}
                         slots={{
                           main: {
@@ -265,7 +265,7 @@ export const home = mx.fn((t, a, rx) =>
                               <ctx.ListItem
                                 key={`nested_login_${login._id}_${index}`}
                                 width="full"
-                                className="transition-bg"
+                                transition="bg"
                                 margin={{ bottom: 1 }}
                                 slots={{
                                   main: {

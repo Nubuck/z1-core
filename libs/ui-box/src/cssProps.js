@@ -229,4 +229,18 @@ export const cssProps = task(t => ({
   fill: v => skipNull(v, t.not(v) ? '' : 'fill-current'),
   stroke: v => skipNull(v, t.not(v) ? '' : 'stroke-current'),
   className: v => skipNull(v, `${v}`),
+  // useful plugins
+  transition: v => skipNull(v, `transition-${v}`),
+  duration: v => skipNull(v, `transition-${v}`),
+  timing: v => skipNull(v, `transition-${v}`),
+  delay: v => skipNull(v, `transition-delay-${v}`),
+  willChange(v) {
+    if (t.isType(v, 'Null')) {
+      return ''
+    }
+    if (t.isType(v, 'Boolean')) {
+      return t.not(v) ? '' : 'will-change'
+    }
+    return `will-change-${v}`
+  },
 }))

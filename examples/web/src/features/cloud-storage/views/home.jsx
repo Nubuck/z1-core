@@ -289,8 +289,8 @@ export const home = mx.fn((t, a, rx) =>
                         key={rowProps.key}
                         style={rowProps.style}
                         borderRadius="sm"
-                        className="transition-bg"
                         margin={{ bottom: 1 }}
+                        transition="bg"
                         slots={{
                           main: {
                             padding: { x: 3, y: 2 },
@@ -298,7 +298,6 @@ export const home = mx.fn((t, a, rx) =>
                           },
                           title: {
                             justifyContent: 'between',
-                           
                           },
                         }}
                         avatar={{

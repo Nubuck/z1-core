@@ -94,9 +94,9 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                                 key={`${navKey}_${index}`}
                                 as={ui.NavLink}
                                 to={navItem.path}
-                                size="xl"
                                 color={[null, { hover: 'blue-500' }]}
                                 padding={spacing}
+                                transition='colors'
                                 activeClassName="text-yellow-500"
                                 {...elProps}
                               />
@@ -142,9 +142,9 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                             return (
                               <ui.IconLabel
                                 key={`${navKey}_${index}`}
-                                size="xl"
                                 color={[null, { hover: 'blue-500' }]}
                                 padding={spacing}
+                                transition='colors'
                                 {...nextProps}
                               />
                             )
@@ -184,7 +184,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               key={`${navKey}_${index}`}
                               as={ui.NavLink}
                               to={navItem.path}
-                              size="xl"
+                              transition='colors'
                               activeClassName="text-yellow-500"
                               {...elProps}
                             />
@@ -240,7 +240,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               fontWeight="light"
                               fontSize="xl"
                               letterSpacing="wider"
-                              className="transition-colors"
+                              transition='colors'
                             >
                               Z1 System
                             </ui.Col>
@@ -259,6 +259,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               color={[null, { hover: 'blue-500' }]}
                               padding={[{ x: 1 }, { md: 3 }]}
                               fontSize={['xs', { md: 'sm', lg: 'base' }]}
+                              transition='colors'
                               activeClassName="text-yellow-500"
                               {...elProps}
                             />
@@ -278,10 +279,10 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               key={`${navKey}_${index}`}
                               as={ui.NavLink}
                               to={navItem.path}
-                              size="xl"
                               color={[null, { hover: 'blue-500' }]}
                               padding={[{ x: 1 }, { md: 3 }]}
                               fontSize={['xs', { md: 'sm', lg: 'base' }]}
+                              transition='colors'
                               activeClassName="text-yellow-500"
                               {...elProps}
                             />
@@ -317,7 +318,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               key={`${navKey}_${index}`}
                               as={ui.NavLink}
                               to={navItem.path}
-                              size="xl"
+                              transition='colors'
                               activeClassName="text-yellow-500"
                               {...elProps}
                             />

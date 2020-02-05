@@ -5,7 +5,7 @@ import { withRest } from '@z1/kit-bucket-storage-node'
 
 export const api = async apiPath => {
   const client = await io(apiPath, {
-    storageOptions: { dir: path.join(app.getPath('home'), '.z1') },
+    storageOptions: { dir: path.join(app.getPath('home'), '.z1', 'storage') },
   })
   return withRest(client)
 }

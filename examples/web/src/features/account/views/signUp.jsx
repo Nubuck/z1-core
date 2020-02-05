@@ -202,7 +202,14 @@ export const signUp = mx.fn((t, a) =>
                               size="lg"
                               shape="pill"
                               fill="outline"
-                              colors={{ on: 'blue-500', off: 'yellow-500' }}
+                              colors={{
+                                on: {
+                                  bg: 'yellow-500',
+                                  border: 'yellow-500',
+                                  content: 'gray-900',
+                                },
+                                off: 'yellow-500',
+                              }}
                               loading={t.eq(status, ctx.status.loading)}
                             />
                           </ctx.Row>

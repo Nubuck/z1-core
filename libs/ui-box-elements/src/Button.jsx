@@ -97,7 +97,7 @@ const renderColor = fn(t => (fill, colors, color) =>
             bgColor: null,
             borderColor: 'transparent',
             color: [
-              null,
+              colorByKey('off', 'content', fill, colors, color),
               { hover: colorByKey('on', 'content', fill, colors, color) },
             ],
           }

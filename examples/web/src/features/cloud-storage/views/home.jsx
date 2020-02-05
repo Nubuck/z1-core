@@ -218,33 +218,6 @@ export const home = mx.fn((t, a, rx) =>
       }
     },
     ui(ctx) {
-      const fileIcon = ext => {
-        if (t.includes(ext, ['png', 'jpg', 'jpeg', 'gif'])) {
-          return 'file-image'
-        }
-        if (t.includes(ext, ['svg', 'js', 'json', 'css', 'html', 'py'])) {
-          return 'file-code'
-        }
-        if (t.eq(ext, 'pdf')) {
-          return 'file-pdf'
-        }
-        if (t.eq(ext, 'csv')) {
-          return 'file-csv'
-        }
-        if (t.includes(ext, ['doc', 'docx', 'word'])) {
-          return 'file-word'
-        }
-        if (t.includes(ext, ['xls', 'xlsx', 'excel'])) {
-          return 'file-excel'
-        }
-        if (t.includes(ext, ['ppt', 'pptx', 'powerpoint'])) {
-          return 'file-powerpoint'
-        }
-        if (t.includes(ext, ['zip', 'rar', 'gzip', '7zip'])) {
-          return 'file-archive'
-        }
-        return 'file-alt'
-      }
       const creatorProps = (creator = {}) =>
         t.runMatch({
           user: () => ({
@@ -257,7 +230,7 @@ export const home = mx.fn((t, a, rx) =>
           }),
           machine: () => ({
             name: t.atOr('Unknown', 'alias', creator),
-            icon: 'robot',
+            icon: ctx.icons.login(creator.role),
           }),
           _: () => ({ name: 'Unknown', icon: 'user' }),
         })(t.atOr('user', 'type', creator))
@@ -328,7 +301,7 @@ export const home = mx.fn((t, a, rx) =>
                           },
                         }}
                         avatar={{
-                          icon: fileIcon(file.ext),
+                          icon: ctx.icons.file(file.ext),
                           size: 'md',
                           fill: 'ghost',
                           color: 'blue-500',

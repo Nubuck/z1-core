@@ -156,31 +156,6 @@ export const home = mx.fn((t, a, rx) =>
       }
     },
     ui(ctx) {
-      const loginIcon = t.match({
-        _: 'user-astronaut',
-        agent: 'user-secret',
-        bot: 'robot',
-        robot: 'robot',
-        service: 'terminal',
-        supervisor: 'user-shield',
-      })
-      const machineIcon = (distro = '', manufacturer = '') => {
-        if (t.includes('windows', t.to.lowerCase(distro))) {
-          return 'windows'
-        }
-        if (
-          t.or(
-            t.includes('apple', t.to.lowerCase(manufacturer)),
-            t.includes('mac', t.to.lowerCase(distro))
-          )
-        ) {
-          return 'apple'
-        }
-        if (t.includes('linux', t.to.lowerCase(distro))) {
-          return 'linux'
-        }
-        return 'laptop'
-      }
       const itemHeight = {
         main: 90,
         nested: 76,
@@ -227,10 +202,7 @@ export const home = mx.fn((t, a, rx) =>
                           },
                         }}
                         avatar={{
-                          icon: machineIcon(
-                            machine.distro,
-                            machine.manufacturer
-                          ),
+                          icon: ctx.icons.machine(machine.type),
                           fill: 'ghost',
                           color: 'blue-500',
                           size: 'lg',
@@ -306,7 +278,7 @@ export const home = mx.fn((t, a, rx) =>
                                 }}
                                 avatar={{
                                   icon: {
-                                    name: loginIcon(login.role),
+                                    name: ctx.icons.login(login.role),
                                   },
                                   size: 'md',
                                   fill: 'ghost',

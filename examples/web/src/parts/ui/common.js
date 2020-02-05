@@ -41,3 +41,49 @@ export const renderText = z.fn(t => (props, baseProps = {}) => {
     </Row>
   )
 })
+
+const loginIcon = z.fn(t =>
+  t.match({
+    _: 'user-astronaut',
+    agent: 'user-secret',
+    bot: 'robot',
+    robot: 'robot',
+    service: 'terminal',
+    supervisor: 'user-shield',
+  })
+)
+const machineIcon = z.fn(t =>
+  t.pipe(t.to.lowerCase, type =>
+    t.includes('windows', type)
+      ? 'windows'
+      : t.includes('linux', type)
+      ? 'linux'
+      : t.includes('darwin', type)
+      ? 'apple'
+      : 'laptop'
+  )
+)
+
+const fileIcon = z.fn(t =>
+  t.pipe(t.to.lowerCase, ext =>
+    t.eq(ext, 'csv')
+      ? 'file-csv'
+      : t.eq(ext, 'pdf')
+      ? 'file-pdf'
+      : t.includes(ext, ['png', 'jpg', 'jpeg', 'gif'])
+      ? 'file-image'
+      : t.includes(ext, ['zip', 'rar', 'gzip', '7zip'])
+      ? 'file-archive'
+      : t.includes(ext, ['svg', 'js', 'json', 'css', 'html', 'py'])
+      ? 'file-code'
+      : t.includes(ext, ['doc', 'docx', 'word'])
+      ? 'file-word'
+      : t.includes(ext, ['xls', 'xlsx', 'excel'])
+      ? 'file-excel'
+      : t.includes(ext, ['ppt', 'pptx', 'powerpoint'])
+      ? 'file-powerpoint'
+      : 'file-alt'
+  )
+)
+
+export const icons = { login: loginIcon, machine: machineIcon, file: fileIcon }

@@ -2,7 +2,7 @@ import z from '@z1/lib-feature-box'
 import el from '@z1/lib-ui-box-elements'
 
 // common
-import { dateFn, bytes } from './common'
+import { dateFn, bytes, icons } from './common'
 
 // elements
 import { Alert } from './Alert'
@@ -27,4 +27,5 @@ export const ui = {
   VList,
   dateFn,
   bytes,
+  icons,
 }

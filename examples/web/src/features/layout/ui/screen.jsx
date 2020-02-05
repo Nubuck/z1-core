@@ -72,8 +72,11 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                           to="/"
                           icon="superpowers"
                           size="lg"
-                          fill="ghost-solid"
-                          colors="blue-500"
+                          fill="ghost"
+                          colors={{
+                            off: { content: 'blue-500' },
+                            on: 'yellow-500',
+                          }}
                           fontWeight="bold"
                           margin={navClosed ? null : { y: 2 }}
                         />
@@ -206,7 +209,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                           { lg: { top: true, right: true } },
                         ],
                         zIndex: 30,
-                        padding: [{ x: 3 }, { lg: { x: 4 } }],
+                        padding: [{ x: 3 }, { lg: { left: 2, right: 4 } }],
                       }}
                       style={t.pick(['height', 'left'], props.nav.body)}
                     >
@@ -234,7 +237,7 @@ export const screen = z.fn(t => ({ ui, mutators }) => {
                               y="center"
                               fontWeight="light"
                               fontSize="xl"
-                              letterSpacing='wider'
+                              letterSpacing="wider"
                               className="transition-colors"
                             >
                               Z1 System

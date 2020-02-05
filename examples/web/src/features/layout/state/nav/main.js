@@ -107,10 +107,7 @@ export const nav = z.fn(t =>
             action
           )
           const baseBottom = calcBodySpacing('bottom', body, size, bodyHeight)
-          const bottom = t.and(
-            t.eq(state.status, 'closed'),
-            t.notEmpty(primaryItems)
-          )
+          const bottom = t.and(t.eq(status, 'closed'), t.notEmpty(primaryItems))
             ? baseBottom + navSize.primary
             : baseBottom
           const top = calcBodySpacing('top', body, size, bodyHeight)
@@ -268,7 +265,7 @@ export const nav = z.fn(t =>
             state.primary.actions
           )
           const bottom = t.and(
-            t.eq(state.status, 'closed'),
+            t.eq(nextStatus, 'closed'),
             t.notEmpty(primaryGear)
           )
             ? baseBottom + navSize.primary

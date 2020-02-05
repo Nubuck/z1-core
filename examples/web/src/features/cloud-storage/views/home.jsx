@@ -222,7 +222,7 @@ export const home = mx.fn((t, a, rx) =>
               'surname',
               creator
             )}`,
-            icon: 'user-plus',
+            icon: 'user',
           }),
           machine: () => ({
             name: t.atOr('Unknown', 'alias', creator),
@@ -231,9 +231,11 @@ export const home = mx.fn((t, a, rx) =>
           _: () => ({ name: 'Unknown', icon: 'user' }),
         })(t.atOr('user', 'type', creator))
       return props => {
+        const status = t.at('state.status', props)
         return (
           <ctx.Page
             key="cloud-storage"
+            loading={t.or(t.eq('waiting', status), t.eq('init', status))}
             render={() => (
               <React.Fragment>
                 <ctx.Row key="title-bar" margin={{ bottom: 4 }}>

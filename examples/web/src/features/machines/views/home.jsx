@@ -176,9 +176,11 @@ export const home = mx.fn((t, a, rx) =>
       }
       return props => {
         const machines = t.atOr([], 'state.data.machines', props)
+        const status = t.at('state.status', props)
         return (
           <ctx.Page
             key="machines"
+            loading={t.or(t.eq('waiting', status), t.eq('init', status))}
             render={() => (
               <React.Fragment>
                 <ctx.IconLabel

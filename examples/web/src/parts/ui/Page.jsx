@@ -35,7 +35,13 @@ const renderPage = z.fn(t => props => {
         value={loading ? 'loading' : 'ready'}
         render={{
           loading: () => (
-            <Col x="center" y="center" flex={1}>
+            <Col
+              x="center"
+              y="center"
+              flex={1}
+              position="fixed"
+              pin={{ top: true, left: true, bottom: true, right: true }}
+            >
               <Spinner size="lg" color={t.atOr('white', 'color', props)} />
             </Col>
           ),

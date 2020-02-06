@@ -342,7 +342,7 @@ export const home = mx.fn((t, a, rx) =>
                   .patch(
                     payload._id,
                     { alias: payload.alias },
-                    { includeAuthors: true }
+                    { query: { includeAuthors: true } }
                   )
               )
               if (fileErr) {
@@ -360,7 +360,25 @@ export const home = mx.fn((t, a, rx) =>
               return null
             },
             remove: async () => {
-              return null
+              const id = t.at('modal.id', props)
+              if (t.isNil(id)) {
+                return null
+              }
+              const [removeErr] = await a.of(
+                props.api.service('bucket-storage').remove(id)
+              )
+              if (removeErr) {
+                return {
+                  status: ctx.status.fail,
+                  error: removeErr,
+                  data: {},
+                }
+              }
+              return {
+                status: props.status,
+                error: null,
+                data: {},
+              }
             },
           })(t.at('modal.active', props))
           return await transmitter()
@@ -576,6 +594,7 @@ export const home = mx.fn((t, a, rx) =>
                             fill: 'ghost-solid',
                             size: 'xs',
                             color: 'blue-500',
+                            margin: { left: 1 },
                             loading: t.eq(
                               ctx.status.loading,
                               t.at('state.status', props)
@@ -593,6 +612,7 @@ export const home = mx.fn((t, a, rx) =>
                             fill: 'ghost-solid',
                             size: 'xs',
                             color: 'red-500',
+                            margin: { left: 1 },
                             loading: t.eq(
                               ctx.status.loading,
                               t.at('state.status', props)
@@ -601,7 +621,7 @@ export const home = mx.fn((t, a, rx) =>
                               props.mutations.modalChange({
                                 open: true,
                                 modal: 'remove',
-                                id: file._id,
+                                id: file.fileId,
                                 name: file.originalName,
                               }),
                           },

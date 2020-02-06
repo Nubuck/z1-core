@@ -53,7 +53,14 @@ export const api = (z, props) =>
           return ctx
         }
         const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
-        const addFlagToParams = ctx => {
+        const withAuthors = keys => ctx => {
+          ctx.data = t.merge(ctx.data, {
+            [keys.author]: t.pathOr(null, ['params', 'user', dbId], ctx),
+            [keys.role]: t.at('params.user.role', ctx),
+          })
+          return ctx
+        }
+        const withQueryParams = ctx => {
           const includeAuthors = t.at('params.query.includeAuthors', ctx)
           if (t.isNil(includeAuthors)) {
             return ctx
@@ -62,7 +69,7 @@ export const api = (z, props) =>
           ctx.params.includeAuthors = includeAuthors
           return ctx
         }
-        const withAuthors = common.when(
+        const withAuthorJoins = common.when(
           ctx => t.atOr(false, 'params.includeAuthors', ctx),
           common.fastJoin(ctx => {
             return {
@@ -132,16 +139,23 @@ export const api = (z, props) =>
           hooks: {
             before: {
               all: [auth.authenticate('jwt')],
-              get: [addFlagToParams],
-              find: [data.safeFindMSSQL, addFlagToParams],
-              create: [data.withIdUUIDV4],
-              patch:[addFlagToParams],
+              get: [withQueryParams],
+              find: [data.safeFindMSSQL, withQueryParams],
+              create: [
+                data.withIdUUIDV4,
+                withQueryParams,
+                withAuthors({ author: 'createdBy', role: 'creatorRole' }),
+              ],
+              patch: [
+                withQueryParams,
+                withAuthors({ author: 'updatedBy', role: 'updaterRole' }),
+              ],
             },
             after: {
-              get: [withAuthors],
-              find: [withAuthors],
-              create: [withAuthors],
-              patch: [withAuthors],
+              get: [withAuthorJoins],
+              find: [withAuthorJoins],
+              create: [withAuthorJoins],
+              patch: [withAuthorJoins],
             },
           },
         })
@@ -248,35 +262,24 @@ export const api = (z, props) =>
                     })
                     if (registryFile) {
                       const [patchError, result] = await a.of(
-                        ctx.app.service(SERVICES.REGISTRY).patch(
-                          registryFile[dbId],
-                          t.merge(nextMeta, {
-                            updatedBy: t.pathOr(
-                              null,
-                              ['params', 'user', dbId],
-                              ctx
-                            ),
-                            updaterRole: t.at('params.user.role', ctx),
-                          }),
-                          { includeAuthors: true }
-                        )
+                        ctx.app
+                          .service(SERVICES.REGISTRY)
+                          .patch(registryFile[dbId], nextMeta, {
+                            includeAuthors: true,
+                            user: t.at('params.user', ctx),
+                          })
                       )
                       if (t.not(patchError)) {
                         ctx.result.meta = result
                       }
                     } else {
                       const [createError, result] = await a.of(
-                        ctx.app.service(SERVICES.REGISTRY).create(
-                          t.merge(nextMeta, {
-                            createdBy: t.pathOr(
-                              null,
-                              ['params', 'user', dbId],
-                              ctx
-                            ),
-                            creatorRole: t.at('params.user.role', ctx),
-                          }),
-                          { includeAuthors: true }
-                        )
+                        ctx.app
+                          .service(SERVICES.REGISTRY)
+                          .create(nextMeta, {
+                            includeAuthors: true,
+                            user: t.at('params.user', ctx),
+                          })
                       )
                       if (t.not(createError)) {
                         ctx.result.meta = result

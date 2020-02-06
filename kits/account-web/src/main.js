@@ -166,7 +166,6 @@ export const authState = z.fn((t, a) => (boxName = 'account', props = {}) => {
         fx(
           [box.actions.boot, box.actions.connection],
           (ctx, dispatch, done) => {
-            console.log('BoX NAME', boxName)
             const state = ctx.getState()
             const connected = t.path([boxName, 'connected'], state)
             if (

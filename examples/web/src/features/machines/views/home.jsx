@@ -340,6 +340,7 @@ export const home = mx.fn((t, a, rx) =>
                                     fill: 'ghost-solid',
                                     size: 'xs',
                                     color: 'blue-500',
+                                    margin: { left: 1 },
                                   },
                                   {
                                     icon: 'arrow-circle-right',
@@ -347,6 +348,7 @@ export const home = mx.fn((t, a, rx) =>
                                     fill: 'ghost-solid',
                                     size: 'xs',
                                     color: 'blue-500',
+                                    margin: { left: 1 },
                                   },
                                 ]}
                               />

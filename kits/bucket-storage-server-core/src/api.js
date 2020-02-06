@@ -3,6 +3,7 @@ import FsBlobStore from 'fs-blob-store'
 import Dauria from 'dauria'
 import Multer from 'multer'
 import mime from 'mime-types'
+import pt from 'path'
 
 // ctx
 import { SERVICES, PATHS } from './context'
@@ -51,9 +52,6 @@ export const api = (z, props) =>
             ctx.result = t.omit(['uri'], ctx.result)
           }
           return ctx
-        }
-        const zipOrNil = mimeType => {
-          return t.includes('zip', t.to.lowerCase(mimeType)) ? 'zip' : null
         }
         const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
         const withAuthors = keys => ctx => {
@@ -204,8 +202,13 @@ export const api = (z, props) =>
                     const dataUri = t.path(PATHS.DATA_URI, ctx)
                     const meta = safeMeta(ctx)
                     if (t.and(t.not(dataUri), t.path(PATHS.PARAMS_FILE, ctx))) {
-                      const mimeType = t.path(PATHS.PARAMS_FILE_MIME, ctx)
-                      const ext = mimeType ? mime.extension(mimeType) : null
+                      const mimeType = t.pathOr('', PATHS.PARAMS_FILE_MIME, ctx)
+                      const originalName = decodeURIComponent(
+                        t.pathOr('', PATHS.PARAMS_FILE_ORIGINAL, ctx)
+                      )
+                      const ext = t.noLen(originalName)
+                        ? mime.extension(mimeType)
+                        : pt.extname(originalName)
                       ctx.data = {
                         uri: Dauria.getBase64DataURI(
                           t.path(PATHS.PARAMS_FILE_BUFFER, ctx),
@@ -213,24 +216,23 @@ export const api = (z, props) =>
                         ),
                         meta: t.merge(meta, {
                           mimeType,
-                          ext: t.not(ext) ? zipOrNil(mimeType) : ext,
-                          originalName: decodeURIComponent(
-                            t.pathOr('', PATHS.PARAMS_FILE_ORIGINAL, ctx)
-                          ),
+                          ext: t.replace('.', '', ext),
+                          originalName,
                           encoding: t.path(PATHS.PARAMS_FILE_ENCODING, ctx),
                           size: t.path(PATHS.PARAMS_FILE_SIZE, ctx),
                         }),
                       }
                     } else if (dataUri) {
                       const content = Dauria.parseDataURI(dataUri)
-                      const ext = content.MIME
+                      const originalName = dataURIName(dataUri)
+                      const ext = t.noLen(originalName)
                         ? mime.extension(content.MIME)
-                        : null
+                        : pt.extname(originalName)
                       ctx.data = t.merge(ctx.data, {
                         meta: t.merge(meta, {
                           mimeType: content.MIME,
-                          ext: t.not(ext) ? zipOrNil(content.MIME) : ext,
-                          originalName: dataURIName(dataUri),
+                          ext: t.replace('.', '', ext),
+                          originalName,
                           encoding: content.mediaType,
                           size: content.buffer.length,
                         }),

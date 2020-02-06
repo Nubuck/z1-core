@@ -472,7 +472,7 @@ export const renderButton = fn(t => props => {
         fills(fill),
         buttonColor(
           fill,
-          t.anyOf([loading, disabled, inactive, selected]),
+          t.anyOf([loading, inactive, selected]),
           colors,
           color
         ),

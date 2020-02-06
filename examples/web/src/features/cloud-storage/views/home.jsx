@@ -101,7 +101,7 @@ const modals = mx.fn(t => ({
           color: 'blue-500',
           margin: { right: 2 },
           height: 10,
-          loading: t.eq('loading', t.at('state.status', props)),
+          disabled: t.eq('loading', t.at('state.status', props)),
           onClick: () => props.mutations.modalChange({ open: false }),
         },
         {
@@ -423,7 +423,7 @@ export const home = mx.fn((t, a, rx) =>
               'surname',
               creator
             )}`,
-            icon: 'user',
+            icon: 'user-circle',
           }),
           machine: () => ({
             name: t.atOr('Unknown', 'alias', creator),
@@ -481,10 +481,11 @@ export const home = mx.fn((t, a, rx) =>
                 <ctx.VList
                   key="file-list"
                   items={t.atOr([], 'state.data.files', props)}
-                  rowHeight={79}
+                  rowHeight={80}
                   render={(file, rowProps) => {
                     const creator = creatorProps(t.atOr({}, 'creator', file))
                     const hasAlias = t.notNil(file.alias)
+                    const fileIcon = ctx.icons.file(file.ext)
                     return (
                       <ctx.ListItem
                         key={rowProps.key}
@@ -502,10 +503,10 @@ export const home = mx.fn((t, a, rx) =>
                           },
                         }}
                         avatar={{
-                          icon: ctx.icons.file(file.ext),
+                          icon: fileIcon.name,
                           size: 'md',
                           fill: 'ghost',
-                          color: 'blue-500',
+                          color: fileIcon.color,
                         }}
                         caption={{
                           label: {
@@ -550,14 +551,25 @@ export const home = mx.fn((t, a, rx) =>
                           },
                         }}
                         subtitle={{
-                          icon: { name: creator.icon, size: 'xl' },
+                          icon: {
+                            name: creator.icon,
+                            size: 'xl',
+                            color: 'gray-500',
+                          },
                           label: {
                             text: creator.name,
-                            fontSize: 'sm',
+                            fontSize: 'xs',
                             letterSpacing: 'wide',
                             margin: { left: 2 },
+                            color: 'gray-400',
                           },
-                          color: 'gray-500',
+                          info: {
+                            text: 'creator',
+                            fontSize: 'xs',
+                            letterSpacing: 'wide',
+                            margin: { left: 2 },
+                            color: 'gray-500',
+                          },
                         }}
                         stamp={{
                           icon: 'clock',
@@ -597,7 +609,7 @@ export const home = mx.fn((t, a, rx) =>
                             size: 'xs',
                             color: 'blue-500',
                             margin: { left: 1 },
-                            loading: t.eq(
+                            disabled: t.eq(
                               ctx.status.loading,
                               t.at('state.status', props)
                             ),
@@ -615,7 +627,7 @@ export const home = mx.fn((t, a, rx) =>
                             size: 'xs',
                             color: 'red-500',
                             margin: { left: 1 },
-                            loading: t.eq(
+                            disabled: t.eq(
                               ctx.status.loading,
                               t.at('state.status', props)
                             ),
@@ -721,14 +733,15 @@ export const home = mx.fn((t, a, rx) =>
                                     props
                                   )
                                   const noAlias = t.isNil(file.alias)
+                                  const fileIcon = ctx.icons.file(file.ext)
                                   return (
                                     <ctx.IconLabel
                                       alignSelf="start"
                                       margin={{ y: 1 }}
                                       icon={{
-                                        name: ctx.icons.file(file.ext),
+                                        name: fileIcon.name,
                                         size: '4xl',
-                                        color: 'blue-500',
+                                        color: fileIcon.color,
                                       }}
                                       label={{
                                         text: t.atOr(
@@ -788,7 +801,7 @@ export const home = mx.fn((t, a, rx) =>
                                 flexDirection: 'row',
                                 margin: { bottom: 3 },
                               },
-                              info: { x: 'center' },
+                              label: { x: 'center', y: 'center' },
                             }}
                             icon={{
                               name: 'exclamation-triangle',
@@ -802,7 +815,7 @@ export const home = mx.fn((t, a, rx) =>
                               letterSpacing: 'wide',
                               margin: { left: 2 },
                             }}
-                            info={{
+                            label={{
                               dangerouslySetInnerHTML: {
                                 __html: `<span>
                                 You are about to remove the file

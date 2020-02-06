@@ -82,22 +82,32 @@ const fileIcon = z.fn(t =>
     t.to.lowerCase,
     ext =>
       t.eq(ext, 'csv')
-        ? 'file-csv'
+        ? { name: 'file-csv', color: 'green-500' }
         : t.eq(ext, 'pdf')
-        ? 'file-pdf'
+        ? { name: 'file-pdf', color: 'red-400' }
         : t.includes(ext, ['png', 'jpg', 'jpeg', 'gif'])
-        ? 'file-image'
+        ? { name: 'file-image', color: 'purple-400' }
         : t.includes(ext, ['zip', 'rar', 'gzip', '7zip'])
-        ? 'file-archive'
-        : t.includes(ext, ['svg', 'js', 'json', 'css', 'html', 'py'])
-        ? 'file-code'
+        ? { name: 'file-archive', color: 'yellow-500' }
+        : t.includes(ext, [
+            'svg',
+            'js',
+            'jsx',
+            'ts',
+            'tsx',
+            'json',
+            'css',
+            'html',
+            'py',
+          ])
+        ? { name: 'file-code', color: 'yellow-400' }
         : t.includes(ext, ['doc', 'docx', 'word'])
-        ? 'file-word'
+        ? { name: 'file-word', color: 'blue-400' }
         : t.includes(ext, ['xls', 'xlsx', 'excel'])
-        ? 'file-excel'
+        ? { name: 'file-excel', color: 'green-400' }
         : t.includes(ext, ['ppt', 'pptx', 'powerpoint'])
-        ? 'file-powerpoint'
-        : 'file-alt'
+        ? { name: 'file-powerpoint', color: 'orange-400' }
+        : { name: 'file-alt', color: 'gray-200' }
   )
 )
 

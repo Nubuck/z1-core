@@ -78,7 +78,7 @@ const buttonsBase = {
     padding: {
       top: 0,
       x: 4,
-      bottom: 3,
+      bottom: 4,
     },
   },
 }
@@ -142,7 +142,7 @@ const renderModal = z.fn(t => props => {
             <When
               is={t.hasLen(buttons)}
               render={() =>
-                buttonsBase(
+                renderSlot(
                   Row,
                   buttonsBase,
                   buttonSlot,

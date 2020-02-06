@@ -3,50 +3,108 @@ import mx from '@z1/lib-feature-macros'
 import sc from '@z1/lib-ui-schema'
 
 // parts
-const uploadForm = props =>
-  sc.form.create((f, k) =>
-    f({ type: k.object }, [
-      f('alias', {
-        title: 'File Alias',
-        type: k.string,
-        required: true,
-        ui: {
-          [k.ui.placeholder]: 'File alias',
-          [k.ui.disabled]: props.disabled,
-        },
-      }),
-      f('uri', {
-        title: 'File to upload',
-        type: k.string,
-        format: k.format.dataUrl,
-        required: true,
-        ui: {
-          [k.ui.placeholder]: 'Select the file to upload',
-          [k.ui.disabled]: props.disabled,
-        },
-      }),
-    ])
-  )
+const forms = {
+  upload: props =>
+    sc.form.create((f, k) =>
+      f({ type: k.object }, [
+        f('alias', {
+          title: 'File Alias',
+          type: k.string,
+          required: true,
+          ui: {
+            [k.ui.placeholder]: 'Enter an alias for this file',
+            [k.ui.disabled]: props.disabled,
+          },
+        }),
+        f('uri', {
+          title: 'File to upload',
+          type: k.string,
+          format: k.format.dataUrl,
+          required: true,
+          ui: {
+            [k.ui.placeholder]: 'Select the file to upload',
+            [k.ui.disabled]: props.disabled,
+          },
+        }),
+      ])
+    ),
+  file: props =>
+    sc.form.create((f, k) =>
+      f({ type: k.object }, [
+        f('alias', {
+          title: 'File Alias',
+          type: k.string,
+          required: true,
+          ui: {
+            [k.ui.placeholder]: 'Enter an alias for this file',
+            [k.ui.disabled]: props.disabled,
+          },
+        }),
+      ])
+    ),
+}
 
 // main
 export const home = mx.fn((t, a, rx) =>
   mx.view.create('home', {
     state(ctx) {
+      const modalTitle = t.runMatch({
+        _: () => ({ icon: null, label: null }),
+        upload: () => ({
+          icon: {
+            name: 'cloud-upload',
+            color: 'blue-500',
+            fontSize: '2xl',
+          },
+          label: {
+            text: 'File Upload',
+            color: 'blue-500',
+            fontSize: 'lg',
+          },
+        }),
+        file: () => ({
+          icon: {
+            name: 'gear',
+            color: 'blue-500',
+            fontSize: '2xl',
+          },
+          label: {
+            text: 'Edit file',
+            color: 'blue-500',
+            fontSize: 'lg',
+          },
+        }),
+        remove: () => ({
+          icon: {
+            name: 'trash',
+            color: 'red-500',
+            fontSize: '2xl',
+          },
+          label: {
+            text: 'Remove file',
+            color: 'red-500',
+            fontSize: 'lg',
+          },
+        }),
+      })
+      const modalContent = next =>
+        t.omit(['modal', 'id', 'open', 'icon', 'title'], next)
       return {
         initial: {
           data: {
             url: null,
             files: [],
           },
-          form: {
-            upload: {
-              data: {},
-              ui: uploadForm({ disabled: false }),
-            },
-          },
+          form: t.mapObjIndexed(
+            form => ({ data: {}, ui: form({ disabled: false }) }),
+            forms
+          ),
           modal: {
             open: false,
-            title: { icon: 'upload', label: 'File Upload' },
+            active: null,
+            id: null,
+            title: {},
+            content: {},
           },
         },
         data(props) {
@@ -157,23 +215,54 @@ export const home = mx.fn((t, a, rx) =>
           )
         },
         form(props) {
+          const active = t.eq(ctx.event.modalChange, props.event)
+            ? t.atOr('none', 'next.modal', props)
+            : t.atOr('none', 'modal.active', props)
+          const form = t.at(active, forms)
+          if (t.isNil(form)) {
+            return null
+          }
           return t.runMatch({
             _: () => null,
+            [ctx.event.modalChange]: () => {
+              const id = t.at('next.id', props)
+              if (t.isNil(id)) {
+                return {
+                  [active]: {
+                    data: {},
+                    ui: form({ disabled: false }),
+                  },
+                }
+              }
+              const data = t.find(
+                file => t.eq(file._id, id),
+                t.atOr([], 'data.files', props)
+              )
+              if (t.isNil(data)) {
+                return t.at('form.file', props)
+              }
+              return {
+                [active]: {
+                  data,
+                  ui: form({ disabled: false }),
+                },
+              }
+            },
             [ctx.event.formTransmit]: () => {
               return {
-                upload: {
+                [active]: {
                   data: t.atOr({}, 'next.data', props),
-                  ui: uploadForm({ disabled: true }),
+                  ui: form({ disabled: true }),
                 },
               }
             },
             [ctx.event.formTransmitComplete]: () => {
               return {
-                upload: {
+                [active]: {
                   data: t.notNil(t.at('next.error', props))
-                    ? t.atOr({}, 'form.upload.data', props)
+                    ? t.pathOr({}, ['form', active, 'data'], props)
                     : {},
-                  ui: uploadForm({ disabled: false }),
+                  ui: form({ disabled: false }),
                 },
               }
             },
@@ -199,15 +288,26 @@ export const home = mx.fn((t, a, rx) =>
           return t.runMatch({
             _: () => props.modal,
             [ctx.event.modalChange]: () => {
+              const active = t.at('next.modal', props)
               return t.merge(props.modal, {
+                active,
                 open: t.atOr(false, 'next.open', props),
+                id: t.atOr(null, 'next.id', props),
+                title: modalTitle(active),
+                content: modalContent(props.next),
               })
             },
             [ctx.event.formTransmitComplete]: () => {
               const error = t.at('next.error', props)
-              return t.merge(props.modal, {
-                open: t.notNil(error),
-              })
+              return t.notNil(error)
+                ? t.merge(props.modal, {
+                    open: true,
+                    active: null,
+                    id: null,
+                    title: {},
+                    content: {},
+                  })
+                : props.modal
             },
           })(props.event)
         },
@@ -216,6 +316,7 @@ export const home = mx.fn((t, a, rx) =>
     ui(ctx) {
       const creatorProps = (creator = {}) =>
         t.runMatch({
+          _: () => ({ name: 'Unknown', icon: 'user' }),
           user: () => ({
             name: `${t.atOr('Unknown', 'name', creator)} ${t.atOr(
               '',
@@ -228,7 +329,6 @@ export const home = mx.fn((t, a, rx) =>
             name: t.atOr('Unknown', 'alias', creator),
             icon: ctx.icons.login(creator.role),
           }),
-          _: () => ({ name: 'Unknown', icon: 'user' }),
         })(t.atOr('user', 'type', creator))
       return props => {
         const status = t.at('state.status', props)
@@ -420,77 +520,173 @@ export const home = mx.fn((t, a, rx) =>
                   }}
                 />
                 <ctx.Modal
-                  title={{
-                    icon: {
-                      name: 'cloud-upload',
-                      color: 'blue-500',
-                      fontSize: '2xl',
-                    },
-                    label: {
-                      text: 'File Upload',
-                      color: 'blue-500',
-                      fontSize: 'lg',
-                    },
-                  }}
+                  title={t.at('state.modal.title', props)}
                   open={t.atOr(false, 'state.modal.open', props)}
                   onClose={() => props.mutations.modalChange({ open: false })}
+                  slots={{
+                    buttons: {
+                      x: 'center',
+                    },
+                  }}
+                  buttons={
+                    t.neq(
+                      'remove',
+                      t.atOr('upload', 'state.modal.active', props)
+                    )
+                      ? []
+                      : [
+                          {
+                            label: { text: 'Cancel' },
+                            fill: 'ghost-solid',
+                            size: 'sm',
+                            color: 'blue-500',
+                            margin: { right: 2 },
+                            height: 10,
+                            onClick: () =>
+                              props.mutations.modalChange({ open: false }),
+                          },
+                          {
+                            reverse: true,
+                            icon: 'trash',
+                            label: { text: 'Confirm' },
+                            fill: 'outline',
+                            size: 'sm',
+                            color: 'red-500',
+                            height: 10,
+                          },
+                        ]
+                  }
                 >
-                  <ctx.IconLabel
-                    slots={{
-                      label: { x: 'center' },
-                    }}
-                    label={{
-                      text:
-                        'Enter your file alias below and select a file to upload to continue.',
-                      fontSize: 'lg',
-                      fontWeight: 'medium',
-                      letterSpacing: 'wide',
-                    }}
-                  />
-                  <ctx.When
-                    is={t.notNil(props.state.error)}
-                    render={() => (
-                      <ctx.Alert
-                        icon="exclamation-triangle"
-                        message={t.atOr(
-                          'Upload failed',
-                          'state.error.message',
+                  <ctx.Match
+                    value={t.atOr('upload', 'state.modal.active', props)}
+                    render={{
+                      _: () => {
+                        const active = t.atOr(
+                          'upload',
+                          'state.modal.active',
                           props
-                        )}
-                        color="orange-500"
-                        margin={{ top: 5 }}
-                        x="center"
-                      />
-                    )}
+                        )
+                        return (
+                          <React.Fragment>
+                            <ctx.IconLabel
+                              slots={{
+                                label: { x: 'center' },
+                              }}
+                              label={{
+                                text: t.eq('upload', active)
+                                  ? 'Enter your file alias below and select a file to upload to continue.'
+                                  : 'Enter your file alias below to continue.',
+                                fontSize: 'lg',
+                                fontWeight: 'medium',
+                                letterSpacing: 'wide',
+                              }}
+                            />
+                            <ctx.When
+                              is={t.notNil(props.state.error)}
+                              render={() => (
+                                <ctx.Alert
+                                  icon="exclamation-triangle"
+                                  message={t.atOr(
+                                    'Operation failed',
+                                    'state.error.message',
+                                    props
+                                  )}
+                                  color="orange-500"
+                                  margin={{ top: 5 }}
+                                  x="center"
+                                />
+                              )}
+                            />
+                            <ctx.Form
+                              schema={t.path(
+                                ['state', 'form', active, 'ui', 'schema'],
+                                props
+                              )}
+                              uiSchema={t.path(
+                                ['state', 'form', active, 'ui', 'uiSchema'],
+                                props
+                              )}
+                              formData={t.path(
+                                ['state', 'form', active, 'data'],
+                                props
+                              )}
+                              onSubmit={payload =>
+                                props.mutations.formTransmit({
+                                  data: payload.formData,
+                                })
+                              }
+                              x="center"
+                            >
+                              <ctx.Row
+                                x="center"
+                                y="center"
+                                margin={{ top: 3 }}
+                              >
+                                <ctx.Button
+                                  reverse
+                                  label="Continue"
+                                  icon="arrow-circle-right"
+                                  type="submit"
+                                  size="md"
+                                  shape="pill"
+                                  fill="outline"
+                                  colors={{ on: 'blue-500', off: 'yellow-500' }}
+                                  loading={t.eq(
+                                    t.at('state.status', props),
+                                    ctx.status.loading
+                                  )}
+                                />
+                              </ctx.Row>
+                            </ctx.Form>
+                          </React.Fragment>
+                        )
+                      },
+                      remove: () => {
+                        return (
+                          <ctx.IconLabel
+                            flexDirection="col"
+                            margin={{ bottom: 3 }}
+                            slots={{
+                              label: { x: 'center' },
+                              label: { x: 'center' },
+                            }}
+                            icon={{
+                              name: 'exclamation-triangle',
+                              size: '4xl',
+                              color: 'red-500',
+                            }}
+                            label={{
+                              text: `Are you sure?`,
+                              fontSize: '2xl',
+                              fontWeight: 'medium',
+                              letterSpacing: 'wide',
+                              margin: { bottom: 3 },
+                              color: 'red-500',
+                            }}
+                            info={{
+                              dangerouslySetInnerHTML: {
+                                __html: `<span>
+                                You are about to remove the file
+                                <span class="font-bold px-1 break-all">
+                                ${t.atOr('', 'state.modal.content.name', props)}
+                                </span>
+                                which cannot be undone.
+                                </span>
+                                <br/>
+                                <span>Please confirm below to continue</span>`,
+                              },
+                              fontSize: 'lg',
+                              fontWeight: 'light',
+                              letterSpacing: 'wide',
+                              wordBreak: 'words',
+                              textAlignX: 'center',
+                              flexDirection: 'col',
+                            }}
+                          />
+                        )
+                      },
+                    }}
                   />
-                  <ctx.Form
-                    schema={t.at('state.form.upload.ui.schema', props)}
-                    uiSchema={t.at('state.form.upload.ui.uiSchema', props)}
-                    formData={t.at('state.form.upload.data', props)}
-                    onSubmit={payload =>
-                      props.mutations.formTransmit({
-                        data: payload.formData,
-                      })
-                    }
-                    x="center"
-                  >
-                    <ctx.Row x="center" y="center" margin={{ top: 3 }}>
-                      <ctx.Button
-                        reverse
-                        label="Continue"
-                        icon="arrow-circle-right"
-                        type="submit"
-                        size="md"
-                        shape="pill"
-                        fill="outline"
-                        colors={{ on: 'blue-500', off: 'yellow-500' }}
-                        loading={t.eq(
-                          t.at('state.status', props),
-                          ctx.status.loading
-                        )}
-                      />
-                    </ctx.Row>
-                  </ctx.Form>
                 </ctx.Modal>
               </React.Fragment>
             )}

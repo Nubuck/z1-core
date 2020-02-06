@@ -245,22 +245,22 @@ const circleSize = fn(t =>
     },
   })
 )
-const buttonSpacing = fn(t => (size, noIcon) =>
+const buttonSpacing = fn(t => size =>
   t.match({
     _: {
-      padding: { top: 1, bottom: noIcon ? 2 : 1, x: 2 },
+      padding: { top: 1, bottom: 1, x: 2 },
       fontSize: 'lg',
     },
     xs: {
-      padding: { top: 1, bottom: noIcon ? 2 : 1, x: 2 },
+      padding: { top: 1, bottom: 1, x: 2 },
       fontSize: 'sm',
     },
     sm: {
-      padding: { top: 1, bottom: noIcon ? 2 : 1, x: 2 },
+      padding: { top: 1, bottom: 1, x: 2 },
       fontSize: 'md',
     },
     lg: {
-      padding: { top: 2, bottom: noIcon ? 3 : 2, x: 3 },
+      padding: { top: 2, bottom: 2, x: 3 },
       fontSize: '2xl',
     },
     xl: {
@@ -467,7 +467,7 @@ export const renderButton = fn(t => props => {
       as: el,
       box: t.mergeAll([
         layout.container,
-        buttonSpacing(size, noIcon),
+        buttonSpacing(size),
         shapes(shape),
         fills(fill),
         buttonColor(

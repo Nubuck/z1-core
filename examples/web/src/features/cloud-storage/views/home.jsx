@@ -43,52 +43,81 @@ const forms = {
       ])
     ),
 }
+const modals = mx.fn(t => ({
+  title: t.runMatch({
+    _: () => ({ icon: null, label: null }),
+    upload: () => ({
+      icon: {
+        name: 'cloud-upload',
+        color: 'blue-500',
+        fontSize: '2xl',
+      },
+      label: {
+        text: 'File Upload',
+        color: 'blue-500',
+        fontSize: 'lg',
+      },
+    }),
+    file: () => ({
+      icon: {
+        name: 'gear',
+        color: 'blue-500',
+        fontSize: '2xl',
+      },
+      label: {
+        text: 'Edit file',
+        color: 'blue-500',
+        fontSize: 'lg',
+      },
+    }),
+    remove: () => ({
+      icon: {
+        name: 'trash',
+        color: 'red-500',
+        fontSize: '2xl',
+      },
+      label: {
+        text: 'Remove file',
+        color: 'red-500',
+        fontSize: 'lg',
+      },
+    }),
+  }),
+  content: next => t.omit(['modal', 'id', 'open', 'icon', 'title'], next),
+  buttons: props =>
+    t.neq('remove', t.atOr('upload', 'state.modal.active', props))
+      ? []
+      : [
+          {
+            label: { text: 'Cancel' },
+            fill: 'ghost-solid',
+            size: 'sm',
+            color: 'blue-500',
+            margin: { right: 2 },
+            height: 10,
+            onClick: () => props.mutations.modalChange({ open: false }),
+          },
+          {
+            reverse: true,
+            icon: 'trash',
+            label: { text: 'Confirm' },
+            fill: 'outline',
+            size: 'sm',
+            color: 'red-500',
+            height: 10,
+            onClick: () =>
+              props.mutations.formTransmit({
+                form: 'remove',
+                id: t.at('state.modal.id', props),
+              }),
+          },
+        ],
+}))
 
 // main
 export const home = mx.fn((t, a, rx) =>
   mx.view.create('home', {
     state(ctx) {
-      const modalTitle = t.runMatch({
-        _: () => ({ icon: null, label: null }),
-        upload: () => ({
-          icon: {
-            name: 'cloud-upload',
-            color: 'blue-500',
-            fontSize: '2xl',
-          },
-          label: {
-            text: 'File Upload',
-            color: 'blue-500',
-            fontSize: 'lg',
-          },
-        }),
-        file: () => ({
-          icon: {
-            name: 'gear',
-            color: 'blue-500',
-            fontSize: '2xl',
-          },
-          label: {
-            text: 'Edit file',
-            color: 'blue-500',
-            fontSize: 'lg',
-          },
-        }),
-        remove: () => ({
-          icon: {
-            name: 'trash',
-            color: 'red-500',
-            fontSize: '2xl',
-          },
-          label: {
-            text: 'Remove file',
-            color: 'red-500',
-            fontSize: 'lg',
-          },
-        }),
-      })
-      const modalContent = next =>
-        t.omit(['modal', 'id', 'open', 'icon', 'title'], next)
       return {
         initial: {
           data: {
@@ -269,20 +298,32 @@ export const home = mx.fn((t, a, rx) =>
           })(props.event)
         },
         async transmit(props) {
-          const data = t.at('form.upload.data', props)
-          const [bucketErr] = await a.of(props.api.upload(data))
-          if (bucketErr) {
-            return {
-              status: ctx.status.fail,
-              error: bucketErr,
-              data,
-            }
-          }
-          return {
-            status: props.status,
-            error: null,
-            data: {},
-          }
+          const transmitter = t.match({
+            _: async () => null,
+            upload: async () => {
+              const data = t.at('form.upload.data', props)
+              const [bucketErr] = await a.of(props.api.upload(data))
+              if (bucketErr) {
+                return {
+                  status: ctx.status.fail,
+                  error: bucketErr,
+                  data,
+                }
+              }
+              return {
+                status: props.status,
+                error: null,
+                data: {},
+              }
+            },
+            file: async () => {
+              return null
+            },
+            remove: async () => {
+              return null
+            },
+          })(t.at('modal.active', props))
+          return await transmitter()
         },
         modal(props) {
           return t.runMatch({
@@ -293,8 +334,8 @@ export const home = mx.fn((t, a, rx) =>
                 active,
                 open: t.atOr(false, 'next.open', props),
                 id: t.atOr(null, 'next.id', props),
-                title: modalTitle(active),
-                content: modalContent(props.next),
+                title: modals.title(active),
+                content: modals.content(props.next),
               })
             },
             [ctx.event.formTransmitComplete]: () => {
@@ -377,6 +418,7 @@ export const home = mx.fn((t, a, rx) =>
                   />
                 </ctx.Row>
                 <ctx.VList
+                  key="file-list"
                   items={t.atOr([], 'state.data.files', props)}
                   rowHeight={79}
                   render={(file, rowProps) => {
@@ -520,6 +562,7 @@ export const home = mx.fn((t, a, rx) =>
                   }}
                 />
                 <ctx.Modal
+                  key="view-modal"
                   title={t.at('state.modal.title', props)}
                   open={t.atOr(false, 'state.modal.open', props)}
                   onClose={() => props.mutations.modalChange({ open: false })}
@@ -528,34 +571,7 @@ export const home = mx.fn((t, a, rx) =>
                       x: 'center',
                     },
                   }}
-                  buttons={
-                    t.neq(
-                      'remove',
-                      t.atOr('upload', 'state.modal.active', props)
-                    )
-                      ? []
-                      : [
-                          {
-                            label: { text: 'Cancel' },
-                            fill: 'ghost-solid',
-                            size: 'sm',
-                            color: 'blue-500',
-                            margin: { right: 2 },
-                            height: 10,
-                            onClick: () =>
-                              props.mutations.modalChange({ open: false }),
-                          },
-                          {
-                            reverse: true,
-                            icon: 'trash',
-                            label: { text: 'Confirm' },
-                            fill: 'outline',
-                            size: 'sm',
-                            color: 'red-500',
-                            height: 10,
-                          },
-                        ]
-                  }
+                  buttons={modals.buttons(props)}
                 >
                   <ctx.Match
                     value={t.atOr('upload', 'state.modal.active', props)}
@@ -661,13 +677,12 @@ export const home = mx.fn((t, a, rx) =>
                               fontWeight: 'medium',
                               letterSpacing: 'wide',
                               margin: { bottom: 3 },
-                              color: 'red-500',
                             }}
                             info={{
                               dangerouslySetInnerHTML: {
                                 __html: `<span>
                                 You are about to remove the file
-                                <span class="font-bold px-1 break-all">
+                                <span class="font-bold px-1 break-all text-red-500">
                                 ${t.atOr('', 'state.modal.content.name', props)}
                                 </span>
                                 which cannot be undone.

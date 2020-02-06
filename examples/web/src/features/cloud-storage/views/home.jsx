@@ -4,44 +4,50 @@ import sc from '@z1/lib-ui-schema'
 
 // parts
 const forms = {
-  upload: props =>
-    sc.form.create((f, k) =>
-      f({ type: k.object }, [
-        f('alias', {
-          title: 'File Alias',
-          type: k.string,
-          required: true,
-          ui: {
-            [k.ui.placeholder]: 'Enter an alias for this file',
-            [k.ui.disabled]: props.disabled,
-          },
-        }),
-        f('uri', {
-          title: 'File to upload',
-          type: k.string,
-          format: k.format.dataUrl,
-          required: true,
-          ui: {
-            [k.ui.placeholder]: 'Select the file to upload',
-            [k.ui.disabled]: props.disabled,
-          },
-        }),
-      ])
-    ),
-  file: props =>
-    sc.form.create((f, k) =>
-      f({ type: k.object }, [
-        f('alias', {
-          title: 'File Alias',
-          type: k.string,
-          required: true,
-          ui: {
-            [k.ui.placeholder]: 'Enter an alias for this file',
-            [k.ui.disabled]: props.disabled,
-          },
-        }),
-      ])
-    ),
+  upload: {
+    entity: null,
+    ui: props =>
+      sc.form.create((f, k) =>
+        f({ type: k.object }, [
+          f('alias', {
+            title: 'File Alias',
+            type: k.string,
+            required: true,
+            ui: {
+              [k.ui.placeholder]: 'Enter an alias for this file',
+              [k.ui.disabled]: props.disabled,
+            },
+          }),
+          f('uri', {
+            title: 'File to upload',
+            type: k.string,
+            format: k.format.dataUrl,
+            required: true,
+            ui: {
+              [k.ui.placeholder]: 'Select the file to upload',
+              [k.ui.disabled]: props.disabled,
+            },
+          }),
+        ])
+      ),
+  },
+  file: {
+    entity: 'files',
+    ui: props =>
+      sc.form.create((f, k) =>
+        f({ type: k.object }, [
+          f('alias', {
+            title: 'File Alias',
+            type: k.string,
+            required: true,
+            ui: {
+              [k.ui.placeholder]: 'Enter an alias for this file',
+              [k.ui.disabled]: props.disabled,
+            },
+          }),
+        ])
+      ),
+  },
 }
 const modals = mx.fn(t => ({
   title: t.runMatch({
@@ -85,33 +91,36 @@ const modals = mx.fn(t => ({
   }),
   content: next => t.omit(['modal', 'id', 'open', 'icon', 'title'], next),
   buttons: props =>
-    t.neq('remove', t.atOr('upload', 'state.modal.active', props))
-      ? []
-      : [
-          {
-            label: { text: 'Cancel' },
-            fill: 'ghost-solid',
-            size: 'sm',
-            color: 'blue-500',
-            margin: { right: 2 },
-            height: 10,
-            onClick: () => props.mutations.modalChange({ open: false }),
-          },
-          {
-            reverse: true,
-            icon: 'trash',
-            label: { text: 'Confirm' },
-            fill: 'outline',
-            size: 'sm',
-            color: 'red-500',
-            height: 10,
-            onClick: () =>
-              props.mutations.formTransmit({
-                form: 'remove',
-                id: t.at('state.modal.id', props),
-              }),
-          },
-        ],
+    t.runMatch({
+      _: () => [],
+      remove: () => [
+        {
+          label: { text: 'Cancel' },
+          fill: 'ghost-solid',
+          size: 'sm',
+          color: 'blue-500',
+          margin: { right: 2 },
+          height: 10,
+          loading: t.eq('loading', t.at('state.status', props)),
+          onClick: () => props.mutations.modalChange({ open: false }),
+        },
+        {
+          reverse: true,
+          icon: 'trash',
+          label: { text: 'Confirm' },
+          fill: 'outline',
+          size: 'sm',
+          color: 'red-500',
+          height: 10,
+          loading: t.eq('loading', t.at('state.status', props)),
+          onClick: () =>
+            props.mutations.formTransmit({
+              form: 'remove',
+              id: t.at('state.modal.id', props),
+            }),
+        },
+      ],
+    })(t.atOr('upload', 'state.modal.active', props)),
 }))
 
 // main
@@ -125,7 +134,11 @@ export const home = mx.fn((t, a, rx) =>
             files: [],
           },
           form: t.mapObjIndexed(
-            form => ({ data: {}, ui: form({ disabled: false }) }),
+            form => ({
+              entity: form.entity,
+              data: {},
+              ui: form.ui({ disabled: false }),
+            }),
             forms
           ),
           modal: {
@@ -251,48 +264,49 @@ export const home = mx.fn((t, a, rx) =>
           if (t.isNil(form)) {
             return null
           }
+          const activeForm = t.path(['form', active], props)
           return t.runMatch({
             _: () => null,
             [ctx.event.modalChange]: () => {
               const id = t.at('next.id', props)
-              if (t.isNil(id)) {
+              if (t.or(t.isNil(id), t.isNil(t.at('entity', activeForm)))) {
                 return {
-                  [active]: {
+                  [active]: t.merge(activeForm, {
                     data: {},
-                    ui: form({ disabled: false }),
-                  },
+                    ui: form.ui({ disabled: false }),
+                  }),
                 }
               }
               const data = t.find(
-                file => t.eq(file._id, id),
-                t.atOr([], 'data.files', props)
+                entity => t.eq(entity._id, id),
+                t.pathOr([], ['data', activeForm.entity], props)
               )
               if (t.isNil(data)) {
-                return t.at('form.file', props)
+                return activeForm
               }
               return {
-                [active]: {
+                [active]: t.merge(activeForm, {
                   data,
-                  ui: form({ disabled: false }),
-                },
+                  ui: form.ui({ disabled: false }),
+                }),
               }
             },
             [ctx.event.formTransmit]: () => {
               return {
-                [active]: {
+                [active]: t.merge(activeForm, {
                   data: t.atOr({}, 'next.data', props),
-                  ui: form({ disabled: true }),
-                },
+                  ui: form.ui({ disabled: true }),
+                }),
               }
             },
             [ctx.event.formTransmitComplete]: () => {
               return {
-                [active]: {
+                [active]: t.merge(activeForm, {
                   data: t.notNil(t.at('next.error', props))
                     ? t.pathOr({}, ['form', active, 'data'], props)
                     : {},
-                  ui: form({ disabled: false }),
-                },
+                  ui: form.ui({ disabled: false }),
+                }),
               }
             },
           })(props.event)
@@ -317,6 +331,32 @@ export const home = mx.fn((t, a, rx) =>
               }
             },
             file: async () => {
+              const data = t.at('form.file.data', props)
+              const payload = t.pick(['_id', 'alias'], data)
+              if (t.isNil(payload._id)) {
+                return null
+              }
+              const [fileErr] = await a.of(
+                props.api
+                  .service('bucket-registry')
+                  .patch(
+                    payload._id,
+                    { alias: payload.alias },
+                    { includeAuthors: true }
+                  )
+              )
+              if (fileErr) {
+                return {
+                  status: ctx.status.fail,
+                  error: fileErr,
+                  data,
+                }
+              }
+              return {
+                status: props.status,
+                error: null,
+                data: {},
+              }
               return null
             },
             remove: async () => {
@@ -339,10 +379,9 @@ export const home = mx.fn((t, a, rx) =>
               })
             },
             [ctx.event.formTransmitComplete]: () => {
-              const error = t.at('next.error', props)
-              return t.notNil(error)
+              return t.isNil(t.at('next.error', props))
                 ? t.merge(props.modal, {
-                    open: true,
+                    open: false,
                     active: null,
                     id: null,
                     title: {},
@@ -376,7 +415,10 @@ export const home = mx.fn((t, a, rx) =>
         return (
           <ctx.Page
             key="cloud-storage"
-            loading={t.or(t.eq('waiting', status), t.eq('init', status))}
+            loading={t.or(
+              t.eq(ctx.status.waiting, status),
+              t.eq(ctx.status.init, status)
+            )}
             render={() => (
               <React.Fragment>
                 <ctx.Row key="title-bar" margin={{ bottom: 4 }}>
@@ -408,7 +450,6 @@ export const home = mx.fn((t, a, rx) =>
                       },
                     }}
                     height={8}
-                    loading={t.eq(status, ctx.status.loading)}
                     onClick={() =>
                       props.mutations.modalChange({
                         open: true,
@@ -535,6 +576,10 @@ export const home = mx.fn((t, a, rx) =>
                             fill: 'ghost-solid',
                             size: 'xs',
                             color: 'blue-500',
+                            loading: t.eq(
+                              ctx.status.loading,
+                              t.at('state.status', props)
+                            ),
                             onClick: () =>
                               props.mutations.modalChange({
                                 open: true,
@@ -548,6 +593,10 @@ export const home = mx.fn((t, a, rx) =>
                             fill: 'ghost-solid',
                             size: 'xs',
                             color: 'red-500',
+                            loading: t.eq(
+                              ctx.status.loading,
+                              t.at('state.status', props)
+                            ),
                             onClick: () =>
                               props.mutations.modalChange({
                                 open: true,
@@ -648,8 +697,8 @@ export const home = mx.fn((t, a, rx) =>
                                   fill="outline"
                                   colors={{ on: 'blue-500', off: 'yellow-500' }}
                                   loading={t.eq(
-                                    t.at('state.status', props),
-                                    ctx.status.loading
+                                    ctx.status.loading,
+                                    t.at('state.status', props)
                                   )}
                                 />
                               </ctx.Row>

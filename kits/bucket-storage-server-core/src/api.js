@@ -135,6 +135,7 @@ export const api = (z, props) =>
               get: [addFlagToParams],
               find: [data.safeFindMSSQL, addFlagToParams],
               create: [data.withIdUUIDV4],
+              patch:[addFlagToParams],
             },
             after: {
               get: [withAuthors],

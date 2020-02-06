@@ -2,12 +2,16 @@ import React from 'react'
 import z from '@z1/lib-feature-box'
 import { Row } from '@z1/lib-ui-box-elements'
 import prettyBytes from 'pretty-bytes'
+/* NOTE: pluralize is 17kb - useful as it is use on when needed
+import pluralize from 'pluralize'
+*/
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
 // main
 export const bytes = prettyBytes
+/* export const plural = pluralize */
 export const dateFn = dayjs
 export const isRenderProp = z.fn(t => prop =>
   t.isNil(prop) ? false : t.isType(prop, 'function')

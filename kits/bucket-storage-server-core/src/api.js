@@ -52,6 +52,9 @@ export const api = (z, props) =>
           }
           return ctx
         }
+        const zipOrNil = mimeType => {
+          return t.includes('zip', t.to.lowerCase(mimeType)) ? 'zip' : null
+        }
         const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
         const withAuthors = keys => ctx => {
           ctx.data = t.merge(ctx.data, {
@@ -202,6 +205,7 @@ export const api = (z, props) =>
                     const meta = safeMeta(ctx)
                     if (t.and(t.not(dataUri), t.path(PATHS.PARAMS_FILE, ctx))) {
                       const mimeType = t.path(PATHS.PARAMS_FILE_MIME, ctx)
+                      const ext = mimeType ? mime.extension(mimeType) : null
                       ctx.data = {
                         uri: Dauria.getBase64DataURI(
                           t.path(PATHS.PARAMS_FILE_BUFFER, ctx),
@@ -209,7 +213,7 @@ export const api = (z, props) =>
                         ),
                         meta: t.merge(meta, {
                           mimeType,
-                          ext: mimeType ? mime.extension(mimeType) : null,
+                          ext: t.not(ext) ? zipOrNil(mimeType) : ext,
                           originalName: decodeURIComponent(
                             t.pathOr('', PATHS.PARAMS_FILE_ORIGINAL, ctx)
                           ),
@@ -219,12 +223,13 @@ export const api = (z, props) =>
                       }
                     } else if (dataUri) {
                       const content = Dauria.parseDataURI(dataUri)
+                      const ext = content.MIME
+                        ? mime.extension(content.MIME)
+                        : null
                       ctx.data = t.merge(ctx.data, {
                         meta: t.merge(meta, {
                           mimeType: content.MIME,
-                          ext: content.MIME
-                            ? mime.extension(content.MIME)
-                            : null,
+                          ext: t.not(ext) ? zipOrNil(content.MIME) : ext,
                           originalName: dataURIName(dataUri),
                           encoding: content.mediaType,
                           size: content.buffer.length,
@@ -274,12 +279,10 @@ export const api = (z, props) =>
                       }
                     } else {
                       const [createError, result] = await a.of(
-                        ctx.app
-                          .service(SERVICES.REGISTRY)
-                          .create(nextMeta, {
-                            includeAuthors: true,
-                            user: t.at('params.user', ctx),
-                          })
+                        ctx.app.service(SERVICES.REGISTRY).create(nextMeta, {
+                          includeAuthors: true,
+                          user: t.at('params.user', ctx),
+                        })
                       )
                       if (t.not(createError)) {
                         ctx.result.meta = result

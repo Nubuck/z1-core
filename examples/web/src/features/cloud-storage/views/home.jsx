@@ -106,11 +106,14 @@ const modals = mx.fn(t => ({
         },
         {
           reverse: true,
-          icon: 'trash',
+          icon: 'check-circle',
           label: { text: 'Confirm' },
           fill: 'outline',
           size: 'sm',
-          color: 'red-500',
+          colors: {
+            off: { content: 'red-500', border: 'red-500' },
+            on: { bg: 'green-500', border: 'green-500', content: 'white' },
+          },
           height: 10,
           loading: t.eq('loading', t.at('state.status', props)),
           onClick: () =>
@@ -312,7 +315,7 @@ export const home = mx.fn((t, a, rx) =>
           })(props.event)
         },
         async transmit(props) {
-          const transmitter = t.match({
+          return await t.runMatch({
             _: async () => null,
             upload: async () => {
               const data = t.at('form.upload.data', props)
@@ -381,7 +384,6 @@ export const home = mx.fn((t, a, rx) =>
               }
             },
           })(t.at('modal.active', props))
-          return await transmitter()
         },
         modal(props) {
           return t.runMatch({
@@ -677,7 +679,7 @@ export const home = mx.fn((t, a, rx) =>
                                     props
                                   )}
                                   color="orange-500"
-                                  margin={{ top: 5 }}
+                                  margin={{ top: 3 }}
                                   x="center"
                                 />
                               )}
@@ -702,6 +704,54 @@ export const home = mx.fn((t, a, rx) =>
                               }
                               x="center"
                             >
+                              <ctx.When
+                                is={t.eq(
+                                  'file',
+                                  t.at('state.modal.active', props)
+                                )}
+                                render={() => {
+                                  const file = t.pathOr(
+                                    {},
+                                    [
+                                      'state',
+                                      'form',
+                                      t.at('state.modal.active', props),
+                                      'data',
+                                    ],
+                                    props
+                                  )
+                                  const noAlias = t.isNil(file.alias)
+                                  return (
+                                    <ctx.IconLabel
+                                      alignSelf="start"
+                                      margin={{ y: 1 }}
+                                      icon={{
+                                        name: ctx.icons.file(file.ext),
+                                        size: '4xl',
+                                        color: 'blue-500',
+                                      }}
+                                      label={{
+                                        text: t.atOr(
+                                          file.originalName,
+                                          'alias',
+                                          file
+                                        ),
+                                        fontSize: noAlias ? 'md' : 'lg',
+                                        margin: noAlias ? null : { bottom: 1 },
+                                      }}
+                                      info={
+                                        noAlias
+                                          ? null
+                                          : {
+                                              text: file.originalName,
+                                              fontSize: 'sm',
+                                              color: 'gray-400',
+                                            }
+                                      }
+                                    />
+                                  )
+                                }}
+                              />
                               <ctx.Row
                                 x="center"
                                 y="center"
@@ -732,20 +782,25 @@ export const home = mx.fn((t, a, rx) =>
                             flexDirection="col"
                             margin={{ bottom: 3 }}
                             slots={{
-                              label: { x: 'center' },
-                              label: { x: 'center' },
+                              icon: {
+                                x: 'center',
+                                y: 'center',
+                                flexDirection: 'row',
+                                margin: { bottom: 3 },
+                              },
+                              info: { x: 'center' },
                             }}
                             icon={{
                               name: 'exclamation-triangle',
                               size: '4xl',
                               color: 'red-500',
                             }}
-                            label={{
+                            caption={{
                               text: `Are you sure?`,
-                              fontSize: '2xl',
+                              fontSize: 'lg',
                               fontWeight: 'medium',
                               letterSpacing: 'wide',
-                              margin: { bottom: 3 },
+                              margin: { left: 2 },
                             }}
                             info={{
                               dangerouslySetInnerHTML: {
@@ -759,7 +814,7 @@ export const home = mx.fn((t, a, rx) =>
                                 <br/>
                                 <span>Please confirm below to continue</span>`,
                               },
-                              fontSize: 'lg',
+                              fontSize: 'md',
                               fontWeight: 'light',
                               letterSpacing: 'wide',
                               wordBreak: 'words',

@@ -89,7 +89,7 @@ const modals = mx.fn(t => ({
       },
     }),
   }),
-  content: next => t.omit(['modal', 'id', 'open', 'icon', 'title'], next),
+  content: next => t.omit(['modal', 'id', 'open', 'title'], next),
   buttons: props =>
     t.runMatch({
       _: () => [],
@@ -165,6 +165,7 @@ export const home = mx.fn((t, a, rx) =>
                 }
               },
               [ctx.event.dataChange]: () => {
+                // events from subscribe
                 const change = t.at('next.change', props)
                 const file = t.at('next.file', props)
                 const files = t.at('data.files', props)
@@ -272,7 +273,8 @@ export const home = mx.fn((t, a, rx) =>
             _: () => null,
             [ctx.event.modalChange]: () => {
               const id = t.at('next.id', props)
-              if (t.or(t.isNil(id), t.isNil(t.at('entity', activeForm)))) {
+              const entity = t.at('entity', activeForm)
+              if (t.or(t.isNil(id), t.isNil(entity))) {
                 return {
                   [active]: t.merge(activeForm, {
                     data: {},
@@ -281,8 +283,8 @@ export const home = mx.fn((t, a, rx) =>
                 }
               }
               const data = t.find(
-                entity => t.eq(entity._id, id),
-                t.pathOr([], ['data', activeForm.entity], props)
+                current => t.eq(current._id, id),
+                t.pathOr([], ['data', entity], props)
               )
               if (t.isNil(data)) {
                 return activeForm
@@ -360,7 +362,6 @@ export const home = mx.fn((t, a, rx) =>
                 error: null,
                 data: {},
               }
-              return null
             },
             remove: async () => {
               const id = t.at('modal.id', props)
@@ -435,10 +436,7 @@ export const home = mx.fn((t, a, rx) =>
         return (
           <ctx.Page
             key="cloud-storage"
-            loading={t.or(
-              t.eq(ctx.status.waiting, status),
-              t.eq(ctx.status.init, status)
-            )}
+            loading={t.includes(status, [ctx.status.waiting, ctx.status.init])}
             render={() => (
               <React.Fragment>
                 <ctx.Row key="title-bar" margin={{ bottom: 4 }}>
@@ -717,19 +715,11 @@ export const home = mx.fn((t, a, rx) =>
                               x="center"
                             >
                               <ctx.When
-                                is={t.eq(
-                                  'file',
-                                  t.at('state.modal.active', props)
-                                )}
+                                is={t.eq('file', active)}
                                 render={() => {
                                   const file = t.pathOr(
                                     {},
-                                    [
-                                      'state',
-                                      'form',
-                                      t.at('state.modal.active', props),
-                                      'data',
-                                    ],
+                                    ['state', 'form', active, 'data'],
                                     props
                                   )
                                   const noAlias = t.isNil(file.alias)

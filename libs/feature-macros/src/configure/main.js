@@ -301,6 +301,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                 t.mergeAll([
                   context,
                   activeState,
+                  t.pick(['route', 'params'], boxState),
                   {
                     status: types.status.ready,
                     mutators,
@@ -333,7 +334,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
         // routes exit
         fx(
           [t.globrex('*/ROUTING/*').regex, z.routing.actions.notFound],
-          async (context, dispatch, done) => {
+          (context, dispatch, done) => {
             const state = context.getState()
             const prev = state.location.prev
             if (t.not(t.includes(prev.type, routeActionTypes))) {
@@ -352,7 +353,10 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                       status: t.includes(state.location.type, routeActionTypes)
                         ? 'active'
                         : 'inactive',
-                      active: { param: viewKey.param, view: viewKey.key },
+                      active: {
+                        param: t.at('param', viewKey || {}),
+                        view: t.at('key', viewKey || {}),
+                      },
                     },
                     routing,
                   ])
@@ -365,26 +369,31 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
         fx([actions.routeExit], async (context, dispatch, done) => {
           const boxState = t.at(boxName, context.getState())
           const activeView = t.at('action.payload.active.view', context)
-          const activeState = t.path(['views', activeView], boxState)
-          const activeMacro = viewMacros[activeView]
           if (t.isNil(activeMacro)) {
             done()
           } else {
-            await a.of(
-              activeMacro.exit(
-                t.mergeAll([
-                  context,
-                  activeState,
-                  {
-                    status: types.status.ready,
-                    mutators,
-                    next: context.action.payload,
-                    dispatch,
-                  },
-                ])
+            const activeState = t.path(['views', activeView], boxState)
+            const activeMacro = viewMacros[activeView]
+            if (t.isNil(activeMacro)) {
+              done()
+            } else {
+              await a.of(
+                activeMacro.exit(
+                  t.mergeAll([
+                    context,
+                    activeState,
+                    t.pick(['route', 'params'], boxState),
+                    {
+                      status: types.status.ready,
+                      mutators,
+                      next: context.action.payload,
+                      dispatch,
+                    },
+                  ])
+                )
               )
-            )
-            done()
+              done()
+            }
           }
         }),
         // form transmit
@@ -397,6 +406,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
               t.mergeAll([
                 context,
                 activeState,
+                t.pick(['route', 'params'], boxState),
                 {
                   status: types.status.ready,
                   mutators,

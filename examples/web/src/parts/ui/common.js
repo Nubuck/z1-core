@@ -82,7 +82,7 @@ const fileIcon = z.fn(t =>
     t.to.lowerCase,
     ext =>
       t.eq(ext, 'csv')
-        ? { name: 'file-csv', color: 'green-500' }
+        ? { name: 'file-csv', color: 'green-600' }
         : t.eq(ext, 'pdf')
         ? { name: 'file-pdf', color: 'red-400' }
         : t.includes(ext, ['png', 'jpg', 'jpeg', 'gif'])

@@ -219,6 +219,7 @@ export const api = (z, props) => {
               after: {
                 find: [withLogins],
                 get: [withLogins],
+                patch: [withLogins],
               },
             },
           })
@@ -234,6 +235,7 @@ export const api = (z, props) => {
                 after: {
                   find: [withMachine],
                   get: [withMachine],
+                  patch: [withMachine],
                 },
               },
             }

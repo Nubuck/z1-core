@@ -167,7 +167,7 @@ export const home = mx.fn((t, a, rx) =>
               [ctx.event.dataChange]: () => {
                 // events from subscribe
                 const change = t.at('next.change', props)
-                const file = t.at('next.file', props)
+                const file = t.at('next.data', props)
                 const files = t.at('data.files', props)
                 if (t.or(t.isNil(change), t.isNil(file))) {
                   return props.data
@@ -233,32 +233,39 @@ export const home = mx.fn((t, a, rx) =>
           }
         },
         subscribe(props) {
-          const bucketService = props.api.service('bucket-registry')
-          return rx.fromEvent(bucketService, 'created').pipe(
-            rx.merge(
-              rx.fromEvent(bucketService, 'patched').pipe(
-                rx.map(file => ({
-                  file,
-                  change: 'patched',
-                }))
-              ),
-              rx.fromEvent(bucketService, 'removed').pipe(
-                rx.map(file =>
-                  t.eq('patched', t.at('change', file))
-                    ? file
-                    : {
-                        file,
-                        change: 'removed',
-                      }
-                )
-              )
-            ),
-            rx.map(file =>
-              props.mutators.dataChange(
-                t.not(t.has('file')(file)) ? { file, change: 'created' } : file
-              )
-            )
-          )
+          // const bucketService = props.api.service('bucket-registry')
+          // return rx.fromEvent(bucketService, 'created').pipe(
+          //   rx.merge(
+          //     rx.fromEvent(bucketService, 'patched').pipe(
+          //       rx.map(file => ({
+          //         file,
+          //         change: 'patched',
+          //       }))
+          //     ),
+          //     rx.fromEvent(bucketService, 'removed').pipe(
+          //       rx.map(file =>
+          //         t.eq('patched', t.at('change', file))
+          //           ? file
+          //           : {
+          //               file,
+          //               change: 'removed',
+          //             }
+          //       )
+          //     )
+          //   ),
+          //   rx.map(file =>
+          //     props.mutators.dataChange(
+          //       t.not(t.has('file')(file)) ? { file, change: 'created' } : file
+          //     )
+          //   )
+          // )
+          return ctx.macros.subscribe(props.mutators.dataChange, [
+            {
+              service: props.api.service('bucket-registry'),
+              events: ['created', 'patched', 'removed'],
+              entity: 'file',
+            },
+          ])
         },
         form(props) {
           const active = t.eq(ctx.event.modalChange, props.event)

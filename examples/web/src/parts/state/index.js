@@ -1,3 +1,3 @@
+import { macros } from './macros'
 // main
-export const state = {
-}
+export const state = { macros }

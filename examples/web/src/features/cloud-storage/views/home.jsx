@@ -166,10 +166,10 @@ export const home = mx.fn((t, a, rx) =>
               },
               [ctx.event.dataChange]: () => {
                 // events from subscribe
-                const change = t.at('next.change', props)
+                const event = t.at('next.event', props)
                 const file = t.at('next.data', props)
                 const files = t.at('data.files', props)
-                if (t.or(t.isNil(change), t.isNil(file))) {
+                if (t.or(t.isNil(event), t.isNil(file))) {
                   return props.data
                 }
                 return t.runMatch({
@@ -196,7 +196,7 @@ export const home = mx.fn((t, a, rx) =>
                         files
                       ),
                     }),
-                })(change)
+                })(event)
               },
             })(props.event),
           }
@@ -243,7 +243,7 @@ export const home = mx.fn((t, a, rx) =>
         },
         form(props) {
           const active = t.eq(ctx.event.modalChange, props.event)
-            ? t.atOr('none', 'next.modal', props)
+            ? t.atOr('none', 'next.active', props)
             : t.atOr('none', 'modal.active', props)
           const form = t.at(active, forms)
           if (t.isNil(form)) {
@@ -371,7 +371,7 @@ export const home = mx.fn((t, a, rx) =>
           return t.runMatch({
             _: () => props.modal,
             [ctx.event.modalChange]: () => {
-              const active = t.at('next.modal', props)
+              const active = t.at('next.active', props)
               return t.merge(props.modal, {
                 active,
                 open: t.atOr(false, 'next.open', props),
@@ -452,7 +452,7 @@ export const home = mx.fn((t, a, rx) =>
                     onClick={() =>
                       props.mutations.modalChange({
                         open: true,
-                        modal: 'upload',
+                        active: 'upload',
                       })
                     }
                   />
@@ -595,7 +595,7 @@ export const home = mx.fn((t, a, rx) =>
                             onClick: () =>
                               props.mutations.modalChange({
                                 open: true,
-                                modal: 'file',
+                                active: 'file',
                                 id: file._id,
                               }),
                           },
@@ -613,7 +613,7 @@ export const home = mx.fn((t, a, rx) =>
                             onClick: () =>
                               props.mutations.modalChange({
                                 open: true,
-                                modal: 'remove',
+                                active: 'remove',
                                 id: file.fileId,
                                 name: file.originalName,
                               }),

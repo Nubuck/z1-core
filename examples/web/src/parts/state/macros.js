@@ -10,7 +10,7 @@ const isSub = mx.fn(t => current =>
     t.has('data')(current),
   ])
 )
-const subscribe = mx.fn((t, _, rx) => (mutator, subs) => {
+const subx = mx.fn((t, _, rx) => (mutator, subs) => {
   const next = t.reduce(
     (collection, sub) => {
       const obs = t.map(
@@ -140,21 +140,19 @@ const datax = mx.fn(t => props => {
             const parentPath = t.head(entityList)
             const nestedPath = t.tail(entityList)
             const parents = t.at(parentPath, props.data)
-            const parentIndex = t.findIndex(
-              current => t.eq(current[id], data[parent]),
-              parents
-            )
-            const nested = t.pathOr([], nestPath, parents[parentIndex] || {})
             return t.merge(props.data, {
               [parentPath]: t.adjust(
-                parentIndex,
+                t.findIndex(
+                  current => t.eq(current[id], data[parent]),
+                  parents
+                ),
                 current => {
                   return t.merge(current, {
                     [t.head(nestedPath)]: mutateEntityList(
                       id,
                       event,
                       data,
-                      nested
+                      t.pathOr([], nestedPath, current)
                     ),
                   })
                 },
@@ -253,6 +251,7 @@ const formx = mx.fn(t => (forms, props) => {
   })(props.event)
 })
 const transmitx = mx.fn((t, a) => async (transmitList, props) => {
+  // TODO: active form from transmitList
   return {
     status: props.status,
     error: null,
@@ -276,6 +275,9 @@ const modalx = mx.fn(t => props => {
       })
     },
     [types.event.formTransmitComplete]: () => {
+      if (t.not(t.at('modal.open', props))) {
+        return props.modal
+      }
       return t.isNil(t.at('next.error', props))
         ? t.merge(props.modal, {
             open: false,
@@ -291,7 +293,7 @@ const modalx = mx.fn(t => props => {
 
 // main
 export const macros = {
-  subscribe,
+  subscribe: subx,
   data: datax,
   load: loadx,
   form: formx,

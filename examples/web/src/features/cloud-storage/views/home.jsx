@@ -233,11 +233,13 @@ export const home = mx.fn((t, a, rx) =>
           }
         },
         subscribe(props) {
-          return ctx.macros.subscribe(props.mutators.dataChange, [
+          return ctx.macros.subscribe([
             {
+              id: '_id',
+              entity: 'file',
               service: props.api.service('bucket-registry'),
               events: ['created', 'patched', 'removed'],
-              entity: 'file',
+              mutator: props.mutators.dataChange,
             },
           ])
         },

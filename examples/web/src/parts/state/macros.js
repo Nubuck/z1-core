@@ -2,15 +2,10 @@ import mx from '@z1/lib-feature-macros'
 const { types } = mx.view
 
 // parts
-const isSub = mx.fn(t => current =>
-  t.allOf([
-    t.has('change')(current),
-    t.has('event')(current),
-    t.has('entity')(current),
-    t.has('data')(current),
-  ])
+const isAction = mx.fn(t => current =>
+  t.allOf([t.has('type')(current), t.has('action')(current)])
 )
-const subx = mx.fn((t, _, rx) => (mutator, subs) => {
+const subx = mx.fn((t, _, rx) => subs => {
   const next = t.reduce(
     (collection, sub) => {
       const obs = t.map(
@@ -21,6 +16,7 @@ const subx = mx.fn((t, _, rx) => (mutator, subs) => {
           entity: sub.entity,
           id: t.atOr('_id', 'id', sub),
           parent: t.at('parent', sub),
+          mutator: t.at('mutator', sub),
         }),
         sub.events
       )
@@ -33,13 +29,13 @@ const subx = mx.fn((t, _, rx) => (mutator, subs) => {
   if (t.eq(t.len(next), 1)) {
     return entry.service$.pipe(
       rx.map(current =>
-        mutator({
+        entry.mutator({
           change: 'sub',
-          event: entry.event,
-          entity: entry.entity,
-          data: current,
           id: t.atOr('_id', 'id', entry),
           parent: t.at('parent', entry),
+          entity: entry.entity,
+          event: entry.event,
+          data: current,
         })
       )
     )
@@ -47,33 +43,33 @@ const subx = mx.fn((t, _, rx) => (mutator, subs) => {
   const rest$ = t.map(obs => {
     return obs.service$.pipe(
       rx.map(current => {
-        if (isSub(current)) {
+        if (isAction(current)) {
           return current
         }
-        return {
+        return obs.mutator({
           change: 'sub',
-          event: obs.event,
-          entity: obs.entity,
-          data: current,
           id: t.atOr('_id', 'id', obs),
           parent: t.at('parent', obs),
-        }
+          entity: obs.entity,
+          event: obs.event,
+          data: current,
+        })
       })
     )
   }, t.tail(next))
   return entry.service$.pipe(
     rx.merge(...rest$),
     rx.map(current => {
-      if (isSub(current)) {
-        return mutator(current)
+      if (isAction(current)) {
+        return current
       }
-      return mutator({
+      return entry.mutator({
         change: 'sub',
-        event: entry.event,
-        entity: entry.entity,
-        data: current,
         id: t.atOr('_id', 'id', entry),
         parent: t.at('parent', entry),
+        entity: entry.entity,
+        event: entry.event,
+        data: current,
       })
     })
   )
@@ -139,6 +135,7 @@ const datax = mx.fn(t => props => {
             }
             const parentPath = t.head(entityList)
             const nestedPath = t.tail(entityList)
+            const lastIndex = t.len(nestedPath) - 1
             const parents = t.at(parentPath, props.data)
             return t.merge(props.data, {
               [parentPath]: t.adjust(
@@ -147,14 +144,36 @@ const datax = mx.fn(t => props => {
                   parents
                 ),
                 current => {
-                  return t.merge(current, {
-                    [t.head(nestedPath)]: mutateEntityList(
-                      id,
-                      event,
-                      data,
-                      t.pathOr([], nestedPath, current)
-                    ),
-                  })
+                  const next = t.reduce(
+                    (collection, nextPath) => {
+                      if (t.neq(lastIndex, nextPath.index)) {
+                        const path = t.append(nextPath.key, collection.path)
+                        return t.merge(collection, {
+                          path,
+                          data: t.merge(collection.data, {
+                            [nextPath.key]: t.path(path, current),
+                          }),
+                        })
+                      }
+                      return t.merge(collection, {
+                        path: nestedPath,
+                        data: t.merge(collection.data, {
+                          [nextPath.key]: mutateEntityList(
+                            id,
+                            event,
+                            data,
+                            t.pathOr([], nestedPath, current)
+                          ),
+                        }),
+                      })
+                    },
+                    {
+                      path: [],
+                      data: {},
+                    },
+                    t.mapIndexed((key, index) => ({ key, index }), nestedPath)
+                  )
+                  return t.merge(current, next.data)
                 },
                 parents
               ),

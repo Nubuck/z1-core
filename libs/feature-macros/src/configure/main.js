@@ -262,12 +262,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
             if (t.notNil(viewKey)) {
               allow(action)
             } else {
-              reject(
-                redirect({
-                  type: z.routing.actions.notFound,
-                  payload: {},
-                })
-              )
+              reject(redirect(action, z.routing.actions.notFound))
             }
           }
         ),
@@ -346,30 +341,37 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
               })
               const paramType = viewActionParam(actions, prev)
               const viewKey = findViewKey(paramType, routing, macroCtx.viewKeys)
-              dispatch(
-                mutators.routeExit(
-                  t.mergeAll([
-                    {
-                      status: t.includes(state.location.type, routeActionTypes)
-                        ? 'active'
-                        : 'inactive',
-                      active: {
-                        param: t.at('param', viewKey || {}),
-                        view: t.at('key', viewKey || {}),
+              if (t.isNil(viewKey)) {
+                done()
+              } else {
+                dispatch(
+                  mutators.routeExit(
+                    t.mergeAll([
+                      {
+                        status: t.includes(
+                          state.location.type,
+                          routeActionTypes
+                        )
+                          ? 'active'
+                          : 'inactive',
+                        active: {
+                          param: t.at('param', viewKey || {}),
+                          view: t.at('key', viewKey || {}),
+                        },
                       },
-                    },
-                    routing,
-                  ])
+                      routing,
+                    ])
+                  )
                 )
-              )
-              done()
+                done()
+              }
             }
           }
         ),
         fx([actions.routeExit], async (context, dispatch, done) => {
           const boxState = t.at(boxName, context.getState())
           const activeView = t.at('action.payload.active.view', context)
-          if (t.isNil(activeMacro)) {
+          if (t.isNil(activeView)) {
             done()
           } else {
             const activeState = t.path(['views', activeView], boxState)

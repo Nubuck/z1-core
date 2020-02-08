@@ -233,32 +233,6 @@ export const home = mx.fn((t, a, rx) =>
           }
         },
         subscribe(props) {
-          // const bucketService = props.api.service('bucket-registry')
-          // return rx.fromEvent(bucketService, 'created').pipe(
-          //   rx.merge(
-          //     rx.fromEvent(bucketService, 'patched').pipe(
-          //       rx.map(file => ({
-          //         file,
-          //         change: 'patched',
-          //       }))
-          //     ),
-          //     rx.fromEvent(bucketService, 'removed').pipe(
-          //       rx.map(file =>
-          //         t.eq('patched', t.at('change', file))
-          //           ? file
-          //           : {
-          //               file,
-          //               change: 'removed',
-          //             }
-          //       )
-          //     )
-          //   ),
-          //   rx.map(file =>
-          //     props.mutators.dataChange(
-          //       t.not(t.has('file')(file)) ? { file, change: 'created' } : file
-          //     )
-          //   )
-          // )
           return ctx.macros.subscribe(props.mutators.dataChange, [
             {
               service: props.api.service('bucket-registry'),

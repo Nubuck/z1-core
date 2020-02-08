@@ -192,55 +192,6 @@ export const home = mx.fn((t, a, rx) =>
           }
         },
         subscribe(props) {
-          // const loginService = props.api.service('machine-logins')
-          // const machineService = props.api.service('machines')
-          // return rx.fromEvent(loginService, 'patched').pipe(
-          //   rx.merge(
-          //     rx.fromEvent(machineService, 'created').pipe(
-          //       rx.map(machine => ({
-          //         machine,
-          //         change: 'created',
-          //         entity: 'machine',
-          //       }))
-          //     ),
-          //     rx.fromEvent(machineService, 'patched').pipe(
-          //       rx.map(machineOrlogin =>
-          //         t.eq('created', t.at('change', machineOrlogin))
-          //           ? machineOrlogin
-          //           : {
-          //               machine: machineOrlogin,
-          //               change: 'patched',
-          //               entity: 'machine',
-          //             }
-          //       )
-          //     ),
-          //     rx.fromEvent(loginService, 'created').pipe(
-          //       rx.map(machineOrlogin =>
-          //         t.eq('machine', t.at('entity', machineOrlogin))
-          //           ? machineOrlogin
-          //           : {
-          //               login: machineOrlogin,
-          //               change: 'created',
-          //               entity: 'login',
-          //             }
-          //       )
-          //     )
-          //   ),
-          //   rx.map(machineOrlogin =>
-          //     props.mutators.dataChange(
-          //       t.or(
-          //         t.eq('created', t.at('change', machineOrlogin)),
-          //         t.eq('machine', t.at('entity', machineOrlogin))
-          //       )
-          //         ? machineOrlogin
-          //         : {
-          //             login: machineOrlogin,
-          //             change: 'patched',
-          //             entity: 'login',
-          //           }
-          //     )
-          //   )
-          // )
           return ctx.macros.subscribe(props.mutators.dataChange, [
             {
               service: props.api.service('machines'),

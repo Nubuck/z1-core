@@ -1,4 +1,5 @@
 import mx from '@z1/lib-feature-macros'
+const { types } = mx.view
 
 // parts
 const isSub = mx.fn(t => current =>
@@ -98,14 +99,14 @@ const datax = mx.fn(t => props => {
     error: t.atOr(null, 'next.error', props),
     data: t.runMatch({
       _: () => props.data,
-      [ctx.event.dataLoadComplete]: () => {
+      [types.event.dataLoadComplete]: () => {
         const nextData = t.atOr({}, 'next.data', props)
         if (t.isEmpty(nextData)) {
           return props.data
         }
         return t.merge(props.data, nextData)
       },
-      [ctx.event.dataChange]: () => {
+      [types.event.dataChange]: () => {
         const change = t.at('next.change', props)
         if (t.isNil(change)) {
           return props.data
@@ -169,6 +170,7 @@ const datax = mx.fn(t => props => {
   }
 })
 const loadx = mx.fn((t, a) => async (loadList, props) => {
+  // TODO: exec loadlist and handle errs
   return {
     status: props.status,
     error: null,
@@ -177,7 +179,7 @@ const loadx = mx.fn((t, a) => async (loadList, props) => {
 })
 const formx = mx.fn(t => (forms, props) => {
   // TODO: other active sources + load event
-  const active = t.eq(ctx.event.modalChange, props.event)
+  const active = t.eq(types.event.modalChange, props.event)
     ? t.atOr('none', 'next.active', props)
     : t.atOr('none', 'modal.active', props)
 
@@ -188,7 +190,8 @@ const formx = mx.fn(t => (forms, props) => {
   const activeForm = t.path(['form', active], props)
   return t.runMatch({
     _: () => null,
-    [ctx.event.modalChange]: () => {
+    [types.event.dataLoadComplete]: () => null,
+    [types.event.modalChange]: () => {
       const open = t.at('next.open', props)
       const id = t.at('next.id', props)
       const entity = t.at('entity', activeForm)
@@ -229,7 +232,7 @@ const formx = mx.fn(t => (forms, props) => {
         }),
       }
     },
-    [ctx.event.formTransmit]: () => {
+    [types.event.formTransmit]: () => {
       return {
         [active]: t.merge(activeForm, {
           data: t.atOr({}, 'next.data', props),
@@ -237,7 +240,7 @@ const formx = mx.fn(t => (forms, props) => {
         }),
       }
     },
-    [ctx.event.formTransmitComplete]: () => {
+    [types.event.formTransmitComplete]: () => {
       return {
         [active]: t.merge(activeForm, {
           data: t.notNil(t.at('next.error', props))
@@ -249,36 +252,49 @@ const formx = mx.fn(t => (forms, props) => {
     },
   })(props.event)
 })
-const transmitx = mx.fn((t, a) => async (opts, props) => {})
-const modalx = mx.fn(t => (opts, props) => {
-  // return t.runMatch({
-  //   _: () => props.modal,
-  //   [ctx.event.modalChange]: () => {
-  //     const active = t.at('next.active', props)
-  //     return t.merge(props.modal, {
-  //       active,
-  //       open: t.atOr(false, 'next.open', props),
-  //       id: t.atOr(null, 'next.id', props),
-  //       title: {},
-  //       content: {},
-  //     })
-  //   },
-  //   [ctx.event.formTransmitComplete]: () => {
-  //     return t.isNil(t.at('next.error', props))
-  //       ? t.merge(props.modal, {
-  //           open: false,
-  //           active: null,
-  //           id: null,
-  //           title: {},
-  //           content: {},
-  //         })
-  //       : props.modal
-  //   },
-  // })(props.event)
+const transmitx = mx.fn((t, a) => async (transmitList, props) => {
+  return {
+    status: props.status,
+    error: null,
+    data: {},
+  }
+})
+const modalx = mx.fn(t => props => {
+  return t.runMatch({
+    _: () => props.modal,
+    [types.event.modalChange]: () => {
+      const active = t.at('next.active', props)
+      return t.merge(props.modal, {
+        active,
+        open: t.atOr(false, 'next.open', props),
+        id: t.atOr(null, 'next.id', props),
+        title: t.atOr({}, 'next.title', props),
+        content: t.omit(
+          ['active', 'id', 'open', 'title'],
+          t.atOr({}, 'next', props)
+        ),
+      })
+    },
+    [types.event.formTransmitComplete]: () => {
+      return t.isNil(t.at('next.error', props))
+        ? t.merge(props.modal, {
+            open: false,
+            active: null,
+            id: null,
+            title: {},
+            content: {},
+          })
+        : props.modal
+    },
+  })(props.event)
 })
 
 // main
 export const macros = {
   subscribe,
   data: datax,
+  load: loadx,
+  form: formx,
+  transmit: transmitx,
+  modal: modalx,
 }

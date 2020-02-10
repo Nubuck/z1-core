@@ -6,6 +6,7 @@ export const isAction = mx.fn(t => current =>
   t.allOf([t.has('type')(current), t.has('payload')(current)])
 )
 export const subx = mx.fn((t, _, rx) => subs => {
+  const withEvent = (filter, event) => item => filter(item, event)
   const next = t.reduce(
     (collection, sub) => {
       const obs = t.map(
@@ -29,7 +30,7 @@ export const subx = mx.fn((t, _, rx) => subs => {
   const entry = t.head(next)
   if (t.eq(t.len(next), 1)) {
     const early$ = t.isType(entry.filter, 'function')
-      ? [rx.filter(entry.filter)]
+      ? [rx.filter(withEvent(entry.filter, entry.event))]
       : [
           rx.map(current =>
             entry.mutator({
@@ -46,7 +47,7 @@ export const subx = mx.fn((t, _, rx) => subs => {
   }
   const rest$ = t.map(obs => {
     const obs$ = t.isType(obs.filter, 'function')
-      ? [rx.filter(obs.filter)]
+      ? [rx.filter(withEvent(obs.filter, obs.event))]
       : []
     obs$.push(
       rx.map(current => {
@@ -66,7 +67,7 @@ export const subx = mx.fn((t, _, rx) => subs => {
     return obs.service$.pipe(...obs$)
   }, t.tail(next))
   const entry$ = t.isType(entry.filter, 'function')
-    ? [rx.filter(entry.filter)]
+    ? [rx.filter(withEvent(entry.filter, entry.event))]
     : []
   entry$.push(
     rx.map(current => {

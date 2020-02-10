@@ -189,6 +189,11 @@ export const home = mx.fn(t =>
               <React.Fragment>
                 <ctx.Row key="title-bar" margin={{ bottom: 4 }}>
                   <ctx.IconLabel
+                    slots={{
+                      label: {
+                        padding: { left: 2 },
+                      },
+                    }}
                     icon={{
                       name: 'cloud-upload-alt',
                       size: '3xl',

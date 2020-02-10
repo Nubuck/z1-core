@@ -74,6 +74,35 @@ export const datax = mx.fn(t => props => {
             const parentPath = t.head(entityList)
             const nestedPath = t.tail(entityList)
             const parents = t.at(parentPath, props.data)
+            const nestedIndexed = t.mapIndexed(
+              (key, index) => ({ key, index }),
+              t.reverse(nestedPath)
+            )
+            const reduceNested = current =>
+              t.reduce(
+                (collection, nextPath) => {
+                  if (t.eq(nextPath.index, 0)) {
+                    return t.merge(collection, {
+                      [nextPath.key]: mutateEntity(
+                        id,
+                        event,
+                        data,
+                        t.pathOr([], nestedPath, current)
+                      ),
+                    })
+                  }
+                  return {
+                    [nextPath.key]: collection,
+                  }
+                },
+                {},
+                nestedIndexed
+              )
+            if (t.isType(parents, 'object')) {
+              return t.merge(props.data, {
+                [parentPath]: t.mergeDeepRight(parents, reduceNested(parents)),
+              })
+            }
             return t.merge(props.data, {
               [parentPath]: t.adjust(
                 t.findIndex(
@@ -81,31 +110,7 @@ export const datax = mx.fn(t => props => {
                   parents
                 ),
                 current => {
-                  return t.mergeDeepRight(
-                    current,
-                    t.reduce(
-                      (collection, nextPath) => {
-                        if (t.eq(nextPath.index, 0)) {
-                          return t.merge(collection, {
-                            [nextPath.key]: mutateEntity(
-                              id,
-                              event,
-                              data,
-                              t.pathOr([], nestedPath, current)
-                            ),
-                          })
-                        }
-                        return {
-                          [nextPath.key]: collection,
-                        }
-                      },
-                      {},
-                      t.mapIndexed(
-                        (key, index) => ({ key, index }),
-                        t.reverse(nestedPath)
-                      )
-                    )
-                  )
+                  return t.mergeDeepRight(current, reduceNested(current))
                 },
                 parents
               ),

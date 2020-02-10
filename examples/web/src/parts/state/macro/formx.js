@@ -66,9 +66,13 @@ export const formx = mx.fn(t => (forms, props) => {
             t.pathOr([], ['data', parentPath], props)
           )
         : t.pathOr([], ['data', parentPath], props)
-      const data = t.find(current => {
-        return t.eq(current._id, id)
-      }, preData)
+      const data = t.isType(preData, 'object')
+        ? hasNested
+          ? t.path(nestedPath, preData)
+          : preData
+        : t.find(current => {
+            return t.eq(current._id, id)
+          }, preData)
       if (t.isNil(data)) {
         return activeForm
       }

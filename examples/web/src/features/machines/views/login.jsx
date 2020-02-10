@@ -1,18 +1,28 @@
 import React from 'react'
 import mx from '@z1/lib-feature-macros'
 
+// parts
+import { aliasForm, machineModal } from './parts'
+
 // main
 export const login = mx.fn((t, a) =>
   mx.view.create('login', {
     state(ctx) {
+      const forms = {
+        login: {
+          entity: 'login',
+          ui: aliasForm(ctx, 'login'),
+        },
+      }
       return {
-        initial: {
-          data: {
+        initial: ctx.macro.initial(
+          {
             url: null,
             login: null,
             files: [],
           },
-        },
+          forms
+        ),
         data(props) {
           return ctx.macro.data(props)
         },
@@ -70,24 +80,51 @@ export const login = mx.fn((t, a) =>
             },
           ])
         },
+        form(props) {
+          return ctx.macro.form(forms, props)
+        },
+        async transmit(props) {
+          return await ctx.macro.transmit(
+            [
+              {
+                form: 'login',
+                method: data =>
+                  t.isNil(data._id)
+                    ? null
+                    : props.api
+                        .service('machine-logins')
+                        .patch(data._id, t.pick(['alias'], data)),
+              },
+            ],
+            props
+          )
+        },
+        modal(props) {
+          return ctx.macro.modal({ autoClose: true }, props)
+        },
       }
     },
     ui(ctx) {
+      const MachineModal = machineModal(ctx)
       return props => {
         const status = t.at('state.status', props)
         const online = t.eq('online', t.at('state.data.login.status', props))
+        const osIcon = ctx.icons.machine(
+          t.atOr('', 'state.data.login.machine.type', props)
+        )
         return (
           <ctx.Page
             key="machine-profile"
-            loading={t.includes(status, [
-              ctx.status.init,
-              ctx.status.waiting,
-              ctx.status.loading,
-            ])}
+            loading={t.includes(status, [ctx.status.init, ctx.status.waiting])}
             render={() => (
               <React.Fragment>
                 <ctx.Row key="title-bar" margin={{ bottom: 4 }}>
                   <ctx.IconLabel
+                    slots={{
+                      label: {
+                        padding: { left: 2 },
+                      },
+                    }}
                     icon={{
                       name: 'user-astronaut',
                       size: '3xl',
@@ -270,6 +307,177 @@ export const login = mx.fn((t, a) =>
                       }}
                       margin={{ bottom: 3 }}
                     />
+                    <ctx.IconLabel
+                      display="inline-flex"
+                      slots={{
+                        label: {
+                          padding: {
+                            left: 2,
+                          },
+                        },
+                      }}
+                      icon={{
+                        name: 'calendar-check',
+                        size: '2xl',
+                      }}
+                      label={{
+                        text: 'last updated',
+                        fontSize: 'sm',
+                        letterSpacing: 'wide',
+                        color: 'gray-500',
+                      }}
+                      info={{
+                        text: ctx
+                          .dateFn()
+                          .to(
+                            ctx.dateFn(
+                              t.atOr(null, 'state.data.login.updatedAt', props)
+                            )
+                          ),
+                        fontSize: 'md',
+                        letterSpacing: 'wide',
+                      }}
+                      margin={{ bottom: 3 }}
+                    />
+                    <ctx.IconLabel
+                      display="inline-flex"
+                      slots={{
+                        label: {
+                          padding: {
+                            left: 2,
+                          },
+                        },
+                      }}
+                      icon={{
+                        name: 'calendar-plus',
+                        size: '2xl',
+                      }}
+                      label={{
+                        text: 'created',
+                        fontSize: 'sm',
+                        letterSpacing: 'wide',
+                        color: 'gray-500',
+                      }}
+                      info={{
+                        text: ctx
+                          .dateFn(
+                            t.atOr(null, 'state.data.login.createdAt', props)
+                          )
+                          .format('YYYY MM DD HH:mm:ss A'),
+                        fontSize: 'md',
+                        letterSpacing: 'wide',
+                      }}
+                      margin={{ bottom: 6 }}
+                    />
+                    <ctx.IconLabel
+                      display="inline-flex"
+                      slots={{
+                        label: {
+                          padding: {
+                            left: 2,
+                          },
+                        },
+                      }}
+                      icon={{
+                        name: 'id-card',
+                        size: '2xl',
+                        color: 'blue-500',
+                      }}
+                      label={{
+                        text: 'machine alias',
+                        fontSize: 'sm',
+                        letterSpacing: 'wide',
+                        color: 'gray-500',
+                      }}
+                      info={{
+                        text: t.atOr(
+                          '',
+                          'state.data.login.machine.alias',
+                          props
+                        ),
+                        fontSize: 'md',
+                        letterSpacing: 'wide',
+                      }}
+                      margin={{ bottom: 3 }}
+                    />
+                    <ctx.IconLabel
+                      display="inline-flex"
+                      slots={{
+                        label: {
+                          padding: {
+                            left: 2,
+                          },
+                        },
+                      }}
+                      icon={{
+                        name: 'laptop',
+                        size: '2xl',
+                        color: 'blue-500',
+                      }}
+                      label={{
+                        text: 'machine',
+                        fontSize: 'sm',
+                        letterSpacing: 'wide',
+                        color: 'gray-500',
+                      }}
+                      info={{
+                        text: `${t.atOr(
+                          '',
+                          'state.data.login.machine.manufacturer',
+                          props
+                        )} ${t.atOr(
+                          '',
+                          'state.data.login.machine.model',
+                          props
+                        )} ${t.atOr(
+                          '',
+                          'state.data.login.machine.serialnumber',
+                          props
+                        )} `,
+                        fontSize: 'md',
+                        letterSpacing: 'wide',
+                      }}
+                      margin={{ bottom: 3 }}
+                    />
+                    <ctx.IconLabel
+                      display="inline-flex"
+                      slots={{
+                        label: {
+                          padding: {
+                            left: 2,
+                          },
+                        },
+                      }}
+                      icon={{
+                        name: osIcon,
+                        size: '2xl',
+                        color: 'blue-500',
+                      }}
+                      label={{
+                        text: 'os',
+                        fontSize: 'sm',
+                        letterSpacing: 'wide',
+                        color: 'gray-500',
+                      }}
+                      info={{
+                        text: `${t.atOr(
+                          '',
+                          'state.data.login.machine.distro',
+                          props
+                        )} ${t.atOr(
+                          '',
+                          'state.data.login.machine.release',
+                          props
+                        )} ${t.atOr(
+                          '',
+                          'state.data.login.machine.arch',
+                          props
+                        )} `,
+                        fontSize: 'md',
+                        letterSpacing: 'wide',
+                      }}
+                      margin={{ bottom: 3 }}
+                    />
                   </ctx.Col>
                   <ctx.Col xs={12} md={6} x="left">
                     <ctx.When
@@ -277,6 +485,11 @@ export const login = mx.fn((t, a) =>
                       render={() => (
                         <ctx.IconLabel
                           margin={{ bottom: 4 }}
+                          slots={{
+                            label: {
+                              padding: { left: 2 },
+                            },
+                          }}
                           icon={{
                             name: 'cloud-upload-alt',
                             size: '2xl',
@@ -422,67 +635,6 @@ export const login = mx.fn((t, a) =>
                                 )}/bucket-content/${file.fileId}`,
                                 target: '_blank',
                               },
-                              {
-                                icon: 'gear',
-                                shape: 'circle',
-                                fill: 'ghost-solid',
-                                size: 'xs',
-                                color: 'blue-500',
-                                margin: { left: 1 },
-                                disabled: t.eq(
-                                  ctx.status.loading,
-                                  t.at('state.status', props)
-                                ),
-                                onClick: () =>
-                                  props.mutations.modalChange({
-                                    open: true,
-                                    active: 'file',
-                                    title: {
-                                      icon: {
-                                        name: 'gear',
-                                        color: 'blue-500',
-                                        fontSize: '2xl',
-                                      },
-                                      label: {
-                                        text: 'Edit file',
-                                        color: 'blue-500',
-                                        fontSize: 'lg',
-                                      },
-                                    },
-                                    id: file._id,
-                                  }),
-                              },
-                              {
-                                icon: 'trash',
-                                shape: 'circle',
-                                fill: 'ghost-solid',
-                                size: 'xs',
-                                color: 'red-500',
-                                margin: { left: 1 },
-                                disabled: t.eq(
-                                  ctx.status.loading,
-                                  t.at('state.status', props)
-                                ),
-                                onClick: () =>
-                                  props.mutations.modalChange({
-                                    open: true,
-                                    active: 'remove',
-                                    id: file.fileId,
-                                    title: {
-                                      icon: {
-                                        name: 'trash',
-                                        color: 'red-500',
-                                        fontSize: '2xl',
-                                      },
-                                      label: {
-                                        text: 'Remove file',
-                                        color: 'red-500',
-                                        fontSize: 'lg',
-                                      },
-                                    },
-                                    name: file.originalName,
-                                  }),
-                              },
                             ]}
                           />
                         )
@@ -490,6 +642,7 @@ export const login = mx.fn((t, a) =>
                     />
                   </ctx.Col>
                 </ctx.Row>
+                <MachineModal key="view-modal" {...props} />
               </React.Fragment>
             )}
           />

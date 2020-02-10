@@ -3,7 +3,7 @@ import mx from '@z1/lib-feature-macros'
 import sc from '@z1/lib-ui-schema'
 
 // parts
-const forms = {
+const forms = mx.fn(t => ({
   upload: {
     entity: null,
     ui: props =>
@@ -15,7 +15,7 @@ const forms = {
             required: true,
             ui: {
               [k.ui.placeholder]: 'Enter an alias for this file',
-              [k.ui.disabled]: props.disabled,
+              [k.ui.disabled]: t.eq('loading', t.at('status', props)),
             },
           }),
           f('uri', {
@@ -25,7 +25,7 @@ const forms = {
             required: true,
             ui: {
               [k.ui.placeholder]: 'Select the file to upload',
-              [k.ui.disabled]: props.disabled,
+              [k.ui.disabled]: t.eq('loading', t.at('status', props)),
             },
           }),
         ])
@@ -42,13 +42,13 @@ const forms = {
             required: true,
             ui: {
               [k.ui.placeholder]: 'Enter an alias for this file',
-              [k.ui.disabled]: props.disabled,
+              [k.ui.disabled]: t.eq('loading', t.at('status', props)),
             },
           }),
         ])
       ),
   },
-}
+}))
 
 // main
 export const home = mx.fn((t, a, rx) =>
@@ -122,60 +122,7 @@ export const home = mx.fn((t, a, rx) =>
           ])
         },
         form(props) {
-          const active = t.eq(ctx.event.modalChange, props.event)
-            ? t.atOr('none', 'next.active', props)
-            : t.atOr('none', 'modal.active', props)
-          const form = t.at(active, forms)
-          if (t.isNil(form)) {
-            return null
-          }
-          const activeForm = t.path(['form', active], props)
-          return t.runMatch({
-            _: () => null,
-            [ctx.event.modalChange]: () => {
-              const id = t.at('next.id', props)
-              const entity = t.at('entity', activeForm)
-              if (t.or(t.isNil(id), t.isNil(entity))) {
-                return {
-                  [active]: t.merge(activeForm, {
-                    data: {},
-                    ui: form.ui({ disabled: false }),
-                  }),
-                }
-              }
-              const data = t.find(
-                current => t.eq(current._id, id),
-                t.pathOr([], ['data', entity], props)
-              )
-              if (t.isNil(data)) {
-                return activeForm
-              }
-              return {
-                [active]: t.merge(activeForm, {
-                  data,
-                  ui: form.ui({ disabled: false }),
-                }),
-              }
-            },
-            [ctx.event.formTransmit]: () => {
-              return {
-                [active]: t.merge(activeForm, {
-                  data: t.atOr({}, 'next.data', props),
-                  ui: form.ui({ disabled: true }),
-                }),
-              }
-            },
-            [ctx.event.formTransmitComplete]: () => {
-              return {
-                [active]: t.merge(activeForm, {
-                  data: t.notNil(t.at('next.error', props))
-                    ? t.pathOr({}, ['form', active, 'data'], props)
-                    : {},
-                  ui: form.ui({ disabled: false }),
-                }),
-              }
-            },
-          })(props.event)
+          return ctx.macros.form(forms, props)
         },
         async transmit(props) {
           return await t.runMatch({
@@ -564,7 +511,7 @@ export const home = mx.fn((t, a, rx) =>
                         ),
                         onClick: () =>
                           props.mutations.formTransmit({
-                            form: 'remove',
+                            active: 'remove',
                             id: t.at('state.modal.id', props),
                           }),
                       },
@@ -626,7 +573,7 @@ export const home = mx.fn((t, a, rx) =>
                               )}
                               onSubmit={payload =>
                                 props.mutations.formTransmit({
-                                  form: active,
+                                  active,
                                   data: payload.formData,
                                 })
                               }

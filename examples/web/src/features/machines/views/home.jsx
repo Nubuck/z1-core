@@ -14,7 +14,7 @@ const aliasForm = mx.fn(t => entity => props =>
           [k.ui.placeholder]: `Enter an alias for this ${t.to.lowerCase(
             entity
           )}`,
-          [k.ui.disabled]: props.disabled,
+          [k.ui.disabled]: t.eq('loading', t.at('status', props)),
         },
       }),
     ])
@@ -109,76 +109,7 @@ export const home = mx.fn((t, a, rx) =>
           ])
         },
         form(props) {
-          const active = t.eq(ctx.event.modalChange, props.event)
-            ? t.atOr('none', 'next.active', props)
-            : t.atOr('none', 'modal.active', props)
-          const form = t.at(active, forms)
-          if (t.isNil(form)) {
-            return null
-          }
-          const activeForm = t.path(['form', active], props)
-          return t.runMatch({
-            _: () => null,
-            [ctx.event.modalChange]: () => {
-              const id = t.at('next.id', props)
-              const entity = t.at('entity', activeForm)
-              if (t.or(t.isNil(id), t.isNil(entity))) {
-                return {
-                  [active]: t.merge(activeForm, {
-                    data: {},
-                    ui: form.ui({ disabled: false }),
-                  }),
-                }
-              }
-              const nestedEntityList = t.split('.', entity)
-              const hasNested = t.gt(t.len(nestedEntityList), 1)
-              const parentEntity = t.head(nestedEntityList)
-              const nestedPath = hasNested ? t.tail(nestedEntityList) : []
-              const preData = hasNested
-                ? t.reduce(
-                    (collection, parent) => {
-                      const nested = t.pathOr(null, nestedPath, parent)
-                      console.log('nested', nested)
-                      return t.isType(nested, 'array')
-                        ? t.concat(collection, nested)
-                        : collection
-                    },
-                    [],
-                    t.pathOr([], ['data', parentEntity], props)
-                  )
-                : t.pathOr([], ['data', parentEntity], props)
-              const data = t.find(current => {
-                return t.eq(current._id, id)
-              }, preData)
-              if (t.isNil(data)) {
-                return activeForm
-              }
-              return {
-                [active]: t.merge(activeForm, {
-                  data,
-                  ui: form.ui({ disabled: false }),
-                }),
-              }
-            },
-            [ctx.event.formTransmit]: () => {
-              return {
-                [active]: t.merge(activeForm, {
-                  data: t.atOr({}, 'next.data', props),
-                  ui: form.ui({ disabled: true }),
-                }),
-              }
-            },
-            [ctx.event.formTransmitComplete]: () => {
-              return {
-                [active]: t.merge(activeForm, {
-                  data: t.notNil(t.at('next.error', props))
-                    ? t.pathOr({}, ['form', active, 'data'], props)
-                    : {},
-                  ui: form.ui({ disabled: false }),
-                }),
-              }
-            },
-          })(props.event)
+          return ctx.macros.form(forms, props)
         },
         async transmit(props) {
           return await t.runMatch({
@@ -532,7 +463,7 @@ export const home = mx.fn((t, a, rx) =>
                     formData={t.path(['state', 'form', active, 'data'], props)}
                     onSubmit={payload =>
                       props.mutations.formTransmit({
-                        form: active,
+                        active,
                         data: payload.formData,
                       })
                     }

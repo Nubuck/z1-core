@@ -2,7 +2,7 @@ import mx from '@z1/lib-feature-macros'
 const { types } = mx.view
 
 //  main
-export const mutateEntityList = mx.fn(t => (id, event, entity, list = []) =>
+const mutateEntityList = mx.fn(t => (id, event, entity, list = []) =>
   t.runMatch({
     _: () => list,
     created: () => t.append(entity, list),
@@ -15,6 +15,17 @@ export const mutateEntityList = mx.fn(t => (id, event, entity, list = []) =>
     removed: () =>
       t.filter(current => t.not(t.eq(current[id], entity[id])), list),
   })(t.eq(event, 'updated') ? 'patched' : event)
+)
+const mutateEntityObj = mx.fn(t => (event, entity, obj = {}) =>
+  t.runMatch({
+    _: () => t.merge(obj, entity),
+    removed: () => null,
+  })(t.eq(event, 'updated') ? 'patched' : event)
+)
+export const mutateEntity = mx.fn(t => (id, event, entity, listOrObj) =>
+  t.isType(listOrObj, 'array')
+    ? mutateEntityList(id, event, entity, listOrObj)
+    : mutateEntityObj(event, entity, listOrObj)
 )
 export const datax = mx.fn(t => props => {
   return {
@@ -49,7 +60,7 @@ export const datax = mx.fn(t => props => {
             const hasNested = t.gt(t.len(entityList), 1)
             if (t.not(hasNested)) {
               return t.merge(props.data, {
-                [entity]: mutateEntityList(
+                [entity]: mutateEntity(
                   id,
                   event,
                   data,
@@ -76,7 +87,7 @@ export const datax = mx.fn(t => props => {
                       (collection, nextPath) => {
                         if (t.eq(nextPath.index, 0)) {
                           return t.merge(collection, {
-                            [nextPath.key]: mutateEntityList(
+                            [nextPath.key]: mutateEntity(
                               id,
                               event,
                               data,
@@ -107,4 +118,3 @@ export const datax = mx.fn(t => props => {
     })(props.event),
   }
 })
-

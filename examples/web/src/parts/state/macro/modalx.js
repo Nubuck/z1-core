@@ -2,7 +2,7 @@ import mx from '@z1/lib-feature-macros'
 const { types } = mx.view
 
 // main
-export const modalx = mx.fn(t => props => {
+export const modalx = mx.fn(t => (opts = { autoClose: true }, props) => {
   return t.runMatch({
     _: () => props.modal,
     [types.event.modalChange]: () => {
@@ -22,7 +22,7 @@ export const modalx = mx.fn(t => props => {
       if (t.not(t.at('modal.open', props))) {
         return props.modal
       }
-      return t.isNil(t.at('next.error', props))
+      return t.and(t.isNil(t.at('next.error', props)), opts.autoClose)
         ? t.merge(props.modal, {
             open: false,
             active: null,

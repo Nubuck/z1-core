@@ -1,7 +1,7 @@
 import { initx } from './initx'
-import { datax, mutateEntityList } from './datax'
+import { datax, mutateEntity } from './datax'
 import { loadx } from './loadx'
-import { subx } from './subx'
+import { subx, isAction } from './subx'
 import { formx } from './formx'
 import { transmitx } from './transmitx'
 import { modalx } from './modalx'
@@ -15,5 +15,6 @@ export const macro = {
   form: formx,
   transmit: transmitx,
   modal: modalx,
-  mutateEntity: mutateEntityList,
+  isAction,
+  mutateEntity,
 }

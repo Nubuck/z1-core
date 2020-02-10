@@ -141,7 +141,7 @@ export const home = mx.fn(t =>
           )
         },
         modal(props) {
-          return ctx.macro.modal(props)
+          return ctx.macro.modal({ autoClose: true }, props)
         },
       }
     },

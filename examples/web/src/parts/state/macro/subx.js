@@ -2,7 +2,7 @@ import mx from '@z1/lib-feature-macros'
 const { types } = mx.view
 
 // parts
-const isAction = mx.fn(t => current =>
+export const isAction = mx.fn(t => current =>
   t.allOf([t.has('type')(current), t.has('payload')(current)])
 )
 export const subx = mx.fn((t, _, rx) => subs => {
@@ -17,6 +17,7 @@ export const subx = mx.fn((t, _, rx) => subs => {
           id: t.atOr('_id', 'id', sub),
           parent: t.at('parent', sub),
           mutator: t.at('mutator', sub),
+          filter: t.at('filter', sub),
         }),
         sub.events
       )
@@ -27,21 +28,27 @@ export const subx = mx.fn((t, _, rx) => subs => {
   )
   const entry = t.head(next)
   if (t.eq(t.len(next), 1)) {
-    return entry.service$.pipe(
-      rx.map(current =>
-        entry.mutator({
-          change: 'sub',
-          id: t.atOr('_id', 'id', entry),
-          parent: t.at('parent', entry),
-          entity: entry.entity,
-          event: entry.event,
-          data: current,
-        })
-      )
-    )
+    const early$ = t.isType(entry.filter, 'function')
+      ? [rx.filter(entry.filter)]
+      : [
+          rx.map(current =>
+            entry.mutator({
+              change: 'sub',
+              id: t.atOr('_id', 'id', entry),
+              parent: t.at('parent', entry),
+              entity: entry.entity,
+              event: entry.event,
+              data: current,
+            })
+          ),
+        ]
+    return entry.service$.pipe(...early$)
   }
   const rest$ = t.map(obs => {
-    return obs.service$.pipe(
+    const obs$ = t.isType(obs.filter, 'function')
+      ? [rx.filter(obs.filter)]
+      : []
+    obs$.push(
       rx.map(current => {
         if (isAction(current)) {
           return current
@@ -56,9 +63,12 @@ export const subx = mx.fn((t, _, rx) => subs => {
         })
       })
     )
+    return obs.service$.pipe(...obs$)
   }, t.tail(next))
-  return entry.service$.pipe(
-    rx.merge(...rest$),
+  const entry$ = t.isType(entry.filter, 'function')
+    ? [rx.filter(entry.filter)]
+    : []
+  entry$.push(
     rx.map(current => {
       if (isAction(current)) {
         return current
@@ -73,5 +83,5 @@ export const subx = mx.fn((t, _, rx) => subs => {
       })
     })
   )
+  return entry.service$.pipe(rx.merge(...rest$), ...entry$)
 })
-

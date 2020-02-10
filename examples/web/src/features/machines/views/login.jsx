@@ -42,6 +42,21 @@ export const login = mx.fn((t, a) =>
             props
           )
         },
+        subscribe(props) {
+          return ctx.macro.subscribe([
+            {
+              id: '_id',
+              entity: 'login',
+              service: props.api.service('machine-logins'),
+              events: ['created', 'patched'],
+              mutator: props.mutators.dataChange,
+              filter: loginOrAction =>
+                ctx.macro.isAction(loginOrAction)
+                  ? true
+                  : t.eq(props.params.detail, t.at('_id', loginOrAction)),
+            },
+          ])
+        },
       }
     },
     ui(ctx) {

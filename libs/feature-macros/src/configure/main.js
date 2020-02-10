@@ -514,12 +514,19 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                   return null
                 }
                 return viewMacros[activeView].subscribe(
-                  t.merge(context, {
-                    actions,
-                    mutators,
-                    view: activeView,
-                    name: boxName,
-                  })
+                  t.mergeAll([
+                    context,
+                    {
+                      actions,
+                      mutators,
+                      view: activeView,
+                      name: boxName,
+                    },
+                    t.pick(
+                      ['route', 'params'],
+                      t.at(boxName, context.getState())
+                    ),
+                  ])
                 )
               },
               {

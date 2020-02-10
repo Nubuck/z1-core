@@ -97,8 +97,15 @@ const fileIcon = z.fn(t =>
             'tsx',
             'json',
             'css',
+            'scss',
             'html',
+            'htm',
             'py',
+            'md',
+            'rs',
+            'cs',
+            'ex',
+            'xml',
           ])
         ? { name: 'file-code', color: 'yellow-400' }
         : t.includes(ext, ['doc', 'docx', 'word'])

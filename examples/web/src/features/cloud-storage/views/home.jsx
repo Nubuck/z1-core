@@ -9,15 +9,6 @@ const forms = mx.fn(t => ({
     ui: props =>
       sc.form.create((f, k) =>
         f({ type: k.object }, [
-          f('alias', {
-            title: 'File Alias',
-            type: k.string,
-            required: true,
-            ui: {
-              [k.ui.placeholder]: 'Enter an alias for this file',
-              [k.ui.disabled]: t.eq('loading', t.at('status', props)),
-            },
-          }),
           f('uri', {
             title: 'File to upload',
             type: k.string,
@@ -25,6 +16,15 @@ const forms = mx.fn(t => ({
             required: true,
             ui: {
               [k.ui.placeholder]: 'Select the file to upload',
+              [k.ui.disabled]: t.eq('loading', t.at('status', props)),
+            },
+          }),
+          f('alias', {
+            title: 'File Alias',
+            type: k.string,
+            required: true,
+            ui: {
+              [k.ui.placeholder]: 'Enter an alias for this file',
               [k.ui.disabled]: t.eq('loading', t.at('status', props)),
             },
           }),
@@ -64,7 +64,7 @@ export const home = mx.fn((t, a, rx) =>
             form => ({
               entity: form.entity,
               data: {},
-              ui: form.ui({ disabled: false }),
+              ui: form.ui({ status: ctx.status.init }),
             }),
             forms
           ),
@@ -80,35 +80,28 @@ export const home = mx.fn((t, a, rx) =>
           return ctx.macros.data(props)
         },
         async load(props) {
-          const [filesErr, files] = await a.of(
-            props.api.service('bucket-registry').find({
-              query: {
-                includeAuthors: true,
-                $sort: {
-                  updatedAt: -1,
-                },
-                $limit: 10000,
+          return await ctx.macros.load(
+            [
+              {
+                entity: 'url',
+                data: props.api.url,
               },
-            })
+              {
+                entity: 'files',
+                method: props.api.service('bucket-registry').find({
+                  query: {
+                    includeAuthors: true,
+                    $sort: {
+                      updatedAt: -1,
+                    },
+                    $limit: 10000,
+                  },
+                }),
+                resultAt: 'data',
+              },
+            ],
+            props
           )
-          if (filesErr) {
-            return {
-              status: props.status,
-              error: filesErr,
-              data: {
-                url: props.api.url,
-                files: [],
-              },
-            }
-          }
-          return {
-            status: props.status,
-            error: null,
-            data: {
-              url: props.api.url,
-              files: files.data,
-            },
-          }
         },
         subscribe(props) {
           return ctx.macros.subscribe([
@@ -125,74 +118,34 @@ export const home = mx.fn((t, a, rx) =>
           return ctx.macros.form(forms, props)
         },
         async transmit(props) {
-          return await t.runMatch({
-            _: async () => null,
-            upload: async () => {
-              const data = t.at('form.upload.data', props)
-              const [bucketErr] = await a.of(props.api.upload(data))
-              if (bucketErr) {
-                return {
-                  status: ctx.status.fail,
-                  error: bucketErr,
-                  data,
-                }
-              }
-              return {
-                status: props.status,
-                error: null,
-                data: {},
-              }
-            },
-            file: async () => {
-              const data = t.at('form.file.data', props)
-              const payload = t.pick(['_id', 'alias'], data)
-              if (t.isNil(payload._id)) {
-                return null
-              }
-              const [fileErr] = await a.of(
-                props.api
-                  .service('bucket-registry')
-                  .patch(
-                    payload._id,
-                    { alias: payload.alias },
-                    { query: { includeAuthors: true } }
-                  )
-              )
-              if (fileErr) {
-                return {
-                  status: ctx.status.fail,
-                  error: fileErr,
-                  data,
-                }
-              }
-              return {
-                status: props.status,
-                error: null,
-                data: {},
-              }
-            },
-            remove: async () => {
-              const id = t.at('modal.id', props)
-              if (t.isNil(id)) {
-                return null
-              }
-              const [removeErr] = await a.of(
-                props.api.service('bucket-storage').remove(id)
-              )
-              if (removeErr) {
-                return {
-                  status: ctx.status.fail,
-                  error: removeErr,
-                  data: {},
-                }
-              }
-              return {
-                status: props.status,
-                error: null,
-                data: {},
-              }
-            },
-          })(t.at('modal.active', props))
+          return await ctx.macros.transmit(
+            [
+              {
+                form: 'upload',
+                method: data => props.api.upload(data),
+              },
+              {
+                form: 'file',
+                method: data =>
+                  t.isNil(data._id)
+                    ? null
+                    : props.api
+                        .service('bucket-registry')
+                        .patch(data._id, t.pick(['alias'], data), {
+                          query: { includeAuthors: true },
+                        }),
+              },
+              {
+                form: 'remove',
+                dataAt: 'modal.id',
+                method: id =>
+                  t.isNil(id)
+                    ? null
+                    : props.api.service('bucket-storage').remove(id),
+              },
+            ],
+            props
+          )
         },
         modal(props) {
           return ctx.macros.modal(props)
@@ -535,7 +488,7 @@ export const home = mx.fn((t, a, rx) =>
                               }}
                               label={{
                                 text: t.eq('upload', active)
-                                  ? 'Enter your file alias below and select a file to upload to continue.'
+                                  ? 'Select a file to upload and enter your file alias below to continue.'
                                   : 'Enter your file alias below to continue.',
                                 fontSize: 'lg',
                                 fontWeight: 'medium',

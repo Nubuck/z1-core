@@ -181,12 +181,56 @@ const datax = mx.fn(t => props => {
   }
 })
 const loadx = mx.fn((t, a) => async (loadList, props) => {
-  // TODO: exec loadlist and handle errs
-  return {
-    status: props.status,
-    error: null,
-    data: {},
-  }
+  const preResult = await a.map(loadList, 1, async load => {
+    if (t.and(t.isNil(load.method), t.notNil(load.data))) {
+      return {
+        error: null,
+        data: {
+          [load.entity]: load.data,
+        },
+      }
+    }
+    if (t.isNil(load.method)) {
+      return {
+        error: loadErr,
+        data: {
+          [load.entity]: null,
+        },
+      }
+    }
+    const [loadErr, loadResult] = await a.of(load.method)
+    if (loadErr) {
+      return {
+        error: loadErr,
+        data: {
+          [load.entity]: null,
+        },
+      }
+    }
+    return {
+      error: null,
+      data: {
+        [load.entity]: t.isNil(load.resultAt)
+          ? loadResult
+          : t.atOr('data', load.resultAt, loadResult),
+      },
+    }
+  })
+  return t.merge(
+    {
+      status: props.status,
+    },
+    t.reduce(
+      (collection, result) => {
+        return t.merge(collection, {
+          error: t.notNil(result.error) ? result.error : collection.error,
+          data: t.merge(collection.data, result.data),
+        })
+      },
+      { error: null, data: {} },
+      preResult
+    )
+  )
 })
 const formx = mx.fn(t => (forms, props) => {
   const active = t.match({
@@ -286,11 +330,41 @@ const formx = mx.fn(t => (forms, props) => {
   })(props.event)
 })
 const transmitx = mx.fn((t, a) => async (transmitList, props) => {
-  // TODO: active form from transmitList
+  const active = t.atOr(
+    t.atOr('none', 'modal.active', props),
+    'next.active',
+    props
+  )
+  const activeTransmit = t.find(
+    transmission => t.eq(active, transmission.form),
+    transmitList
+  )
+  if (t.isNil(activeTransmit)) {
+    return null
+  }
+  const data = t.notNil(activeTransmit.dataAt)
+    ? t.at(activeTransmit.dataAt, props)
+    : t.pathOr({}, ['form', activeTransmit.form, 'data'], props)
+  const method = activeTransmit.method(data)
+  if (t.isNil(method)) {
+    return null
+  }
+  const [transmitErr, transmitResult] = await a.of(method)
+  if (transmitErr) {
+    return {
+      status: ctx.status.fail,
+      error: bucketErr,
+      data,
+    }
+  }
   return {
     status: props.status,
     error: null,
-    data: {},
+    data: t.eq(activeTransmit.result, true)
+      ? t.notNil(activeTransmit.entity)
+        ? { [activeTransmit.entity]: transmitResult }
+        : transmitResult
+      : {},
   }
 })
 const modalx = mx.fn(t => props => {

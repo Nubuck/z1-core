@@ -44,7 +44,7 @@ export const home = mx.fn((t, a, rx) =>
             form => ({
               entity: form.entity,
               data: {},
-              ui: form.ui({ disabled: false }),
+              ui: form.ui({ status: ctx.status.init }),
             }),
             forms
           ),
@@ -60,32 +60,23 @@ export const home = mx.fn((t, a, rx) =>
           return ctx.macros.data(props)
         },
         async load(props) {
-          const [machErr, machines] = await a.of(
-            props.api.service('machines').find({
-              query: {
-                $sort: {
-                  updatedAt: -1,
-                },
-                $limit: 10000,
+          return await ctx.macros.load(
+            [
+              {
+                entity: 'machines',
+                method: props.api.service('machines').find({
+                  query: {
+                    $sort: {
+                      updatedAt: -1,
+                    },
+                    $limit: 10000,
+                  },
+                }),
+                resultAt: 'data',
               },
-            })
+            ],
+            props
           )
-          if (machErr) {
-            return {
-              status: props.status,
-              error: machErr,
-              data: {
-                machines: [],
-              },
-            }
-          }
-          return {
-            status: props.status,
-            error: null,
-            data: {
-              machines: machines.data,
-            },
-          }
         },
         subscribe(props) {
           const mutator = t.at('mutators.dataChange', props)
@@ -112,57 +103,29 @@ export const home = mx.fn((t, a, rx) =>
           return ctx.macros.form(forms, props)
         },
         async transmit(props) {
-          return await t.runMatch({
-            _: async () => null,
-            machine: async () => {
-              const data = t.at('form.machine.data', props)
-              const payload = t.pick(['_id', 'alias'], data)
-              if (t.isNil(payload._id)) {
-                return null
-              }
-              const [machErr] = await a.of(
-                props.api
-                  .service('machines')
-                  .patch(payload._id, { alias: payload.alias })
-              )
-              if (machErr) {
-                return {
-                  status: ctx.status.fail,
-                  error: machErr,
-                  data,
-                }
-              }
-              return {
-                status: props.status,
-                error: null,
-                data: {},
-              }
-            },
-            login: async () => {
-              const data = t.at('form.login.data', props)
-              const payload = t.pick(['_id', 'alias'], data)
-              if (t.isNil(payload._id)) {
-                return null
-              }
-              const [loginErr] = await a.of(
-                props.api
-                  .service('machine-logins')
-                  .patch(payload._id, { alias: payload.alias })
-              )
-              if (loginErr) {
-                return {
-                  status: ctx.status.fail,
-                  error: loginErr,
-                  data,
-                }
-              }
-              return {
-                status: props.status,
-                error: null,
-                data: {},
-              }
-            },
-          })(t.at('modal.active', props))
+          return ctx.macros.transmit(
+            [
+              {
+                form: 'machine',
+                method: data =>
+                  t.isNil(data._id)
+                    ? null
+                    : props.api
+                        .service('machines')
+                        .patch(data._id, t.pick(['alias'], data)),
+              },
+              {
+                form: 'login',
+                method: data =>
+                  t.isNil(data._id)
+                    ? null
+                    : props.api
+                        .service('machine-logins')
+                        .patch(data._id, t.pick(['alias'], data)),
+              },
+            ],
+            props
+          )
         },
         modal(props) {
           return ctx.macros.modal(props)

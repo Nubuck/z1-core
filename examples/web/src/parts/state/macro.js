@@ -400,22 +400,27 @@ const modalx = mx.fn(t => props => {
   })(props.event)
 })
 
-const initx = mx.fn(t => (initial = {}) =>
-  t.mergeDeepRight(
-    {
+const initx = mx.fn(t => (data = {}, forms = {}, modal = {}) => ({
+  data,
+  form: t.mapObjIndexed(
+    form => ({
+      entity: form.entity,
       data: {},
-      form: {},
-      modal: {
-        open: false,
-        active: null,
-        id: null,
-        title: {},
-        content: {},
-      },
+      ui: form.ui({ event: types.event.init, status: types.status.init }),
+    }),
+    forms
+  ),
+  modal: t.merge(
+    {
+      open: false,
+      active: null,
+      id: null,
+      title: {},
+      content: {},
     },
-    initial
-  )
-)
+    modal
+  ),
+}))
 
 // main
 export const macro = {

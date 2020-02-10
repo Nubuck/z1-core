@@ -2,73 +2,73 @@ import React from 'react'
 import mx from '@z1/lib-feature-macros'
 import sc from '@z1/lib-ui-schema'
 
-// parts
-const forms = mx.fn(t => ({
-  upload: {
-    entity: null,
-    ui: props =>
-      sc.form.create((f, k) =>
-        f({ type: k.object }, [
-          f('uri', {
-            title: 'File to upload',
-            type: k.string,
-            format: k.format.dataUrl,
-            required: true,
-            ui: {
-              [k.ui.placeholder]: 'Select the file to upload',
-              [k.ui.disabled]: t.eq('loading', t.at('status', props)),
-            },
-          }),
-          f('alias', {
-            title: 'File Alias',
-            type: k.string,
-            required: true,
-            ui: {
-              [k.ui.placeholder]: 'Enter an alias for this file',
-              [k.ui.disabled]: t.eq('loading', t.at('status', props)),
-            },
-          }),
-        ])
-      ),
-  },
-  file: {
-    entity: 'files',
-    ui: props =>
-      sc.form.create((f, k) =>
-        f({ type: k.object }, [
-          f('alias', {
-            title: 'File Alias',
-            type: k.string,
-            required: true,
-            ui: {
-              [k.ui.placeholder]: 'Enter an alias for this file',
-              [k.ui.disabled]: t.eq('loading', t.at('status', props)),
-            },
-          }),
-        ])
-      ),
-  },
-}))
-
 // main
-export const home = mx.fn((t, a, rx) =>
+export const home = mx.fn(t =>
   mx.view.create('home', {
     state(ctx) {
+      const forms = {
+        upload: {
+          entity: null,
+          ui: props =>
+            sc.form.create((f, k) =>
+              f({ type: k.object }, [
+                f('uri', {
+                  title: 'File to upload',
+                  type: k.string,
+                  format: k.format.dataUrl,
+                  required: true,
+                  ui: {
+                    [k.ui.placeholder]: 'Select the file to upload',
+                    [k.ui.disabled]: t.eq(
+                      ctx.status.loading,
+                      t.at('status', props)
+                    ),
+                  },
+                }),
+                f('alias', {
+                  title: 'File Alias',
+                  type: k.string,
+                  required: true,
+                  ui: {
+                    [k.ui.placeholder]: 'Enter an alias for this file',
+                    [k.ui.disabled]: t.eq(
+                      ctx.status.loading,
+                      t.at('status', props)
+                    ),
+                  },
+                }),
+              ])
+            ),
+        },
+        file: {
+          entity: 'files',
+          ui: props =>
+            sc.form.create((f, k) =>
+              f({ type: k.object }, [
+                f('alias', {
+                  title: 'File Alias',
+                  type: k.string,
+                  required: true,
+                  ui: {
+                    [k.ui.placeholder]: 'Enter an alias for this file',
+                    [k.ui.disabled]: t.eq(
+                      ctx.status.loading,
+                      t.at('status', props)
+                    ),
+                  },
+                }),
+              ])
+            ),
+        },
+      }
       return {
-        initial: ctx.macro.initial({
-          data: {
+        initial: ctx.macro.initial(
+          {
             url: null,
             files: [],
           },
-          form: t.mapObjIndexed(
-            form => ({
-              entity: form.entity,
-              data: {},
-              ui: form.ui({ status: ctx.status.init }),
-            }),
-            forms
-          ),
-        }),
+          forms
+        ),
         data(props) {
           return ctx.macro.data(props)
         },

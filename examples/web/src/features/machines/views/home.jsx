@@ -2,53 +2,47 @@ import React from 'react'
 import mx from '@z1/lib-feature-macros'
 import sc from '@z1/lib-ui-schema'
 
-// parts
-const aliasForm = mx.fn(t => entity => props =>
-  sc.form.create((f, k) =>
-    f({ type: k.object }, [
-      f('alias', {
-        title: `${t.to.sentenceCase(entity)} Alias`,
-        type: k.string,
-        required: true,
-        ui: {
-          [k.ui.placeholder]: `Enter an alias for this ${t.to.lowerCase(
-            entity
-          )}`,
-          [k.ui.disabled]: t.eq('loading', t.at('status', props)),
-        },
-      }),
-    ])
-  )
-)
-const forms = {
-  machine: {
-    entity: 'machines',
-    ui: aliasForm('machine'),
-  },
-  login: {
-    entity: 'machines.logins',
-    ui: aliasForm('login'),
-  },
-}
-
 // main
-export const home = mx.fn((t, a, rx) =>
+export const home = mx.fn(t =>
   mx.view.create('home', {
     state(ctx) {
+      const aliasForm = entity => props =>
+        sc.form.create((f, k) =>
+          f({ type: k.object }, [
+            f('alias', {
+              title: `${t.to.sentenceCase(entity)} Alias`,
+              type: k.string,
+              required: true,
+              ui: {
+                [k.ui.placeholder]: `Enter an alias for this ${t.to.lowerCase(
+                  entity
+                )}`,
+                [k.ui.disabled]: t.eq(
+                  ctx.status.loading,
+                  t.at('status', props)
+                ),
+              },
+            }),
+          ])
+        )
+
+      const forms = {
+        machine: {
+          entity: 'machines',
+          ui: aliasForm('machine'),
+        },
+        login: {
+          entity: 'machines.logins',
+          ui: aliasForm('login'),
+        },
+      }
       return {
-        initial: ctx.macro.initial({
-          data: {
+        initial: ctx.macro.initial(
+          {
             machines: [],
           },
-          form: t.mapObjIndexed(
-            form => ({
-              entity: form.entity,
-              data: {},
-              ui: form.ui({ status: ctx.status.init }),
-            }),
-            forms
-          ),
-        }),
+          forms
+        ),
         data(props) {
           return ctx.macro.data(props)
         },

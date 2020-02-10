@@ -49,82 +49,6 @@ const forms = {
       ),
   },
 }
-const modals = mx.fn(t => ({
-  title: t.runMatch({
-    _: () => ({ icon: null, label: null }),
-    upload: () => ({
-      icon: {
-        name: 'cloud-upload',
-        color: 'blue-500',
-        fontSize: '2xl',
-      },
-      label: {
-        text: 'File Upload',
-        color: 'blue-500',
-        fontSize: 'lg',
-      },
-    }),
-    file: () => ({
-      icon: {
-        name: 'gear',
-        color: 'blue-500',
-        fontSize: '2xl',
-      },
-      label: {
-        text: 'Edit file',
-        color: 'blue-500',
-        fontSize: 'lg',
-      },
-    }),
-    remove: () => ({
-      icon: {
-        name: 'trash',
-        color: 'red-500',
-        fontSize: '2xl',
-      },
-      label: {
-        text: 'Remove file',
-        color: 'red-500',
-        fontSize: 'lg',
-      },
-    }),
-  }),
-  content: next => t.omit(['modal', 'id', 'open', 'title'], next),
-  buttons: props =>
-    t.runMatch({
-      _: () => [],
-      remove: () => [
-        {
-          label: { text: 'Cancel' },
-          fill: 'ghost-solid',
-          size: 'sm',
-          color: 'blue-500',
-          margin: { right: 2 },
-          height: 10,
-          disabled: t.eq('loading', t.at('state.status', props)),
-          onClick: () => props.mutations.modalChange({ open: false }),
-        },
-        {
-          reverse: true,
-          icon: 'check-circle',
-          label: { text: 'Confirm' },
-          fill: 'outline',
-          size: 'sm',
-          colors: {
-            off: { content: 'red-500', border: 'red-500' },
-            on: { bg: 'green-500', border: 'green-500', content: 'white' },
-          },
-          height: 10,
-          loading: t.eq('loading', t.at('state.status', props)),
-          onClick: () =>
-            props.mutations.formTransmit({
-              form: 'remove',
-              id: t.at('state.modal.id', props),
-            }),
-        },
-      ],
-    })(t.atOr('upload', 'state.modal.active', props)),
-}))
 
 // main
 export const home = mx.fn((t, a, rx) =>
@@ -154,53 +78,6 @@ export const home = mx.fn((t, a, rx) =>
         },
         data(props) {
           return ctx.macros.data(props)
-          // return {
-          //   status: props.status,
-          //   error: t.atOr(props.error, 'next.error', props),
-          //   data: t.runMatch({
-          //     _: () => props.data,
-          //     [ctx.event.dataLoadComplete]: () => {
-          //       return {
-          //         url: t.atOr('/api', 'next.data.url', props),
-          //         files: t.atOr([], 'next.data.files', props),
-          //       }
-          //     },
-          //     [ctx.event.dataChange]: () => {
-          //       // events from subscribe
-          //       const event = t.at('next.event', props)
-          //       const file = t.at('next.data', props)
-          //       const files = t.at('data.files', props)
-          //       if (t.or(t.isNil(event), t.isNil(file))) {
-          //         return props.data
-          //       }
-          //       return t.runMatch({
-          //         _: () => props.data,
-          //         created: () =>
-          //           t.merge(props.data, {
-          //             files: t.append(file, files),
-          //           }),
-          //         patched: () =>
-          //           t.merge(props.data, {
-          //             files: t.update(
-          //               t.findIndex(
-          //                 current => t.eq(current._id, file._id),
-          //                 files
-          //               ),
-          //               file,
-          //               files
-          //             ),
-          //           }),
-          //         removed: () =>
-          //           t.merge(props.data, {
-          //             files: t.filter(
-          //               current => t.not(t.eq(current._id, file._id)),
-          //               files
-          //             ),
-          //           }),
-          //       })(event)
-          //     },
-          //   })(props.event),
-          // }
         },
         async load(props) {
           const [filesErr, files] = await a.of(
@@ -371,30 +248,7 @@ export const home = mx.fn((t, a, rx) =>
           })(t.at('modal.active', props))
         },
         modal(props) {
-          return t.runMatch({
-            _: () => props.modal,
-            [ctx.event.modalChange]: () => {
-              const active = t.at('next.active', props)
-              return t.merge(props.modal, {
-                active,
-                open: t.atOr(false, 'next.open', props),
-                id: t.atOr(null, 'next.id', props),
-                title: modals.title(active),
-                content: modals.content(props.next),
-              })
-            },
-            [ctx.event.formTransmitComplete]: () => {
-              return t.isNil(t.at('next.error', props))
-                ? t.merge(props.modal, {
-                    open: false,
-                    active: null,
-                    id: null,
-                    title: {},
-                    content: {},
-                  })
-                : props.modal
-            },
-          })(props.event)
+          return ctx.macros.modal(props)
         },
       }
     },
@@ -456,6 +310,18 @@ export const home = mx.fn((t, a, rx) =>
                       props.mutations.modalChange({
                         open: true,
                         active: 'upload',
+                        title: {
+                          icon: {
+                            name: 'cloud-upload',
+                            color: 'blue-500',
+                            fontSize: '2xl',
+                          },
+                          label: {
+                            text: 'File Upload',
+                            color: 'blue-500',
+                            fontSize: 'lg',
+                          },
+                        },
                       })
                     }
                   />
@@ -599,6 +465,18 @@ export const home = mx.fn((t, a, rx) =>
                               props.mutations.modalChange({
                                 open: true,
                                 active: 'file',
+                                title: {
+                                  icon: {
+                                    name: 'gear',
+                                    color: 'blue-500',
+                                    fontSize: '2xl',
+                                  },
+                                  label: {
+                                    text: 'Edit file',
+                                    color: 'blue-500',
+                                    fontSize: 'lg',
+                                  },
+                                },
                                 id: file._id,
                               }),
                           },
@@ -618,6 +496,18 @@ export const home = mx.fn((t, a, rx) =>
                                 open: true,
                                 active: 'remove',
                                 id: file.fileId,
+                                title: {
+                                  icon: {
+                                    name: 'trash',
+                                    color: 'red-500',
+                                    fontSize: '2xl',
+                                  },
+                                  label: {
+                                    text: 'Remove file',
+                                    color: 'red-500',
+                                    fontSize: 'lg',
+                                  },
+                                },
                                 name: file.originalName,
                               }),
                           },
@@ -636,7 +526,50 @@ export const home = mx.fn((t, a, rx) =>
                       x: 'center',
                     },
                   }}
-                  buttons={modals.buttons(props)}
+                  buttons={t.runMatch({
+                    _: () => [],
+                    remove: () => [
+                      {
+                        label: { text: 'Cancel' },
+                        fill: 'ghost-solid',
+                        size: 'sm',
+                        color: 'blue-500',
+                        margin: { right: 2 },
+                        height: 10,
+                        disabled: t.eq(
+                          ctx.status.loading,
+                          t.at('state.status', props)
+                        ),
+                        onClick: () =>
+                          props.mutations.modalChange({ open: false }),
+                      },
+                      {
+                        reverse: true,
+                        icon: 'check-circle',
+                        label: { text: 'Confirm' },
+                        fill: 'outline',
+                        size: 'sm',
+                        colors: {
+                          off: { content: 'red-500', border: 'red-500' },
+                          on: {
+                            bg: 'green-500',
+                            border: 'green-500',
+                            content: 'white',
+                          },
+                        },
+                        height: 10,
+                        loading: t.eq(
+                          ctx.status.loading,
+                          t.at('state.status', props)
+                        ),
+                        onClick: () =>
+                          props.mutations.formTransmit({
+                            form: 'remove',
+                            id: t.at('state.modal.id', props),
+                          }),
+                      },
+                    ],
+                  })(t.atOr('upload', 'state.modal.active', props))}
                 >
                   <ctx.Match
                     value={t.atOr('upload', 'state.modal.active', props)}
@@ -693,6 +626,7 @@ export const home = mx.fn((t, a, rx) =>
                               )}
                               onSubmit={payload =>
                                 props.mutations.formTransmit({
+                                  form: active,
                                   data: payload.formData,
                                 })
                               }

@@ -30,36 +30,6 @@ const forms = {
     ui: aliasForm('login'),
   },
 }
-const modals = mx.fn(t => ({
-  title: t.runMatch({
-    _: () => ({ icon: null, label: null }),
-    machine: () => ({
-      icon: {
-        name: 'laptop',
-        color: 'blue-500',
-        fontSize: '2xl',
-      },
-      label: {
-        text: 'Machine',
-        color: 'blue-500',
-        fontSize: 'lg',
-      },
-    }),
-    login: () => ({
-      icon: {
-        name: 'user-circle',
-        color: 'blue-500',
-        fontSize: '2xl',
-      },
-      label: {
-        text: 'Machine Login',
-        color: 'blue-500',
-        fontSize: 'lg',
-      },
-    }),
-  }),
-  content: next => t.omit(['modal', 'id', 'open', 'title'], next),
-}))
 
 // main
 export const home = mx.fn((t, a, rx) =>
@@ -264,30 +234,7 @@ export const home = mx.fn((t, a, rx) =>
           })(t.at('modal.active', props))
         },
         modal(props) {
-          return t.runMatch({
-            _: () => props.modal,
-            [ctx.event.modalChange]: () => {
-              const active = t.at('next.active', props)
-              return t.merge(props.modal, {
-                active,
-                open: t.atOr(false, 'next.open', props),
-                id: t.atOr(null, 'next.id', props),
-                title: modals.title(active),
-                content: modals.content(props.next),
-              })
-            },
-            [ctx.event.formTransmitComplete]: () => {
-              return t.isNil(t.at('next.error', props))
-                ? t.merge(props.modal, {
-                    open: false,
-                    active: null,
-                    id: null,
-                    title: {},
-                    content: {},
-                  })
-                : props.modal
-            },
-          })(props.event)
+          return ctx.macros.modal(props)
         },
       }
     },
@@ -394,6 +341,18 @@ export const home = mx.fn((t, a, rx) =>
                                 open: true,
                                 active: 'machine',
                                 id: machine._id,
+                                title: {
+                                  icon: {
+                                    name: 'laptop',
+                                    color: 'blue-500',
+                                    fontSize: '2xl',
+                                  },
+                                  label: {
+                                    text: 'Machine',
+                                    color: 'blue-500',
+                                    fontSize: 'lg',
+                                  },
+                                },
                                 text:
                                   'Enter an alias for this machine below to continue.',
                               }),
@@ -488,6 +447,18 @@ export const home = mx.fn((t, a, rx) =>
                                         open: true,
                                         active: 'login',
                                         id: login._id,
+                                        title: {
+                                          icon: {
+                                            name: 'user-circle',
+                                            color: 'blue-500',
+                                            fontSize: '2xl',
+                                          },
+                                          label: {
+                                            text: 'Machine Login',
+                                            color: 'blue-500',
+                                            fontSize: 'lg',
+                                          },
+                                        },
                                         text:
                                           'Enter an alias for this login below to continue.',
                                       }),
@@ -561,6 +532,7 @@ export const home = mx.fn((t, a, rx) =>
                     formData={t.path(['state', 'form', active, 'data'], props)}
                     onSubmit={payload =>
                       props.mutations.formTransmit({
+                        form: active,
                         data: payload.formData,
                       })
                     }

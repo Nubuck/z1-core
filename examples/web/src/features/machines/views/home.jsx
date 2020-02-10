@@ -251,7 +251,7 @@ export const home = mx.fn(t =>
                         <ctx.MapIndexed
                           items={t.atOr([], 'logins', machine)}
                           render={(login, index) => {
-                            const online = t.eq(login.status, 'online')
+                            const online = t.eq('online', login.status)
                             return (
                               <ctx.ListItem
                                 key={`nested_login_${login._id}_${index}`}

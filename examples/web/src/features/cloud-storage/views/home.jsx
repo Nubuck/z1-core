@@ -178,8 +178,8 @@ export const home = mx.fn(t =>
                       color: 'blue-500',
                     }}
                     label={{
-                      fontWeight: 'bold',
                       text: 'Cloud Storage',
+                      fontWeight: 'bold',
                       fontSize: 'xl',
                     }}
                   />

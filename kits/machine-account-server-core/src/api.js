@@ -166,6 +166,24 @@ export const api = (z, props) => {
             })(type)
             return ctx
           }
+          const withQueryParams = ctx => {
+            const excludeLogins = t.at('params.query.excludeLogins', ctx)
+            const includeMachine = t.at('params.query.includeMachine', ctx)
+            if (t.and(t.isNil(excludeLogins), t.isNil(includeMachine))) {
+              return ctx
+            }
+            ctx.params.query = t.omit(
+              ['excludeLogins', 'includeMachine'],
+              ctx.params.query
+            )
+            if (t.notNil(excludeLogins)) {
+              ctx.params.excludeLogins = excludeLogins
+            }
+            if (t.notNil(includeMachine)) {
+              ctx.params.includeMachine = includeMachine
+            }
+            return ctx
+          }
           const withLogins = h.common.when(
             ctx => {
               return t.not(t.atOr(false, 'params.excludeLogins', ctx))
@@ -214,9 +232,17 @@ export const api = (z, props) => {
             hooks: {
               before: {
                 all: [h.auth.authenticate('jwt')],
-                create: [h.common.disallow('external'), withAlias('machine')],
+                get: [withQueryParams],
+                find: [withQueryParams],
+                create: [
+                  h.common.disallow('external'),
+                  withAlias('machine'),
+                  withQueryParams,
+                ],
+                patch: [withQueryParams],
               },
               after: {
+                get: [withLogins],
                 find: [withLogins],
                 get: [withLogins],
                 patch: [withLogins],
@@ -230,9 +256,17 @@ export const api = (z, props) => {
               hooks: {
                 before: {
                   all: [h.auth.authenticate('jwt')],
-                  create: [h.common.disallow('external'), withAlias('login')],
+                  get: [withQueryParams],
+                  find: [withQueryParams],
+                  create: [
+                    h.common.disallow('external'),
+                    withAlias('login'),
+                    withQueryParams,
+                  ],
+                  patch: [withQueryParams],
                 },
                 after: {
+                  get: [withMachine],
                   find: [withMachine],
                   get: [withMachine],
                   patch: [withMachine],

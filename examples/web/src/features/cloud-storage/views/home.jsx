@@ -164,10 +164,27 @@ export const home = mx.fn(t =>
         })(t.atOr('user', 'type', creator))
       return props => {
         const status = t.at('state.status', props)
+        const fileUpload = () =>
+          props.mutations.modalChange({
+            open: true,
+            active: 'upload',
+            title: {
+              icon: {
+                name: 'cloud-upload',
+                color: 'blue-500',
+                fontSize: '2xl',
+              },
+              label: {
+                text: 'File Upload',
+                color: 'blue-500',
+                fontSize: 'lg',
+              },
+            },
+          })
         return (
           <ctx.Page
             key="cloud-storage"
-            loading={t.includes(status, [ctx.status.waiting, ctx.status.init])}
+            loading={t.includes(status, [ctx.status.init, ctx.status.waiting])}
             render={() => (
               <React.Fragment>
                 <ctx.Row key="title-bar" margin={{ bottom: 4 }}>
@@ -199,30 +216,47 @@ export const home = mx.fn(t =>
                       },
                     }}
                     height={8}
-                    onClick={() =>
-                      props.mutations.modalChange({
-                        open: true,
-                        active: 'upload',
-                        title: {
-                          icon: {
-                            name: 'cloud-upload',
-                            color: 'blue-500',
-                            fontSize: '2xl',
-                          },
-                          label: {
-                            text: 'File Upload',
-                            color: 'blue-500',
-                            fontSize: 'lg',
-                          },
-                        },
-                      })
-                    }
+                    onClick={fileUpload}
                   />
                 </ctx.Row>
                 <ctx.VList
                   key="file-list"
                   items={t.atOr([], 'state.data.files', props)}
                   rowHeight={80}
+                  noRowsRenderer={() => (
+                    <ctx.IconLabel
+                      width="full"
+                      padding={3}
+                      flexDirection="col"
+                      color={['gray-500', { hover: 'yellow-500' }]}
+                      cursor="pointer"
+                      slots={{
+                        icon: {
+                          x: 'center',
+                          margin: { bottom: 3 },
+                        },
+                        label: {
+                          x: 'center',
+                        },
+                      }}
+                      icon={{
+                        name: 'folder-open',
+                        size: '4xl',
+                      }}
+                      label={{
+                        text: 'There are currently no File Uploads',
+                        fontWeight: 'medium',
+                        fontSize: 'lg',
+                        margin: { bottom: 3 },
+                      }}
+                      info={{
+                        text: 'Be the first to upload a file',
+                        fontWeight: 'light',
+                        fontSize: 'lg',
+                      }}
+                      onClick={fileUpload}
+                    />
+                  )}
                   render={(file, rowProps) => {
                     const creator = creatorProps(t.atOr({}, 'creator', file))
                     const hasAlias = t.notNil(file.alias)

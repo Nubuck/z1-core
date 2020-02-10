@@ -130,7 +130,7 @@ export const home = mx.fn(t =>
         return (
           <ctx.Page
             key="machines"
-            loading={t.includes(status, [ctx.status.waiting, ctx.status.init])}
+            loading={t.includes(status, [ctx.status.init, ctx.status.waiting])}
             render={() => (
               <React.Fragment>
                 <ctx.IconLabel

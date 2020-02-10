@@ -27,7 +27,9 @@ export const login = mx.fn((t, a) =>
                 entity: 'login',
                 method: props.api
                   .service('machine-logins')
-                  .get(props.params.detail),
+                  .get(props.params.detail, {
+                    query: { includeMachine: true },
+                  }),
               },
               {
                 entity: 'files',
@@ -180,7 +182,6 @@ export const login = mx.fn((t, a) =>
                       }}
                       info={{
                         text: t.atOr('', 'state.data.login.alias', props),
-                        fontWeight: 'medium',
                         fontSize: 'lg',
                         letterSpacing: 'wide',
                       }}
@@ -210,7 +211,6 @@ export const login = mx.fn((t, a) =>
                       }}
                       info={{
                         text: t.atOr('', 'state.data.login.role', props),
-                        fontWeight: 'medium',
                         fontSize: 'lg',
                         letterSpacing: 'wide',
                       }}
@@ -238,7 +238,6 @@ export const login = mx.fn((t, a) =>
                       }}
                       info={{
                         text: t.atOr('', 'state.data.login.hostname', props),
-                        fontWeight: 'medium',
                         fontSize: 'lg',
                         letterSpacing: 'wide',
                       }}
@@ -266,7 +265,6 @@ export const login = mx.fn((t, a) =>
                       }}
                       info={{
                         text: t.atOr('', 'state.data.login.username', props),
-                        fontWeight: 'medium',
                         fontSize: 'lg',
                         letterSpacing: 'wide',
                       }}
@@ -274,27 +272,58 @@ export const login = mx.fn((t, a) =>
                     />
                   </ctx.Col>
                   <ctx.Col xs={12} md={6} x="left">
-                    <ctx.IconLabel
-                      margin={{ bottom: 3 }}
-                      icon={{
-                        name: 'cloud-upload-alt',
-                        size: '2xl',
-                        color: 'blue-500',
-                      }}
-                      label={{
-                        text: `${t.atOr(
-                          '',
-                          'state.data.login.alias',
-                          props
-                        )} File Uploads`,
-                        fontWeight: 'medium',
-                        fontSize: 'lg',
-                      }}
+                    <ctx.When
+                      is={t.notZeroLen(t.atOr([], 'state.data.files', props))}
+                      render={() => (
+                        <ctx.IconLabel
+                          margin={{ bottom: 4 }}
+                          icon={{
+                            name: 'cloud-upload-alt',
+                            size: '2xl',
+                            color: 'blue-500',
+                          }}
+                          label={{
+                            text: `${t.atOr(
+                              '',
+                              'state.data.login.alias',
+                              props
+                            )} File Uploads`,
+                            fontWeight: 'medium',
+                            fontSize: 'lg',
+                          }}
+                        />
+                      )}
                     />
                     <ctx.VList
                       key="file-list"
                       items={t.atOr([], 'state.data.files', props)}
                       rowHeight={80}
+                      noRowsRenderer={() => (
+                        <ctx.IconLabel
+                          width="full"
+                          padding={3}
+                          flexDirection="col"
+                          color="gray-500"
+                          slots={{
+                            icon: {
+                              x: 'center',
+                              margin: { bottom: 3 },
+                            },
+                            label: {
+                              x: 'center',
+                            },
+                          }}
+                          icon={{
+                            name: 'folder-open',
+                            size: '4xl',
+                          }}
+                          label={{
+                            text: 'This login has no File Uploads',
+                            fontWeight: 'medium',
+                            fontSize: 'lg',
+                          }}
+                        />
+                      )}
                       render={(file, rowProps) => {
                         const hasAlias = t.notNil(file.alias)
                         const fileIcon = ctx.icons.file(file.ext)
@@ -333,7 +362,6 @@ export const login = mx.fn((t, a) =>
                               slots: {
                                 label: {
                                   display: 'flex',
-                                  // flexDirection: 'row',
                                   margin: { top: 1 },
                                   y: 'center',
                                 },
@@ -354,7 +382,6 @@ export const login = mx.fn((t, a) =>
                                 flexDirection: 'col',
                                 y: 'center',
                                 x: 'center',
-                                alignSelf: 'stretch',
                                 fontSize: hasAlias ? 'sm' : 'md',
                                 fontWeight: hasAlias ? 'light' : 'nornal',
                                 letterSpacing: 'wide',

@@ -25,7 +25,6 @@ export const home = mx.fn(t =>
             }),
           ])
         )
-
       const forms = {
         machine: {
           entity: 'machines',
@@ -90,7 +89,7 @@ export const home = mx.fn(t =>
           return ctx.macro.form(forms, props)
         },
         async transmit(props) {
-          return ctx.macro.transmit(
+          return await ctx.macro.transmit(
             [
               {
                 form: 'machine',

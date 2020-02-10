@@ -32,18 +32,19 @@ export const subx = mx.fn((t, _, rx) => subs => {
   if (t.eq(t.len(next), 1)) {
     const early$ = t.isType(entry.filter, 'function')
       ? [rx.filter(withEvent(entry.filter, entry.event))]
-      : [
-          rx.map(current =>
-            entry.mutator({
-              change: 'sub',
-              id: t.atOr('_id', 'id', entry),
-              parent: t.at('parent', entry),
-              entity: entry.entity,
-              event: entry.event,
-              data: current,
-            })
-          ),
-        ]
+      : []
+    early$.push(
+      rx.map(current =>
+        entry.mutator({
+          change: 'sub',
+          id: t.atOr('_id', 'id', entry),
+          parent: t.at('parent', entry),
+          entity: entry.entity,
+          event: entry.event,
+          data: current,
+        })
+      )
+    )
     return entry.service$.pipe(...early$)
   }
   const rest$ = t.map(obs => {

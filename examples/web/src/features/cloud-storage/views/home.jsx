@@ -153,53 +153,54 @@ export const home = mx.fn((t, a, rx) =>
           },
         },
         data(props) {
-          return {
-            status: props.status,
-            error: t.atOr(props.error, 'next.error', props),
-            data: t.runMatch({
-              _: () => props.data,
-              [ctx.event.dataLoadComplete]: () => {
-                return {
-                  url: t.atOr('/api', 'next.data.url', props),
-                  files: t.atOr([], 'next.data.files', props),
-                }
-              },
-              [ctx.event.dataChange]: () => {
-                // events from subscribe
-                const event = t.at('next.event', props)
-                const file = t.at('next.data', props)
-                const files = t.at('data.files', props)
-                if (t.or(t.isNil(event), t.isNil(file))) {
-                  return props.data
-                }
-                return t.runMatch({
-                  _: () => props.data,
-                  created: () =>
-                    t.merge(props.data, {
-                      files: t.append(file, files),
-                    }),
-                  patched: () =>
-                    t.merge(props.data, {
-                      files: t.update(
-                        t.findIndex(
-                          current => t.eq(current._id, file._id),
-                          files
-                        ),
-                        file,
-                        files
-                      ),
-                    }),
-                  removed: () =>
-                    t.merge(props.data, {
-                      files: t.filter(
-                        current => t.not(t.eq(current._id, file._id)),
-                        files
-                      ),
-                    }),
-                })(event)
-              },
-            })(props.event),
-          }
+          return ctx.macros.data(props)
+          // return {
+          //   status: props.status,
+          //   error: t.atOr(props.error, 'next.error', props),
+          //   data: t.runMatch({
+          //     _: () => props.data,
+          //     [ctx.event.dataLoadComplete]: () => {
+          //       return {
+          //         url: t.atOr('/api', 'next.data.url', props),
+          //         files: t.atOr([], 'next.data.files', props),
+          //       }
+          //     },
+          //     [ctx.event.dataChange]: () => {
+          //       // events from subscribe
+          //       const event = t.at('next.event', props)
+          //       const file = t.at('next.data', props)
+          //       const files = t.at('data.files', props)
+          //       if (t.or(t.isNil(event), t.isNil(file))) {
+          //         return props.data
+          //       }
+          //       return t.runMatch({
+          //         _: () => props.data,
+          //         created: () =>
+          //           t.merge(props.data, {
+          //             files: t.append(file, files),
+          //           }),
+          //         patched: () =>
+          //           t.merge(props.data, {
+          //             files: t.update(
+          //               t.findIndex(
+          //                 current => t.eq(current._id, file._id),
+          //                 files
+          //               ),
+          //               file,
+          //               files
+          //             ),
+          //           }),
+          //         removed: () =>
+          //           t.merge(props.data, {
+          //             files: t.filter(
+          //               current => t.not(t.eq(current._id, file._id)),
+          //               files
+          //             ),
+          //           }),
+          //       })(event)
+          //     },
+          //   })(props.event),
+          // }
         },
         async load(props) {
           const [filesErr, files] = await a.of(
@@ -236,7 +237,7 @@ export const home = mx.fn((t, a, rx) =>
           return ctx.macros.subscribe([
             {
               id: '_id',
-              entity: 'file',
+              entity: 'files',
               service: props.api.service('bucket-registry'),
               events: ['created', 'patched', 'removed'],
               mutator: props.mutators.dataChange,

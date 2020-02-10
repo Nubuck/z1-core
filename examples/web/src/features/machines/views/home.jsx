@@ -88,81 +88,6 @@ export const home = mx.fn((t, a, rx) =>
         },
         data(props) {
           return ctx.macros.data(props)
-          // return {
-          //   status: props.status,
-          //   error: t.atOr(null, 'next.error', props),
-          //   data: t.runMatch({
-          //     _: () => props.data,
-          //     [ctx.event.dataLoadComplete]: () =>
-          //       t.merge(props.data, {
-          //         machines: t.atOr(
-          //           props.data.machines,
-          //           'next.data.machines',
-          //           props
-          //         ),
-          //       }),
-          //     [ctx.event.dataChange]: () => {
-          //       // events from subscribe
-          //       const event = t.at('next.event', props)
-          //       const machines = t.at('data.machines', props)
-          //       // machine events
-          //       if (t.eq('machine', t.at('next.entity', props))) {
-          //         const machine = t.at('next.data', props)
-          //         return t.merge(props.data, {
-          //           machines: t.runMatch({
-          //             _: () => machines,
-          //             created: () => t.append(machine, machines),
-          //             patched: () =>
-          //               t.update(
-          //                 t.findIndex(
-          //                   current => t.eq(current._id, machine._id),
-          //                   machines
-          //                 ),
-          //                 machine,
-          //                 machines
-          //               ),
-          //           })(event),
-          //         })
-          //       }
-          //       // login events
-          //       const login = t.at('next.data', props)
-          //       const machineIndex = t.findIndex(
-          //         machine => t.eq(machine._id, login.machineId),
-          //         machines
-          //       )
-          //       if (t.eq(machineIndex, -1)) {
-          //         return props.data
-          //       }
-          //       const logins = t.atOr(
-          //         [],
-          //         'logins',
-          //         machines[machineIndex] || {}
-          //       )
-          //       return t.merge(props.data, {
-          //         machines: t.adjust(
-          //           machineIndex,
-          //           machine =>
-          //             t.merge(machine, {
-          //               logins: t.runMatch({
-          //                 _: () => machine.logins,
-          //                 patched: () =>
-          //                   t.update(
-          //                     t.findIndex(
-          //                       current => t.eq(current._id, login._id),
-          //                       logins
-          //                     ),
-          //                     login,
-          //                     logins
-          //                   ),
-          //                 created: () => t.append(login, logins),
-          //               })(event),
-          //             }),
-          //           machines
-          //         ),
-          //       })
-          //     },
-          //   })(props.event),
-          // }
         },
         async load(props) {
           const [machErr, machines] = await a.of(
@@ -215,7 +140,7 @@ export const home = mx.fn((t, a, rx) =>
         },
         form(props) {
           const active = t.eq(ctx.event.modalChange, props.event)
-            ? t.atOr('none', 'next.modal', props)
+            ? t.atOr('none', 'next.active', props)
             : t.atOr('none', 'modal.active', props)
           const form = t.at(active, forms)
           if (t.isNil(form)) {

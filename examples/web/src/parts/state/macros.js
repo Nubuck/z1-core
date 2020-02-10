@@ -3,7 +3,7 @@ const { types } = mx.view
 
 // parts
 const isAction = mx.fn(t => current =>
-  t.allOf([t.has('type')(current), t.has('action')(current)])
+  t.allOf([t.has('type')(current), t.has('payload')(current)])
 )
 const subx = mx.fn((t, _, rx) => subs => {
   const next = t.reduce(
@@ -133,9 +133,9 @@ const datax = mx.fn(t => props => {
             if (t.isNil(parent)) {
               return props.data
             }
+            // path: machines.joins.logins
             const parentPath = t.head(entityList)
             const nestedPath = t.tail(entityList)
-            const lastIndex = t.len(nestedPath) - 1
             const parents = t.at(parentPath, props.data)
             return t.merge(props.data, {
               [parentPath]: t.adjust(
@@ -144,36 +144,31 @@ const datax = mx.fn(t => props => {
                   parents
                 ),
                 current => {
-                  const next = t.reduce(
-                    (collection, nextPath) => {
-                      if (t.neq(lastIndex, nextPath.index)) {
-                        const path = t.append(nextPath.key, collection.path)
-                        return t.merge(collection, {
-                          path,
-                          data: t.merge(collection.data, {
-                            [nextPath.key]: t.path(path, current),
-                          }),
-                        })
-                      }
-                      return t.merge(collection, {
-                        path: nestedPath,
-                        data: t.merge(collection.data, {
-                          [nextPath.key]: mutateEntityList(
-                            id,
-                            event,
-                            data,
-                            t.pathOr([], nestedPath, current)
-                          ),
-                        }),
-                      })
-                    },
-                    {
-                      path: [],
-                      data: {},
-                    },
-                    t.mapIndexed((key, index) => ({ key, index }), nestedPath)
+                  return t.mergeDeepRight(
+                    current,
+                    t.reduce(
+                      (collection, nextPath) => {
+                        if (t.eq(nextPath.index, 0)) {
+                          return t.merge(collection, {
+                            [nextPath.key]: mutateEntityList(
+                              id,
+                              event,
+                              data,
+                              t.pathOr([], nestedPath, current)
+                            ),
+                          })
+                        }
+                        return {
+                          [nextPath.key]: collection,
+                        }
+                      },
+                      {},
+                      t.mapIndexed(
+                        (key, index) => ({ key, index }),
+                        t.reverse(nestedPath)
+                      )
+                    )
                   )
-                  return t.merge(current, next.data)
                 },
                 parents
               ),

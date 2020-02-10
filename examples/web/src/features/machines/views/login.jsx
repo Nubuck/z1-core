@@ -50,10 +50,11 @@ export const login = mx.fn((t, a) =>
               service: props.api.service('machine-logins'),
               events: ['created', 'patched'],
               mutator: props.mutators.dataChange,
-              filter: loginOrAction =>
-                ctx.macro.isAction(loginOrAction)
-                  ? true
-                  : t.eq(props.params.detail, t.at('_id', loginOrAction)),
+              filter: (login, event) =>
+                t.and(
+                  t.eq('patched', event),
+                  t.eq(props.params.detail, t.at('_id', login))
+                ),
             },
           ])
         },

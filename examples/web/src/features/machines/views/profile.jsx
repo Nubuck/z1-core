@@ -12,42 +12,18 @@ export const profile = mx.fn((t, a) =>
           },
         },
         data(props) {
-          return {
-            status: props.status,
-            error: t.atOr(null, 'next.error', props),
-            data: t.runMatch({
-              _: () => props.data,
-              [ctx.event.dataLoadComplete]: () =>
-                t.merge(props.data, {
-                  machine: t.atOr(
-                    props.data.machine,
-                    'next.data.machine',
-                    props
-                  ),
-                }),
-            })(props.event),
-          }
+          return ctx.macro.data(props)
         },
         async load(props) {
-          const [machErr, machine] = await a.of(
-            props.api.service('machines').get(props.params.detail)
-          )
-          if (machErr) {
-            return {
-              status: props.status,
-              error: machErr,
-              data: {
-                machine: null,
+          return await ctx.macro.load(
+            [
+              {
+                entity: 'machine',
+                method: props.api.service('machines').get(props.params.detail),
               },
-            }
-          }
-          return {
-            status: props.status,
-            error: null,
-            data: {
-              machine,
-            },
-          }
+            ],
+            props
+          )
         },
       }
     },

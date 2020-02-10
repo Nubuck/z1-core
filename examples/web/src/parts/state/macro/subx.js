@@ -5,8 +5,8 @@ const { types } = mx.view
 export const isAction = mx.fn(t => current =>
   t.allOf([t.has('type')(current), t.has('payload')(current)])
 )
+const withEvent = (filter, event) => item => filter(item, event)
 export const subx = mx.fn((t, _, rx) => subs => {
-  const withEvent = (filter, event) => item => filter(item, event)
   const next = t.reduce(
     (collection, sub) => {
       const obs = t.map(

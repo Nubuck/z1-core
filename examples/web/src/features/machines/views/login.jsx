@@ -53,13 +53,18 @@ export const login = mx.fn((t, a) =>
               id: '_id',
               entity: 'login',
               service: props.api.service('machine-logins'),
-              events: ['created', 'patched'],
+              events: ['patched'],
               mutator: props.mutators.dataChange,
-              filter: (login, event) =>
-                t.and(
-                  t.eq('patched', event),
-                  t.eq(props.params.detail, t.at('_id', login))
-                ),
+              filter: login => t.eq(props.params.detail, t.at('_id', login)),
+            },
+            {
+              id: '_id',
+              entity: 'files',
+              service: props.api.service('bucket-registry'),
+              events: ['created', 'patched', 'removed'],
+              mutator: props.mutators.dataChange,
+              filter: file =>
+                t.eq(props.params.detail, t.at('createdBy', file)),
             },
           ])
         },
@@ -170,6 +175,7 @@ export const login = mx.fn((t, a) =>
                         text: 'alias',
                         fontSize: 'sm',
                         letterSpacing: 'wide',
+                        color: 'gray-500',
                       }}
                       info={{
                         text: t.atOr('', 'state.data.login.alias', props),
@@ -199,6 +205,7 @@ export const login = mx.fn((t, a) =>
                         text: 'role',
                         fontSize: 'sm',
                         letterSpacing: 'wide',
+                        color: 'gray-500',
                       }}
                       info={{
                         text: t.atOr('', 'state.data.login.role', props),
@@ -226,6 +233,7 @@ export const login = mx.fn((t, a) =>
                         text: 'host name',
                         fontSize: 'sm',
                         letterSpacing: 'wide',
+                        color: 'gray-500',
                       }}
                       info={{
                         text: t.atOr('', 'state.data.login.hostname', props),
@@ -253,6 +261,7 @@ export const login = mx.fn((t, a) =>
                         text: 'user name',
                         fontSize: 'sm',
                         letterSpacing: 'wide',
+                        color: 'gray-500',
                       }}
                       info={{
                         text: t.atOr('', 'state.data.login.username', props),
@@ -268,7 +277,7 @@ export const login = mx.fn((t, a) =>
                       margin={{ bottom: 3 }}
                       icon={{
                         name: 'cloud-upload-alt',
-                        size: '3xl',
+                        size: '2xl',
                         color: 'blue-500',
                       }}
                       label={{
@@ -277,8 +286,8 @@ export const login = mx.fn((t, a) =>
                           'state.data.login.alias',
                           props
                         )} File Uploads`,
-                        fontWeight: 'bold',
-                        fontSize: 'xl',
+                        fontWeight: 'medium',
+                        fontSize: 'lg',
                       }}
                     />
                     <ctx.VList
@@ -323,7 +332,7 @@ export const login = mx.fn((t, a) =>
                               slots: {
                                 label: {
                                   display: 'flex',
-                                  flexDirection: 'row',
+                                  // flexDirection: 'row',
                                   margin: { top: 1 },
                                   y: 'center',
                                 },

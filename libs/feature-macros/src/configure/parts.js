@@ -116,17 +116,18 @@ export const onRouteEnter = fn(
     const viewKey = findViewKey(paramType, routing, viewKeys)
     const activeMacro = viewMacros[viewKey.key]
     const activeState = state.views[viewKey.key]
+    const reEnter = t.eq(state.route.path, routing.route.path)
     const activeCtx = t.mergeAll([
       activeState,
       {
         event: types.event.routeEnter,
-        status: t.neq(activeState.status, types.status.init)
+        status: t.and(reEnter, t.neq(activeState.status, types.status.init))
           ? types.status.ready
           : types.status.waiting,
+        next: null,
+        reEnter,
       },
       routing,
-      { next: null },
-      { reEnter: t.eq(state.route.path, routing.route.path) },
     ])
     const nextActiveState = nextViewState(activeMacro, activeCtx)
     return t.mergeAll([

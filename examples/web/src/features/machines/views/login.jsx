@@ -72,13 +72,14 @@ export const login = mx.fn((t, a) =>
     },
     ui(ctx) {
       return props => {
+        const status = t.at('state.status', props)
         const online = t.eq('online', t.at('state.data.login.status', props))
         return (
           <ctx.Page
             key="machine-profile"
             loading={t.includes(status, [
-              ctx.status.waiting,
               ctx.status.init,
+              ctx.status.waiting,
               ctx.status.loading,
             ])}
             render={() => (

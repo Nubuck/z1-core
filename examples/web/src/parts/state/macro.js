@@ -400,8 +400,26 @@ const modalx = mx.fn(t => props => {
   })(props.event)
 })
 
+const initx = mx.fn(t => (initial = {}) =>
+  t.mergeDeepRight(
+    {
+      data: {},
+      form: {},
+      modal: {
+        open: false,
+        active: null,
+        id: null,
+        title: {},
+        content: {},
+      },
+    },
+    initial
+  )
+)
+
 // main
-export const macros = {
+export const macro = {
+  initial: initx,
   subscribe: subx,
   data: datax,
   load: loadx,

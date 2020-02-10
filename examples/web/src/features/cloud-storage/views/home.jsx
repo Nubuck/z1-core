@@ -55,7 +55,7 @@ export const home = mx.fn((t, a, rx) =>
   mx.view.create('home', {
     state(ctx) {
       return {
-        initial: {
+        initial: ctx.macro.initial({
           data: {
             url: null,
             files: [],
@@ -68,19 +68,12 @@ export const home = mx.fn((t, a, rx) =>
             }),
             forms
           ),
-          modal: {
-            open: false,
-            active: null,
-            id: null,
-            title: {},
-            content: {},
-          },
-        },
+        }),
         data(props) {
-          return ctx.macros.data(props)
+          return ctx.macro.data(props)
         },
         async load(props) {
-          return await ctx.macros.load(
+          return await ctx.macro.load(
             [
               {
                 entity: 'url',
@@ -104,7 +97,7 @@ export const home = mx.fn((t, a, rx) =>
           )
         },
         subscribe(props) {
-          return ctx.macros.subscribe([
+          return ctx.macro.subscribe([
             {
               id: '_id',
               entity: 'files',
@@ -115,10 +108,10 @@ export const home = mx.fn((t, a, rx) =>
           ])
         },
         form(props) {
-          return ctx.macros.form(forms, props)
+          return ctx.macro.form(forms, props)
         },
         async transmit(props) {
-          return await ctx.macros.transmit(
+          return await ctx.macro.transmit(
             [
               {
                 form: 'upload',
@@ -148,7 +141,7 @@ export const home = mx.fn((t, a, rx) =>
           )
         },
         modal(props) {
-          return ctx.macros.modal(props)
+          return ctx.macro.modal(props)
         },
       }
     },

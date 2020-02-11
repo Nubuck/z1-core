@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-machine-account-server-core",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/machine-account-server-core",

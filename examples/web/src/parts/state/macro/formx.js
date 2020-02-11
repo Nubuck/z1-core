@@ -83,6 +83,14 @@ export const formx = mx.fn(t => (forms, props) => {
         }),
       }
     },
+    [types.event.formChange]: () => {
+      return {
+        [active]: t.merge(activeForm, {
+          data: t.merge(activeForm.data, t.atOr({}, 'next.data', props)),
+          ui: form.ui(props),
+        }),
+      }
+    },
     [types.event.formTransmit]: () => {
       return {
         [active]: t.merge(activeForm, {

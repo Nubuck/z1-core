@@ -20,7 +20,7 @@ const renderIcon = fn(t => props => {
       ),
       {
         as: el,
-        className: `z1-icon ${prefix} ${iconPrefix}-${icon}${
+        className: `${prefix} ${iconPrefix}-${icon}${
           t.isNil(className) ? '' : ` ${className}`
         }`,
         box: t.merge(

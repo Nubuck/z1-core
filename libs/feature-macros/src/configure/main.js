@@ -205,7 +205,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
               return t.merge(state, {
                 views: t.merge(state.views, {
                   [state.active.view]: t.merge(activeState, {
-                    form: t.merge(activeState, nextForm),
+                    form: t.merge(activeState.form, nextForm),
                   }),
                 }),
               })

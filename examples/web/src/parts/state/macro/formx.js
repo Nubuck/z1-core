@@ -54,18 +54,26 @@ export const formx = mx.fn(t => (forms, props) => {
       const hasNested = t.gt(t.len(entityList), 1)
       const parentPath = t.head(entityList)
       const nestedPath = hasNested ? t.tail(entityList) : []
-      const preData = hasNested
-        ? t.reduce(
-            (collection, parent) => {
-              const nested = t.pathOr(null, nestedPath, parent)
-              return t.isType(nested, 'array')
-                ? t.concat(collection, nested)
-                : collection
-            },
-            [],
-            t.pathOr([], ['data', parentPath], props)
-          )
-        : t.pathOr([], ['data', parentPath], props)
+      const genPreData = () => {
+        const parentEntity = t.pathOr([], ['data', parentPath], props)
+        if (t.isType(parentEntity, 'object')) {
+          return t.pathOr([], ['data', ...entityList], props)
+        }
+        return hasNested
+          ? t.reduce(
+              (collection, parent) => {
+                const nested = t.pathOr(null, nestedPath, parent)
+                return t.isType(nested, 'array')
+                  ? t.concat(collection, nested)
+                  : collection
+              },
+              [],
+              // TODO: check data type of parent
+              t.pathOr([], ['data', parentPath], props)
+            )
+          : t.pathOr([], ['data', parentPath], props)
+      }
+      const preData = genPreData()
       const data = t.isType(preData, 'object')
         ? hasNested
           ? t.path(nestedPath, preData)
@@ -79,7 +87,7 @@ export const formx = mx.fn(t => (forms, props) => {
       return {
         [active]: t.merge(activeForm, {
           data,
-          ui: form.ui(props),
+          ui: form.ui(t.merge(props, { next: { form: active, data } })),
         }),
       }
     },

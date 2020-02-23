@@ -26,12 +26,17 @@ export const transmitx = mx.fn((t, a) => async (transmitList, props) => {
   if (transmitErr) {
     return {
       status: types.status.fail,
-      error: bucketErr,
+      error: transmitErr,
       data,
     }
   }
   return {
-    status: props.status,
+    status: t.and(
+      t.eq(activeTransmit.result, true),
+      t.has('status')(transmitResult || {})
+    )
+      ? transmitResult.status
+      : props.status,
     error: null,
     data: t.eq(activeTransmit.result, true)
       ? t.notNil(activeTransmit.entity)

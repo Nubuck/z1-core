@@ -46,7 +46,31 @@ export const datax = mx.fn(t => props => {
           return props.data
         }
         return t.runMatch({
-          _: () => props.data,
+          _: () => {
+            // NOTE: more complete data transforms needed
+            const data = t.at('next.data', props)
+            const entity = t.at('next.entity', props)
+            const entityList = t.split('.', entity)
+            const hasNested = t.gt(t.len(entityList), 1)
+            if (hasNested) {
+              const parentPath = t.head(entityList)
+              const current = t.at(parentPath, props.data)
+              const target = t.last(entityList)
+              return t.merge(props.data, {
+                [parentPath]: t.merge(current, {
+                  [target]: data,
+                }),
+              })
+            }
+            if (t.eq(t.at(entity, props.data), data)) {
+              return props.data
+            }
+            return t.and(t.notNil(data), t.notNil(entity))
+              ? t.merge(props.data, {
+                  [entity]: data,
+                })
+              : props.data
+          },
           sub: () => {
             const id = t.atOr('_id', 'next.id', props)
             const parent = t.at('next.parent', props)

@@ -14,7 +14,8 @@ export const route = z.fn(t => ctx => {
       ctx.views.ui(ctx.ui),
       nextState(props),
       props.mutations,
-      stateKey
+      stateKey,
+      props.dispatch
     )
   }
   Route.displayName = 'Route'

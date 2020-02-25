@@ -68,7 +68,6 @@ export const formx = mx.fn(t => (forms, props) => {
                   : collection
               },
               [],
-              // TODO: check data type of parent
               t.pathOr([], ['data', parentPath], props)
             )
           : t.pathOr([], ['data', parentPath], props)
@@ -82,12 +81,12 @@ export const formx = mx.fn(t => (forms, props) => {
             return t.eq(current._id, id)
           }, preData)
       if (t.isNil(data)) {
-        return activeForm
+        return { [active]: t.merge(activeForm, { ui: form.ui(props) }) }
       }
       return {
         [active]: t.merge(activeForm, {
           data,
-          ui: form.ui(t.merge(props, { next: { form: active, data } })),
+          ui: form.ui(t.merge(props, { next: { active, data } })),
         }),
       }
     },

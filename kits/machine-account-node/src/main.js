@@ -301,6 +301,13 @@ export const accountState = fn((t, a) => (boxName, props = {}) => {
             }
           } catch (e) {
             // log.debug('AUTH ERR', e)
+            dispatch(
+              box.mutators.authenticateComplete({
+                status: authStatus.fail,
+                user: null,
+                error: e,
+              })
+            )
             done()
           }
         }),

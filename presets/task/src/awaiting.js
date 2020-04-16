@@ -1,4 +1,3 @@
-
 export {
   delay,
   time,
@@ -15,11 +14,10 @@ export {
   result,
   awaited,
   awaited as awaitable,
-  throwRejections as throw,
+  throwRejections as doThrow,
   swallowRejections as swallow,
   ErrorList,
 }
-
 
 function ErrorList(message) {
   this.name = 'ErrorList'
@@ -27,17 +25,17 @@ function ErrorList(message) {
   this.stack = new Error().stack
   this.errors = []
   Object.defineProperty(this, 'length', {
-    get: function() {
+    get: function () {
       return this.errors.length
     },
   })
 }
 ErrorList.prototype = Object.create(Error.prototype)
 ErrorList.prototype.constructor = ErrorList
-ErrorList.prototype.add = function(err) {
+ErrorList.prototype.add = function (err) {
   this.errors.push(err)
 }
-ErrorList.prototype.get = function(index) {
+ErrorList.prototype.get = function (index) {
   return this.errors[index]
 }
 // ErrorList.prototype[Symbol.iterator] = function* () {
@@ -61,7 +59,7 @@ ErrorList.prototype.get = function(index) {
  * // => 5000
  */
 async function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms))
+  return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 /**
@@ -98,20 +96,20 @@ async function limit(goal, limiter) {
     const limitFn = typeof limiter === 'number' ? delay(limiter) : limiter
     let completed = false
     goal
-      .then(result => {
+      .then((result) => {
         if (complete()) return
         resolve(result)
       })
-      .catch(err => {
+      .catch((err) => {
         if (complete()) return
         reject(err)
       })
     limitFn
-      .then(result => {
+      .then((result) => {
         if (complete()) return
         reject(new Error('limit exceeded'))
       })
-      .catch(err => {
+      .catch((err) => {
         if (complete()) return
         reject(err)
       })
@@ -224,7 +222,7 @@ async function set(list, count = Infinity, ignore = 0) {
     const limit = Math.min(list.length - goal, ignore)
     const results = []
     const failures = new ErrorList('too many failures')
-    list.forEach(promise => promise.then(success).catch(error))
+    list.forEach((promise) => promise.then(success).catch(error))
 
     function success(result) {
       if (failures.length > limit) return
@@ -300,9 +298,9 @@ async function list(list, ignore = 0) {
  */
 
 async function object(container, ignore = 0) {
-  const containsPromise = key => typeof container[key].then === 'function'
+  const containsPromise = (key) => typeof container[key].then === 'function'
   const keys = Object.keys(container).filter(containsPromise)
-  const promises = keys.map(key => container[key])
+  const promises = keys.map((key) => container[key])
   const results = await list(promises, ignore)
   const obj = Object.assign({}, container)
   results.forEach((result, index) => {
@@ -340,15 +338,13 @@ async function map(list, concurrency, fn) {
         return resolve(results)
       }
       while (running < concurrency && index < list.length) {
-        fn(list[index])
-          .then(success(index))
-          .catch(error)
+        fn(list[index]).then(success(index)).catch(error)
         index++
         running++
       }
     }
     function success(i) {
-      return result => {
+      return (result) => {
         running--
         results[i] = result
         update()
@@ -379,7 +375,7 @@ async function failure(promise) {
   return Promise.resolve()
     .then(() => promise)
     .then(() => undefined)
-    .catch(err => err)
+    .catch((err) => err)
 }
 
 /**
@@ -414,7 +410,7 @@ async function success(promise) {
 async function result(promise) {
   return Promise.resolve()
     .then(() => promise)
-    .catch(err => err)
+    .catch((err) => err)
 }
 
 /**

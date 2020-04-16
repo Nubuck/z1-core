@@ -71,14 +71,14 @@ import update from 'ramda/es/update'
 import uniq from 'ramda/es/uniq'
 import values from 'ramda/es/values'
 import when from 'ramda/es/when'
-
+// case
 import { camelCase } from 'camel-case'
 import { snakeCase } from 'snake-case'
 import { pathCase } from 'path-case'
 import { sentenceCase } from 'sentence-case'
 import { dotCase } from 'dot-case'
 import { paramCase } from 'param-case'
-
+// tags
 import {
   html,
   safeHtml,
@@ -91,15 +91,15 @@ import {
   commaLists,
   oneLineCommaLists,
 } from 'common-tags'
-
+// utils
 import { globrex } from './globrex'
-
 import throttle from 'lodash.throttle'
-
+// types
 const isType = (subject, matcher) =>
   equals(toLower(rType(subject)), toLower(matcher))
-
-const getMatch = key => cases => {
+const ofType = (matcher, subject) => isType(subject, matcher)
+// pattern match
+const getMatch = (key) => (cases) => {
   const matched = has(key)(cases) ? cases[key] : null
   const nextElseCase = isNil(matched)
     ? has('_')(cases)
@@ -112,45 +112,41 @@ const getMatch = key => cases => {
     ? nextElseCase
     : matched
 }
-
-const match = cases => key => getMatch(`${key}`)(cases)
-
-const runMatch = cases => (key, value = {}) => {
+const match = (cases) => (key) => getMatch(`${key}`)(cases)
+const runMatch = (cases) => (key, value = {}) => {
   const matched = match(cases)(key)
   return isType(matched, 'function') ? matched(value) : null
 }
-
-const trampoline = fn => (...args) => {
+// utils
+const trampoline = (fn) => (...args) => {
   let result = fn(...args)
   while (isType(result, 'function')) {
     result = result()
   }
   return result
 }
-
+const valPipe = (val) => (...args) => pipe(...args)(val)
+// logic
 const anyOf = (list = []) => {
   return gt(
-    findIndex(subject => equals(subject, true), list),
+    findIndex((subject) => equals(subject, true), list),
     -1
   )
 }
 const allOf = (list = []) => {
-  return equals(length(filter(subject => equals(subject, false), list)), 0)
+  return equals(length(filter((subject) => equals(subject, false), list)), 0)
 }
-
 // new alias: noLen + hasLen
-const isZeroLen = subject => equals(length(subject), 0)
+const isZeroLen = (subject) => equals(length(subject), 0)
 const notZeroLen = pipe(isZeroLen, not)
-
+// deep path
 const at = (pathAt, subject = {}) => {
   return path(split('.', pathAt), subject)
 }
 const atOr = (other, pathAt, subject = {}) => {
   return pathOr(other, split('.', pathAt), subject)
 }
-
-const valPipe = val => (...args) => pipe(...args)(val)
-
+// transform
 const to = {
   camelCase,
   constantCase: pipe(snakeCase, toUpper),
@@ -164,7 +160,7 @@ const to = {
   pairs: toPairs,
   string: toString,
 }
-
+// main
 export const TASK = {
   at,
   atOr,
@@ -249,6 +245,7 @@ export const TASK = {
   uniq,
   values,
   isType,
+  ofType,
   when,
   notType: (subject, typeKey) => not(isType(subject, typeKey)),
   // should deprecate: isZeroLen for shorter noLen

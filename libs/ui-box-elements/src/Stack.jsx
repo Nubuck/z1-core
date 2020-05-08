@@ -5,13 +5,13 @@ import { fn } from '@z1/lib-ui-box'
 import { renderBox } from './Box'
 
 // main
-const matchX = fn(t =>
+const matchX = fn((t) =>
   t.match({ left: 'start', center: 'center', right: 'end' })
 )
-const matchY = fn(t =>
+const matchY = fn((t) =>
   t.match({ top: 'start', center: 'center', bottom: 'end' })
 )
-export const renderStack = fn(t => (direction, props) => {
+export const renderStack = fn((t) => (direction, props) => {
   const stackProps = {
     flexDirection: t.eq(direction, 'vertical') ? 'col' : 'row',
   }
@@ -62,10 +62,10 @@ export const renderStack = fn(t => (direction, props) => {
     })
   )
 })
-const colWidth = fn(t => width =>
+const colWidth = fn((t) => (width) =>
   t.isNil(width) ? width : t.gte(width, 12) ? 'full' : `${width}/12`
 )
-export const renderResponsiveStack = fn(t => (direction, props) => {
+export const renderResponsiveStack = fn((t) => (direction, props) => {
   const sm = colWidth(t.atOr(null, 'sm', props))
   const md = colWidth(t.atOr(null, 'md', props))
   const lg = colWidth(t.atOr(null, 'lg', props))

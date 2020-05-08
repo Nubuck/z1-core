@@ -5,7 +5,7 @@ import { fn } from '@z1/lib-ui-box'
 import { Box } from '../Box'
 
 // main
-const renderTextArea = fn(t => props => {
+const renderTextArea = fn((t) => (props) => {
   const as = t.atOr('textarea', 'as', props)
   const className = t.atOr(null, 'className', props)
   return React.createElement(
@@ -18,7 +18,7 @@ const renderTextArea = fn(t => props => {
           display: 'block',
           width: 'full',
         },
-        t.atOr({}, ['box'], props)
+        t.atOr({}, 'box', props)
       ),
     })
   )

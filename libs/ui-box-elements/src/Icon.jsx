@@ -5,7 +5,7 @@ import { fn } from '@z1/lib-ui-box'
 import { renderBox } from './Box'
 
 // main
-const renderIcon = fn(t => props => {
+const renderIcon = fn((t) => (props) => {
   const el = t.atOr('i', 'as', props)
   const prefix = t.atOr('la', 'prefix', props)
   const iconPrefix = t.atOr('la', 'iconPrefix', props)

@@ -5,7 +5,7 @@ import { fn } from '@z1/lib-ui-box'
 import { renderBox } from './Box'
 
 // main
-const matchSize = fn(t =>
+const matchSize = fn((t) =>
   t.match({
     default: {
       width: '1rem',
@@ -30,7 +30,7 @@ const matchSize = fn(t =>
     _: {},
   })
 )
-const renderSpinner = fn(t => props => {
+const renderSpinner = fn((t) => (props) => {
   const size = t.atOr('default', 'size', props)
   const colorProp = t.atOr('white', 'color', props)
   const color = t.head(t.split('-', colorProp))

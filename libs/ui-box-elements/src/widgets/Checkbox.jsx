@@ -5,7 +5,7 @@ import { fn } from '@z1/lib-ui-box'
 import { Box } from '../Box'
 
 // main
-const renderCheckbox = fn(t => props => {
+const renderCheckbox = fn((t) => (props) => {
   const as = t.atOr('input', 'as', props)
   const type = t.atOr('checkbox', 'as', props)
   const className = t.atOr(null, 'className', props)

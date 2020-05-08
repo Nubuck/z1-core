@@ -5,7 +5,7 @@ import { fn } from '@z1/lib-ui-box'
 import { renderResponsiveStack } from './Stack'
 
 // main
-const renderRow = fn(t => props =>
+const renderRow = fn((t) => (props) =>
   renderResponsiveStack(
     'horizontal',
     t.merge(t.omit(['box'], props), {

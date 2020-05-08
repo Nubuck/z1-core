@@ -7,7 +7,7 @@ import { Spinner } from './Spinner'
 import { Icon } from './Icon'
 
 // appearance
-const shapes = fn(t =>
+const shapes = fn((t) =>
   t.match({
     _: {},
     normal: {
@@ -25,7 +25,7 @@ const shapes = fn(t =>
     },
   })
 )
-const fills = fn(t =>
+const fills = fn((t) =>
   t.match({
     _: {
       borderWidth: 2,
@@ -40,7 +40,7 @@ const fills = fn(t =>
   })
 )
 
-const colorByKey = fn(t => (mode, key, fill, colors, color) => {
+const colorByKey = fn((t) => (mode, key, fill, colors, color) => {
   const foundColor = t.pathOr(null, [mode, key], colors || {})
   if (t.notNil(foundColor)) {
     return foundColor
@@ -80,9 +80,9 @@ const colorsToBox = (fill, colors) => {
   }
 }
 
-const renderColor = fn(t => (fill, colors, color) =>
+const renderColor = fn((t) => (fill, colors, color) =>
   t.match({
-    _: mode =>
+    _: (mode) =>
       t.isType(colors, 'object')
         ? colorsToBox(fill, colors)[mode]
         : {
@@ -91,7 +91,7 @@ const renderColor = fn(t => (fill, colors, color) =>
             color: null,
           },
 
-    ghost: mode =>
+    ghost: (mode) =>
       t.eq(mode, 'off')
         ? {
             bgColor: null,
@@ -106,7 +106,7 @@ const renderColor = fn(t => (fill, colors, color) =>
             borderColor: 'transparent',
             color: colorByKey('on', 'content', fill, colors, color),
           },
-    outline: mode =>
+    outline: (mode) =>
       t.eq(mode, 'off')
         ? {
             bgColor: [
@@ -135,7 +135,7 @@ const renderColor = fn(t => (fill, colors, color) =>
             borderColor: colorByKey('on', 'border', fill, colors, color),
             color: colorByKey('on', 'content', fill, colors, 'white'),
           },
-    solid: mode =>
+    solid: (mode) =>
       t.eq(mode, 'off')
         ? {
             bgColor: [
@@ -154,7 +154,7 @@ const renderColor = fn(t => (fill, colors, color) =>
             borderColor: 'transparent',
             color: colorByKey('on', 'content', fill, colors, 'white'),
           },
-    ghostOutline: mode =>
+    ghostOutline: (mode) =>
       t.eq(mode, 'off')
         ? {
             bgColor: null,
@@ -172,7 +172,7 @@ const renderColor = fn(t => (fill, colors, color) =>
             borderColor: colorByKey('on', 'border', fill, colors, color),
             color: colorByKey('on', 'content', fill, colors, color),
           },
-    ghostSolid: mode =>
+    ghostSolid: (mode) =>
       t.eq(mode, 'off')
         ? {
             bgColor: [
@@ -193,7 +193,7 @@ const renderColor = fn(t => (fill, colors, color) =>
   })(fill)
 )
 
-const buttonColor = fn(t => (fill, active, colors, color) => {
+const buttonColor = fn((t) => (fill, active, colors, color) => {
   if (t.and(t.isNil(fill, colors), t.isNil(color))) {
     return {}
   }
@@ -205,7 +205,7 @@ const buttonColor = fn(t => (fill, active, colors, color) => {
 })
 
 // size
-const iconSize = fn(t =>
+const iconSize = fn((t) =>
   t.match({
     _: '3xl',
     xs: 'xl',
@@ -214,14 +214,14 @@ const iconSize = fn(t =>
     xl: '4xl',
   })
 )
-const spinnerSize = fn(t =>
+const spinnerSize = fn((t) =>
   t.match({
     _: 'default',
     lg: 'sm',
     xl: 'sm',
   })
 )
-const circleSize = fn(t =>
+const circleSize = fn((t) =>
   t.match({
     _: {
       width: '2.5rem',
@@ -245,7 +245,7 @@ const circleSize = fn(t =>
     },
   })
 )
-const buttonSpacing = fn(t => size =>
+const buttonSpacing = fn((t) => (size) =>
   t.match({
     _: {
       padding: { top: 1, bottom: 1, x: 2 },
@@ -305,13 +305,13 @@ const buttonBox = {
 }
 
 // elements
-const renderIcon = fn(t => (size, icon) =>
+const renderIcon = fn((t) => (size, icon) =>
   React.createElement(
     Icon,
     t.mergeAll([{ key: 'icon', size: iconSize(size) }, t.omit(['size'], icon)])
   )
 )
-const Label = fn(t => ({ isCircle, noIcon, text, children, ...props }) =>
+const Label = fn((t) => ({ isCircle, noIcon, text, children, ...props }) =>
   renderBox(
     t.merge(t.omit(['text', 'children', 'box'], props), {
       key: 'label',
@@ -329,7 +329,7 @@ const Label = fn(t => ({ isCircle, noIcon, text, children, ...props }) =>
 Label.displayName = 'Label'
 
 // main
-export const renderButton = fn(t => props => {
+export const renderButton = fn((t) => (props) => {
   const nextProps = t.omit(
     [
       'as',
@@ -477,7 +477,7 @@ export const renderButton = fn(t => props => {
           color
         ),
       ]),
-      next: b => b.next(box).next(next),
+      next: (b) => b.next(box).next(next),
       className: `${t.noLen(className) ? '' : `${className} `}${shape} ${fill}`,
       style: isCircle ? t.merge(circleSize(size), style) : style,
       disabled: loading ? true : disabled,

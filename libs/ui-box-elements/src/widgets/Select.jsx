@@ -5,7 +5,7 @@ import { fn } from '@z1/lib-ui-box'
 import { Box } from '../Box'
 
 // main
-const renderSelect = fn(t => props => {
+const renderSelect = fn((t) => (props) => {
   const as = t.atOr('select', 'as', props)
   const multiple = t.atOr(null, 'multiple', props)
   const className = t.atOr(null, 'className', props)
@@ -21,7 +21,7 @@ const renderSelect = fn(t => props => {
           display: 'block',
           width: 'full',
         },
-        t.atOr({}, ['box'], props)
+        t.atOr({}, 'box', props)
       ),
     })
   )

@@ -5,7 +5,7 @@ import { fn } from '@z1/lib-ui-box'
 import { renderBox } from './Box'
 
 // main
-const renderSpacer = fn(t => props =>
+const renderSpacer = fn((t) => (props) =>
   renderBox(
     t.merge(t.omit(['box'], props), {
       box: t.merge({ flex: 1 }, t.atOr({}, 'box', props)),

@@ -10,7 +10,7 @@ const baseProps = {
   shape: 'circle',
   fill: 'outline',
 }
-const circleSize = fn(t =>
+const circleSize = fn((t) =>
   t.match({
     _: {
       width: '2.9rem',
@@ -34,7 +34,7 @@ const circleSize = fn(t =>
     },
   })
 )
-const renderAvatar = fn(t => props => {
+const renderAvatar = fn((t) => (props) => {
   const src = t.atOr(null, 'src', props)
   const to = t.atOr(null, 'to', props)
   const onClick = t.atOr(null, 'onClick', props)

@@ -6,12 +6,12 @@ import { Box } from '../Box'
 
 // main
 const renderInput = fn((t) => (props) => {
-  const as = t.atOr('input', 'as', props)
+  const el = t.atOr('input', 'as', props)
   const className = t.atOr(null, 'className', props)
   return React.createElement(
     Box,
     t.merge(t.omit(['as', 'className', 'box'], props), {
-      as,
+      as: el,
       className: `form-input${t.isNil(className) ? '' : ` ${className}`}`,
       box: t.merge(
         {

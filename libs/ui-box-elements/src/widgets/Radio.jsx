@@ -6,13 +6,13 @@ import { Box } from '../Box'
 
 // main
 const renderRadio = fn((t) => (props) => {
-  const as = t.atOr('input', 'as', props)
+  const el = t.atOr('input', 'as', props)
   const type = t.atOr('radio', 'as', props)
   const className = t.atOr(null, 'className', props)
   return React.createElement(
     Box,
     t.merge(t.omit(['as', 'className', 'type'], props), {
-      as,
+      as: el,
       type,
       className: `form-radio${t.isNil(className) ? '' : ` ${className}`}`,
     })

@@ -6,13 +6,13 @@ import { Box } from '../Box'
 
 // main
 const renderSelect = fn((t) => (props) => {
-  const as = t.atOr('select', 'as', props)
+  const el = t.atOr('select', 'as', props)
   const multiple = t.atOr(null, 'multiple', props)
   const className = t.atOr(null, 'className', props)
   return React.createElement(
     Box,
     t.merge(t.omit(['as', 'className', 'box'], props), {
-      as,
+      as: el,
       className: `${t.isNil(multiple) ? 'form-select' : 'form-multiselect'}${
         t.isNil(className) ? '' : ` ${className}`
       }`,

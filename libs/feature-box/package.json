@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-feature-box",
   "description": "The Z1 standard feature development solution for web apps",
-  "version": "0.4.9",
+  "version": "0.4.11",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -16,7 +16,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-state-box": "^0.4.9",
+    "@z1/lib-state-box": "^0.4.11",
     "core-js": "^3.6.3",
     "redux-first-router": "^2.1.5",
     "redux-first-router-link": "^2.1.1",

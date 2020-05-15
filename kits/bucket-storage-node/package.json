@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-bucket-storage-node",
-  "version": "0.4.11",
+  "version": "0.4.12",
   "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/bucket-storage-node",

@@ -1,5 +1,5 @@
 import { task as Fn } from '@z1/preset-task'
-import { fromEvent, of } from 'rxjs'
+import { from, fromEvent, of } from 'rxjs'
 import {
   filter,
   tap,
@@ -13,8 +13,9 @@ import {
 // main
 export const fn = Fn((t, a) => factory =>
   factory(t, a, {
-    of,
+    from,
     fromEvent,
+    of,
     filter,
     tap,
     map,

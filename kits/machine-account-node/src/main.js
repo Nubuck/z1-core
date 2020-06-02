@@ -4,7 +4,7 @@ import sysInfo from 'systeminformation'
 import hasha from 'hasha'
 
 // parts
-const hashCtx = fn(t => async ctx => {
+const hashCtx = fn((t) => async (ctx) => {
   const hashVals = t.values(ctx)
   const hashData = t.replace(
     /\s/g,
@@ -23,7 +23,7 @@ const hashCtx = fn(t => async ctx => {
 })
 
 // main
-const account = fn(t => async ({ role, system }) => {
+const account = fn((t) => async ({ role, system }) => {
   const systemInfo = await sysInfo.system()
   const machCtx = {
     hardwareuuid: systemInfo.uuid,
@@ -42,6 +42,7 @@ const account = fn(t => async ({ role, system }) => {
   const login = t.merge(t.omit(['hardwareuuid'], userCtx), {
     machineHashId,
     hashId,
+    version: process.env.npm_package_version,
   })
   if (t.eq(system, true)) {
     const cpuInfo = await sysInfo.cpu()
@@ -76,7 +77,7 @@ const account = fn(t => async ({ role, system }) => {
   }
 })
 
-const system = fn(t => async machine => {
+const system = fn((t) => async (machine) => {
   const cpuInfo = await sysInfo.cpu()
   const timeInfo = await sysInfo.time()
   const hardwareCtx = {
@@ -126,7 +127,7 @@ export const accountState = fn((t, a) => (boxName, props = {}) => {
         m(['connection'], (state, action) => {
           return t.merge(state, { connected: action.payload || false })
         }),
-        m('authenticate', state => {
+        m('authenticate', (state) => {
           return t.merge(state, {
             status: authStatus.waiting,
             error: null,

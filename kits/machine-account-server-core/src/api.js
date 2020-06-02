@@ -3,13 +3,13 @@ import { strategy } from './strategy'
 
 // main
 export const api = (z, props) => {
-  const dbId = z.featureBox.fn(t =>
+  const dbId = z.featureBox.fn((t) =>
     t.eq(props.adapter, 'nedb') ? '_id' : 'id'
   )
-  const isLogin = z.featureBox.fn(t => user =>
+  const isLogin = z.featureBox.fn((t) => (user) =>
     t.allOf([t.has('login')(user), t.has('machine')(user)])
   )
-  const withStatus = z.featureBox.fn(t => (login, status) =>
+  const withStatus = z.featureBox.fn((t) => (login, status) =>
     t.merge(login, { status })
   )
   const patchStatus = z.featureBox.fn((t, a) => async (app, user, status) => {
@@ -147,7 +147,7 @@ export const api = (z, props) => {
       {
         models: props.models,
         services(s, h) {
-          const withAlias = type => ctx => {
+          const withAlias = (type) => (ctx) => {
             ctx.data = t.runMatch({
               _: () => ctx.data,
               machine: () =>
@@ -166,7 +166,7 @@ export const api = (z, props) => {
             })(type)
             return ctx
           }
-          const withQueryParams = ctx => {
+          const withQueryParams = (ctx) => {
             const excludeLogins = t.at('params.query.excludeLogins', ctx)
             const includeMachine = t.at('params.query.includeMachine', ctx)
             if (t.and(t.isNil(excludeLogins), t.isNil(includeMachine))) {
@@ -185,14 +185,14 @@ export const api = (z, props) => {
             return ctx
           }
           const withLogins = h.common.when(
-            ctx => {
+            (ctx) => {
               return t.not(t.atOr(false, 'params.excludeLogins', ctx))
             },
-            h.common.fastJoin(ctx => {
+            h.common.fastJoin((ctx) => {
               return {
                 joins: {
                   logins() {
-                    return async machine => {
+                    return async (machine) => {
                       const result = await ctx.app
                         .service('machine-logins')
                         .find({
@@ -210,12 +210,12 @@ export const api = (z, props) => {
             })
           )
           const withMachine = h.common.when(
-            ctx => t.eq(true, t.atOr(false, 'params.includeMachine', ctx)),
-            h.common.fastJoin(ctx => {
+            (ctx) => t.eq(true, t.atOr(false, 'params.includeMachine', ctx)),
+            h.common.fastJoin((ctx) => {
               return {
                 joins: {
                   machine() {
-                    return async login => {
+                    return async (login) => {
                       const result = await ctx.app
                         .service('machines')
                         .get(login.machineId, { excludeLogins: true })
@@ -277,7 +277,7 @@ export const api = (z, props) => {
           // meta services
           s(
             'machine-account',
-            app => {
+            (app) => {
               return {
                 async create({ machine, login }, params) {
                   if (t.or(t.isNil(machine), t.isNil(login))) {
@@ -309,14 +309,14 @@ export const api = (z, props) => {
                       )
                     }
                     const [nextLoginErr, nextLogin] = await a.of(
-                      app
-                        .service('machine-logins')
-                        .create(
-                          withStatus(
-                            t.merge(login, { machineId: nextMachine[dbId] }),
-                            'offline'
-                          )
+                      app.service('machine-logins').create(
+                        withStatus(
+                          t.merge(login, {
+                            machineId: nextMachine[dbId],
+                          }),
+                          'offline'
                         )
+                      )
                     )
                     if (nextLoginErr) {
                       throw new z.FeathersErrors.GeneralError(
@@ -380,7 +380,7 @@ export const api = (z, props) => {
                     .service('machine-logins')
                     .find(params, { includeMachine: true })
                   return t.merge(logins, {
-                    data: t.map(login => {
+                    data: t.map((login) => {
                       return {
                         [dbId]: login[dbId],
                         role: login.role,
@@ -404,20 +404,20 @@ export const api = (z, props) => {
           )
         },
         lifecycle: {
-          [z.featureBox.api.lifecycle.onConfig]: app => {
+          [z.featureBox.api.lifecycle.onConfig]: (app) => {
             const machineConfig = app.get('machine')
             app.set(
               'machine',
               t.merge({ role: 'machine' }, machineConfig || {})
             )
-            app.set('registerMachine', configKey =>
+            app.set('registerMachine', (configKey) =>
               registerMachine(app, configKey)
             )
             app.set('changeMachineStatus', (user, status) =>
               patchStatus(app, user, status)
             )
           },
-          [z.featureBox.api.lifecycle.onAuthConfig]: app => {
+          [z.featureBox.api.lifecycle.onAuthConfig]: (app) => {
             const { MachineStrategy } = strategy(
               t.merge(z, { loginByHashId }),
               props.adapter
@@ -426,13 +426,15 @@ export const api = (z, props) => {
               .get('authenticationService')
               .register('machine', new MachineStrategy())
           },
-          [z.featureBox.api.lifecycle.onSetup]: app => {
+          [z.featureBox.api.lifecycle.onSetup]: (app) => {
             app.on('login', (authResult, params, context) => {
               if (isLogin(t.atOr({}, 'user', authResult))) {
                 app
                   .get('changeMachineStatus')(authResult.user, 'online')
                   .then(() => {})
-                  .catch(e => app.error('failed to updated machine status', e))
+                  .catch((e) =>
+                    app.error('failed to updated machine status', e)
+                  )
               }
             })
             app.on('logout', (authResult, params, context) => {
@@ -440,32 +442,36 @@ export const api = (z, props) => {
                 app
                   .get('changeMachineStatus')(authResult.user, 'offline')
                   .then(() => {})
-                  .catch(e => app.error('failed to updated machine status', e))
+                  .catch((e) =>
+                    app.error('failed to updated machine status', e)
+                  )
               }
             })
-            app.on('disconnect', connection => {
+            app.on('disconnect', (connection) => {
               if (isLogin(t.atOr({}, 'user', connection))) {
                 app
                   .get('changeMachineStatus')(connection.user, 'offline')
                   .then(() => {})
-                  .catch(e => app.error('failed to updated machine status', e))
+                  .catch((e) =>
+                    app.error('failed to updated machine status', e)
+                  )
               }
             })
           },
-          [z.featureBox.api.lifecycle.onSync]: app => {
+          [z.featureBox.api.lifecycle.onSync]: (app) => {
             app
               .get('registerMachine')('machine')
               .then(() => {
                 app.debug('machine registered', app.get('machineAccount')[dbId])
               })
-              .catch(e => app.error('register machine err:', e))
+              .catch((e) => app.error('register machine err:', e))
           },
-          [z.featureBox.api.lifecycle.onStop]: app => {
+          [z.featureBox.api.lifecycle.onStop]: (app) => {
             app.debug('server stopping, going offline...')
             app
               .get('changeMachineStatus')(app.get('machineAccount'), 'offline')
               .then(() => app.debug('machine status offline'))
-              .catch(e => app.error('machine status failed', e))
+              .catch((e) => app.error('machine status failed', e))
           },
         },
       },

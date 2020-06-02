@@ -1,7 +1,7 @@
 {
   "name": "@z1/lib-feature-macros",
   "description": "Standard macros over both state and ui concerns aimed to reduce repetitive code while implementing the Z1 style managed development pipeline",
-  "version": "0.4.11",
+  "version": "0.4.13",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",
-    "@z1/lib-feature-box": "^0.4.11",
+    "@z1/lib-feature-box": "^0.4.13",
     "neutrino": "^9.0.0",
     "react": "^16.12.0",
     "webpack": "^4",

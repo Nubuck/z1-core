@@ -1,6 +1,6 @@
 {
   "name": "example-app-desktop",
-  "version": "0.4.12",
+  "version": "0.4.13",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "@z1/kit-bucket-storage-node": "^0.4.12",
-    "@z1/kit-machine-account-node": "^0.4.11",
+    "@z1/kit-machine-account-node": "^0.4.13",
     "@z1/lib-api-box-client-node": "^0.4.11",
-    "@z1/lib-state-box-node": "^0.4.11",
+    "@z1/lib-state-box-node": "^0.4.13",
     "core-js": "^3.6.3",
     "electron-log": "^4.0.4",
     "redux": "^4.0.4",

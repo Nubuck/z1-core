@@ -49,7 +49,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
         param: null,
         view: null,
       },
-      views: t.mapObjIndexed(macro => {
+      views: t.mapObjIndexed((macro) => {
         return {
           status: types.status.init,
           reEnter: false,
@@ -503,7 +503,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
             ),
             fx(
               actions.sub,
-              context => {
+              (context) => {
                 const activeView = t.atOr(null, 'action.payload.view', context)
                 if (t.isNil(activeView)) {
                   return null
@@ -534,6 +534,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                 warnTimeout: 0,
                 // TODO: make this configurable
                 // latest: true,
+                throttle: 100,
               }
             ),
           ])

@@ -532,7 +532,8 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
               {
                 cancelType: actions.unsub,
                 warnTimeout: 0,
-                latest: true,
+                // TODO: make this configurable
+                // latest: true,
               }
             ),
           ])

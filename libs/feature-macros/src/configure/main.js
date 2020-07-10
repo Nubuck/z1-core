@@ -558,10 +558,10 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                 if (t.and(t.eq(false, subbed), t.not(connected))) {
                   done()
                 } else if (t.and(t.eq(true, subbed), t.not(connected))) {
-                  dispatch(mutators.unsub(false))
+                  dispatch(mutators.unsub({ view: activeView, subbed: false }))
                   done()
                 } else if (t.and(t.eq(false, subbed), connected)) {
-                  dispatch(mutators.sub(true))
+                  dispatch(mutators.sub({ view: activeView, subbed: true }))
                   done()
                 } else {
                   done()

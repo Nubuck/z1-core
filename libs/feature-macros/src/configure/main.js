@@ -534,7 +534,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                 warnTimeout: 0,
                 // TODO: make this configurable
                 // latest: true,
-                throttle: 100,
+                // throttle: 100,
               }
             ),
           ])

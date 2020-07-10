@@ -535,8 +535,39 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
                 // TODO: make this configurable
                 // latest: true,
                 // throttle: 100,
+                // debounce: 100,
               }
             ),
+            fx('account/CONNECTION', (context, dispatch, done) => {
+              const boxStatus = t.path([boxName, 'status'], context.getState())
+              const activeView = t.path(
+                [boxName, 'active', 'view'],
+                context.getState()
+              )
+              if (t.or(t.isNil(boxStatus), t.eq('inactive', boxStatus))) {
+                done()
+              } else if (t.isNil(activeView)) {
+                done()
+              } else {
+                const subbed = t.pathOr(
+                  false,
+                  [boxName, 'views', activeView, 'subbed'],
+                  context.getState()
+                )
+                const connected = t.at('action.payload', context)
+                if (t.and(t.eq(false, subbed), t.not(connected))) {
+                  done()
+                } else if (t.and(t.eq(true, subbed), t.not(connected))) {
+                  dispatch(mutators.unsub(false))
+                  done()
+                } else if (t.and(t.eq(false, subbed), connected)) {
+                  dispatch(mutators.sub(true))
+                  done()
+                } else {
+                  done()
+                }
+              }
+            }),
           ])
     },
   }

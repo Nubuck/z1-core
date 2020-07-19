@@ -437,7 +437,7 @@ export const api = (z, props) => {
                   )
               }
             })
-            app.on('logout', (authResult, params, context) => {
+            app.prependListener('logout', (authResult, params, context) => {
               if (isLogin(t.atOr({}, 'user', authResult))) {
                 app
                   .get('changeMachineStatus')(authResult.user, 'offline')
@@ -447,7 +447,7 @@ export const api = (z, props) => {
                   )
               }
             })
-            app.on('disconnect', (connection) => {
+            app.prependListener('disconnect', (connection) => {
               if (isLogin(t.atOr({}, 'user', connection))) {
                 app
                   .get('changeMachineStatus')(connection.user, 'offline')

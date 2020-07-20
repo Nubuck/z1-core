@@ -208,7 +208,7 @@ const buttonColor = fn((t) => (fill, active, colors, color) => {
 const iconSize = fn((t) =>
   t.match({
     _: '3xl',
-    xs: 'xl',
+    xs: '2xl',
     sm: '2xl',
     lg: '4xl',
     xl: '4xl',

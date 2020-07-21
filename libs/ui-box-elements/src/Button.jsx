@@ -228,8 +228,8 @@ const circleSize = fn((t) =>
       height: '2.5rem',
     },
     xs: {
-      width: '2rem',
-      height: '2rem',
+      width: '1.9rem',
+      height: '1.9rem',
     },
     sm: {
       width: '2.3rem',

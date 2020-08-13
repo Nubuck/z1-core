@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-server",
-  "version": "0.4.24",
+  "version": "0.4.25",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -26,5 +26,5 @@
     "webpack": "^4",
     "webpack-cli": "^3"
   },
-  "gitHead": "e0fdb32af6cc504b715a85fac398ee03de3bf803"
+  "gitHead": "718f3101aa2440898ac5231f81a871611d8f9f2c"
 }

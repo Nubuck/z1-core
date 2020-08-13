@@ -1,4 +1,4 @@
-import accountCore from '@roboteur/kit-account-server-core'
+import accountCore from '@z1/kit-account-server-core'
 
 // main
 export default (z, props = {}) =>

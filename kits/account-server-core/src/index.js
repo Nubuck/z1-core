@@ -1,12 +1,16 @@
 import { api } from './api'
+import checkPermissions from 'feathers-permissions'
 
+// main
 export default (z, props) =>
   z.featureBox.create(
     'account',
-    p => {
+    (p) => {
       return {
         api: [api(z, p)],
-        hooks: {},
+        hooks: {
+          checkPermissions
+        },
         parts: {},
       }
     },

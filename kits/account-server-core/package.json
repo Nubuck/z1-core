@@ -17,6 +17,7 @@
   "dependencies": {
     "core-js": "^3.6.3",
     "feathers-authentication-management": "^2.0.1",
+    "feathers-permissions": "^2.0.2",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3"
   },

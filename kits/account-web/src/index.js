@@ -2,8 +2,8 @@ import {
   authStatus as aus,
   authenticated as isAuth,
   skipViewsExcept401 as skip,
-  authState
-} from './main'
+} from './fn'
+import { authState } from './state'
 
 // outs
 export const authStatus = aus

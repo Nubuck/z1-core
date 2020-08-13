@@ -2,18 +2,39 @@ import AuthManagement from 'feathers-authentication-management'
 
 // main
 export const api = (z, props) => {
-  const dbId = z.featureBox.fn(t =>
+  const dbId = z.featureBox.fn((t) =>
     t.eq(props.adapter, 'nedb') ? '_id' : 'id'
   )
-  const isAction = z.featureBox.fn(t => (actions = []) => hook => {
-    return t.notNil(t.find(action => t.eq(action, hook.data.action), actions))
+  const isAction = z.featureBox.fn((t) => (actions = []) => (hook) => {
+    return t.notNil(t.find((action) => t.eq(action, hook.data.action), actions))
   })
-  const isUser = z.featureBox.fn(t => user =>
+  const isUser = z.featureBox.fn((t) => (user) =>
     t.allOf([t.has('name')(user), t.has('surname')(user), t.has('email')(user)])
   )
   const patchStatus = z.featureBox.fn((t, a) => async (app, user, status) => {
     await a.of(app.service('users').patch(user[dbId], { status }))
   })
+  const bootAccountStatus = z.featureBox.fn((t, a) => async (app) => {
+    const status = t.atOr('open', 'status', app.get('management'))
+    // boot users
+    const [userErr, users] = await a.of(app.service('users').find())
+    if (userErr) {
+      app.error('Error setting up access', userErr)
+    }
+    const hasUsers = t.gt(users.total, 0)
+    const bootStatus = hasUsers ? status : 'init'
+    app.set('account-status', bootStatus)
+    if (t.not(hasUsers)) {
+      let handle = null
+      const setStatus = () => {
+        app.set('account-status', status)
+        app.service('users').off('created', handle)
+      }
+      handle = setStatus
+      app.service('users').on('created', handle)
+    }
+  })
+
   return z.featureBox.fn((t, a) =>
     z.featureBox.api.create('account', {
       models: props.models,
@@ -26,6 +47,12 @@ export const api = (z, props) => {
               create: [
                 h.auth.hashPassword('password'),
                 AuthManagement.hooks.addVerification('auth-management'),
+                (ctx) => {
+                  if (t.eq('init', ctx.app.get('account-status'))) {
+                    ctx.data.role = 'admin'
+                  }
+                  return ctx
+                },
               ],
               update: [h.common.disallow('external')],
               patch: [
@@ -40,7 +67,7 @@ export const api = (z, props) => {
             after: {
               all: [h.auth.protect('password')],
               create: [
-                hook => {
+                (hook) => {
                   if (!hook.params.provider) {
                     return hook
                   }
@@ -58,7 +85,7 @@ export const api = (z, props) => {
         })
         s(
           'auth-management',
-          app => {
+          (app) => {
             const service = AuthManagement({
               service: '/users',
               path: 'auth-management',
@@ -89,8 +116,8 @@ export const api = (z, props) => {
         // meta user for multi jwt auth
         s(
           'meta-users',
-          app => {
-            const entityService = params =>
+          (app) => {
+            const entityService = (params) =>
               t.eq(
                 'node-xmlhttprequest',
                 t.to.lowerCase(t.atOr('', 'headers.user-agent', params))
@@ -119,30 +146,47 @@ export const api = (z, props) => {
             },
           }
         )
+        // public account status
+        s(
+          'account-status',
+          (app) => {
+            return {
+              async get(_) {
+                return app.get('account-status')
+              },
+            }
+          },
+          {}
+        )
       },
       lifecycle: {
-        [z.featureBox.api.lifecycle.onSetup]: app => {
+        [z.featureBox.api.lifecycle.onSetup]: (app) => {
           app.on('login', (authResult, params, context) => {
             if (isUser(t.atOr({}, 'user', authResult))) {
               patchStatus(app, authResult.user, 'online')
                 .then(() => {})
-                .catch(e => app.error('failed to updated user status', e))
+                .catch((e) => app.error('failed to update user status', e))
             }
           })
           app.on('logout', (authResult, params, context) => {
             if (isUser(t.atOr({}, 'user', authResult))) {
               patchStatus(app, authResult.user, 'offline')
                 .then(() => {})
-                .catch(e => app.error('failed to updated user status', e))
+                .catch((e) => app.error('failed to update user status', e))
             }
           })
-          app.on('disconnect', connection => {
+          app.prependListener('disconnect', (connection) => {
             if (isUser(t.atOr({}, 'user', connection))) {
               patchStatus(app, connection.user, 'offline')
                 .then(() => {})
-                .catch(e => app.error('failed to updated user status', e))
+                .catch((e) => app.error('failed to update user status', e))
             }
           })
+        },
+        [z.featureBox.api.lifecycle.onSync]: (app) => {
+          bootAccountStatus(app)
+            .then(() => {})
+            .catch((e) => app.error('failed to update account status', e))
         },
       },
     })

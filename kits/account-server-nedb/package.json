@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-server-nedb",
-  "version": "0.4.23",
+  "version": "0.4.24",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -26,5 +26,5 @@
     "webpack": "^4",
     "webpack-cli": "^3"
   },
-  "gitHead": "cc1c8958cfa0184c996d799385e7cf94f0094d94"
+  "gitHead": "e0fdb32af6cc504b715a85fac398ee03de3bf803"
 }

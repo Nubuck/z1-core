@@ -29,7 +29,7 @@ const of = function to(subject) {
 }
 const trampoline = (fn) => async (...args) => {
   let result = await fn(...args)
-  while (TASK.isType(result, 'AsyncFunction')) {
+  while (TASK.includes(TASK.type(result), ['AsyncFunction', 'Function'])) {
     result = await result()
   }
   return result

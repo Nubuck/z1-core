@@ -1,0 +1,281 @@
+@import 'tailwindcss/base.css';
+
+@import 'tailwindcss/components.css';
+
+@import 'tailwindcss/utilities.css';
+
+@import '@z1/lib-ui-box-tailwind/elements.css';
+
+.scrollbar {
+  /* 
+  https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar
+   */
+  &::-webkit-scrollbar-corner {
+    background-color: #232a35;
+  }
+}
+
+// TODO: move this to z1
+// reset annoying autofill styling
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  border: 1px solid #fff;
+  -webkit-text-fill-color: #fff;
+  -webkit-box-shadow: 0 0 0px 1000px #000 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.checkbox input[type='checkbox'] {
+  @extend .form-checkbox;
+  @apply mr-2 h-6 w-6;
+}
+.radio input[type='radio'] {
+  @extend .form-radio;
+  @apply mr-2 h-6 w-6;
+}
+
+.scrollbar-form {
+  > .field-object {
+    @extend .scrollbar;
+    @apply overflow-y-auto pr-2;
+    max-height: 70vh;
+  }
+}
+
+.upload-input {
+  @apply flex flex-1 w-full flex-col items-center justify-center;
+  @apply mb-2 !important;
+  &.disabled {
+    & p {
+      @apply cursor-not-allowed opacity-50 !important;
+      &:hover {
+        @apply bg-transparent text-blue-500;
+      }
+    }
+  }
+  & label {
+    @apply hidden !important;
+  }
+  & div {
+    @apply flex flex-1 w-full flex-col items-center justify-center;
+  }
+  & p {
+    @apply flex flex-1 flex-row items-center justify-center px-3 py-2 mb-3 border-2 border-blue-500 rounded-full text-blue-500 overflow-hidden relative cursor-pointer;
+    max-width: 264px;
+    &:hover {
+      @apply bg-blue-500 text-white;
+    }
+    &:before {
+      @apply flex flex-row items-center justify-end text-3xl;
+      content: '\f093';
+      font-family: 'Line Awesome Free';
+      font-weight: 900;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      font-style: normal;
+      font-variant: normal;
+      text-rendering: auto;
+      line-height: 1;
+    }
+    &:after {
+      @apply flex flex-row items-center pl-2 font-medium text-lg tracking-wide pr-1;
+      content: 'Select file to upload';
+      line-height: 1;
+    }
+    & input[type='file'] {
+      cursor: inherit;
+      display: block;
+      font-size: 999px;
+      filter: alpha(opacity=0);
+      min-height: 100%;
+      min-width: 100%;
+      opacity: 0;
+      position: absolute;
+      right: 0;
+      text-align: right;
+      top: 0;
+    }
+  }
+  & .file-info {
+    @apply text-blue-400 text-sm tracking-wider;
+  }
+}
+
+.full-control {
+  & .form-control {
+    @apply w-full;
+  }
+}
+.object-fieldset {
+  @apply flex flex-row flex-wrap w-full self-stretch items-center justify-start flex-1;
+  & legend {
+    @apply w-full;
+  }
+  & .form-group {
+    & .no-label {
+      & .control-label {
+        display: none !important;
+      }
+      & legend {
+        display: none !important;
+      }
+    }
+    & .data-item-value {
+      padding-right: 1rem;
+    }
+    &.half {
+      width: 50% !important;
+      padding-right: 1rem;
+    }
+    &.with-label {
+      & .control-label {
+        display: flex !important;
+      }
+    }
+    &.inline-field {
+      @apply flex-row items-center justify-between !important;
+      & label {
+        margin: 0 !important;
+      }
+    }
+    &.pr-0 {
+      padding-right: 0 !important;
+    }
+  }
+  & .port-field {
+    & label {
+      @apply font-medium;
+    }
+  }
+}
+
+/* rjsf styles */
+.field {
+  @apply mt-1 !important;
+  & input[type='number'].form-control {
+    min-width: 0 !important;
+    width: auto !important;
+    @apply flex flex-shrink;
+    &.full {
+      width: 100% !important;
+    }
+  }
+  & select.form-control {
+    @extend .form-select;
+    @apply bg-transparent !important;
+    > option {
+      @apply text-gray-900 !important;
+    }
+  }
+  & select.form-select {
+    @apply bg-transparent !important;
+    > option {
+      @apply text-gray-900 !important;
+    }
+  }
+  & select[multiple] {
+    > option {
+      @apply text-white !important;
+    }
+  }
+  & .glyphicon {
+    font-family: 'Line Awesome Free';
+    font-weight: 900;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+  }
+  &.field-array {
+    & fieldset {
+      & legend {
+        @apply text-blue-400 mb-1 font-medium;
+      }
+    }
+    & .row {
+      @apply flex flex-row;
+    }
+    & .array-item-list {
+      @apply flex flex-col;
+    }
+    & .array-item {
+      @apply flex flex-row;
+      & .col-xs-9 {
+        @apply flex flex-col w-10/12;
+      }
+      & .col-xs-3 {
+        @apply flex flex-col w-2/12;
+      }
+      & .btn-group {
+        @apply flex flex-row justify-end items-center flex-1 mb-3 !important;
+        & .btn {
+          @apply flex flex-row text-2xl justify-center items-center rounded-full ml-1;
+          @apply flex-none !important;
+          width: 2rem;
+          height: 2rem;
+          &.array-item-remove {
+            @apply text-red-500;
+            &:hover {
+              @apply bg-red-500 text-white;
+            }
+            & .glyphicon {
+              &:before {
+                content: '\f1f8';
+              }
+            }
+          }
+          &.array-item-move-up {
+            @apply text-blue-500;
+            &:hover {
+              @apply bg-blue-500 text-white;
+            }
+            & .glyphicon {
+              &:before {
+                content: '\f106';
+              }
+            }
+          }
+          &.array-item-move-down {
+            @apply text-blue-500;
+            &:hover {
+              @apply bg-blue-500 text-white;
+            }
+            & .glyphicon {
+              &:before {
+                content: '\f107';
+              }
+            }
+          }
+        }
+      }
+    }
+    & .array-item-add {
+      @apply flex flex-row items-center justify-end w-full px-0 pt-2;
+      & .btn-add {
+        @apply flex flex-row items-center justify-center rounded-full bg-gray-800 py-1 pl-3 pr-4 border-2 border-blue-500 text-blue-500;
+        &:after {
+          @apply flex flex-row items-center pl-2 font-medium text-sm tracking-wide;
+          content: 'Add item';
+        }
+        & .glyphicon {
+          @apply text-2xl;
+          &:before {
+            content: '\f067';
+          }
+        }
+        &:hover {
+          @apply bg-blue-500 text-white;
+        }
+      }
+    }
+  }
+}

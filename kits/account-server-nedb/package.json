@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-server-nedb",
-  "version": "0.4.27",
+  "version": "0.4.36",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,7 +15,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/kit-account-server-core": "^0.4.27",
+    "@z1/kit-account-server-core": "^0.4.36",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3"

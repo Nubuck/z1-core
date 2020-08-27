@@ -1,48 +1,38 @@
-import bucketStorageCore from '@z1/kit-bucket-storage-server-core'
+import core from '@z1/kit-bucket-storage-server-core'
 
 // main
-export default z =>
-  bucketStorageCore(z, {
-    adapter: 'sequelize',
-    models(m) {
-      m(['sequelize', 'bucket_registry'], (define, T) =>
-        define({
-          id: {
-            type: T.UUID,
-            primaryKey: true,
+const name = 'bucket_registry'
+export default (z, props = {}) =>
+  core(
+    z,
+    z.featureBox.fn((t) =>
+      t.merge(
+        {
+          adapter: 'knex',
+          models(m) {
+            m(['knex', name], async (db) => {
+              const exists = await db.schema.hasTable(name)
+              if (t.not(exists)) {
+                await db.schema.createTable(name, (table) => {
+                  table.uuid('_id')
+                  table.string('fileId')
+                  table.string('mimeType')
+                  table.string('originalName')
+                  table.string('encoding')
+                  table.integer('size')
+                  table.uuid('createdBy')
+                  table.string('creatorRole')
+                  table.uuid('updatedBy')
+                  table.string('updaterRole')
+                  table.datetime('createdAt')
+                  table.datetime('updatedAt')
+                })
+              }
+            })
           },
-          fileId: {
-            type: T.STRING,
-            allowNull: false,
-          },
-          mimeType: {
-            type: T.STRING,
-            allowNull: false,
-          },
-          originalName: {
-            type: T.STRING,
-            allowNull: false,
-          },
-          encoding: {
-            type: T.STRING,
-          },
-          size: {
-            type: T.INTEGER,
-            allowNull: false,
-          },
-          folderId: {
-            type: T.UUID,
-          },
-        }, {
-          hooks: {
-            beforeCount(options) {
-              options.raw = true
-            },
-          },
-        })
+          serviceFactory: { modelName: name },
+        },
+        props
       )
-    },
-    serviceFactory: {
-      modelName: 'bucket_registry',
-    },
-  })
+    )
+  )

@@ -4,7 +4,7 @@ import { strategy } from './strategy'
 // main
 export const api = (z, props) => {
   const dbId = z.featureBox.fn((t) =>
-    t.eq(props.adapter, 'nedb') ? '_id' : 'id'
+    t.eq(props.adapter, 'nedb') ? '_id' : '_id'
   )
   const isLogin = z.featureBox.fn((t) => (user) =>
     t.allOf([t.has('login')(user), t.has('machine')(user)])
@@ -236,10 +236,15 @@ export const api = (z, props) => {
                 find: [withQueryParams],
                 create: [
                   h.common.disallow('external'),
+                  h.common.when(
+                    t.neq('nedb', props.adapter),
+                    h.data.withIdUUIDV4
+                  ),
                   withAlias('machine'),
                   withQueryParams,
+                  h.common.setNow('createdAt', 'updatedAt'),
                 ],
-                patch: [withQueryParams],
+                patch: [withQueryParams, h.common.setNow('updatedAt')],
               },
               after: {
                 get: [withLogins],
@@ -260,10 +265,15 @@ export const api = (z, props) => {
                   find: [withQueryParams],
                   create: [
                     h.common.disallow('external'),
+                    h.common.when(
+                      t.neq('nedb', props.adapter),
+                      h.data.withIdUUIDV4
+                    ),
                     withAlias('login'),
                     withQueryParams,
+                    h.common.setNow('createdAt', 'updatedAt'),
                   ],
-                  patch: [withQueryParams],
+                  patch: [withQueryParams, h.common.setNow('updatedAt')],
                 },
                 after: {
                   get: [withMachine],

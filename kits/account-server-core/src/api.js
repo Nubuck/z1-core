@@ -45,6 +45,10 @@ export const api = (z, props) => {
               find: [h.auth.authenticate('jwt'), h.data.safeFindMSSQL],
               get: [h.auth.authenticate('jwt')],
               create: [
+                h.common.when(
+                  t.neq('nedb', props.adapter),
+                  h.data.withIdUUIDV4
+                ),
                 h.auth.hashPassword('password'),
                 AuthManagement.hooks.addVerification('auth-management'),
                 (ctx) => {
@@ -53,14 +57,19 @@ export const api = (z, props) => {
                   }
                   return ctx
                 },
+                h.common.setNow('createdAt', 'updatedAt'),
               ],
-              update: [h.common.disallow('external')],
+              update: [
+                h.common.disallow('external'),
+                h.common.setNow('updatedAt'),
+              ],
               patch: [
                 h.common.when(
                   h.common.isProvider('external'),
                   h.auth.hashPassword('password'),
                   h.auth.authenticate('jwt')
                 ),
+                h.common.setNow('updatedAt'),
               ],
               remove: [h.auth.authenticate('jwt')],
             },

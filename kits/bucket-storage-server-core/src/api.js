@@ -7,13 +7,13 @@ import pt from 'path'
 
 // ctx
 import { SERVICES, PATHS } from './context'
-const dataURIName = dataURI => {
+const dataURIName = (dataURI) => {
   // Split metadata from data
   const splitted = dataURI.split(',')
   // Split params
   const params = splitted[0].split(';')
   // Filter the name property from params
-  const properties = params.filter(param => {
+  const properties = params.filter((param) => {
     return param.split('=')[0] === 'name'
   })
   // Look for the name and use unknown if no name property.
@@ -34,7 +34,7 @@ export const api = (z, props) =>
     z.featureBox.api.create('bucketStorage', {
       models: props.models,
       services(s, { auth, common, data }) {
-        const safeMeta = ctx => {
+        const safeMeta = (ctx) => {
           const rawMeta = t.path(PATHS.DATA_META, ctx)
           return t.isType(rawMeta, 'string')
             ? t.tryCatch(
@@ -47,21 +47,21 @@ export const api = (z, props) =>
               )()
             : rawMeta
         }
-        const stripUri = ctx => {
+        const stripUri = (ctx) => {
           if (t.has('result')(ctx)) {
             ctx.result = t.omit(['uri'], ctx.result)
           }
           return ctx
         }
         const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
-        const withAuthors = keys => ctx => {
+        const withAuthors = (keys) => (ctx) => {
           ctx.data = t.merge(ctx.data, {
             [keys.author]: t.pathOr(null, ['params', 'user', dbId], ctx),
             [keys.role]: t.at('params.user.role', ctx),
           })
           return ctx
         }
-        const withQueryParams = ctx => {
+        const withQueryParams = (ctx) => {
           const includeAuthors = t.at('params.query.includeAuthors', ctx)
           if (t.isNil(includeAuthors)) {
             return ctx
@@ -71,12 +71,12 @@ export const api = (z, props) =>
           return ctx
         }
         const withAuthorJoins = common.when(
-          ctx => t.atOr(false, 'params.includeAuthors', ctx),
-          common.fastJoin(ctx => {
+          (ctx) => t.atOr(false, 'params.includeAuthors', ctx),
+          common.fastJoin((ctx) => {
             return {
               joins: {
                 creator() {
-                  return async file => {
+                  return async (file) => {
                     if (t.isNil(file.createdBy)) {
                       return file
                     }
@@ -104,7 +104,7 @@ export const api = (z, props) =>
                   }
                 },
                 updater() {
-                  return async file => {
+                  return async (file) => {
                     if (t.isNil(file.updatedBy)) {
                       return file
                     }
@@ -146,10 +146,12 @@ export const api = (z, props) =>
                 data.withIdUUIDV4,
                 withQueryParams,
                 withAuthors({ author: 'createdBy', role: 'creatorRole' }),
+                common.setNow('createdAt', 'updatedAt'),
               ],
               patch: [
                 withQueryParams,
                 withAuthors({ author: 'updatedBy', role: 'updaterRole' }),
+                common.setNow('updatedAt'),
               ],
             },
             after: {
@@ -163,7 +165,7 @@ export const api = (z, props) =>
         // bucket
         s(
           SERVICES.STORAGE,
-          app => {
+          (app) => {
             const storage = app.get('storage')
             if (storage) {
               const engine = t.prop('engine', storage)
@@ -180,7 +182,7 @@ export const api = (z, props) =>
                       fieldSize: 25 * 1024 * 1024,
                     },
                   }).single('uri'),
-                  function(req, res, next) {
+                  function (req, res, next) {
                     req.feathers.file = req.file
                     next()
                   },
@@ -198,7 +200,7 @@ export const api = (z, props) =>
                 find: [data.safeFindMSSQL],
                 create: [
                   auth.authenticate('jwt'),
-                  ctx => {
+                  (ctx) => {
                     const dataUri = t.path(PATHS.DATA_URI, ctx)
                     const meta = safeMeta(ctx)
                     if (t.and(t.not(dataUri), t.path(PATHS.PARAMS_FILE, ctx))) {
@@ -246,7 +248,7 @@ export const api = (z, props) =>
               after: {
                 create: [
                   stripUri,
-                  async ctx => {
+                  async (ctx) => {
                     ctx.result.meta = null
                     const id = t.path(PATHS.RESULT_ID, ctx)
                     const meta = safeMeta(ctx)
@@ -294,7 +296,7 @@ export const api = (z, props) =>
                   },
                 ],
                 remove: [
-                  async ctx => {
+                  async (ctx) => {
                     ctx.result.meta = null
                     const id = t.path(PATHS.RESULT_ID, ctx)
                     if (t.not(id)) {
@@ -331,15 +333,15 @@ export const api = (z, props) =>
           }
         )
         // content
-        s(SERVICES.CONTENT, app => {
-          app.get(`/${SERVICES.CONTENT}/:id`, function(req, res, next) {
+        s(SERVICES.CONTENT, (app) => {
+          app.get(`/${SERVICES.CONTENT}/:id`, function (req, res, next) {
             // find id in params
             const id = t.path(PATHS.PARAMS_ID, req)
             // find id in api
             app
               .service(SERVICES.STORAGE)
               .get(id)
-              .then(rawContent => {
+              .then((rawContent) => {
                 // validate
                 if (t.not(rawContent)) {
                   next()
@@ -347,7 +349,7 @@ export const api = (z, props) =>
                   app
                     .service(SERVICES.REGISTRY)
                     .find({ query: { fileId: id } })
-                    .then(result => {
+                    .then((result) => {
                       try {
                         const regFile = t.head(result.data) || {}
                         // decode uri with Dauria.parseDataURI()
@@ -368,10 +370,10 @@ export const api = (z, props) =>
                         next(error)
                       }
                     })
-                    .catch(err => next(err))
+                    .catch((err) => next(err))
                 }
               })
-              .catch(contentError => next(contentError))
+              .catch((contentError) => next(contentError))
           })
           return null
         })

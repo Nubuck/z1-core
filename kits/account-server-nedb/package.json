@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-server-nedb",
-  "version": "0.4.25",
+  "version": "0.4.5",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,7 +15,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/kit-account-server-core": "^0.4.25",
+    "@z1/kit-account-server-core": "^0.4.5",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3"
@@ -26,5 +26,5 @@
     "webpack": "^4",
     "webpack-cli": "^3"
   },
-  "gitHead": "718f3101aa2440898ac5231f81a871611d8f9f2c"
+  "gitHead": "cc1c8958cfa0184c996d799385e7cf94f0094d94"
 }

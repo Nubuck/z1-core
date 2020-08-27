@@ -10,7 +10,7 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
     return {
       name: adapterName,
       beforeSetup(boxes) {
-        const config = dbTools.dbConfig('nedb')
+        const config = dbTools.dbConfig(adapterName)
         Fs.dir(config || adapterName)
         const adapter = dbTools.get(adapterName)
 

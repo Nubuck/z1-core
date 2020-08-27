@@ -1,4 +1,4 @@
-const library = require('@neutrinojs/library');
+const library = require('@neutrinojs/library')
 
 module.exports = {
   options: {
@@ -11,4 +11,4 @@ module.exports = {
       target: 'node',
     }),
   ],
-};
+}

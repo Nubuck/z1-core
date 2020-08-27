@@ -1,11 +1,11 @@
 import core from '@z1/lib-feature-box-server-core'
 import { apiBoxCore, task as Fn, fs as Fs } from '@z1/lib-api-box-core'
 import { withNedbAdapter } from '@z1/lib-api-box-nedb'
-import { withSequelizeAdapter } from '@z1/lib-api-box-sql'
+import { withKnexAdapter } from '@z1/lib-api-box-sql'
 
 // main
 export const apiBox = Fn(t =>
-  t.pipe(withNedbAdapter, withSequelizeAdapter, apiBoxCore)()
+  t.pipe(withNedbAdapter, withKnexAdapter, apiBoxCore)()
 )
 export const featureBox = Fn(t =>
   t.mergeAll([

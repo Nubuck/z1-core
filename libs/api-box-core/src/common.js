@@ -38,7 +38,7 @@ export const common = task(t => ({
     data: {
       withIdUUIDV4(hook) {
         if (t.and(t.eq(hook.type, 'before'), t.eq(hook.method, 'create'))) {
-          hook.data.id = uuidv4()
+          hook.data[hook.service.id] = uuidv4()
         }
         return hook
       },

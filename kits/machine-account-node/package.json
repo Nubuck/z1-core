@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-machine-account-node",
-  "version": "0.4.13",
+  "version": "0.4.26",
   "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/machine-account-node",
@@ -12,7 +12,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.4.11",
+    "@z1/preset-task": "^0.4.26",
     "core-js": "^3.6.3",
     "hasha": "^5.1.0",
     "regenerator-runtime": "^0.13.3",

@@ -143,7 +143,7 @@ export const api = (z, props) =>
               get: [withQueryParams],
               find: [data.safeFindMSSQL, withQueryParams],
               create: [
-                data.withIdUUIDV4,
+                data.withUUIDV4('id'),
                 withQueryParams,
                 withAuthors({ author: 'createdBy', role: 'creatorRole' }),
                 common.setNow('createdAt', 'updatedAt'),

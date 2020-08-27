@@ -280,6 +280,8 @@ export const api = (z, props) =>
                       )
                       if (t.not(patchError)) {
                         ctx.result.meta = result
+                      } else {
+                        app.error('BUCKET REGISTRY PATCH FAILED', patchError)
                       }
                     } else {
                       const [createError, result] = await a.of(
@@ -290,6 +292,8 @@ export const api = (z, props) =>
                       )
                       if (t.not(createError)) {
                         ctx.result.meta = result
+                      } else {
+                        app.error('BUCKET REGISTRY CREATE FAILED', createError)
                       }
                     }
                     return ctx

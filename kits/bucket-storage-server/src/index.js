@@ -16,6 +16,7 @@ export default (z, props = {}) =>
                 await db.schema.createTable(name, (table) => {
                   table.uuid('_id')
                   table.string('alias')
+                  table.string('ext')
                   table.string('fileId')
                   table.string('mimeType')
                   table.string('originalName')

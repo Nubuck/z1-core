@@ -1,5 +1,5 @@
 {
-  "name": "@roboteur/lib-api-box-sql",
+  "name": "@z1/lib-api-box-sql",
   "version": "0.4.26",
   "main": "dist/index.js",
   "files": [
@@ -15,7 +15,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@roboteur/lib-api-box-core": "^0.4.11",
+    "@z1/lib-api-box-core": "^0.4.11",
     "@z1/preset-feathers-server-sql": "^0.4.5",
     "@z1/preset-task": "^0.4.26",
     "core-js": "^3.6.3",
@@ -28,5 +28,5 @@
     "webpack": "^4",
     "webpack-cli": "^3"
   },
-  "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
+  "gitHead": "50625124584f27095701c688467346e90bc555e3"
 }

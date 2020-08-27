@@ -1,4 +1,4 @@
-import { task as Fn } from '@roboteur/lib-api-box-core'
+import { task as Fn } from '@z1/lib-api-box-core'
 import { Knex, FeathersKnex } from '@z1/preset-feathers-server-sql'
 
 // main

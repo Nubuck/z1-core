@@ -1,4 +1,4 @@
-import { apiBoxCore, task as Fn, fs as Fs } from '@roboteur/lib-api-box-core'
+import { apiBoxCore, task as Fn, fs as Fs } from '@z1/lib-api-box-core'
 import { Sequelize, FeathersSequelize } from '@z1/preset-feathers-server-sql'
 import { Knex, FeathersKnex } from '@z1/preset-feathers-server-sql'
 

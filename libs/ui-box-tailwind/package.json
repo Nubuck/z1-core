@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-ui-box-tailwind",
-  "version": "0.4.26",
+  "version": "0.4.27",
   "main": "dist/index.js",
   "files": [
     "dist",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@tailwindcss/custom-forms": "^0.1.4",
-    "@z1/preset-task": "^0.4.26",
+    "@z1/preset-task": "^0.4.27",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3",

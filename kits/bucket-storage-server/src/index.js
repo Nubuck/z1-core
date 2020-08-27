@@ -14,7 +14,7 @@ export default (z, props = {}) =>
               const exists = await db.schema.hasTable(name)
               if (t.not(exists)) {
                 await db.schema.createTable(name, (table) => {
-                  table.uuid('id')
+                  table.uuid('_id')
                   table.string('fileId')
                   table.string('mimeType')
                   table.string('originalName')
@@ -30,7 +30,7 @@ export default (z, props = {}) =>
               }
             })
           },
-          serviceFactory: { modelName: name, id: 'id' },
+          serviceFactory: { modelName: name, id: '_id' },
         },
         props
       )

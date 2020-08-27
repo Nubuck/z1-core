@@ -3,7 +3,7 @@ import AuthManagement from 'feathers-authentication-management'
 // main
 export const api = (z, props) => {
   const dbId = z.featureBox.fn((t) =>
-    t.eq(props.adapter, 'nedb') ? '_id' : 'id'
+    t.eq(props.adapter, 'nedb') ? '_id' : '_id'
   )
   const isAction = z.featureBox.fn((t) => (actions = []) => (hook) => {
     return t.notNil(t.find((action) => t.eq(action, hook.data.action), actions))

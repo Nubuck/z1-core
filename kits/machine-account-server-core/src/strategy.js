@@ -5,7 +5,7 @@ export function strategy(z, adapter) {
   AuthenticationBaseStrategy.prototype.authenticate = z.featureBox.fn(
     (t, a) =>
       async function authenticate(payload) {
-        const dbId = t.eq(adapter, 'nedb') ? '_id' : 'id'
+        const dbId = t.eq(adapter, 'nedb') ? '_id' : '_id'
         const payloadErrorMsg =
           'Machine account authentication requires a hashId field'
         if (t.not(t.has('hashId')(payload))) {

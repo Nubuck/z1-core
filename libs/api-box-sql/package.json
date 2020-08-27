@@ -1,0 +1,32 @@
+{
+  "name": "@roboteur/lib-api-box-sql",
+  "version": "0.4.11",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-sql",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "prepublish": "yarn run build"
+  },
+  "dependencies": {
+    "@roboteur/lib-api-box-core": "^0.4.11",
+    "@z1/preset-feathers-server-sql": "^0.4.5",
+    "@z1/preset-task": "^0.4.11",
+    "core-js": "^3.6.3",
+    "regenerator-runtime": "^0.13.3",
+    "source-map-support": "0.4.3"
+  },
+  "devDependencies": {
+    "@neutrinojs/library": "^9.0.0",
+    "neutrino": "^9.0.0",
+    "webpack": "^4",
+    "webpack-cli": "^3"
+  },
+  "gitHead": "dfb9fca25611080d41ac63f9a885dd8591040016"
+}

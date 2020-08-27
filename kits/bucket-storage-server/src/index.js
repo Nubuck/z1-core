@@ -30,7 +30,7 @@ export default (z, props = {}) =>
               }
             })
           },
-          serviceFactory: { modelName: name },
+          serviceFactory: { modelName: name, id: 'id' },
         },
         props
       )

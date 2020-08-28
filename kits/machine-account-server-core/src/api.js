@@ -59,7 +59,7 @@ export const api = (z, props) => {
     )
     if (accountErr) {
       app.set('machineAccount', null)
-      app.debug('create machine account failed')
+      app.error('create machine account failed', accountErr)
       return null
     }
     const [loginErr, loginResult] = await a.of(
@@ -67,7 +67,7 @@ export const api = (z, props) => {
     )
     if (loginErr) {
       app.set('machineAccount', null)
-      app.debug('find machine login failed')
+      app.error('find machine login failed', loginErr)
       return null
     }
     if (loginResult.exists) {
@@ -76,7 +76,7 @@ export const api = (z, props) => {
       )
       if (machAccErr) {
         app.set('machineAccount', null)
-        app.debug('get machine account failed')
+        app.error('get machine account failed', machAccErr)
         return null
       }
       await patchStatus(app, loginResult.login, 'online')
@@ -89,7 +89,7 @@ export const api = (z, props) => {
     )
     if (machErr) {
       app.set('machineAccount', null)
-      app.debug('find machine account failed')
+      app.error('find machine account failed', machErr)
       return null
     }
     if (t.not(machineResult.exists)) {
@@ -99,7 +99,7 @@ export const api = (z, props) => {
       )
       if (sysErr) {
         app.set('machineAccount', null)
-        app.debug('get machine account sys info failed')
+        app.error('get machine account sys info failed', sysErr)
         return null
       }
       const [machAccErr, machAcc] = await a.of(
@@ -110,7 +110,7 @@ export const api = (z, props) => {
       )
       if (machAccErr) {
         app.set('machineAccount', null)
-        app.debug('create machine account failed')
+        app.error('create machine account failed', machAccErr)
         return null
       }
       await patchStatus(app, machAcc.login, 'online')
@@ -130,7 +130,7 @@ export const api = (z, props) => {
     )
     if (nextLoginErr) {
       app.set('machineAccount', null)
-      app.debug('create machine login failed')
+      app.error('create machine login failed', nextLoginErr)
       return null
     }
     await patchStatus(app, nextLogin, 'online')
@@ -472,7 +472,11 @@ export const api = (z, props) => {
             app
               .get('registerMachine')('machine')
               .then(() => {
-                app.debug('machine registered', app.get('machineAccount')[dbId])
+                if (t.notNil(app.get('machineAccount'))) {
+                  app.debug('machine registered')
+                } else {
+                  app.debug('machine register failed')
+                }
               })
               .catch((e) => app.error('register machine err:', e))
           },

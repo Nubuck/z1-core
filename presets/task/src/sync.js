@@ -48,6 +48,7 @@ import range from 'ramda/es/range'
 import reduce from 'ramda/es/reduce'
 import repeat from 'ramda/es/repeat'
 import replace from 'ramda/es/replace'
+import slice from 'ramda/es/slice'
 import sum from 'ramda/es/sum'
 import sort from 'ramda/es/sort'
 import sortBy from 'ramda/es/sortBy'
@@ -230,6 +231,7 @@ export const TASK = {
   reverse,
   split,
   startsWith,
+  slice,
   sum,
   tail,
   take,

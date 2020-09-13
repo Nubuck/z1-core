@@ -1,6 +1,6 @@
 {
   "name": "example-app-desktop",
-  "version": "0.4.27",
+  "version": "0.4.38",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -13,10 +13,10 @@
     "renderer": null
   },
   "dependencies": {
-    "@z1/kit-bucket-storage-node": "^0.4.27",
-    "@z1/kit-machine-account-node": "^0.4.27",
-    "@z1/lib-api-box-client-node": "^0.4.27",
-    "@z1/lib-state-box-node": "^0.4.27",
+    "@z1/kit-bucket-storage-node": "^0.4.38",
+    "@z1/kit-machine-account-node": "^0.4.38",
+    "@z1/lib-api-box-client-node": "^0.4.38",
+    "@z1/lib-state-box-node": "^0.4.38",
     "core-js": "^3.6.3",
     "electron-log": "^4.0.4",
     "redux": "^4.0.4",

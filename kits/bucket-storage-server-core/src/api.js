@@ -34,6 +34,7 @@ export const api = (z, props) =>
     z.featureBox.api.create('bucketStorage', {
       models: props.models,
       services(s, { auth, common, data }) {
+        // parts
         const safeMeta = (ctx) => {
           const rawMeta = t.path(PATHS.DATA_META, ctx)
           return t.isType(rawMeta, 'string')
@@ -53,7 +54,7 @@ export const api = (z, props) =>
           }
           return ctx
         }
-        const dbId = t.eq(props.adapter, 'nedb') ? '_id' : '_id'
+        const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
         const withAuthors = (keys) => (ctx) => {
           ctx.data = t.merge(ctx.data, {
             [keys.author]: t.pathOr(null, ['params', 'user', dbId], ctx),
@@ -135,7 +136,115 @@ export const api = (z, props) =>
             }
           })
         )
+        //sql hooks
+        const safeParse = (val) => {
+          if (t.isNil(val)) {
+            return null
+          }
+          if (t.or(t.ofType('object', val), t.ofType('array', val))) {
+            return val
+          }
+          if (t.isZeroLen(val)) {
+            return []
+          }
+          return JSON.parse(val)
+        }
+
+        const safeStringify = (val) => {
+          if (t.or(t.ofType('object', val), t.ofType('array', val))) {
+            return JSON.stringify(val)
+          }
+          return '{}'
+        }
+        const withSafeParse = (keys = []) => (ctx) => {
+          if (t.eq(ctx.method, 'find')) {
+            ctx.result.data = t.map(
+              (item) =>
+                t.merge(
+                  item,
+                  t.mergeAll(
+                    t.map((key) => {
+                      return {
+                        [key]: safeParse(item[key]),
+                      }
+                    }, keys)
+                  )
+                ),
+              ctx.result.data || []
+            )
+          } else {
+            if (t.not(t.isNil(t.pathOr(null, ['result', '_id'], ctx)))) {
+              ctx.result = t.merge(
+                ctx.result,
+                t.mergeAll(
+                  t.map((key) => {
+                    return {
+                      [key]: safeParse(ctx.result[key]),
+                    }
+                  }, keys)
+                )
+              )
+            }
+          }
+          return ctx
+        }
+        const withSafeStringify = (keys = []) => (ctx) => {
+          if (
+            t.anyOf([
+              t.eq(ctx.method, 'create'),
+              t.eq(ctx.method, 'patch'),
+              t.eq(ctx.method, 'update'),
+            ])
+          ) {
+            ctx.data = t.ofType('array', ctx.data)
+              ? t.map((item) => {
+                  return t.merge(
+                    item,
+                    t.mergeAll(
+                      t.map((key) => {
+                        if (t.isNil(item[key])) {
+                          return {}
+                        }
+                        return {
+                          [key]: safeStringify(item[key]),
+                        }
+                      }, keys)
+                    )
+                  )
+                }, ctx.data)
+              : t.merge(
+                  ctx.data,
+                  t.mergeAll(
+                    t.map((key) => {
+                      if (t.isNil(ctx.data[key])) {
+                        return {}
+                      }
+                      return {
+                        [key]: safeStringify(ctx.data[key]),
+                      }
+                    }, keys)
+                  )
+                )
+          }
+          return ctx
+        }
         // registry
+        const regKeys = [
+          '_id',
+          'fileId',
+          'mimeType',
+          'originalName',
+          'encoding',
+          'size',
+          'ext',
+          'createdBy',
+          'creatorRole',
+          'updatedBy',
+          'updaterRole',
+          'createdAt',
+          'updatedAt',
+        ]
+        const regJson = ['extra']
         s([props.adapter, SERVICES.REGISTRY], props.serviceFactory, {
           hooks: {
             before: {
@@ -143,22 +252,36 @@ export const api = (z, props) =>
               get: [withQueryParams],
               find: [data.safeFindMSSQL, withQueryParams],
               create: [
-                data.withUUIDV4('_id'),
+                data.withIdUUIDV4,
                 withQueryParams,
                 withAuthors({ author: 'createdBy', role: 'creatorRole' }),
                 common.setNow('createdAt', 'updatedAt'),
+                (ctx) => {
+                  ctx.data = t.merge(t.pick(regKeys, ctx.data), {
+                    extra: t.omit(regKeys, ctx.data),
+                  })
+                  return ctx
+                },
+                withSafeStringify(regJson),
               ],
               patch: [
                 withQueryParams,
                 withAuthors({ author: 'updatedBy', role: 'updaterRole' }),
                 common.setNow('updatedAt'),
+                (ctx) => {
+                  ctx.data = t.merge(t.pick(regKeys, ctx.data), {
+                    extra: t.omit(regKeys, ctx.data),
+                  })
+                  return ctx
+                },
+                withSafeStringify(regJson),
               ],
             },
             after: {
-              get: [withAuthorJoins],
-              find: [withAuthorJoins],
-              create: [withAuthorJoins],
-              patch: [withAuthorJoins],
+              get: [withAuthorJoins, withSafeParse(regJson)],
+              find: [withAuthorJoins, withSafeParse(regJson)],
+              create: [withAuthorJoins, withSafeParse(regJson)],
+              patch: [withAuthorJoins, withSafeParse(regJson)],
             },
           },
         })
@@ -280,8 +403,6 @@ export const api = (z, props) =>
                       )
                       if (t.not(patchError)) {
                         ctx.result.meta = result
-                      } else {
-                        ctx.app.error('BUCKET REGISTRY PATCH FAILED', patchError)
                       }
                     } else {
                       const [createError, result] = await a.of(
@@ -292,8 +413,6 @@ export const api = (z, props) =>
                       )
                       if (t.not(createError)) {
                         ctx.result.meta = result
-                      } else {
-                        ctx.app.error('BUCKET REGISTRY CREATE FAILED', createError)
                       }
                     }
                     return ctx

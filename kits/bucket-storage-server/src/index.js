@@ -15,8 +15,6 @@ export default (z, props = {}) =>
               if (t.not(exists)) {
                 await db.schema.createTable(name, (table) => {
                   table.uuid('_id')
-                  table.string('alias')
-                  table.string('ext')
                   table.string('fileId')
                   table.string('mimeType')
                   table.string('originalName')
@@ -28,11 +26,12 @@ export default (z, props = {}) =>
                   table.string('updaterRole')
                   table.datetime('createdAt')
                   table.datetime('updatedAt')
+                  table.text('extra', 'longtext')
                 })
               }
             })
           },
-          serviceFactory: { modelName: name, id: '_id' },
+          serviceFactory: { modelName: name },
         },
         props
       )

@@ -19,6 +19,7 @@ export default (z, props = {}) =>
                   table.string('mimeType')
                   table.string('originalName')
                   table.string('encoding')
+                  table.string('ext')
                   table.integer('size')
                   table.uuid('createdBy')
                   table.string('creatorRole')

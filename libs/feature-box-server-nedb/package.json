@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-feature-box-server-nedb",
-  "version": "0.4.42",
+  "version": "0.4.43",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,8 +15,8 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-api-box-core": "^0.4.42",
-    "@z1/lib-api-box-nedb": "^0.4.42",
+    "@z1/lib-api-box-core": "^0.4.43",
+    "@z1/lib-api-box-nedb": "^0.4.43",
     "@z1/lib-feature-box-server-core": "^0.4.38",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",

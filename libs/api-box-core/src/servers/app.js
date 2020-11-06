@@ -39,7 +39,11 @@ export const app = task((t) => (ctx) => {
     if (t.isType(configure, 'Function')) {
       configure(main, api)
     }
-    const server = main.listen(api.get('port'), () => {
+    let server = null
+    api.setupComplete = () => {
+      api.setup(server)
+    }
+    server = main.listen(api.get('port'), () => {
       if (t.isType(api.onStart, 'Function')) {
         api.onStart()
       }
@@ -47,7 +51,6 @@ export const app = task((t) => (ctx) => {
         cb(api)
       }
     })
-    api.setup(server)
     return {
       namespace,
       main,

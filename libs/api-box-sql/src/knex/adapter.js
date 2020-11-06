@@ -63,6 +63,9 @@ export const withKnexAdapter = Fn((t, a) => (ctx = {}) => {
 
             // sync boxes
             boxes.lifecycle('onSync')(app)
+            if (t.notNil(app.setupComplete)) {
+              app.setupComplete()
+            }
           })
           .catch((adapterErr) => {
             app.error('Knex adapter setup error', adapterErr)

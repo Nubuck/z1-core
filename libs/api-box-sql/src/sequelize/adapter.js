@@ -117,6 +117,9 @@ export const withSequelizeAdapter = Fn((t) => (ctx = {}) => {
               .sync(syncOptions)
               .then(() => {
                 boxes.lifecycle('onSync')(app)
+                if (t.notNil(app.setupComplete)) {
+                  app.setupComplete()
+                }
               })
               .catch((error) => {
                 app.error('FAILED TO SYNC DB', error)

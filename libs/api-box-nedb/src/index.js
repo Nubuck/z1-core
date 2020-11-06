@@ -2,10 +2,10 @@ import { apiBoxCore, task as Fn, fs as Fs } from '@z1/lib-api-box-core'
 import { Nedb, FeathersNedb } from '@z1/preset-feathers-server-nedb'
 
 // main
-export const withNedbAdapter = Fn(t => (ctx = {}) => {
+export const withNedbAdapter = Fn((t) => (ctx = {}) => {
   const adapterName = 'nedb'
   const adapters = t.atOr([], 'adapters', ctx)
-  const nedbAdapter = app => {
+  const nedbAdapter = (app) => {
     const dbTools = app.get('dbTools')
     return {
       name: adapterName,
@@ -28,7 +28,7 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
           dbTools.models.add(adapterName, name, model)
         }
         // register models
-        t.forEach(modelName => {
+        t.forEach((modelName) => {
           define(modelName)
         }, t.keys(adapter.models || {}))
         // register services
@@ -44,7 +44,7 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
           }
           return t.merge({ Model }, t.omit(['modelName'], factoryObj))
         }
-        t.forEach(serviceName => {
+        t.forEach((serviceName) => {
           const serviceDef = adapter.services[serviceName]
           const serviceProps = t.isType(serviceDef.factory, 'function')
             ? serviceDef.factory(nextModels)
@@ -70,6 +70,9 @@ export const withNedbAdapter = Fn(t => (ctx = {}) => {
       },
       onSetup(boxes) {
         boxes.lifecycle('onSync')(app)
+        if (t.notNil(app.setupComplete)) {
+          app.setupComplete()
+        }
       },
     }
   }

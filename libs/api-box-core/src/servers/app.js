@@ -48,8 +48,9 @@ export const app = task((t) => (ctx) => {
       }
     })
     api.setupComplete = () => {
-      api.setup(server)
+      api.log('setup complete')
     }
+    api.setup(server)
     return {
       namespace,
       main,

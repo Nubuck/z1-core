@@ -41,16 +41,16 @@ export const app = task((t) => (ctx) => {
     }
     let server = null
     api.setupComplete = () => {
+      main.listen(api.get('port'), () => {
+        if (t.isType(api.onStart, 'Function')) {
+          api.onStart()
+        }
+        if (t.isType(cb, 'Function')) {
+          cb(api)
+        }
+      })
       api.setup(server)
     }
-    server = main.listen(api.get('port'), () => {
-      if (t.isType(api.onStart, 'Function')) {
-        api.onStart()
-      }
-      if (t.isType(cb, 'Function')) {
-        cb(api)
-      }
-    })
     return {
       namespace,
       main,

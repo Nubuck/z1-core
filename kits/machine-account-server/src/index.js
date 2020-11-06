@@ -13,7 +13,7 @@ export default (z, props = {}) =>
               const exists = await db.schema.hasTable('machine')
               if (t.not(exists)) {
                 await db.schema.createTable('machine', (table) => {
-                  table.uuid('_id')
+                  table.uuid('_id').primary()
                   table.datetime('createdAt')
                   table.datetime('updatedAt')
                   table.string('hardwareuuid')
@@ -38,7 +38,7 @@ export default (z, props = {}) =>
               const exists = await db.schema.hasTable('machine_login')
               if (t.not(exists)) {
                 await db.schema.createTable('machine_login', (table) => {
-                  table.uuid('_id')
+                  table.uuid('_id').primary()
                   table.datetime('createdAt')
                   table.datetime('updatedAt')
                   table.string('hostname')

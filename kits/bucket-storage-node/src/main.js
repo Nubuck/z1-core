@@ -74,5 +74,6 @@ export const withRest = fn(t => api => {
     })
   }
   api.url = prefixUrl
+  api.got = got
   return api
 })

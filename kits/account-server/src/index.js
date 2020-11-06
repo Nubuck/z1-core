@@ -13,7 +13,7 @@ export default (z, props = {}) =>
               const exists = await db.schema.hasTable('users')
               if (t.not(exists)) {
                 await db.schema.createTable('users', (table) => {
-                  table.uuid('_id')
+                  table.uuid('_id').primary()
                   table.string('username')
                   table.string('name')
                   table.string('surname')

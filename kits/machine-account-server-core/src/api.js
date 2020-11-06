@@ -3,9 +3,7 @@ import { strategy } from './strategy'
 
 // main
 export const api = (z, props) => {
-  const dbId = z.featureBox.fn((t) =>
-    t.eq(props.adapter, 'nedb') ? '_id' : '_id'
-  )
+  const dbId = '_id'
   const isLogin = z.featureBox.fn((t) => (user) =>
     t.allOf([t.has('login')(user), t.has('machine')(user)])
   )

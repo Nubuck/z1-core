@@ -54,7 +54,7 @@ export const api = (z, props) =>
           }
           return ctx
         }
-        const dbId = t.eq(props.adapter, 'nedb') ? '_id' : 'id'
+        const dbId = '_id'
         const withAuthors = (keys) => (ctx) => {
           ctx.data = t.merge(ctx.data, {
             [keys.author]: t.pathOr(null, ['params', 'user', dbId], ctx),

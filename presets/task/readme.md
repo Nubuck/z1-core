@@ -32,7 +32,7 @@ import * from '@z1/preset-task'
 | compose            |                    | t.compose(t.toUpper ,(a=> `${a}`)))                  | [compose](https://ramdajs.com/docs/#compose)                                    |
 | concat             |                    | t.concat(object, object)                             | [concat](https://ramdajs.com/docs/#concat)                                      |
 | contains           |                    | t.contains(search, list)                             | [contains](https://ramdajs.com/docs/#contains)                                  |
-| dropLast           |                    | t.dropLast(n, array || string )                      | [dropLast](https://ramdajs.com/docs/#dropLast)                                  |
+| dropLast           |                    | t.dropLast(n, array/string )                      | [dropLast](https://ramdajs.com/docs/#dropLast)                                  |
 | endsWith           |                    | t.endWith(object, listOfObjects)                     | [endsWith](https://ramdajs.com/docs/#endsWith)                                  |
 | equals             |                    | t.equals(object, object)                             | [equals](https://ramdajs.com/docs/#equals)                                      |
 | eq                 | :heavy_check_mark: | t.eq(object, object)                                 | shorthand for equals                                                            |
@@ -45,29 +45,29 @@ import * from '@z1/preset-task'
 | forEachObjIndexed  |                    | t.forEachObjIndexed((value,key), object)             | [forEachObjIndexed](https://ramdajs.com/docs/#forEachObjIndexed)                |
 | fromPairs          |                    | t.fromPairs(objectOfPairs)                           | [fromPairs](https://ramdajs.com/docs/#fromPairs)                                |
 | groupBy            |                    | t.groupBy(fn)                                        | [groupBy](https://ramdajs.com/docs/#groupBy)                                    |
-| gt                 |                    | t.gt(a-> int|string, b-> int|string)                 | [gt](https://ramdajs.com/docs/#gt)                                              |
-| gte                |                    | t.gte(a-> int|string, b-> int|string)                | [gte](https://ramdajs.com/docs/#gte)                                            |
+| gt                 |                    | t.gt(a-> int/string, b-> int/string)                 | [gt](https://ramdajs.com/docs/#gt)                                              |
+| gte                |                    | t.gte(a-> int/string, b-> int/string)                | [gte](https://ramdajs.com/docs/#gte)                                            |
 | has                |                    | t.has(key)({key: value})                             | [has](https://ramdajs.com/docs/#has)                                            |
 | hasIn              |                    | t.hasIn(prop, object)                                | [hasIn](https://ramdajs.com/docs/#hasIn)                                        |
-| head               |                    | t.head(list|string)                                  | [head](https://ramdajs.com/docs/#head)                                          |
-| includes           |                    | t.includes(object, list|string)                      | [includes](https://ramdajs.com/docs/#includes)                                  |
-| isEmpty            |                    | t.isEmpty(object|list)                               | [isEmpty](https://ramdajs.com/docs/#isEmpty)                                    |
+| head               |                    | t.head(list/string)                                  | [head](https://ramdajs.com/docs/#head)                                          |
+| includes           |                    | t.includes(object, list/string)                      | [includes](https://ramdajs.com/docs/#includes)                                  |
+| isEmpty            |                    | t.isEmpty(object/list)                               | [isEmpty](https://ramdajs.com/docs/#isEmpty)                                    |
 | isNil              |                    | t.isNil(value)                                       | [isNil](https://ramdajs.com/docs/#isNil)                                        |
 | keys               |                    | t.keys(object)                                       | [keys](https://ramdajs.com/docs/#keys)                                          |
 | keysIn             |                    | t.keysIn(object)                                     | [keysIn](https://ramdajs.com/docs/#keysIn)                                      |
-| last               |                    | t.last(list|string)                                  | [last](https://ramdajs.com/docs/#last)                                          |
-| length             |                    | t.length(list|string)                                | [length](https://ramdajs.com/docs/#length)                                      |
-| len                |                    | t.len(list|string)                                   | shorthand for length                                                            |
-| lt                 |                    | t.lt(a → int|string, b → int|string)                 | [lt](https://ramdajs.com/docs/#lt)                                              |
-| lte                |                    | t.lte(a → int|string, b → int|string)                | [lte](https://ramdajs.com/docs/#lte)                                            |
+| last               |                    | t.last(list/string)                                  | [last](https://ramdajs.com/docs/#last)                                          |
+| length             |                    | t.length(list/string)                                | [length](https://ramdajs.com/docs/#length)                                      |
+| len                |                    | t.len(list/string)                                   | shorthand for length                                                            |
+| lt                 |                    | t.lt(a → int/string, b → int/string)                 | [lt](https://ramdajs.com/docs/#lt)                                              |
+| lte                |                    | t.lte(a → int/string, b → int/string)                | [lte](https://ramdajs.com/docs/#lte)                                            |
 | map                |                    | t.map(fn, list)                                      | [map](https://ramdajs.com/docs/#map)                                            |
 | mapIndexed         | :heavy_check_mark: | t.mapIndex((value, index) =>{}, list)                | addIndex(map)                                |
 | mapObjIndexed      |                    | t.mapObjIndexed(fn, list)                            | [mapObjIndexed](https://ramdajs.com/docs/#mapObjIndexed)                        |
-| merge              |                    | t.merge(object|list, object|list)                    | [merge](https://ramdajs.com/docs/#merge)                                        |
-| mergeAll           |                    | t.mergeAll(object|list, object|list)                 | [mergeAll](https://ramdajs.com/docs/#mergeAll)                                  |
-| mergeDeepRight     |                    | t.mergeDeepRight(object|list, object|list)           | [mergeDeepRight](https://ramdajs.com/docs/#mergeDeepRight)                      |
+| merge              |                    | t.merge(object/list, object/list)                    | [merge](https://ramdajs.com/docs/#merge)                                        |
+| mergeAll           |                    | t.mergeAll(object/list, object/list)                 | [mergeAll](https://ramdajs.com/docs/#mergeAll)                                  |
+| mergeDeepRight     |                    | t.mergeDeepRight(object/list, object/list)           | [mergeDeepRight](https://ramdajs.com/docs/#mergeDeepRight)                      |
 | not                |                    | t.not(boolean)                                       | [not](https://ramdajs.com/docs/#not)                                            |
-| omit               |                    | t.omit([keyA,keyB], list|object)                     | [omit](https://ramdajs.com/docs/#omit)                                          |
+| omit               |                    | t.omit([keyA,keyB], list/object)                     | [omit](https://ramdajs.com/docs/#omit)                                          |
 | or                 |                    | t.or(a → Boolean, b → Boolean, ...)                  | [or](https://ramdajs.com/docs/#or)                                              |
 | path               |                    | t.path([key, ...], object)                           | [path](https://ramdajs.com/docs/#path)                                          |
 | pathOr             |                    | t.pathOr(fallback,[key, ...], object)                | [pathOr](https://ramdajs.com/docs/#pathOr)                                      |
@@ -77,7 +77,7 @@ import * from '@z1/preset-task'
 | pipe               |                    | t.pipe(fn,fn,...)                                    | [pipe](https://ramdajs.com/docs/#pipe)                                          |
 | pluck              |                    | t.pluck(prop)                                        | [pluck](https://ramdajs.com/docs/#pluck)                                        |
 | prepend            |                    | t.prepend(item, object)                              | [prepend](https://ramdajs.com/docs/#prepend)                                    |
-| prop               |                    | t.prop(key,object|list)                              | [prop](https://ramdajs.com/docs/#prop)                                          |
+| prop               |                    | t.prop(key,object/list)                              | [prop](https://ramdajs.com/docs/#prop)                                          |
 | propEq             |                    | t.propEq(prop, prop, ...)                            | [propEq](https://ramdajs.com/docs/#propEq)                                      |
 | range              |                    | t.range(from, to)                                    | [range](https://ramdajs.com/docs/#range)                                        |
 | reduce             |                    | t.reduce(fn, object, list)                                    | [reduce](https://ramdajs.com/docs/#reduce)                                      |

@@ -20,8 +20,10 @@ import * from '@z1/preset-task'
 
 ### Top level functions
 
-| fn                 | backwards compatible | custom fn          | usage                      | docs                                                                            |
-| ------------------ | -------------------- | ------------------ | -------------------------- | ------------------------------------------------------------------------------- | ------------ |
+
+
+| fn                 | backwards compatible | custom fn          | usage                      | docs |
+| ------------------ | -------------------- | ------------------ | -------------------------- | ---- | 
 | addIndex           |                      |                    |   t.addIndex   | [addIndex](https://ramdajs.com/docs/#addIndex) |
 | allPass            |                      |                    |   | [allPass](https://ramdajs.com/docs/#allPass)                                                                     | [allPass]()  |
 | anyPass            |                      |                    |                            | [anyPass](https://ramdajs.com/docs/#anyPass)                                                                     | [anyPass]()  |

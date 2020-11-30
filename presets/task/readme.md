@@ -2,6 +2,9 @@
 
 Documentation under construction.
 
+A simple wrapper over ramda and other commonly used functions in the @z1 Lib.
+reduces the dependancy on imports from one component to the next as only a single import is needed.
+
 ## Usage
 
 ### Install
@@ -20,6 +23,7 @@ import * from '@z1/preset-task'
 
 ### Top level functions
 
+#### Sync
 | fn                 | custom fn          | usage                                                | docs                                                                            |
 | ------------------ | ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------- |
 | addIndex           |                    |                                                      | [addIndex](https://ramdajs.com/docs/#addIndex)                                  |
@@ -78,51 +82,69 @@ import * from '@z1/preset-task'
 | pluck              |                    | t.pluck(prop)                                        | [pluck](https://ramdajs.com/docs/#pluck)                                        |
 | prepend            |                    | t.prepend(item, object)                              | [prepend](https://ramdajs.com/docs/#prepend)                                    |
 | prop               |                    | t.prop(key,object/list)                              | [prop](https://ramdajs.com/docs/#prop)                                          |
-| propEq             |                    | t.propEq(prop, prop, ...)                            | [propEq](https://ramdajs.com/docs/#propEq)                                      |
+| propEq             |                    | t.propEq(prop, prop, ...)                            | [propEq](https://ramdajs.com/docs/#propEq)                              tos        |
 | range              |                    | t.range(from, to)                                    | [range](https://ramdajs.com/docs/#range)                                        |
-| reduce             |                    | t.reduce(fn, object, list)                                    | [reduce](https://ramdajs.com/docs/#reduce)                                      |
-| repeat             |                    |                                                      | [repeat](https://ramdajs.com/docs/#repeat)                                      |
-| replace            |                    |                                                      | [replace](https://ramdajs.com/docs/#replace)                                    |
-| sort               |                    |                                                      | [sort](https://ramdajs.com/docs/#sort)                                          |
-| sortBy             |                    |                                                      | [sortBy](https://ramdajs.com/docs/#sortBy)                                      |
-| sortWith           |                    |                                                      | [sortWith](https://ramdajs.com/docs/#sortWith)                                  |
-| descend            |                    |                                                      | [descend](https://ramdajs.com/docs/#descend)                                    |
-| ascend             |                    |                                                      | [ascend](https://ramdajs.com/docs/#ascend)                                      |
-| reverse            |                    |                                                      | [reverse](https://ramdajs.com/docs/#reverse)                                    |
-| split              |                    |                                                      | [split](https://ramdajs.com/docs/#split)                                        |
-| startsWith         |                    |                                                      | [startsWith](https://ramdajs.com/docs/#startsWith)                              |
-| sum                |                    |                                                      | [sum](https://ramdajs.com/docs/#sum)                                            |
-| tail               |                    |                                                      | [tail](https://ramdajs.com/docs/#tail)                                          |
-| take               |                    |                                                      | [take](https://ramdajs.com/docs/#take)                                          |
-| takeLast           |                    |                                                      | [takeLast](https://ramdajs.com/docs/#takeLast)                                  |
-| toPairs            |                    |                                                      | [toPairs])(https://ramdajs.com/docs/#toPairs)                                   |
-| toString           |                    |                                                      | [toString](https://ramdajs.com/docs/#toString)                                  |
-| trim               |                    |                                                      | [trim](https://ramdajs.com/docs/#trim)                                          |
-| tryCatch           |                    |                                                      | [tryCatch](https://ramdajs.com/docs/#tryCatch)                                  |
-| type               |                    |                                                      | [type](https://ramdajs.com/docs/#type)                                          |
-| uniq               |                    |                                                      | [uniq](https://ramdajs.com/docs/#uniq)                                          |
-| values             |                    |                                                      | [values](https://ramdajs.com/docs/#values)                                      |
-| isType             | :heavy_check_mark: |                                                      | [isType](https://ramdajs.com/docs/#isType)                                      |
-| when               |                    |                                                      | [when](https://ramdajs.com/docs/#when)                                          |
-| notType            | :heavy_check_mark: | t.notType(()=>{},'Object')                           | (subject, typeKey) => not(isType(subject, typeKey))                             |
-| isZeroLen          | :heavy_check_mark: | t.isZeroLen(payload.hashId)                          | [isZeroLen](./src/sync.js)                                                      |
+| reduce             |                    | t.reduce(fn, object, list)                           | [reduce](https://ramdajs.com/docs/#reduce)                                      |
+| repeat             |                    | t.repeat(object/list/string, times)                  | [repeat](https://ramdajs.com/docs/#repeat)                                      |
+| replace            |                    | t.replace(toReplace, replceWith, string)             | [replace](https://ramdajs.com/docs/#replace)                                    |
+| sort               |                    | t.sort((a,b) => a - b)                               | [sort](https://ramdajs.com/docs/#sort)                                          |
+| sortBy             |                    | t.sortBy(t.prop(0))                                  | [sortBy](https://ramdajs.com/docs/#sortBy)                                      |
+| sortWith           |                    | t.sortWith([fn, fn, ...])                   | [sortWith](https://ramdajs.com/docs/#sortWith)                                  |
+| descend            |                    | t.sort(t.descend(t.Prop(0)), list)                   | [descend](https://ramdajs.com/docs/#descend)                                    |
+| ascend             |                    | t.sort(t.ascend(t.Prop(0)), list)                    | [ascend](https://ramdajs.com/docs/#ascend)                                      |
+| reverse            |                    | t.reverse(list/string)                               | [reverse](https://ramdajs.com/docs/#reverse)                                    |
+| split              |                    | t.split(toSplitOn, string)                           | [split](https://ramdajs.com/docs/#split)                                        |
+| startsWith         |                    | t.startsWith(string,string)                          | [startsWith](https://ramdajs.com/docs/#startsWith)                              |
+| sum                |                    | t.sum(list)                                          | [sum](https://ramdajs.com/docs/#sum)                                            |
+| tail               |                    | t.tail(list)                                         | [tail](https://ramdajs.com/docs/#tail)                                          |
+| take               |                    | t.take(number, list)                                 | [take](https://ramdajs.com/docs/#take)                                          |
+| takeLast           |                    | t.takeLast(number, list)                             | [takeLast](https://ramdajs.com/docs/#takeLast)                                  |
+| toPairs            |                    | t.toPairs(object)                                    | [toPairs])(https://ramdajs.com/docs/#toPairs)                                   |
+| toString           |                    | t.toString(number/object/list)                       | [toString](https://ramdajs.com/docs/#toString)                                  |
+| trim               |                    | t.trim(string)                                       | [trim](https://ramdajs.com/docs/#trim)                                          |
+| tryCatch           |                    | t.tryCatch(fn,fn)                        | [tryCatch](https://ramdajs.com/docs/#tryCatch)                                  |
+| type               |                    | t.type(*)                                            | [type](https://ramdajs.com/docs/#type)                                          |
+| uniq               |                    | t.uniq(list)                                         | [uniq](https://ramdajs.com/docs/#uniq)                                          |
+| values             |                    | t.values(object)                                     | [values](https://ramdajs.com/docs/#values)                                      |
+| isType             | :heavy_check_mark: | t.isType(object, string)                             | equals(toLower(rType(subject)), toLower(matcher))                               |
+| when               |                    | t.when(a → Boolean, fn)                         | [when](https://ramdajs.com/docs/#when)                                          |
+| notType            | :heavy_check_mark: | t.notType(fn,'Object')                           | (subject, typeKey) => not(isType(subject, typeKey))                             |
+| isZeroLen          | :heavy_check_mark: | t.isZeroLen(list/string)                             | [isZeroLen](./src/sync.js)                                                      |
 | notZeroLen         | :heavy_check_mark: | t.notZeroLen(])                                      | pipe(isZeroLen, not)                                                            |
 | valPipe            | :heavy_check_mark: | t.valPipe                                            | val => (...args) => pipe(...args)(val)                                          |
-| runMatch           | :heavy_check_mark: |                                                      | [runMatch](https://ramdajs.com/docs/#runMatch)                                  |
-| getMatch           | :heavy_check_mark: |                                                      | [getMatch](https://ramdajs.com/docs/#addIndex)                                  |
-| match              | :heavy_check_mark: | t.getMatch(prop.match)(match)                        | [match](./src/sync.js)                                                          |
-| to                 |                    |                                                      | [to](https://ramdajs.com/docs/#addIndex)                                        |
-| caseTo             |                    |                                                      | Same as above `to` fn                                                           |
-| html               |                    |                                                      | [html](https://github.com/zspecza/common-tags#html)                             |
-| safeHtml           |                    |                                                      | [safeHtml](https://github.com/zspecza/common-tags#safehtml)                     |
-| oneLine            |                    |                                                      | [oneLine](https://github.com/zspecza/common-tags#oneLine)                       |
-| oneLineTrim        |                    |                                                      | [oneLineTrim](https://github.com/zspecza/common-tags#oneLineTrim)               |
-| stripIndent        |                    |                                                      | [stripIndent](https://github.com/zspecza/common-tags#stripIndent)               |
-| stripIndents       |                    |                                                      | [stripIndents](https://github.com/zspecza/common-tags#stripIndents)             |
-| inlineLists        |                    |                                                      | [inlineLists](https://github.com/zspecza/common-tags#inlineLists)               |
-| oneLineInlineLists |                    |                                                      | [oneLineInlineLists](https://github.com/zspecza/common-tags#oneLineInlineLists) |
-| commaLists         |                    |                                                      | [commaLists](https://github.com/zspecza/common-tags#commaLists)                 |
-| oneLineCommaLists  |                    |                                                      | [oneLineCommaLists](https://github.com/zspecza/common-tags#oneLineCommaLists)   |
-| globrex            |                    |                                                      | [globrex](https://github.com/terkelg/globrex)                                   |
-| throttle           |                    |                                                      | [throttle](https://lodash.com/docs/#throttle)                                   |
+| runMatch           | :heavy_check_mark: | t.runMatch()                                         | [runMatch](./src/sync.js)                                                       |
+| getMatch           | :heavy_check_mark: | t.getMatch(prop.match)(match)                        | [getMatch](./src/sync.js)                                                       |
+| match              | :heavy_check_mark: |                                                      | [match](./src/sync.js)                                                          |
+| to                 |                    | t.to.fn(string)                                      | [to](https://ramdajs.com/docs/#addIndex)                                        |
+| caseTo             |                    | t.caseTo(string)                                     | Same as above `to` fn                                                           |
+| html               |                    | t.html(string)                                       | [html](https://github.com/zspecza/common-tags#html)                             |
+| safeHtml           |                    | t.safeHtml(string)                                   | [safeHtml](https://github.com/zspecza/common-tags#safehtml)                     |
+| oneLine            |                    | t.oneLine(`multiline string`)                        | [oneLine](https://github.com/zspecza/common-tags#oneLine)                       |
+| oneLineTrim        |                    | t.oneLineTrim(`multiline string`)                    | [oneLineTrim](https://github.com/zspecza/common-tags#oneLineTrim)               |
+| stripIndent        |                    | t.stripIndent(`string`)                              | [stripIndent](https://github.com/zspecza/common-tags#stripIndent)               |
+| stripIndents       |                    | t.stripIndents(string)                               | [stripIndents](https://github.com/zspecza/common-tags#stripIndents)             |
+| inlineLists        |                    | t.lineLists(string)                                  | [inlineLists](https://github.com/zspecza/common-tags#inlineLists)               |
+| oneLineInlineLists |                    | t.oneLineInlineLists(list)                           | [oneLineInlineLists](https://github.com/zspecza/common-tags#oneLineInlineLists) |
+| commaLists         |                    | t.commaLists(list)                                   | [commaLists](https://github.com/zspecza/common-tags#commaLists)                 |
+| oneLineCommaLists  |                    | t.oneLineCommaLists(list)                            | [oneLineCommaLists](https://github.com/zspecza/common-tags#oneLineCommaLists)   |
+| globrex            |                    | t.globrex(pattern).regex.test(string)                | [globrex](https://github.com/terkelg/globrex)                                   |
+| throttle           |                    | t.throttle(fn, number [options={}])             | [throttle](https://lodash.com/docs/#throttle)                                   |
 | trampoline         | :heavy_check_mark: | t.trampoline(async function rollup(props){})         | [trampoline](./src/sync.js)                                                     |
+
+
+#### async
+
+| fn                 | custom fn          | usage                                                | docs                                                                            |
+| ------------------ | ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------- |
+| event              |                    |                                                      |                                                                                 |
+| callback           |                    |                                                      |                                                                                 |
+| awaited            |                    |                                                      |                                                                                 |
+| single             |                    |                                                      |                                                                                 |
+| set                |                    |                                                      |                                                                                 |
+| list               |                    |                                                      |                                                                                 |
+| object             |                    |                                                      |                                                                                 |
+| map                |                    |                                                      |                                                                                 |
+| failure            |                    |                                                      |                                                                                 |
+| success            |                    |                                                      |                                                                                 |
+| result             |                    |                                                      |                                                                                 |
+| of                 |                    |                                                      |                                                                                 |

@@ -21,8 +21,7 @@ import { task } from '@z1/preset-task'
 
 ```
 
-### Top level functions
-
+### Example 
 ```Javascript 
 
 const fn = task((t,a) => { /* t = syncFN , a = asyncFN */ })
@@ -45,6 +44,8 @@ const channel = task(t => ({
 }))
 
 ```
+
+### Top level functions
 
 #### Sync
 | fn                 | custom fn          | usage                                                | docs                                                                            |
@@ -155,13 +156,13 @@ const channel = task(t => ({
 | trampoline         | :heavy_check_mark: | t.trampoline(async function rollup(props){})         | [trampoline](./src/sync.js)                                                     |
 
 
+
 #### async
 
 | fn                 | custom fn          | usage                                                | docs                                                                            |
 | ------------------ | ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------- |
 | event              | :heavy_check_mark: |  a.event(server, 'listen')                           |  Waits for `emitter` to emit an `eventName` event.                              |
-| callback           | :heavy_check_mark: |  a.callback(fs.readFile, 'foo.txt')                  |  Calls a function `func` that takes arguments `args` and an `(err, result)` callback.
- * Waits for the callback result, throwing an Error if err is truthy.                                                     |
+| callback           | :heavy_check_mark: |  a.callback(fs.readFile, 'foo.txt')                  |  Calls a function `func` that takes arguments `args` and an `(err, result)` callback. Waits for the callback result, throwing an Error if err is truthy.                                                     |
 | awaited            | :heavy_check_mark: |  a.awaited(fs.readFile)                              | Wraps a node style function (see `callback`) into a new function, which instead of taking a callback function, returns an async function (`Promise`). This `Promise` resolves if the first (error) argument of the callback was called with a falsy value, rejects with the error otherwise. Takes the rest of the arguments as the original function `fn`. |
 | single             | :heavy_check_mark: |  a.single([ fetch(remoteFile), read(localFile) ])    | Waits for the first Promise in `list` to resolve.                               |
 | set                | :heavy_check_mark: |  a.set([fn, fn,...,], count)                         | Waits for the first `count` Promises in `list` to resolve.                      |

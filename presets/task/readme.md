@@ -50,16 +50,16 @@ const channel = task(t => ({
 #### Sync
 | fn                 | custom fn          | usage                                                | docs                                                                            |
 | ------------------ | ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------- |
-| addIndex           |                    |                                                      | [addIndex](https://ramdajs.com/docs/#addIndex)                                  |
-| allPass            |                    | t.allPass([a → Boolean, b → Boolean, ...])           | [allPass](https://ramdajs.com/docs/#allPass)                                    |
-| anyPass            |                    | t.anyPass([a → Boolean, b → Boolean, ...])           | [anyPass](https://ramdajs.com/docs/#anyPass)                                    |
+| at                 |                    | t.at(pathAt, object)                                 | [at](./src/syncjs#L144)                                                         |
+| atOr               |                    | t.atOr(fallback, pathAt, object)                     | [atOr](./src/sync.js#L147)                                                      |
+| addIndex           |                    | t.addIndex((value, index) => {}, object)             | [addIndex](https://ramdajs.com/docs/#addIndex)                                  |
+| adjust             |                    | t.adjust(index, R.toUpper, list)                     | [addIndex](https://ramdajs.com/docs/#addIndex)                                  |
 | and                |                    | t.any([a → Boolean, b → Boolean])                    | [and](https://ramdajs.com/docs/#and)                                            |
 | anyOf              | :heavy_check_mark: | t.anyOf([a → Boolean, b → Boolean, ...])             | [anyOf](./src/sync.js)                                                          |
 | allOf              | :heavy_check_mark: | t.allOf([a → Boolean, b → Boolean, ...])             | [allOf](./src/sync.js)                                                          |
 | append             |                    | t.append(object, object)                             | [append](https://ramdajs.com/docs/#append)                                      |
-| compose            |                    | t.compose(t.toUpper ,(a=> `${a}`)))                  | [compose](https://ramdajs.com/docs/#compose)                                    |
+| compose            |                    | t.compose(t.toUpper ,(a => `${a}`)))                 | [compose](https://ramdajs.com/docs/#compose)                                    |
 | concat             |                    | t.concat(object, object)                             | [concat](https://ramdajs.com/docs/#concat)                                      |
-| contains           |                    | t.contains(search, list)                             | [contains](https://ramdajs.com/docs/#contains)                                  |
 | dropLast           |                    | t.dropLast(n, array/string )                         | [dropLast](https://ramdajs.com/docs/#dropLast)                                  |
 | endsWith           |                    | t.endWith(object, listOfObjects)                     | [endsWith](https://ramdajs.com/docs/#endsWith)                                  |
 | equals             |                    | t.equals(object, object)                             | [equals](https://ramdajs.com/docs/#equals)                                      |
@@ -80,12 +80,14 @@ const channel = task(t => ({
 | head               |                    | t.head(list/string)                                  | [head](https://ramdajs.com/docs/#head)                                          |
 | includes           |                    | t.includes(object, list/string)                      | [includes](https://ramdajs.com/docs/#includes)                                  |
 | isEmpty            |                    | t.isEmpty(object/list)                               | [isEmpty](https://ramdajs.com/docs/#isEmpty)                                    |
+| notEmpty           |                    | t.notEmpty(object/list)                              | pipe(isEmpty, not)                                                              |
 | isNil              |                    | t.isNil(value)                                       | [isNil](https://ramdajs.com/docs/#isNil)                                        |
+| notNil             |                    | t.notNil(value)                                      | pipe(isNil, not)                                                                |
 | keys               |                    | t.keys(object)                                       | [keys](https://ramdajs.com/docs/#keys)                                          |
 | keysIn             |                    | t.keysIn(object)                                     | [keysIn](https://ramdajs.com/docs/#keysIn)                                      |
 | last               |                    | t.last(list/string)                                  | [last](https://ramdajs.com/docs/#last)                                          |
 | length             |                    | t.length(list/string)                                | [length](https://ramdajs.com/docs/#length)                                      |
-| len                |                    | t.len(list/string)                                   | shorthand for length                                                            |
+| len                |                    | t.len(list/string)                                   | shorthand for `length`                                                          |
 | lt                 |                    | t.lt(a → int/string, b → int/string)                 | [lt](https://ramdajs.com/docs/#lt)                                              |
 | lte                |                    | t.lte(a → int/string, b → int/string)                | [lte](https://ramdajs.com/docs/#lte)                                            |
 | map                |                    | t.map(fn, list)                                      | [map](https://ramdajs.com/docs/#map)                                            |
@@ -100,13 +102,10 @@ const channel = task(t => ({
 | path               |                    | t.path([key, ...], object)                           | [path](https://ramdajs.com/docs/#path)                                          |
 | pathOr             |                    | t.pathOr(fallback, [key, ...], object)               | [pathOr](https://ramdajs.com/docs/#pathOr)                                      |
 | pick               |                    | t.pick([keys], object)                               | [pick](https://ramdajs.com/docs/#pick)                                          |
-| pickAll            |                    | t.pickAll([keys], objet)                             | [pickAll](https://ramdajs.com/docs/#pickAll)                                    |
-| pickBy             |                    | t.pickBy(fn, object)                                 | [pickBy](https://ramdajs.com/docs/#pickBy)                                      |
 | pipe               |                    | t.pipe(fn,fn,...)                                    | [pipe](https://ramdajs.com/docs/#pipe)                                          |
 | pluck              |                    | t.pluck(prop)                                        | [pluck](https://ramdajs.com/docs/#pluck)                                        |
 | prepend            |                    | t.prepend(item, object)                              | [prepend](https://ramdajs.com/docs/#prepend)                                    |
 | prop               |                    | t.prop(key, object/list)                             | [prop](https://ramdajs.com/docs/#prop)                                          |
-| propEq             |                    | t.propEq(prop, prop, ...)                            | [propEq](https://ramdajs.com/docs/#propEq)                                      |
 | range              |                    | t.range(from, to)                                    | [range](https://ramdajs.com/docs/#range)                                        |
 | reduce             |                    | t.reduce(fn, object, list)                           | [reduce](https://ramdajs.com/docs/#reduce)                                      |
 | repeat             |                    | t.repeat(object/list/string, x)                      | [repeat](https://ramdajs.com/docs/#repeat)                                      |
@@ -119,6 +118,7 @@ const channel = task(t => ({
 | reverse            |                    | t.reverse(list/string)                               | [reverse](https://ramdajs.com/docs/#reverse)                                    |
 | split              |                    | t.split(toSplitOn, string)                           | [split](https://ramdajs.com/docs/#split)                                        |
 | startsWith         |                    | t.startsWith(string,string)                          | [startsWith](https://ramdajs.com/docs/#startsWith)                              |
+| slice              |                    | t.slice(fromIndex(inclusive), toIndex(exclusive), string, string) | [split](https://ramdajs.com/docs/#slice)                           |
 | sum                |                    | t.sum(list)                                          | [sum](https://ramdajs.com/docs/#sum)                                            |
 | tail               |                    | t.tail(list)                                         | [tail](https://ramdajs.com/docs/#tail)                                          |
 | take               |                    | t.take(number, list)                                 | [take](https://ramdajs.com/docs/#take)                                          |
@@ -128,14 +128,19 @@ const channel = task(t => ({
 | trim               |                    | t.trim(string)                                       | [trim](https://ramdajs.com/docs/#trim)                                          |
 | tryCatch           |                    | t.tryCatch(fn, fn)                                   | [tryCatch](https://ramdajs.com/docs/#tryCatch)                                  |
 | type               |                    | t.type(*)                                            | [type](https://ramdajs.com/docs/#type)                                          |
+| update             |                    | t.update(index, value, list)                         | [update](https://ramdajs.com/docs/#update)                                      |
 | uniq               |                    | t.uniq(list)                                         | [uniq](https://ramdajs.com/docs/#uniq)                                          |
 | values             |                    | t.values(object)                                     | [values](https://ramdajs.com/docs/#values)                                      |
 | isType             | :heavy_check_mark: | t.isType(object, string)                             | equals(toLower(rType(subject)), toLower(matcher))                               |
-| when               |                    | t.when(a → Boolean, fn)                              | [when](https://ramdajs.com/docs/#when)                                          |
+| ofType             | :heavy_check_mark: | t.ofType(matcher, subject)                           | [ofType](./src/syncjs#L101)                                                     |
 | notType            | :heavy_check_mark: | t.notType(fn,'Object')                               | (subject, typeKey) => not(isType(subject, typeKey))                             |
+| when               |                    | t.when(a → Boolean, fn)                              | [when](https://ramdajs.com/docs/#when)                                          |
 | isZeroLen          | :heavy_check_mark: | t.isZeroLen(list/string)                             | [isZeroLen](./src/sync.js)                                                      |
 | notZeroLen         | :heavy_check_mark: | t.notZeroLen(])                                      | pipe(isZeroLen, not)                                                            |
+| noLen              | :heavy_check_mark: | t.noLen(list/string)                                 | `isZeroLen`                                                                     |
+| hasLen             | :heavy_check_mark: | t.hasLen(list/string)                                | `notZeroLen`                                                                    |
 | valPipe            | :heavy_check_mark: | t.valPipe                                            | val => (...args) => pipe(...args)(val)                                          |
+| vPipe              | :heavy_check_mark: | t.vPipe                                              | valPipe                                                                         |
 | runMatch           | :heavy_check_mark: | t.runMatch()                                         | [runMatch](./src/sync.js)                                                       |
 | getMatch           | :heavy_check_mark: | t.getMatch(prop.match)(match)                        | [getMatch](./src/sync.js)                                                       |
 | match              | :heavy_check_mark: |                                                      | [match](./src/sync.js)                                                          |

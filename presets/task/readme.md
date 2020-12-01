@@ -17,11 +17,34 @@ yarn add @z1/preset-task
 
 ```JavaScript
 
-import * from '@z1/preset-task'
+import { task } from '@z1/preset-task'
 
 ```
 
 ### Top level functions
+
+```Javascript 
+
+const fn = task((t,a) => { /* t = syncFN , a = asyncFN */ })
+
+const channel = task(t => ({
+  config: channelList => app => {
+    if (t.notType(app.channel, 'Function')) {
+      // If no real-time functionality has been configured
+      // just return
+      return null
+    }
+    if (t.isZeroLen(channelList)) {
+      defaultChannelConfig(app)
+    } else {
+      t.forEach(channel => {
+        channel(app)
+      }, channelList || [])
+    }
+  },
+}))
+
+```
 
 #### Sync
 | fn                 | custom fn          | usage                                                | docs                                                                            |

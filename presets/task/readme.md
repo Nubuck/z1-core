@@ -50,13 +50,13 @@ const channel = task(t => ({
 #### Sync
 | fn                 | custom fn          | usage                                                | docs                                                                            |
 | ------------------ | ------------------ | ---------------------------------------------------- | ------------------------------------------------------------------------------- |
-| at                 |                    | t.at(pathAt, object)                                 | [at](./src/syncjs#L144)                                                         |
+| at                 |                    | t.at(pathAt, object)                                 | [at](./src/sync.js#L144)                                                        |
 | atOr               |                    | t.atOr(fallback, pathAt, object)                     | [atOr](./src/sync.js#L147)                                                      |
 | addIndex           |                    | t.addIndex((value, index) => {}, object)             | [addIndex](https://ramdajs.com/docs/#addIndex)                                  |
-| adjust             |                    | t.adjust(index, R.toUpper, list)                     | [addIndex](https://ramdajs.com/docs/#addIndex)                                  |
+| adjust             |                    | t.adjust(index, R.toUpper, list)                     | [adjust](https://ramdajs.com/docs/#adjust)                                      |
 | and                |                    | t.any([a → Boolean, b → Boolean])                    | [and](https://ramdajs.com/docs/#and)                                            |
-| anyOf              | :heavy_check_mark: | t.anyOf([a → Boolean, b → Boolean, ...])             | [anyOf](./src/sync.js)                                                          |
-| allOf              | :heavy_check_mark: | t.allOf([a → Boolean, b → Boolean, ...])             | [allOf](./src/sync.js)                                                          |
+| anyOf              | :heavy_check_mark: | t.anyOf([a → Boolean, b → Boolean, ...])             | [anyOf](./src/sync.js#L131)                                                     |
+| allOf              | :heavy_check_mark: | t.allOf([a → Boolean, b → Boolean, ...])             | [allOf](./src/sync.js#L137)                                                     |
 | append             |                    | t.append(object, object)                             | [append](https://ramdajs.com/docs/#append)                                      |
 | compose            |                    | t.compose(t.toUpper ,(a => `${a}`)))                 | [compose](https://ramdajs.com/docs/#compose)                                    |
 | concat             |                    | t.concat(object, object)                             | [concat](https://ramdajs.com/docs/#concat)                                      |
@@ -135,15 +135,15 @@ const channel = task(t => ({
 | ofType             | :heavy_check_mark: | t.ofType(matcher, subject)                           | [ofType](./src/syncjs#L101)                                                     |
 | notType            | :heavy_check_mark: | t.notType(fn,'Object')                               | (subject, typeKey) => not(isType(subject, typeKey))                             |
 | when               |                    | t.when(a → Boolean, fn)                              | [when](https://ramdajs.com/docs/#when)                                          |
-| isZeroLen          | :heavy_check_mark: | t.isZeroLen(list/string)                             | [isZeroLen](./src/sync.js)                                                      |
+| isZeroLen          | :heavy_check_mark: | t.isZeroLen(list/string)                             | [isZeroLen](./src/sync.js#L141)                                                 |
 | notZeroLen         | :heavy_check_mark: | t.notZeroLen(])                                      | pipe(isZeroLen, not)                                                            |
 | noLen              | :heavy_check_mark: | t.noLen(list/string)                                 | `isZeroLen`                                                                     |
 | hasLen             | :heavy_check_mark: | t.hasLen(list/string)                                | `notZeroLen`                                                                    |
 | valPipe            | :heavy_check_mark: | t.valPipe                                            | val => (...args) => pipe(...args)(val)                                          |
 | vPipe              | :heavy_check_mark: | t.vPipe                                              | valPipe                                                                         |
-| runMatch           | :heavy_check_mark: | t.runMatch()                                         | [runMatch](./src/sync.js)                                                       |
-| getMatch           | :heavy_check_mark: | t.getMatch(prop.match)(match)                        | [getMatch](./src/sync.js)                                                       |
-| match              | :heavy_check_mark: |                                                      | [match](./src/sync.js)                                                          |
+| runMatch           | :heavy_check_mark: | t.runMatch()                                         | [runMatch](./src/sync.js#L117)                                                  |
+| getMatch           | :heavy_check_mark: | t.getMatch(prop.match)(match)                        | [getMatch](./src/sync.js#L103)                                                  |
+| match              | :heavy_check_mark: |                                                      | [match](./src/sync.js#L116)                                                     |
 | to                 |                    | t.to.fn(string)                                      | [to](https://ramdajs.com/docs/#addIndex)                                        |
 | caseTo             |                    | t.caseTo(string)                                     | Same as above `to` fn                                                           |
 | html               |                    | t.html(string)                                       | [html](https://github.com/zspecza/common-tags#html)                             |
@@ -157,8 +157,8 @@ const channel = task(t => ({
 | commaLists         |                    | t.commaLists(list)                                   | [commaLists](https://github.com/zspecza/common-tags#commaLists)                 |
 | oneLineCommaLists  |                    | t.oneLineCommaLists(list)                            | [oneLineCommaLists](https://github.com/zspecza/common-tags#oneLineCommaLists)   |
 | globrex            |                    | t.globrex(pattern).regex.test(string)                | [globrex](https://github.com/terkelg/globrex)                                   |
-| throttle           |                    | t.throttle(fn, number [options={}])                  | [throttle](https://lodash.com/docs/#throttle)                                        |
-| trampoline         | :heavy_check_mark: | t.trampoline(async function rollup(props){})         | [trampoline](./src/sync.js)                                                     |
+| throttle           |                    | t.throttle(fn, number [options={}])                  | [throttle](https://lodash.com/docs/#throttle)                                   |
+| trampoline         | :heavy_check_mark: | t.trampoline(async function rollup(props){})         | [trampoline](./src/sync.js#L122)                                                |
 
 
 

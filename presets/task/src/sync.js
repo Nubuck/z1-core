@@ -161,6 +161,19 @@ const to = {
   pairs: toPairs,
   string: toString,
 }
+// export const isEven = z((t) => (number) => {
+//   return t.eq(number & 1, 0)
+// })
+
+// export const isOdd = z((t) => (number) => {
+//   return t.eq(number & 1, 1)
+// })
+
+// export const isMultipleOf = z((t) => (number, multipleOf) => {
+//   const divider = number / multipleOf
+//   return t.eq(divider % 1, 0)
+// })
+
 // main
 export const TASK = {
   at,

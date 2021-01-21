@@ -16,10 +16,11 @@ import { auth } from './auth'
 import { channel } from './channel'
 import { lifecycle } from './types'
 // main
-export const api = task(t => (ctx = {}) => {
+export const api = task((t) => (ctx = {}) => {
   const Adapters = adapters(ctx)
   const Auth = auth(ctx)
-  return function({ namespace, boxes, middleware, hooks, channels }) {
+  // TODO: async here
+  return function ({ namespace, boxes, middleware, hooks, channels }) {
     const nextBoxes = t.isType(boxes, 'Object') ? boxes : ctx.combine(boxes)
 
     // Create feathers app with Express engine
@@ -71,31 +72,33 @@ export const api = task(t => (ctx = {}) => {
     const adapterKeys = t.keys(adapterStore)
 
     // register models
-    t.forEach(modelsFactory => {
+    t.forEach((modelsFactory) => {
       if (t.isType(modelsFactory, 'Function')) {
         modelsFactory(api.get('dbTools').models.create)
       }
     }, nextBoxes.models || [])
 
     // register services
-    t.forEach(servicesFactory => {
+    t.forEach((servicesFactory) => {
       if (t.isType(servicesFactory, 'Function')) {
         servicesFactory(api.get('dbTools').services.create)
       }
     }, nextBoxes.services || [])
 
     // adapter beforeSetup - not for api boxes
-    t.forEach(adapterName => {
+    t.forEach((adapterName) => {
       t.pathOr(() => {}, [adapterName, 'beforeSetup'], adapterStore)(nextBoxes)
     }, adapterKeys)
 
+    // TODO: async here
+
     // associate models on setup
     const oldSetup = api.setup
-    api.setup = function(...args) {
+    api.setup = function (...args) {
       const result = oldSetup.apply(this, args)
 
       // adapter onSetup
-      t.forEach(adapterName => {
+      t.forEach((adapterName) => {
         t.pathOr(() => {}, [adapterName, 'onSetup'], adapterStore)(nextBoxes)
       }, adapterKeys)
 
@@ -105,7 +108,7 @@ export const api = task(t => (ctx = {}) => {
       return result
     }
     // adapter afterSetup - not for api boxes
-    t.forEach(adapterName => {
+    t.forEach((adapterName) => {
       t.pathOr(() => {}, [adapterName, 'afterSetup'], adapterStore)(nextBoxes)
     }, adapterKeys)
 

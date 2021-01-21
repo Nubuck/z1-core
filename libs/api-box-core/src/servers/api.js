@@ -5,7 +5,8 @@ import { createServer } from 'http'
 import Fallback from 'express-history-api-fallback'
 
 // main
-export const api = task(t => ctx => {
+export const api = task((t) => (ctx) => {
+  // TODO: async here
   const create = (props = {}, server = undefined) => {
     try {
       // check props for namespace and site
@@ -34,6 +35,7 @@ export const api = task(t => ctx => {
           },
         })
       }
+      // TODO: async here
       const api = ctx.api(props)
       if (t.not(server)) {
         server = createServer(api)

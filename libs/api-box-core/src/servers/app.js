@@ -9,12 +9,14 @@ import Fallback from 'express-history-api-fallback'
 
 // main
 export const app = task((t) => (ctx) => {
+  // TODO: async here
   const create = (props, cb) => {
     // check for namespace and configure props
     // -> create main app and mount api at namespace
     const namespace = t.atOr('api', 'apiPath', props)
     const appFolderName = t.atOr('site', 'siteFolder', props)
     const configure = t.at('configure', props)
+    // TODO: async here
     const api = ctx.api(props)
     const main = FeathersExpress()
     main.use(Cors())

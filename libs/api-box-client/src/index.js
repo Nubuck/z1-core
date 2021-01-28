@@ -12,5 +12,6 @@ const api = task(t => (path, props = {}) =>
     )
   )
 )
+api.storage = localforage
 export const apiClient = api
 export default api

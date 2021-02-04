@@ -10,21 +10,27 @@ export const effects = z.fn((t, a) => (boxName, props) => (fx, box) => {
     fx(
       [box.actions.boot, box.actions.connection],
       async (ctx, dispatch, done) => {
-        const state = ctx.getState()
-        const connected = t.path([boxName, 'connected'], state)
-        if (
-          t.or(
-            t.not(connected),
-            t.and(authenticated(boxName, state), t.eq(connected, true))
-          )
-        ) {
-          const [_, statusResult] = await a.of(
-            ctx.api.service('account-status').get('')
-          )
-          dispatch(box.mutators.info(statusResult))
+        try {
+          const state = ctx.getState()
+          const connected = t.path([boxName, 'connected'], state)
+          if (
+            t.or(
+              t.not(connected),
+              t.and(authenticated(boxName, state), t.eq(connected, true))
+            )
+          ) {
+            const [_, statusResult] = await a.of(
+              ctx.api.service('account-status').get('')
+            )
+            dispatch(box.mutators.info(statusResult))
+            done()
+          } else {
+            dispatch(box.mutators.authenticate())
+            done()
+          }
           done()
-        } else {
-          dispatch(box.mutators.authenticate())
+        } catch (e) {
+          console.error(e)
           done()
         }
       }

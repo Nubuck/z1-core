@@ -130,6 +130,10 @@ export const effects = z.fn((t, a) => (boxName, props) => (fx, box) => {
       }
     }),
     fx(box.actions.logout, async (ctx, dispatch, done) => {
+      dispatch({
+        type: 'body/BOOT_CHANGE',
+        payload: 'waiting',
+      })
       const api = t.at(apiAt, ctx)
       api.logout()
       const [_, statusResult] = await a.of(
@@ -153,6 +157,10 @@ export const effects = z.fn((t, a) => (boxName, props) => (fx, box) => {
           )
         )
       }
+      dispatch({
+        type: 'body/BOOT_CHANGE',
+        payload: 'ready',
+      })
       done()
     }),
     // with views

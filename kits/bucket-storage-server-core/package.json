@@ -22,7 +22,8 @@
     "mime-types": "^2.1.26",
     "multer": "^1.4.2",
     "regenerator-runtime": "^0.13.3",
-    "source-map-support": "0.4.3"
+    "source-map-support": "0.4.3",
+    "friendly-mimes": "^1.0.3"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.0.0",

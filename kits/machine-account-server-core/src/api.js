@@ -200,6 +200,16 @@ export const api = (z, props) => {
                           },
                         })
                       machine.logins = result.data
+                      machine.status = t.noLen(result.data)
+                        ? 'offline'
+                        : t.anyOf(
+                            t.map(
+                              (login) => t.eq('online', login.status),
+                              result.data
+                            )
+                          )
+                        ? 'online'
+                        : 'offline'
                       return machine
                     }
                   },

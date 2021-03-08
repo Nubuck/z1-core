@@ -33,6 +33,15 @@ export const api = (z, props) => {
     }
   })
 
+  const bootAccountVerification = z.featureBox.fn((t, a) => async (app) => {
+    const verification = t.atOr(
+      false,
+      'forceVerification',
+      app.get('authentication')
+    )
+    app.set('verification', verification)
+  })
+
   return z.featureBox.fn((t, a) =>
     z.featureBox.api.create('account', {
       models: props.models,
@@ -78,11 +87,13 @@ export const api = (z, props) => {
                   if (!hook.params.provider) {
                     return hook
                   }
-                  // const user = hook.result
-                  // if (hook.data && hook.data.email && user) {
-                  // communicate(hook.app, user)['resendVerifySignup']()
-                  // return hook
-                  // }
+                  if (t.eq('active', hook.app.get('communication'))) {
+                    const user = hook.result
+                    if (hook.data && hook.data.email && user) {
+                      z.communicate(hook.app, user)['resendVerifySignup']()
+                      return hook
+                    }
+                  }
                   return hook
                 },
                 AuthManagement.hooks.removeVerification(),
@@ -98,9 +109,12 @@ export const api = (z, props) => {
               path: 'auth-management',
               identifyUserProps: ['email'],
               notifier(type, user) {
-                // const actions = communicate(app, user)
-                // return !actions[type] ? null : actions[type]()
-                return null
+                if (t.eq('active', app.get('communication'))) {
+                  const actions = z.communicate(app, user)
+                  return !actions[type] ? null : actions[type]()
+                } else {
+                  return null
+                }
               },
             })
             service.apply(app, app)
@@ -111,6 +125,8 @@ export const api = (z, props) => {
               before: {
                 find: [h.data.safeFindMSSQL],
                 create: [
+                  // this actually works, provide an error if the user is not verified, but obviously this won't work here, so do not uncomment it here, just example of how its being called
+                  // AuthManagement.hooks.isVerified(),
                   h.common.when(
                     isAction(['passwordChange', 'identityChange']),
                     h.auth.authenticate('jwt')
@@ -164,7 +180,19 @@ export const api = (z, props) => {
             }
           },
           {}
-        )
+        ),
+          // public account verification
+          s(
+            'account-verification',
+            (app) => {
+              return {
+                async get(_) {
+                  return app.get('verification')
+                },
+              }
+            },
+            {}
+          )
       },
       lifecycle: {
         [z.featureBox.api.lifecycle.onSetup]: (app) => {
@@ -194,6 +222,14 @@ export const api = (z, props) => {
           bootAccountStatus(app)
             .then(() => {})
             .catch((e) => app.error('failed to update account status', e))
+          bootAccountVerification(app)
+            .then(() => {})
+            .catch((e) =>
+              app.error(
+                'failed to set forceVerification status from the authentication field in the server config',
+                e
+              )
+            )
         },
       },
     })

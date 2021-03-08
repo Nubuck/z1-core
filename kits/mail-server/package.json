@@ -1,0 +1,34 @@
+{
+  "name": "@z1/kit-mail-server",
+  "version": "0.4.41",
+  "main": "dist/index.js",
+  "license": "MIT",
+  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/mail-server",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "prepublish": "yarn run build"
+  },
+  "dependencies": {
+    "feathers-mailer": "^3.0.1",
+    "normalize-url": "^5.3.0",
+    "oy-vey": "^0.11.2"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*"
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.12.13",
+    "@neutrinojs/library": "^9.0.0",
+    "@z1/lib-feature-box-server": "^0.4.46",
+    "neutrino": "^9.0.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "webpack": "^4",
+    "webpack-cli": "^3"
+  },
+  "gitHead": "cc1c8958cfa0184c996d799385e7cf94f0094d94"
+}

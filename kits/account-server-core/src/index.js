@@ -1,6 +1,7 @@
 import { api } from './api'
 import checkPermissions from 'feathers-permissions'
 
+// z contains the core object in the server main
 // main
 export default (z, props) =>
   z.featureBox.create(
@@ -9,7 +10,7 @@ export default (z, props) =>
       return {
         api: [api(z, p)],
         hooks: {
-          checkPermissions
+          checkPermissions,
         },
         parts: {},
       }

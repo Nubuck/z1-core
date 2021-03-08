@@ -17,6 +17,7 @@ export default (z, props = {}) =>
                   table.uuid('_id').primary()
                   table.string('fileId')
                   table.string('mimeType')
+                  table.string('fileType')
                   table.string('originalName')
                   table.string('encoding')
                   table.string('ext')

@@ -4,6 +4,7 @@ import Dauria from 'dauria'
 import Multer from 'multer'
 import mime from 'mime-types'
 import pt from 'path'
+import { resolveMime } from 'friendly-mimes'
 
 // ctx
 import { SERVICES, PATHS } from './context'
@@ -233,6 +234,7 @@ export const api = (z, props) =>
           '_id',
           'fileId',
           'mimeType',
+          'fileType',
           'originalName',
           'encoding',
           'size',
@@ -341,6 +343,7 @@ export const api = (z, props) =>
                         ),
                         meta: t.merge(meta, {
                           mimeType,
+                          fileType: resolveMime(mimeType),
                           ext: t.replace('.', '', ext),
                           originalName,
                           encoding: t.path(PATHS.PARAMS_FILE_ENCODING, ctx),
@@ -356,6 +359,7 @@ export const api = (z, props) =>
                       ctx.data = t.merge(ctx.data, {
                         meta: t.merge(meta, {
                           mimeType: content.MIME,
+                          fileType: resolveMime(content.MIME),
                           ext: t.replace('.', '', ext),
                           originalName,
                           encoding: content.mediaType,

@@ -1,8 +1,8 @@
 import core from '@z1/kit-account-server-core'
 
 // main
-export default (z, props = {}) =>
-  core(
+export default (z, props = {}) => {
+  return core(
     z,
     z.featureBox.fn((t) =>
       t.merge(
@@ -27,6 +27,7 @@ export default (z, props = {}) =>
                   table.date('verifyExpires')
                   table.json('verifyChanges')
                   table.string('resetToken')
+                  table.string('resetShortToken')
                   table.date('resetExpires')
                   table.datetime('createdAt')
                   table.datetime('updatedAt')
@@ -40,3 +41,4 @@ export default (z, props = {}) =>
       )
     )
   )
+}

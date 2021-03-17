@@ -1,6 +1,6 @@
 {
   "name": "example-app-web",
-  "version": "0.4.48",
+  "version": "0.4.52",
   "main": "dist/index.js",
   "license": "MIT",
   "private": true,
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@neutrinojs/copy": "^9.0.0",
     "@neutrinojs/react": "^9.0.0",
-    "@z1/lib-ui-box-tailwind": "^0.4.46",
+    "@z1/lib-ui-box-tailwind": "^0.4.52",
     "autoprefixer": "^9.6.0",
     "neutrino": "^9.0.0",
     "postcss-extend": "^1.0.5",

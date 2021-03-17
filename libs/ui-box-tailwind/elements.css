@@ -24,17 +24,20 @@ textarea {
 }
 
 .scrollbar {
-  scrollbar-color: #718096 #232a35;
+  /* 
+  https://developer.mozilla.org/en-US/docs/Web/CSS/::-webkit-scrollbar
+   */
+  scrollbar-color: #4a5568 #232a35 !important;
   scrollbar-width: auto;
   &::-webkit-scrollbar {
     width: 12px;
     height: 12px;
     background-color: #232a35;
-    border-radius: 6px;
+    border-radius: 0;
   }
   &::-webkit-scrollbar-thumb {
-    background: #718096;
-    border-radius: 6px;
+    background: #4a5568 !important;
+    border-radius: 0;
     &:hover {
       background-color: #a0aec0;
     }
@@ -46,6 +49,9 @@ textarea {
     &::-webkit-scrollbar-thumb {
       border-radius: 0;
     }
+  }
+  &::-webkit-scrollbar-corner {
+    background-color: #232a35;
   }
 }
 
@@ -64,13 +70,13 @@ fieldset {
 .form-group {
   @apply flex flex-col m-0 p-0 border-none w-full;
   &.field {
-    @apply my-3;
+    @apply my-1;
   }
   &.field-object {
     @apply my-0;
   }
   & .control-label {
-    @apply inline-block mb-2;
+    @apply inline-block mb-1;
     & .required {
       @apply text-lg px-1 text-red-500;
     }
@@ -78,7 +84,12 @@ fieldset {
 
   & .form-control {
     @extend .form-input;
-    @apply bg-transparent border border-white;
+    @apply bg-gray-900 border-gray-400 rounded-sm text-sm;
+    &:hover,
+    &:active,
+    &:focus {
+      @apply bg-gray-800 border-blue-500;
+    }
     &:disabled {
       @apply opacity-50 cursor-not-allowed;
     }

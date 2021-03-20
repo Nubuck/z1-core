@@ -1,8 +1,8 @@
-import mx from '@z1/lib-feature-macros'
-const { types } = mx.view
+import z from '@z1/lib-feature-box'
+import { types } from '../types'
 
 //  main
-const mutateEntityList = mx.fn(
+const mutateEntityList = z.fn(
   (t) => (id, event, entity, list = [], prepend = false) =>
     t.runMatch({
       _: () => list,
@@ -18,19 +18,19 @@ const mutateEntityList = mx.fn(
         t.filter((current) => t.not(t.eq(current[id], entity[id])), list),
     })(t.or(t.eq(event, 'updated'), t.eq(event, 'state')) ? 'patched' : event)
 )
-const mutateEntityObj = mx.fn((t) => (event, entity, obj = {}) =>
+const mutateEntityObj = z.fn((t) => (event, entity, obj = {}) =>
   t.runMatch({
     _: () => t.mergeDeepRight(obj, entity),
     removed: () => null,
   })(t.or(t.eq(event, 'updated'), t.eq(event, 'state')) ? 'patched' : event)
 )
-export const mutateEntity = mx.fn(
+export const mutateEntity = z.fn(
   (t) => (id, event, entity, listOrObj, prepend) =>
     t.isType(listOrObj, 'array')
       ? mutateEntityList(id, event, entity, listOrObj, prepend)
       : mutateEntityObj(event, entity, listOrObj)
 )
-export const datax = mx.fn((t) => (props) => {
+export const datax = z.fn((t) => (props) => {
   return {
     status: t.atOr(props.status, 'next.status', props),
     error: t.atOr(null, 'next.error', props),
@@ -59,11 +59,12 @@ export const datax = mx.fn((t) => (props) => {
               const parentPath = t.head(entityList)
               const current = t.at(parentPath, props.data)
               const target = t.last(entityList)
-              return t.merge(props.data, {
+              const result = t.merge(props.data, {
                 [parentPath]: t.merge(current, {
                   [target]: data,
                 }),
               })
+              return result
             }
             if (t.eq(t.at(entity, props.data), data)) {
               return props.data

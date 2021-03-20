@@ -1,8 +1,8 @@
-import mx from '@z1/lib-feature-macros'
-const { types } = mx.view
+import z from '@z1/lib-feature-box'
+import { types } from '../types'
 
 // main
-export const modalx = mx.fn((t) => (opts = { autoClose: true }, props) => {
+export const modalx = z.fn((t) => (opts = { autoClose: true }, props) => {
   return t.runMatch({
     _: () => props.modal,
     [types.event.modalChange]: () => {

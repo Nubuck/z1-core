@@ -1,8 +1,8 @@
-import mx from '@z1/lib-feature-macros'
+import z from '@z1/lib-feature-box'
 
 // main
-export const loadx = mx.fn((t, a) => async (loadList, props) => {
-  const preResult = await a.map(loadList, 1, async load => {
+export const loadx = z.fn((t, a) => async (loadList, props) => {
+  const preResult = await a.map(loadList, 1, async (load) => {
     if (t.and(t.isNil(load.method), t.notNil(load.data))) {
       return {
         error: null,

@@ -1,8 +1,8 @@
-import mx from '@z1/lib-feature-macros'
-const { types } = mx.view
+import z from '@z1/lib-feature-box'
+import { types } from '../types'
 
 // main
-export const transmitx = mx.fn((t, a) => async (transmitList, props) => {
+export const transmitx = z.fn((t, a) => async (transmitList, props) => {
   const active = t.atOr(
     t.atOr('none', 'modal.active', props),
     'next.active',
@@ -18,11 +18,13 @@ export const transmitx = mx.fn((t, a) => async (transmitList, props) => {
   const data = t.notNil(activeTransmit.dataAt)
     ? t.at(activeTransmit.dataAt, props)
     : t.pathOr({}, ['form', activeTransmit.form, 'data'], props)
+
   const method = activeTransmit.method(data)
   if (t.isNil(method)) {
     return null
   }
   const [transmitErr, transmitResult] = await a.of(method)
+
   if (transmitErr) {
     return {
       status: types.status.fail,
@@ -30,6 +32,7 @@ export const transmitx = mx.fn((t, a) => async (transmitList, props) => {
       data,
     }
   }
+
   return {
     status: t.and(
       t.eq(activeTransmit.result, true),

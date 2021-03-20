@@ -1,13 +1,14 @@
-import mx from '@z1/lib-feature-macros'
-const { types } = mx.view
+import z from '@z1/lib-feature-box'
+import { types } from '../types'
 
 // main
-export const initx = mx.fn(t => (data = {}, forms = {}, modal = {}) => ({
+export const initx = z.fn((t) => (data = {}, forms = {}, modal = {}) => ({
   data,
   form: t.mapObjIndexed(
-    form => ({
+    (form) => ({
       entity: form.entity,
       entityAt: form.entityAt,
+      dataAt: form.dataAt,
       data: {},
       ui: form.ui({ event: types.event.init, status: types.status.init }),
     }),

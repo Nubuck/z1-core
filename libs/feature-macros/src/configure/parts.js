@@ -4,7 +4,7 @@ import { fn } from '@z1/lib-feature-box'
 import { types } from '../types'
 
 // main
-export const viewActionParam = fn(t => (actions, action) => {
+export const viewActionParam = fn((t) => (actions, action) => {
   return t.match({
     [actions.routeHome]: 'view',
     [actions.routeView]: 'view',
@@ -14,7 +14,7 @@ export const viewActionParam = fn(t => (actions, action) => {
 })
 
 export const routingFromAction = fn(
-  t => (
+  (t) => (
     action,
     routePaths = {
       pathname: ['meta', 'location', 'current', 'pathname'],
@@ -54,9 +54,9 @@ export const routingFromAction = fn(
   }
 )
 
-export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
+export const findViewKey = fn((t) => (paramType, routing, viewKeys) => {
   const viewByKey = t.find(
-    viewKey => t.eq(viewKey.key, routing.route.key),
+    (viewKey) => t.eq(viewKey.key, routing.route.key),
     viewKeys
   )
   if (t.notNil(viewByKey)) {
@@ -77,7 +77,7 @@ export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
         searchKeys
       )}`
     )
-    const view = t.find(viewKey => t.eq(viewKey.key, routingKey), viewKeys)
+    const view = t.find((viewKey) => t.eq(viewKey.key, routingKey), viewKeys)
     if (t.notNil(view)) {
       return view
     } else {
@@ -86,7 +86,7 @@ export const findViewKey = fn(t => (paramType, routing, viewKeys) => {
   }
 })
 
-export const nextViewState = fn(t => (activeMacro, activeCtx) => {
+export const nextViewState = fn((t) => (activeMacro, activeCtx) => {
   const nextData = activeMacro.data(activeCtx)
   const nextForm = activeMacro.form(
     t.isNil(nextData) ? activeCtx : t.merge(activeCtx, nextData)
@@ -111,7 +111,7 @@ export const nextViewState = fn(t => (activeMacro, activeCtx) => {
 })
 
 export const onRouteEnter = fn(
-  t => (viewMacros, paramType, viewKeys) => (state, action) => {
+  (t) => (viewMacros, paramType, viewKeys) => (state, action) => {
     const routing = routingFromAction(action)
     const viewKey = findViewKey(paramType, routing, viewKeys)
     const activeMacro = viewMacros[viewKey.key]

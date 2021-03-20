@@ -3,7 +3,7 @@ import { fn } from '@z1/lib-feature-box'
 
 // main
 export const render = fn(
-  t => (
+  (t) => (
     Views = null,
     stateProp = {},
     mutations = {},

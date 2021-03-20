@@ -1,22 +1,31 @@
 import { fn } from '@z1/lib-feature-box'
 import { types } from './types'
+import { auto } from './auto'
+
 // main
-export const combine = fn(t => (rawViews = []) => {
+export const combine = fn((t) => (rawViews = []) => {
   const views = t.sort(t.ascend(t.prop('key')), rawViews)
-  const viewKeys = t.map(view => t.pick(['name', 'key', 'param'], view), views)
+  const viewKeys = t.map(
+    (view) => t.pick(['name', 'key', 'param'], view),
+    views
+  )
   const params = t.mapObjIndexed(
-    groupKeys => t.map(groupKey => groupKey.key, groupKeys),
-    t.groupBy(view => view.param, viewKeys)
+    (groupKeys) => t.map((groupKey) => groupKey.key, groupKeys),
+    t.groupBy((view) => view.param, viewKeys)
   )
   return {
     viewKeys,
     params,
     state(ctx = {}) {
       const nextViews = t.mergeAll(
-        t.map(view => {
+        t.map((view) => {
           return {
             [view.key]: view.state(
-              t.mergeAll([ctx, types, { params, viewKeys, key: view.key }])
+              t.mergeAll([
+                types,
+                { params, viewKeys, key: view.key, auto },
+                ctx,
+              ])
             ),
           }
         }, views)
@@ -32,7 +41,7 @@ export const combine = fn(t => (rawViews = []) => {
     },
     ui(ctx = {}) {
       return t.mergeAll(
-        t.map(view => {
+        t.map((view) => {
           return {
             [view.key]: view.ui(t.merge(types, ctx)),
           }

@@ -1,15 +1,14 @@
-import mx from '@z1/lib-feature-macros'
-const { types } = mx.view
+import z from '@z1/lib-feature-box'
 
 // parts
-export const isAction = mx.fn((t) => (current) =>
+export const isAction = z.fn((t) => (current) =>
   t.allOf([t.has('type')(current), t.has('payload')(current)])
 )
 const withEvent = (filter, event) => (item) =>
   isAction(item) ? true : filter(item, event)
 
 // main
-export const subx = mx.fn((t, _, rx) => (subs) => {
+export const subx = z.fn((t, _, rx) => (subs) => {
   const next = t.reduce(
     (collection, sub) => {
       const obs = t.map((event) => {

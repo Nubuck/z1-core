@@ -11,6 +11,7 @@ export const state = z.fn((t, a) => (cx, settings = {}) => {
     'modal',
     settings
   )
+
   return (ctx) => {
     const vx = t.reduce(
       (collection, part) => {
@@ -25,6 +26,7 @@ export const state = z.fn((t, a) => (cx, settings = {}) => {
             after: nextPart('data.after', part, collection),
           },
           load: {
+            before: nextPart('load.before', part, collection),
             auto: nextPart('load.auto', part, collection),
             after: nextPart('load.after', part, collection),
           },
@@ -40,6 +42,7 @@ export const state = z.fn((t, a) => (cx, settings = {}) => {
             ),
             after: nextPart('transmit.after', part, collection),
           },
+          extra: t.merge(collection.extra, t.atOr({}, 'extra', part)),
         }
       },
       {
@@ -52,6 +55,7 @@ export const state = z.fn((t, a) => (cx, settings = {}) => {
           after: [],
         },
         load: {
+          before: [],
           auto: [],
           after: [],
         },
@@ -64,6 +68,7 @@ export const state = z.fn((t, a) => (cx, settings = {}) => {
           match: {},
           after: [],
         },
+        extra: {},
       },
       t.map(
         (part) => part.state(ctx),
@@ -71,12 +76,14 @@ export const state = z.fn((t, a) => (cx, settings = {}) => {
       )
     )
     return {
+      extra: vx.extra,
       initial: ctx.auto.initial(vx.initial.data, vx.forms),
       data(props) {
         const match = t.find(
           (next) => t.notNil(next),
           t.map((cmd) => cmd(props), vx.data.before)
         )
+
         if (t.notNil(match)) {
           return match
         }
@@ -98,6 +105,16 @@ export const state = z.fn((t, a) => (cx, settings = {}) => {
           props.dispatch(props.redirect(props.mutators.routeHome({})))
           return null
         }
+        if (t.hasLen(vx.load.before)) {
+          let preCollection = null
+          await a.map(vx.load.before, 1, async (cmd) => {
+            preCollection = await cmd(props, preCollection)
+            return null
+          })
+          if (t.notNil(preCollection)) {
+            return preCollection
+          }
+        }
         const result = await ctx.auto.load(
           t.flatten(t.map((cmd) => cmd(props), vx.load.auto)),
           props
@@ -113,6 +130,9 @@ export const state = z.fn((t, a) => (cx, settings = {}) => {
         return result
       },
       subscribe(props) {
+        if (t.noLen(vx.subscribe)) {
+          return null
+        }
         return ctx.auto.subscribe(
           t.flatten(t.map((cmd) => cmd(props), vx.subscribe))
         )

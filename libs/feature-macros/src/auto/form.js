@@ -1,8 +1,8 @@
-import mx from '@z1/lib-feature-macros'
-const { types } = mx.view
+import z from '@z1/lib-feature-box'
+import { types } from '../types'
 
 // main
-export const formx = mx.fn((t) => (forms, props) => {
+export const formx = z.fn((t) => (forms, props) => {
   const active = t.match({
     _: t.atOr('none', 'modal.active', props),
     [types.event.modalChange]: t.atOr('none', 'next.active', props),
@@ -40,6 +40,7 @@ export const formx = mx.fn((t) => (forms, props) => {
       const id = t.at('next.id', props)
       const entity = t.at('entity', activeForm)
       const entityAt = t.at('entityAt', activeForm)
+      const dataAt = t.at('dataAt', activeForm)
       if (t.not(open)) {
         return null
       }
@@ -85,11 +86,13 @@ export const formx = mx.fn((t) => (forms, props) => {
             return t.eq(current._id, id)
           }, preData)
       if (t.isNil(data)) {
-        return { [active]: t.merge(activeForm, { ui: form.ui(props) }) }
+        return {
+          [active]: t.merge(activeForm, { ui: form.ui(props), data: {} }),
+        }
       }
       return {
         [active]: t.merge(activeForm, {
-          data,
+          data: t.notNil(dataAt) ? t.at(dataAt, data) : data,
           ui: form.ui(t.merge(props, { next: { active, data } })),
         }),
       }

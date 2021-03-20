@@ -6,6 +6,8 @@ import { render } from './render'
 import { route } from './route'
 import { types } from './types'
 import { routeActions } from './parts'
+import { combo } from './combo'
+import { proRoute } from './proRoute'
 
 // main
 export const routeView = {
@@ -16,4 +18,6 @@ export const routeView = {
   route,
   types,
   routeActions,
+  combo,
+  proRoute,
 }

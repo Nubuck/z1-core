@@ -1,6 +1,6 @@
 {
   "name": "example-app-server",
-  "version": "0.4.55",
+  "version": "0.4.56",
   "description": "Lib check",
   "main": "dist/index.js",
   "author": "@Nubuck",
@@ -16,8 +16,8 @@
     "@z1/kit-bucket-storage-server": "^0.4.49",
     "@z1/kit-bucket-storage-server-nedb": "^0.4.49",
     "@z1/kit-machine-account-node": "^0.4.46",
-    "@z1/kit-machine-account-server": "^0.4.55",
-    "@z1/kit-machine-account-server-nedb": "^0.4.55",
+    "@z1/kit-machine-account-server": "^0.4.56",
+    "@z1/kit-machine-account-server-nedb": "^0.4.56",
     "@z1/lib-feature-box-server": "^0.4.46",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",

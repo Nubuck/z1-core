@@ -236,6 +236,7 @@ export const api = (z, props) => {
             })
           )
           // adapter services
+          const machineHooks = t.atOr({}, 'machineHooks', props)
           s([props.adapter, 'machines'], props.serviceFactory.machines, {
             hooks: {
               before: {
@@ -255,10 +256,18 @@ export const api = (z, props) => {
                 patch: [withQueryParams, h.common.setNow('updatedAt')],
               },
               after: {
-                get: [withLogins],
-                find: [withLogins],
-                get: [withLogins],
-                patch: [withLogins],
+                get: t.flatten([
+                  withLogins,
+                  t.atOr([], 'after.get', machineHooks),
+                ]),
+                find: t.flatten([
+                  withLogins,
+                  t.atOr([], 'after.find', machineHooks),
+                ]),
+                patch: t.flatten([
+                  withLogins,
+                  t.atOr([], 'after.patch', machineHooks),
+                ]),
               },
             },
           })

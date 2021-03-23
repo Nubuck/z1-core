@@ -31,6 +31,7 @@ export default (z, props = {}) =>
                   table.string('distro')
                   table.string('hostSerialnumber')
                   table.string('alias')
+                  table.string('status')
                 })
               }
             })

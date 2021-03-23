@@ -11,7 +11,29 @@ export const api = (z, props) => {
     t.merge(login, { status })
   )
   const patchStatus = z.featureBox.fn((t, a) => async (app, user, status) => {
-    await a.of(app.service('machine-logins').patch(user[dbId], { status }))
+    const [_, login] = await a.of(
+      app.service('machine-logins').patch(user[dbId], { status })
+    )
+    const machineId = t.at('machineId', login || {})
+    if (t.notNil(machineId)) {
+      const [__, machine] = await a.of(app.service('machines').get(machineId))
+      if (t.notNil(machine)) {
+        const logins = t.atOr([], 'logins', machine || {})
+        const status = t.noLen(logins)
+          ? 'offline'
+          : t.anyOf(t.map((login) => t.eq('online', login.status), logins))
+          ? t.anyOf([
+              t.isNil(machine.status),
+              t.includes(machine.status || '__', ['offline', 'init']),
+            ])
+            ? 'online'
+            : machine.status
+          : 'offline'
+        if (t.neq(state, machine.status)) {
+          await a.of(app.service('machines').patch(machineId, { status }))
+        }
+      }
+    }
     return null
   })
   const machineByHashId = z.featureBox.fn((t, a) => async (app, hashId) => {
@@ -200,16 +222,7 @@ export const api = (z, props) => {
                           },
                         })
                       machine.logins = result.data
-                      machine.status = t.noLen(result.data)
-                        ? 'offline'
-                        : t.anyOf(
-                            t.map(
-                              (login) => t.eq('online', login.status),
-                              result.data
-                            )
-                          )
-                        ? 'online'
-                        : 'offline'
+
                       return machine
                     }
                   },
@@ -257,18 +270,9 @@ export const api = (z, props) => {
                 patch: [withQueryParams, h.common.setNow('updatedAt')],
               },
               after: {
-                get: t.flatten([
-                  withLogins,
-                  t.atOr([], 'after.get', mk),
-                ]),
-                find: t.flatten([
-                  withLogins,
-                  t.atOr([], 'after.find', mk),
-                ]),
-                patch: t.flatten([
-                  withLogins,
-                  t.atOr([], 'after.patch', mk),
-                ]),
+                get: t.flatten([withLogins, t.atOr([], 'after.get', mk)]),
+                find: t.flatten([withLogins, t.atOr([], 'after.find', mk)]),
+                patch: t.flatten([withLogins, t.atOr([], 'after.patch', mk)]),
               },
             },
           })

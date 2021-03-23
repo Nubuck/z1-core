@@ -29,7 +29,7 @@ export const api = (z, props) => {
             ? 'online'
             : machine.status
           : 'offline'
-        if (t.neq(state, machine.status)) {
+        if (t.neq(status, machine.status)) {
           await a.of(app.service('machines').patch(machineId, { status }))
         }
       }

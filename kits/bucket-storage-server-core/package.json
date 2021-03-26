@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-bucket-storage-server-core",
-  "version": "0.4.49",
+  "version": "0.4.58",
   "main": "dist/index.js",
   "files": [
     "dist"

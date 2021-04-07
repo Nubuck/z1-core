@@ -1,6 +1,6 @@
 {
   "name": "example-app-desktop",
-  "version": "0.4.46",
+  "version": "0.4.59",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@z1/kit-bucket-storage-node": "^0.4.46",
-    "@z1/kit-machine-account-node": "^0.4.46",
+    "@z1/kit-machine-account-node": "^0.4.59",
     "@z1/lib-api-box-client-node": "^0.4.46",
     "@z1/lib-state-box-node": "^0.4.46",
     "core-js": "^3.6.3",

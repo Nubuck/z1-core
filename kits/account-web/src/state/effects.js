@@ -135,7 +135,7 @@ export const effects = z.fn((t, a) => (boxName, props) => (fx, box) => {
         payload: 'waiting',
       })
       const api = t.at(apiAt, ctx)
-      api.logout()
+      await a.of(api.logout())
       const [_, statusResult] = await a.of(
         ctx.api.service('account-status').get('')
       )

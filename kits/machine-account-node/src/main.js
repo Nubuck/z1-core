@@ -4,7 +4,7 @@ import sysInfo from 'systeminformation'
 import hasha from 'hasha'
 
 // parts
-const hashCtx = fn((t) => async (ctx) => {
+export const hashCtx = fn((t) => async (ctx) => {
   const hashVals = t.values(ctx)
   const hashData = t.replace(
     /\s/g,
@@ -31,14 +31,18 @@ const account = fn((t) => async ({ role, system }) => {
     manufacturer: systemInfo.manufacturer,
     model: systemInfo.model,
   }
-  const machineHashId = await hashCtx(machCtx)
+  // const machineHashId = await hashCtx(machCtx)
+  const machineHashId = machCtx.hardwareuuid
   const userCtx = {
     hardwareuuid: systemInfo.uuid,
     hostname: os.hostname(),
     username: t.to.lowerCase(os.userInfo().username),
     role,
   }
-  const hashId = await hashCtx(userCtx)
+  // const hashId = await hashCtx(userCtx)
+  const hashId = t.to.snakeCase(
+    `${userCtx.hardwareuuid}_${userCtx.role}_${userCtx.hostname}_${userCtx.username}`
+  )
   const login = t.merge(t.omit(['hardwareuuid'], userCtx), {
     machineHashId,
     hashId,

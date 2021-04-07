@@ -26,15 +26,15 @@ export const hashCtx = fn((t) => async (ctx) => {
 const account = fn((t) => async ({ role, system }) => {
   const systemInfo = await sysInfo.system()
   const machCtx = {
-    hardwareuuid: systemInfo.uuid,
+    hardwareuuid: t.to.lowerCase(systemInfo.uuid),
     serialnumber: systemInfo.serial,
     manufacturer: systemInfo.manufacturer,
     model: systemInfo.model,
   }
   // const machineHashId = await hashCtx(machCtx)
-  const machineHashId = machCtx.hardwareuuid
+  const machineHashId = t.to.snakeCase(machCtx.hardwareuuid)
   const userCtx = {
-    hardwareuuid: systemInfo.uuid,
+    hardwareuuid: machCtx.hardwareuuid,
     hostname: os.hostname(),
     username: t.to.lowerCase(os.userInfo().username),
     role,

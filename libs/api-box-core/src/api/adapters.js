@@ -1,7 +1,7 @@
 import { task } from '@z1/preset-task'
 
 // main
-export const adapters = task(t => ctx => {
+export const adapters = task((t) => (ctx) => {
   return {
     configure(app) {
       // setup store
@@ -82,14 +82,14 @@ export const adapters = task(t => ctx => {
                 })
               }
             } else {
-              app.configure(() => {
-                const service = factory(app)
-                const serviceName = ctx.safeServiceName(serviceId)
-                if (t.notNil(service)) {
-                  app.use(`/${serviceName}`, service)
-                }
-                dbTools.services.wire(serviceName, hooksEvents)
-              })
+              // app.configure(() => {
+              const service = factory(app)
+              const serviceName = ctx.safeServiceName(serviceId)
+              if (t.notNil(service)) {
+                app.use(`/${serviceName}`, service)
+              }
+              dbTools.services.wire(serviceName, hooksEvents)
+              // })
             }
             return null
           },
@@ -104,7 +104,7 @@ export const adapters = task(t => ctx => {
                 }
                 if (t.has('events')(hooksEvents)) {
                   if (t.isType(hooksEvents.events, 'Object')) {
-                    t.forEach(eventKey => {
+                    t.forEach((eventKey) => {
                       service.on(eventKey, (data, context) => {
                         t.atOr(
                           () => {},
@@ -122,7 +122,7 @@ export const adapters = task(t => ctx => {
         },
       })
       // load adapters
-      t.forEach(adapterFactory => {
+      t.forEach((adapterFactory) => {
         const adapter = adapterFactory(app)
         app.get('dbTools').set(adapter.name, adapter)
       }, t.atOr([], 'adapters', ctx))

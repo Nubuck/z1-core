@@ -13,6 +13,43 @@ export const withKnexAdapter = Fn((t, a) => (ctx = {}) => {
         const adapter = dbTools.get(adapterName)
         const config = dbTools.dbConfig(adapterName)
         const knexClient = Knex(config)
+        dbTools.set(adapterName, t.merge(adapter, { client: knexClient }))
+        // register services
+        const serviceModelProps = (factoryObj = {}) => {
+          const modelName = t.atOr(null, 'modelName', factoryObj)
+          if (t.isNil(modelName)) {
+            return null
+          }
+          return t.merge(
+            { Model: knexClient, name: modelName, id: '_id' },
+            t.omit(['modelName'], factoryObj)
+          )
+        }
+        t.forEach((serviceName) => {
+          const serviceDef = adapter.services[serviceName]
+          const serviceProps = t.isType(serviceDef.factory, 'function')
+            ? serviceDef.factory(knexClient)
+            : serviceModelProps(serviceDef.factory)
+          const nextServiceName = app
+            .get('serviceTools')
+            .safeServiceName(serviceName)
+          if (t.notNil(serviceProps)) {
+            app.use(
+              `/${nextServiceName}`,
+              FeathersKnex(
+                t.mergeAll([
+                  serviceProps,
+                  {
+                    paginate: t.has('paginate')(serviceProps)
+                      ? serviceProps.paginate
+                      : app.get('paginate'),
+                  },
+                ])
+              )
+            )
+            dbTools.services.wire(nextServiceName, serviceDef.hooksEvents)
+          }
+        }, t.keys(adapter.services || {}))
         // register models
         a.map(t.keys(adapter.models || {}), 1, async (modelName) => {
           const modelFactory = t.at(modelName, adapter.models)
@@ -23,44 +60,6 @@ export const withKnexAdapter = Fn((t, a) => (ctx = {}) => {
           return null
         })
           .then(() => {
-            dbTools.set(adapterName, t.merge(adapter, { client: knexClient }))
-            // register services
-            const serviceModelProps = (factoryObj = {}) => {
-              const modelName = t.atOr(null, 'modelName', factoryObj)
-              if (t.isNil(modelName)) {
-                return null
-              }
-              return t.merge(
-                { Model: knexClient, name: modelName, id: '_id' },
-                t.omit(['modelName'], factoryObj)
-              )
-            }
-            t.forEach((serviceName) => {
-              const serviceDef = adapter.services[serviceName]
-              const serviceProps = t.isType(serviceDef.factory, 'function')
-                ? serviceDef.factory(knexClient)
-                : serviceModelProps(serviceDef.factory)
-              const nextServiceName = app
-                .get('serviceTools')
-                .safeServiceName(serviceName)
-              if (t.notNil(serviceProps)) {
-                app.use(
-                  `/${nextServiceName}`,
-                  FeathersKnex(
-                    t.mergeAll([
-                      serviceProps,
-                      {
-                        paginate: t.has('paginate')(serviceProps)
-                          ? serviceProps.paginate
-                          : app.get('paginate'),
-                      },
-                    ])
-                  )
-                )
-                dbTools.services.wire(nextServiceName, serviceDef.hooksEvents)
-              }
-            }, t.keys(adapter.services || {}))
-
             // sync boxes
             boxes.lifecycle('onSync')(app)
             if (t.notNil(app.setupComplete)) {

@@ -53,13 +53,13 @@ export const withKnexAdapter = Fn((t, a) => (ctx = {}) => {
       },
       onSetup(boxes) {
         const adapter = dbTools.get(adapterName)
-        const config = dbTools.dbConfig(adapterName)
-        const knexClient = Knex(config)
-        dbTools.set(adapterName, t.merge(adapter, { client: knexClient }))
+        // const config = dbTools.dbConfig(adapterName)
+        // const knexClient = Knex(config)
+        // dbTools.set(adapterName, t.merge(adapter, { client: knexClient }))
         // register models
         a.map(t.keys(adapter.models || {}), 1, async (modelName) => {
           const modelFactory = t.at(modelName, adapter.models)
-          const [modelErr] = await a.of(modelFactory(knexClient))
+          const [modelErr] = await a.of(modelFactory(adapter.client))
           if (modelErr) {
             app.error('Knex model setup error', modelErr)
           }

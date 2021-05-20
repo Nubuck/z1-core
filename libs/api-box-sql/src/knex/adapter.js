@@ -9,7 +9,7 @@ export const withKnexAdapter = Fn((t, a) => (ctx = {}) => {
     const dbTools = app.get('dbTools')
     return {
       name: adapterName,
-      onSetup(boxes) {
+      beforeSetup() {
         const adapter = dbTools.get(adapterName)
         const config = dbTools.dbConfig(adapterName)
         const knexClient = Knex(config)
@@ -50,6 +50,12 @@ export const withKnexAdapter = Fn((t, a) => (ctx = {}) => {
             dbTools.services.wire(nextServiceName, serviceDef.hooksEvents)
           }
         }, t.keys(adapter.services || {}))
+      },
+      onSetup(boxes) {
+        const adapter = dbTools.get(adapterName)
+        const config = dbTools.dbConfig(adapterName)
+        const knexClient = Knex(config)
+        dbTools.set(adapterName, t.merge(adapter, { client: knexClient }))
         // register models
         a.map(t.keys(adapter.models || {}), 1, async (modelName) => {
           const modelFactory = t.at(modelName, adapter.models)

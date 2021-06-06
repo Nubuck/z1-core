@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-spa-server",
-  "version": "0.4.46",
+  "version": "0.5.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,8 +15,8 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.4.46",
-    "@z1/preset-tools": "^0.4.46",
+    "@z1/preset-task": "^0.5.0",
+    "@z1/preset-tools": "^0.5.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "core-js": "^3.6.3",

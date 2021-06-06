@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-task",
-  "version": "0.4.46",
+  "version": "0.5.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -19,8 +19,8 @@
     "common-tags": "^1.8.0",
     "core-js": "^3.6.3",
     "dot-case": "^3.0.3",
-    "lodash.throttle": "^4.1.1",
     "lodash.at": "^4.6.0",
+    "lodash.throttle": "^4.1.1",
     "param-case": "^3.0.3",
     "path-case": "^3.0.3",
     "ramda": "^0.26.1",

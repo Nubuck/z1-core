@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-tools",
-  "version": "0.4.46",
+  "version": "0.5.0",
   "main": "dist/index.js",
   "files": [
     "dist"

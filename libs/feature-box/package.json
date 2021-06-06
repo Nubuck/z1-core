@@ -31,8 +31,8 @@
     "redux": "*"
   },
   "devDependencies": {
-    "@neutrinojs/library": "^9.0.0",
-    "neutrino": "^9.0.0",
+    "@neutrinojs/library": "^9.5.0",
+    "neutrino": "^9.5.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-redux": "6.0.1",

@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@hot-loader/react-dom": "^16.8.6",
-    "@neutrinojs/library": "^9.0.0",
+    "@neutrinojs/library": "^9.5.0",
     "@types/react": "^16.9.23",
     "@z1/lib-feature-box": "^0.4.46",
     "eslint": "^6.8.0",

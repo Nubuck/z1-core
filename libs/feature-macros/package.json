@@ -25,9 +25,9 @@
     "react": "*"
   },
   "devDependencies": {
-    "@neutrinojs/library": "^9.0.0",
+    "@neutrinojs/library": "^9.5.0",
     "@z1/lib-feature-box": "^0.4.46",
-    "neutrino": "^9.0.0",
+    "neutrino": "^9.5.0",
     "react": "^16.12.0",
     "webpack": "^4",
     "webpack-cli": "^3"

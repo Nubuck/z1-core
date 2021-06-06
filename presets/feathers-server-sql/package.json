@@ -16,9 +16,9 @@
   },
   "dependencies": {
     "core-js": "^3.6.3",
-    "feathers-knex": "^7.1.0",
+    "feathers-knex": "^7.1.1",
     "feathers-sequelize": "^6.1.0",
-    "knex": "^0.20.4",
+    "knex": "^0.95.6",
     "mysql": "^2.17.1",
     "mysql2": "^2.0.2",
     "pg": "^7.14.0",
@@ -26,12 +26,12 @@
     "regenerator-runtime": "^0.13.3",
     "sequelize": "^5.21.2",
     "source-map-support": "0.4.3",
-    "sqlite3": "^4.1.1",
-    "tedious": "^6.6.2"
+    "sqlite3": "^5.0.2",
+    "tedious": "^11.0.9"
   },
   "devDependencies": {
-    "@neutrinojs/library": "^9.0.0",
-    "neutrino": "^9.0.0",
+    "@neutrinojs/library": "^9.5.0",
+    "neutrino": "^9.5.0",
     "webpack": "^4",
     "webpack-cli": "^3"
   },

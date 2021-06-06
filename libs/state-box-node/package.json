@@ -26,8 +26,8 @@
     "redux": "*"
   },
   "devDependencies": {
-    "@neutrinojs/library": "^9.0.0",
-    "neutrino": "^9.0.0",
+    "@neutrinojs/library": "^9.5.0",
+    "neutrino": "^9.5.0",
     "redux": "^4.0.4",
     "webpack": "^4",
     "webpack-cli": "^3"

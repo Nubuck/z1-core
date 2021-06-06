@@ -20,6 +20,7 @@
     "core-js": "^3.6.3",
     "dot-case": "^3.0.3",
     "lodash.throttle": "^4.1.1",
+    "lodash.at": "^4.6.0",
     "param-case": "^3.0.3",
     "path-case": "^3.0.3",
     "ramda": "^0.26.1",
@@ -29,8 +30,8 @@
     "source-map-support": "0.4.3"
   },
   "devDependencies": {
-    "@neutrinojs/library": "^9.0.0",
-    "neutrino": "^9.0.0",
+    "@neutrinojs/library": "^9.5.0",
+    "neutrino": "^9.5.0",
     "webpack": "^4",
     "webpack-cli": "^3"
   },

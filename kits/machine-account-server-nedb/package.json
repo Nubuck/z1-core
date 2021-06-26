@@ -3,7 +3,7 @@
   "version": "0.5.0",
   "main": "dist/index.js",
   "license": "MIT",
-  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/machine-account-server-nedb",
+  "repository": "https://github.com/Nubuck/z1-core/tree/master/kits/machine-account-server-nedb",
   "publishConfig": {
     "access": "public"
   },

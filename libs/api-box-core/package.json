@@ -5,7 +5,7 @@
   "files": [
     "dist"
   ],
-  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/api-box-core",
+  "repository": "https://github.com/Nubuck/z1-core/tree/master/libs/api-box-core",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

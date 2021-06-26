@@ -6,7 +6,7 @@
     "dist"
   ],
   "license": "MIT",
-  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/spa-server",
+  "repository": "https://github.com/Nubuck/z1-core/tree/master/libs/spa-server",
   "publishConfig": {
     "access": "public"
   },

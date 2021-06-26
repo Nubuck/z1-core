@@ -6,7 +6,7 @@
     "dist"
   ],
   "license": "MIT",
-  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/account-server-core",
+  "repository": "https://github.com/Nubuck/z1-core/tree/master/kits/account-server-core",
   "publishConfig": {
     "access": "public"
   },

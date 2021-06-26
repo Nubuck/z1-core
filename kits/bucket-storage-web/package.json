@@ -6,7 +6,7 @@
     "dist"
   ],
   "license": "MIT",
-  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/kits/bucket-storage-web",
+  "repository": "https://github.com/Nubuck/z1-core/tree/master/kits/bucket-storage-web",
   "publishConfig": {
     "access": "public"
   },

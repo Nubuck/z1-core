@@ -6,7 +6,7 @@
     "dist"
   ],
   "license": "MIT",
-  "repository": "https://github.com/SaucecodeOfficial/zero-one-core/tree/master/presets/feathers-server-sql",
+  "repository": "https://github.com/Nubuck/z1-core/tree/master/presets/feathers-server-sql",
   "publishConfig": {
     "access": "public"
   },

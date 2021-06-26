@@ -633,4 +633,4 @@ interface CssProps = {
 
 ### Converting Tailwind classNames into CssProps
 
-[Z1 Lib UI Box Reverse](https://github.com/SaucecodeOfficial/zero-one-core/tree/master/libs/ui-box-reverse) does the opposite of this lib. It takes a string of Tailwind classNames and returns a CssProps object.
+[Z1 Lib UI Box Reverse](https://github.com/Nubuck/z1-core/tree/master/libs/ui-box-reverse) does the opposite of this lib. It takes a string of Tailwind classNames and returns a CssProps object.

@@ -5,7 +5,6 @@ process.on('unhandledRejection', (reason, p) =>
   console.log('Unhandled Rejection at: Promise ', p, reason)
 )
 
-// TODO: async here
 let app = z.app.create(
   {
     boxes: features.api,

@@ -7,18 +7,23 @@
   },
   "db": {
     "nedb": "nedb",
-    "sequelize": {
-      "database": "z1_example",
-      "username": "example",
-      "password": "example",
-      "host": "localhost",
-      "dialect": "mssql",
-      "forceAlter": true,
-      "dialectOptions": {
-        "port": 51757,
-        "encrypt": true,
-        "requestTimeout": 0
-      }
+    "knex": {
+      "client": "sqlite3",
+      "connection": {
+        "filename": "z1.sqlite"
+      },
+      "useNullAsDefault": true
+    }
+  },
+  "mail": {
+    "transport": "mailgun",
+    "service": "mail"
+  },
+  "mailgun": {
+    "from": "myemail@example.com",
+    "auth": {
+      "api_key": "key-1234123412341234",
+      "domain": "one of your domain names listed at your https://app.mailgun.com/app/sending/domains"
     }
   },
   "storage": {
@@ -26,12 +31,14 @@
     "bucket": "bucket"
   },
   "management": {
-    "path": "/account/manage",
-    "from": "noreply@saucecode.tech",
-    "brand": "Z1 Example"
+    "path": "http://localhost:5000/account/",
+    "from": "noreply@example.com",
+    "brand": "Z1 Example",
+    "status": "open"
   },
   "authentication": {
     "entity": "user",
+    "forceVerification": true,
     "service": "meta-users",
     "secret": "H+4NgJQmbG0j4OCf+U031NCAhH4=",
     "authStrategies": ["jwt", "local", "machine"],
@@ -42,7 +49,7 @@
       "audience": "https://yourdomain.com",
       "issuer": "feathers",
       "algorithm": "HS256",
-      "expiresIn": "1d"
+      "expiresIn": "1w"
     },
     "local": {
       "usernameField": "email",
@@ -53,6 +60,6 @@
     }
   },
   "machine": {
-    "role": "supervisor"
+    "role": "server"
   }
 }

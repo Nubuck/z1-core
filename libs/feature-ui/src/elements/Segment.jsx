@@ -6,7 +6,7 @@ import { HStack, Button, MapIndexed } from '@z1/lib-ui-box-elements'
 const shapes = z.fn((t) =>
   t.match({
     _: false,
-    normal: 'lg',
+    normal: 'sm',
     square: false,
     pill: 'full',
     circle: 'full',
@@ -35,7 +35,11 @@ export const renderSegment = z.fn((t) => (props) => {
             border: 'blue-400',
             content: 'white',
           },
-          off: 'blue-500',
+          off: {
+            bg: 'gray-700',
+            border: 'gray-400',
+            content: 'gray-400',
+          },
         }
       : {
           on: {
@@ -43,7 +47,11 @@ export const renderSegment = z.fn((t) => (props) => {
             border: 'yellow-500',
             content: 'gray-900',
           },
-          off: 'yellow-500',
+          off: {
+            bg: 'gray-700',
+            border: 'gray-400',
+            content: 'gray-400',
+          },
         },
     'colors',
     props
@@ -112,7 +120,12 @@ export const renderSegment = z.fn((t) => (props) => {
             preProps,
             {
               selected: segSelected,
-              next: (b) => b.next({ padding: { x: 1 } }),
+              next: (b) =>
+                b.next({
+                  padding: t.eq(true, t.at('fixHeight', props))
+                    ? { x: 1, top: 0, bottom: 0 }
+                    : { x: 1 },
+                }),
             },
             hasLink
               ? {}
@@ -120,11 +133,13 @@ export const renderSegment = z.fn((t) => (props) => {
               ? {
                   onClick: (e) => {
                     e.preventDefault()
-                    onChange(
-                      segSelected
-                        ? t.filter((v) => t.neq(v, key), selected)
-                        : t.append(key, selected)
-                    )
+                    if (t.neq(true, btn.disabled)) {
+                      onChange(
+                        segSelected
+                          ? t.filter((v) => t.neq(v, key), selected)
+                          : t.append(key, selected)
+                      )
+                    }
                   },
                 }
               : segSelected
@@ -132,13 +147,25 @@ export const renderSegment = z.fn((t) => (props) => {
               : {
                   onClick: (e) => {
                     e.preventDefault()
-                    onChange(key)
+                    if (t.neq(true, btn.disabled)) {
+                      onChange(key)
+                    }
                   },
                 },
-                btn,
+            btn,
             t.and(multi, segSelected) ? { icon: 'check-circle' } : {},
             t.eq('xs', size)
-              ? { label: { text: btn.label, margin: 0 } }
+              ? {
+                  label: {
+                    text: btn.label,
+                    margin: 0,
+                    fontWeight: 'normal',
+                    padding: { left: 1 },
+                  },
+                }
+              : {},
+            t.eq(true, t.at('fixHeight', props))
+              ? { style: { height: '1.9rem' } }
               : {},
           ])
           return <Button key={`segment_${key}`} {...segProps} />

@@ -38,7 +38,7 @@ const selectorProps = {
   fill: 'custom',
   colors: {
     on: { border: 'transparent', content: 'green-500' },
-    off: { border: 'transparent', content: ['white', { hover: 'green-500' }] },
+    off: { border: 'transparent', content: ['gray-400', { hover: 'green-500' }] },
   },
 }
 const renderSelector = z.fn((t) => (props, baseProps = {}) => {

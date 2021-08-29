@@ -13,19 +13,19 @@ export const stateKit = parts =>
             fx(
               [box.actions.routeLanding, 'account/AUTHENTICATE_COMPLETE'],
               (context, dispatch, done) => {
-                const state = context.getState()
-                if (
-                  t.and(
-                    parts.authenticated(state),
-                    t.eq(box.actions.routeLanding, t.at('location.type', state))
-                  )
-                ) {
-                  dispatch(
-                    context.redirect({
-                      type: 'machines/ROUTING/ROUTE_HOME',
-                    })
-                  )
-                }
+                // const state = context.getState()
+                // if (
+                //   t.and(
+                //     parts.authenticated(state),
+                //     t.eq(box.actions.routeLanding, t.at('location.type', state))
+                //   )
+                // ) {
+                //   dispatch(
+                //     context.redirect({
+                //       type: 'machines/ROUTING/ROUTE_HOME',
+                //     })
+                //   )
+                // }
                 done()
               }
             ),

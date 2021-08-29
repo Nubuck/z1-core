@@ -6,8 +6,13 @@ export const api = (z, props) => {
   const isAction = z.featureBox.fn((t) => (actions = []) => (hook) => {
     return t.notNil(t.find((action) => t.eq(action, hook.data.action), actions))
   })
-  const isUser = z.featureBox.fn((t) => (user) =>
-    t.allOf([t.has('name')(user), t.has('surname')(user), t.has('email')(user)])
+  const isUser = z.featureBox.fn(
+    (t) => (user) =>
+      t.allOf([
+        t.has('name')(user),
+        t.has('surname')(user),
+        t.has('email')(user),
+      ])
   )
   const patchStatus = z.featureBox.fn((t, a) => async (app, user, status) => {
     await a.of(app.service('users').patch(user[dbId], { status }))
@@ -61,6 +66,12 @@ export const api = (z, props) => {
                 (ctx) => {
                   if (t.eq('init', ctx.app.get('account-status'))) {
                     ctx.data.role = 'admin'
+                  }
+                  ctx.data.verifyChanges = JSON.stringify(
+                    t.atOr({}, 'data.verifyChanges', ctx)
+                  )
+                  if (t.notNil(ctx.data.verifyExpires)) {
+                    ctx.data.verifyExpires = new Date(ctx.data.verifyExpires)
                   }
                   return ctx
                 },

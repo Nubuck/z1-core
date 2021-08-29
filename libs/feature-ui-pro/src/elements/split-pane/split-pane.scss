@@ -1,0 +1,15 @@
+.split-pane {
+  & div[data-type='Resizer'] {
+    background: #2d3748;
+    opacity: 0 !important;
+    width: 12px !important;
+    margin: 0px -6px !important;
+    &:hover {
+      background: #4299e1;
+      opacity: 1 !important;
+      transition: all 0.3s ease;
+      border-right: 5px solid rgba(0, 0, 0, 0.6) !important;
+      border-left: 5px solid rgba(0, 0, 0, 0.6) !important;
+    }
+  }
+}

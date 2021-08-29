@@ -4,7 +4,7 @@ import { VStack, Match, Spinner, Col } from '@z1/lib-ui-box-elements'
 import { isRenderProp } from './common'
 
 // main
-const renderPage = z.fn(t => props => {
+const renderPage = z.fn((t) => (props) => {
   const loading = t.atOr(false, 'loading', props)
   const centered = t.atOr(false, 'centered', props)
   const shouldCenter = loading ? true : centered
@@ -22,7 +22,7 @@ const renderPage = z.fn(t => props => {
         zIndex: 0,
         minHeight: 'full',
       },
-      next: b => b.next(box).next(next),
+      next: (b) => b.next(box).next(next),
     },
     t.omit(
       ['children', 'render', 'loading', 'centered', 'color', 'box', 'next'],
@@ -39,7 +39,7 @@ const renderPage = z.fn(t => props => {
               x="center"
               y="center"
               flex={1}
-              position="fixed"
+              position={'absolute'}
               pin={{ top: true, left: true, bottom: true, right: true }}
             >
               <Spinner size="lg" color={t.atOr('white', 'color', props)} />

@@ -8,11 +8,23 @@ const renderAlert = z.fn((t) => (props) => {
   const icon = t.at('icon', props)
   const label = t.at('label', props)
   const msg = t.at('message', props)
+  const baseLabel = {
+    fontSize: 'sm',
+    whitespace: 'normal',
+    wordBreak: 'all',
+    width: 'full',
+    display: 'flex',
+    maxWidth: 'full',
+  }
   return renderIconLabel(
     t.mergeDeepRight(
       {
         slots: {
           icon: { alignSelf: 'auto', flex: 'none', padding: { right: 2 } },
+          label: {
+            flex: 1,
+            maxWidth: 'full',
+          },
         },
         icon: t.isType(icon, 'string')
           ? {
@@ -23,30 +35,25 @@ const renderAlert = z.fn((t) => (props) => {
           ? t.merge({ size: '3xl' }, icon)
           : icon,
         label: t.isType(label, 'string')
-          ? {
+          ? t.merge(baseLabel, {
               text: label,
-              fontSize: 'lg',
-              whitespace: 'normal',
-              wordBreak: 'words',
-            }
+            })
           : t.isType(msg, 'string')
-          ? {
+          ? t.merge(baseLabel, {
               text: msg,
-              fontSize: 'lg',
-              whitespace: 'normal',
-              wordBreak: 'words',
-            }
+            })
           : t.notNil(label)
-          ? t.merge(
-              { fontSize: 'lg', whitespace: 'normal', wordBreak: 'words' },
-              label
-            )
+          ? t.merge(baseLabel, label)
           : label,
         borderWidth: 1,
         borderColor: t.at('color', props),
-        padding: { x: 3, y: 4 },
+        padding: { x: 2, y: 3 },
         alignSelf: 'auto',
         borderRadius: 'sm',
+        x: 'center',
+        maxWidth: 'full',
+        display: 'flex',
+        flexWrap: true,
       },
       t.omit(['message', 'icon', 'label'], props)
     )

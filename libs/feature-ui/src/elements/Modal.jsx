@@ -13,6 +13,7 @@ import {
 import { isRenderProp } from './common'
 import { renderIconLabel } from './IconLabel'
 import { Fn } from './Fn'
+import KeyboardEventHandler from 'react-keyboard-event-handler'
 
 // slots
 const renderSlot = z.fn((t) => (Element, baseProps, slot, children) => {
@@ -43,7 +44,7 @@ const modalBase = {
   box: {
     position: 'relative',
     alignSelf: 'auto',
-    bgColor: 'gray-900',
+    bgColor: 'gray-1000',
     borderRadius: 'sm',
     borderWidth: true,
     borderColor: 'gray-700',
@@ -62,6 +63,9 @@ const closeBase = {
   shape: 'circle',
   fill: 'ghost-solid',
   color: 'blue-500',
+  box: {
+    borderRadius: 'sm',
+  },
 }
 const contentBase = {
   key: 'slot-content',
@@ -75,7 +79,7 @@ const contentBase = {
   overflowY: 'auto',
   className: 'scrollbar outline-none',
   style: {
-    maxHeight: '84vh',
+    maxHeight: '85vh',
   },
 }
 const buttonsBase = {
@@ -98,6 +102,7 @@ const renderModal = z.fn((t) => (props) => {
   const loading = t.atOr(false, 'loading', props)
   // layout:
   const slots = t.atOr({}, 'slots', props)
+  const loadingSlot = t.atOr({}, 'loading', slots)
   const overlaySlot = t.at('overlay', slots)
   const contentSlot = t.at('content', slots)
   const titleSlot = t.at('title', slots)
@@ -160,6 +165,7 @@ const renderModal = z.fn((t) => (props) => {
                   y="center"
                   flex={1}
                   style={{ minHeight: '60vh' }}
+                  {...loadingSlot}
                 >
                   <Spinner size="lg" color={t.atOr('white', 'color', props)} />
                 </Col>
@@ -197,9 +203,15 @@ const renderModal = z.fn((t) => (props) => {
       )
 })
 
-export class Modal extends React.Component {
-  render() {
-    return renderModal(this.props)
-  }
-}
-Modal.displayName = 'Modal'
+export const Modal = z.fn((t) => (props) => {
+  const onClose = t.atOr(() => {}, 'onClose', props)
+  return (
+    <React.Fragment>
+      <KeyboardEventHandler
+        handleKeys={['esc']}
+        onKeyEvent={(key, e) => onClose()}
+      />
+      {renderModal(props)}
+    </React.Fragment>
+  )
+})

@@ -8,15 +8,21 @@ export const SearchInput = z.fn((t) => (props) => {
   const onSearch = t.atOr(() => {}, 'onSearch', props)
   const onReset = t.atOr(() => {}, 'onReset', props)
   const box = t.atOr({}, 'box', props)
-  const nextProps = t.omit(['matcher', 'onSearch', 'onReset', 'box'], props)
+  const nextProps = t.omit(
+    ['matcher', 'onSearch', 'onReset', 'box', 'placeholder'],
+    props
+  )
+  const hasMatcher = t.hasLen(matcher)
+  const color = hasMatcher ? 'blue-500' : 'gray-400'
+  const placeholder = t.atOr('search...', 'placeholder', props)
   return (
     <HStack
       key="search-box"
       y="center"
       box={{
         borderWidth: 2,
-        borderColor: 'blue-500',
-        color: 'blue-500',
+        borderColor: color,
+        color,
         padding: { x: 3, y: 1 },
         borderRadius: 'full',
       }}
@@ -30,7 +36,7 @@ export const SearchInput = z.fn((t) => (props) => {
         as="input"
         tabIndex="0"
         type="text"
-        placeholder="search..."
+        placeholder={placeholder}
         fontSize="sm"
         box={{
           display: 'flex',
@@ -47,12 +53,11 @@ export const SearchInput = z.fn((t) => (props) => {
         }}
       />
       <When
-        is={t.hasLen(matcher)}
+        is={hasMatcher}
         render={() => (
           <Icon
             name="close"
             size="xl"
-            margin={{ left: 2 }}
             color={[null, { hover: 'white' }]}
             cursor="pointer"
             onClick={(e) => {

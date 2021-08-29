@@ -1,5 +1,3 @@
-import './index.css'
-
 // elements
 import { Alert } from './Alert'
 import { Fn } from './Fn'

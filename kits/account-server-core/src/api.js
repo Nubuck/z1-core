@@ -51,6 +51,7 @@ export const api = (z, props) => {
     z.featureBox.api.create('account', {
       models: props.models,
       services(s, h) {
+        const userKeys = ['verifyChanges']
         s([props.adapter, 'users'], props.serviceFactory, {
           hooks: {
             before: {
@@ -80,6 +81,7 @@ export const api = (z, props) => {
               update: [
                 h.common.disallow('external'),
                 h.common.setNow('updatedAt'),
+                h.data.withSafeStringify(userKeys),
               ],
               patch: [
                 h.common.when(
@@ -88,12 +90,16 @@ export const api = (z, props) => {
                   h.auth.authenticate('jwt')
                 ),
                 h.common.setNow('updatedAt'),
+                h.data.withSafeStringify(userKeys),
               ],
               remove: [h.auth.authenticate('jwt')],
             },
             after: {
               all: [h.auth.protect('password')],
+              get: [h.data.withSafeParse(userKeys)],
+              find: [h.data.withSafeParse(userKeys)],
               create: [
+                h.data.withSafeParse(userKeys),
                 (hook) => {
                   if (!hook.params.provider) {
                     return hook
@@ -109,6 +115,8 @@ export const api = (z, props) => {
                 },
                 AuthManagement.hooks.removeVerification(),
               ],
+              patch: [h.data.withSafeParse(userKeys)],
+              update: [h.data.withSafeParse(userKeys)],
             },
           },
         })

@@ -1,4 +1,4 @@
-import core from '@z1/kit-account-server-core'
+import core from '@roboteur/kit-account-server-core'
 
 // main
 export default (z, props = {}) => {
@@ -25,7 +25,7 @@ export default (z, props = {}) => {
                   table.string('verifyToken')
                   table.string('verifyShortToken')
                   table.date('verifyExpires')
-                  table.json('verifyChanges')
+                  table.text('verifyChanges', 'longtext')
                   table.string('resetToken')
                   table.string('resetShortToken')
                   table.date('resetExpires')

@@ -63,6 +63,13 @@ export const api = (z, props) => {
                   h.data.withIdUUIDV4
                 ),
                 h.auth.hashPassword('password'),
+                (hook) => {
+                  const email = t.at('data.email', hook)
+                  if (t.notNil(email)) {
+                    hook.data.email = t.to.lowerCase(email)
+                  }
+                  return hook
+                },
                 AuthManagement.hooks.addVerification('auth-management'),
                 (ctx) => {
                   if (t.eq('init', ctx.app.get('account-status'))) {
@@ -82,6 +89,13 @@ export const api = (z, props) => {
                 h.common.disallow('external'),
                 h.common.setNow('updatedAt'),
                 h.data.withSafeStringify(userKeys),
+                (hook) => {
+                  const email = t.at('data.email', hook)
+                  if (t.notNil(email)) {
+                    hook.data.email = t.to.lowerCase(email)
+                  }
+                  return hook
+                },
               ],
               patch: [
                 h.common.when(
@@ -91,6 +105,13 @@ export const api = (z, props) => {
                 ),
                 h.common.setNow('updatedAt'),
                 h.data.withSafeStringify(userKeys),
+                (hook) => {
+                  const email = t.at('data.email', hook)
+                  if (t.notNil(email)) {
+                    hook.data.email = t.to.lowerCase(email)
+                  }
+                  return hook
+                },
               ],
               remove: [h.auth.authenticate('jwt')],
             },

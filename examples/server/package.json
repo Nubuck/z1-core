@@ -1,6 +1,6 @@
 {
   "name": "example-app-server",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "Lib check",
   "main": "dist/index.js",
   "author": "@Nubuck",
@@ -11,8 +11,8 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
-    "@z1/kit-account-server": "^0.5.2",
-    "@z1/kit-account-server-nedb": "^0.5.2",
+    "@z1/kit-account-server": "^0.5.3",
+    "@z1/kit-account-server-nedb": "^0.5.3",
     "@z1/kit-bucket-storage-server": "^0.5.0",
     "@z1/kit-bucket-storage-server-nedb": "^0.5.0",
     "@z1/kit-machine-account-node": "^0.5.1",

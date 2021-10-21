@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-client-node",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,8 +15,8 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-feathers-client-node": "^0.5.0",
-    "@z1/preset-task": "^0.5.0",
+    "@z1/preset-feathers-client-node": "^0.5.1",
+    "@z1/preset-task": "^0.5.1",
     "core-js": "^3.6.3",
     "node-persist": "^3.0.5",
     "regenerator-runtime": "^0.13.3",

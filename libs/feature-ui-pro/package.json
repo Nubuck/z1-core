@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-feature-ui-pro",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -21,8 +21,8 @@
     "source-map-support": "0.4.3"
   },
   "peerDependencies": {
-    "@z1/lib-feature-ui": "*",
     "@z1/lib-feature-box": "*",
+    "@z1/lib-feature-ui": "*",
     "@z1/lib-ui-box-elements": "*",
     "react": "*",
     "react-base-table": "*",
@@ -37,10 +37,10 @@
   "devDependencies": {
     "@hot-loader/react-dom": "^16.14.0",
     "@neutrinojs/react-components": "^9.2.0",
-    "@z1/lib-feature-ui": "^0.5.0",
     "@types/react": "^16.9.23",
-    "@z1/lib-feature-box": "^0.5.0",
-    "@z1/lib-ui-box-elements": "^0.5.0",
+    "@z1/lib-feature-box": "^0.5.1",
+    "@z1/lib-feature-ui": "^0.5.1",
+    "@z1/lib-ui-box-elements": "^0.5.1",
     "autoprefixer": "^9.6.0",
     "dayjs": "^1.8.30",
     "eslint": "^6.8.0",

@@ -20,7 +20,7 @@ export const common = task((t) => {
       return []
     }
     try {
-      return JSON.parse(val)
+      return JSON.parse(JSON.stringify(val))
     } catch (e) {
       return val
     }

@@ -20,7 +20,7 @@ export const common = task((t) => {
       return []
     }
     try {
-      return JSON.parse(JSON.stringify(val))
+      return JSON.parse(val.replace(/\n/g, '\\n'))
     } catch (e) {
       return val
     }

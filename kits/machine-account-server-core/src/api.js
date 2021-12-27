@@ -4,11 +4,11 @@ import { strategy } from './strategy'
 // main
 export const api = (z, props) => {
   const dbId = '_id'
-  const isLogin = z.featureBox.fn((t) => (user) =>
-    t.allOf([t.has('login')(user), t.has('machine')(user)])
+  const isLogin = z.featureBox.fn(
+    (t) => (user) => t.allOf([t.has('login')(user), t.has('machine')(user)])
   )
-  const withStatus = z.featureBox.fn((t) => (login, status) =>
-    t.merge(login, { status })
+  const withStatus = z.featureBox.fn(
+    (t) => (login, status) => t.merge(login, { status })
   )
   const patchStatus = z.featureBox.fn((t, a) => async (app, user, status) => {
     const [_, login] = await a.of(
@@ -504,10 +504,25 @@ export const api = (z, props) => {
           },
           [z.featureBox.api.lifecycle.onStop]: (app) => {
             app.debug('server stopping, going offline...')
+            const destroy = () => {
+              const db = app.get('knex')
+              if (t.notNil(db)) {
+                const client = t.at('client', db)
+                if (t.notNil(client)) {
+                  client.destroy()
+                }
+              }
+            }
             app
               .get('changeMachineStatus')(app.get('machineAccount'), 'offline')
-              .then(() => app.debug('machine status offline'))
-              .catch((e) => app.error('machine status failed', e))
+              .then(() => {
+                app.debug('machine status offline')
+                destroy()
+              })
+              .catch((e) => {
+                app.error('machine status failed', e)
+                destroy()
+              })
           },
         },
       },

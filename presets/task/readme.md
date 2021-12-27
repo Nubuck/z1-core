@@ -118,12 +118,12 @@ const channel = task(t => ({
 | reverse            |                    | t.reverse(list/string)                               | [reverse](https://ramdajs.com/docs/#reverse)                                    |
 | split              |                    | t.split(toSplitOn, string)                           | [split](https://ramdajs.com/docs/#split)                                        |
 | startsWith         |                    | t.startsWith(string,string)                          | [startsWith](https://ramdajs.com/docs/#startsWith)                              |
-| slice              |                    | t.slice(fromIndex(inclusive), toIndex(exclusive), string, string) | [split](https://ramdajs.com/docs/#slice)                           |
+| slice              |                    | t.slice(fromIndex(inclusive), toIndex(exclusive), string, string) | [split](https://ramdajs.com/docs/#slice)                          |
 | sum                |                    | t.sum(list)                                          | [sum](https://ramdajs.com/docs/#sum)                                            |
 | tail               |                    | t.tail(list)                                         | [tail](https://ramdajs.com/docs/#tail)                                          |
 | take               |                    | t.take(number, list)                                 | [take](https://ramdajs.com/docs/#take)                                          |
 | takeLast           |                    | t.takeLast(number, list)                             | [takeLast](https://ramdajs.com/docs/#takeLast)                                  |
-| toPairs            |                    | t.toPairs(object)                                    | [toPairs])(https://ramdajs.com/docs/#toPairs)                                   |
+| toPairs            |                    | t.toPairs(object)                                    | [toPairs](https://ramdajs.com/docs/#toPairs)                                   |
 | toString           |                    | t.toString(number/object/list)                       | [toString](https://ramdajs.com/docs/#toString)                                  |
 | trim               |                    | t.trim(string)                                       | [trim](https://ramdajs.com/docs/#trim)                                          |
 | tryCatch           |                    | t.tryCatch(fn, fn)                                   | [tryCatch](https://ramdajs.com/docs/#tryCatch)                                  |

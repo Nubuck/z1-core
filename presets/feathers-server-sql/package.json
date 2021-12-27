@@ -23,7 +23,6 @@
     "mysql2": "^2.3.3",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "pg-native": "^3.0.0",
     "regenerator-runtime": "^0.13.3",
     "sequelize": "^5.21.2",
     "source-map-support": "0.4.3",

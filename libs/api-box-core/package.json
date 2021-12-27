@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-core",
-  "version": "0.5.6",
+  "version": "0.5.7",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@z1/preset-feathers-server-core": "^0.5.1",
-    "@z1/preset-task": "^0.5.1",
+    "@z1/preset-task": "^0.5.7",
     "@z1/preset-tools": "^0.5.1",
     "core-js": "^3.6.3",
     "express-history-api-fallback": "^2.2.1",

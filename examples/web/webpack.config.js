@@ -6,8 +6,7 @@ const aliasConfig = {
   resolve: {
     ...config.resolve,
     alias: {
-      ...config.resolve.alias,
-      'react-dom': '@hot-loader/react-dom',
+      ...config.resolve.alias
     },
   },
 }

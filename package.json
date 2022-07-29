@@ -19,10 +19,15 @@
     "boot:presets": "lerna bootstrap --force-local --scope=@z1/preset-*",
     "boot:libs": "lerna bootstrap --force-local --scope=@z1/lib-*",
     "boot:kits": "lerna bootstrap --force-local --scope=@z1/kit-*",
-    "boot:examples": "lerna bootstrap --force-local --scope=example-app-*",
-    "publish": "lerna publish"
+    "boot:examples": "lerna bootstrap --force-local --scope=@z1/example-app-*",
+    "publish": "lerna publish",
+    "examples": "nx run-many --target=start --all",
+    "build": "nx run-many --target=build --all --nx-bail"
   },
   "dependencies": {
     "lerna": "3.19.0"
+  },
+  "devDependencies": {
+    "nx": "14.4.3"
   }
 }

@@ -1,13 +1,13 @@
 {
-  "name": "example-app-desktop",
+  "name": "@z1/example-app-desktop",
   "version": "0.5.7",
   "license": "MIT",
   "private": true,
   "scripts": {
     "start": "electron-webpack dev",
     "compile": "electron-webpack",
-    "dist": "yarn compile && electron-builder",
-    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+    "build": "yarn compile && electron-builder",
+    "build:dir": "yarn build --dir -c.compression=store -c.mac.identity=null"
   },
   "electronWebpack": {
     "renderer": null

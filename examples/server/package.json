@@ -1,5 +1,5 @@
 {
-  "name": "example-app-server",
+  "name": "@z1/example-app-server",
   "version": "0.5.7",
   "description": "Lib check",
   "main": "dist/index.js",

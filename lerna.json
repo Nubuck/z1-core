@@ -2,9 +2,7 @@
   "version": "0.5.7",
   "packages": [
     "examples/**",
-    "kits/**",
-    "libs/**",
-    "presets/**"
+    "pkgs/**"
   ],
   "hoist": false,
   "useWorkspaces": false,

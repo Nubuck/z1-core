@@ -1,5 +1,5 @@
 {
-  "name": "example-app-web",
+  "name": "@z1/example-app-web",
   "version": "0.5.7",
   "main": "dist/index.js",
   "license": "MIT",

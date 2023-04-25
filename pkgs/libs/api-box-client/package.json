@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-client",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,7 +15,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-api-box-client-core": "^0.5.7",
+    "@z1/lib-api-box-client-core": "^0.5.8",
     "core-js": "^3.6.3",
     "localforage": "^1.7.3",
     "regenerator-runtime": "^0.13.3",

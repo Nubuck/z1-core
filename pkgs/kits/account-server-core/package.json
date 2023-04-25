@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-server-core",
-  "version": "0.5.4",
+  "version": "0.5.8",
   "main": "dist/index.js",
   "files": [
     "dist"

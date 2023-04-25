@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-feature-box-server-core",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,8 +15,8 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-task": "^0.5.7",
-    "@z1/preset-tools": "^0.5.1",
+    "@z1/preset-task": "^0.5.8",
+    "@z1/preset-tools": "^0.5.8",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3"

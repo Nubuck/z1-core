@@ -25,8 +25,13 @@ export const hashCtx = fn((t) => async (ctx) => {
 // main
 const account = fn((t) => async ({ role, system }) => {
   const systemInfo = await sysInfo.system()
+  let hardwareuuid = systemInfo.uuid
+  if (t.noLen(hardwareuuid || '')){
+    const uuid = await sysInfo.uuid()
+    hardwareuuid = `${uuid.os}${t.replace(':', '-', uuid.macs || '')}`
+  }
   const machCtx = {
-    hardwareuuid: t.to.lowerCase(systemInfo.uuid),
+    hardwareuuid: t.to.lowerCase(hardwareuuid),
     serialnumber: systemInfo.serial,
     manufacturer: systemInfo.manufacturer,
     model: systemInfo.model,

@@ -26,14 +26,20 @@ export const hashCtx = fn((t) => async (ctx) => {
 const account = fn((t) => async ({ role, system }) => {
   const systemInfo = await sysInfo.system()
   let hardwareuuid = systemInfo.uuid
-  if (t.noLen(hardwareuuid || '')) {
+  if (t.noLen(hardwareuuid || '') || hardwareuuid == '-') {
     const uuid = await sysInfo.uuid()
     const macs = uuid.macs || []
-    hardwareuuid = `${uuid.os}${
-      t.ofType('array', macs)
-        ? t.replace(' ', '', t.tags.oneLineInlineLists`${macs}`)
-        : macs
-    }`
+    hardwareuuid = t.replace(
+      /:/g,
+      '',
+      `${uuid.os}${
+        t.ofType('array', macs)
+          ? t.hasLen(macs)
+            ? t.replace(/ /g, '', t.head(macs))
+            : ''
+          : `${macs}`
+      }`
+    )
   }
   const machCtx = {
     hardwareuuid: t.to.lowerCase(hardwareuuid),

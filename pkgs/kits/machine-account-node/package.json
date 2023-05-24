@@ -17,7 +17,7 @@
     "hasha": "^5.1.0",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3",
-    "systeminformation": "^4.19.1"
+    "systeminformation": "5.12.9"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.5.0",

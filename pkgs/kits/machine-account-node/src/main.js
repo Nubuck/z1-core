@@ -32,7 +32,7 @@ const account = fn((t) => async ({ role, system }) => {
     hardwareuuid = t.replace(
       /:/g,
       '',
-      `${uuid.os}${
+      `${uuid.os}__${
         t.ofType('array', macs)
           ? t.hasLen(macs)
             ? t.replace(/ /g, '', t.head(macs))

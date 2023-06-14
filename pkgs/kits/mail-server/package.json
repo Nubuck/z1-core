@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-mail-server",
-  "version": "0.5.19",
+  "version": "0.5.20",
   "main": "dist/index.js",
   "license": "MIT",
   "repository": "https://github.com/Nubuck/z1-core/tree/master/kits/mail-server",
@@ -23,7 +23,7 @@
   "devDependencies": {
     "@babel/preset-react": "^7.12.13",
     "@neutrinojs/library": "^9.5.0",
-    "@z1/lib-feature-box-server": "^0.5.19",
+    "@z1/lib-feature-box-server": "^0.5.20",
     "neutrino": "^9.5.0",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",

@@ -35,18 +35,12 @@ export const api = task((t) => (ctx = {}) => {
           new Winston.transports.File({
             filename: 'error.log',
             level: 'error',
-            format: Winston.format.combine(
-              Winston.format.splat(),
-              Winston.format.simple()
-            ),
+            format:  Winston.format.simple()
           }),
           new Winston.transports.File({
             filename: 'combined.log',
             level: 'debug',
-            format: Winston.format.combine(
-              Winston.format.splat(),
-              Winston.format.simple()
-            ),
+            format:  Winston.format.simple()
           }),
         ]
       : []
@@ -60,10 +54,7 @@ export const api = task((t) => (ctx = {}) => {
       transports: t.flatten([
         new Winston.transports.Console({
           level: 'debug',
-          format: Winston.format.combine(
-            Winston.format.splat(),
-            Winston.format.simple()
-          ),
+          format:  Winston.format.simple()
         }),
         transports,
       ]),

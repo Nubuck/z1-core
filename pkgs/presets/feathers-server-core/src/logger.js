@@ -14,7 +14,7 @@ export const Logger = (logger) => {
 
         log(...args) {
           if (this._logger && typeof this._logger.log === 'function') {
-            return this._logger.log.apply(this._logger, ['notice', ...args])
+            return this._logger.log.apply(this._logger, ['info', ...args])
           }
 
           return console.log('LOG: ', ...args)

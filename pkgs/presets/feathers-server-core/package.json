@@ -34,7 +34,7 @@
     "socket.io": "^2.3.0",
     "source-map-support": "0.4.3",
     "uberproto": "^2.0.4",
-    "winston": "^3.2.1"
+    "winston": "^3.9.0"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.5.0",

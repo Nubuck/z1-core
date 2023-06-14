@@ -35,12 +35,18 @@ export const api = task((t) => (ctx = {}) => {
           new Winston.transports.File({
             filename: 'error.log',
             level: 'error',
-            format: Winston.format.json(),
+            format: Winston.format.combine(
+              Winston.format.splat(),
+              Winston.format.simple()
+            ),
           }),
           new Winston.transports.File({
             filename: 'combined.log',
             level: 'debug',
-            format: Winston.format.json(),
+            format: Winston.format.combine(
+              Winston.format.splat(),
+              Winston.format.simple()
+            ),
           }),
         ]
       : []
@@ -52,7 +58,6 @@ export const api = task((t) => (ctx = {}) => {
       //   Winston.format.simple()
       // ),
       transports: t.flatten([
-        transports,
         new Winston.transports.Console({
           level: 'debug',
           format: Winston.format.combine(
@@ -60,9 +65,10 @@ export const api = task((t) => (ctx = {}) => {
             Winston.format.simple()
           ),
         }),
+        transports,
       ]),
     })
-    api.configure(FeathersLogger())
+    api.configure(FeathersLogger(logger))
 
     // Enable Cors, security, compression, favicon and body parsing
     if (t.not(namespace)) {

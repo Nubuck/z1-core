@@ -21,24 +21,24 @@ export const Logger = (logger) => {
         },
 
         info(...args) {
-          if (this._logger && typeof this._logger.info === 'function') {
-            return this._logger.info.apply(this._logger, ['info', ...args])
+          if (this._logger && typeof this._logger.log === 'function') {
+            return this._logger.log.apply(this._logger, ['info', ...args])
           }
 
           return console.info('INFO: ', ...args)
         },
 
         warn(...args) {
-          if (this._logger && typeof this._logger.warn === 'function') {
-            return this._logger.warn.apply(this._logger, ['warn', ...args])
+          if (this._logger && typeof this._logger.log === 'function') {
+            return this._logger.log.apply(this._logger, ['warn', ...args])
           }
 
           return console.warn('WARNING: ', ...args)
         },
 
         error(...args) {
-          if (this._logger && typeof this._logger.error === 'function') {
-            return this._logger.error.apply(this._logger, ['error', ...args])
+          if (this._logger && typeof this._logger.log === 'function') {
+            return this._logger.log.apply(this._logger, ['error', ...args])
           }
           return console.error('ERROR: ', ...args)
         },

@@ -1,7 +1,7 @@
 const Proto = require('uberproto')
 
-export const Logger = logger => {
-  return app => {
+export const Logger = (logger) => {
+  return (app) => {
     if (typeof logger === 'function') {
       app.use(logger)
     } else if (typeof logger !== 'undefined') {
@@ -14,7 +14,7 @@ export const Logger = logger => {
 
         log(...args) {
           if (this._logger && typeof this._logger.log === 'function') {
-            return this._logger.log.apply(this._logger, args)
+            return this._logger.log.apply(this._logger, ['notice', ...args])
           }
 
           return console.log('LOG: ', ...args)
@@ -22,7 +22,7 @@ export const Logger = logger => {
 
         info(...args) {
           if (this._logger && typeof this._logger.info === 'function') {
-            return this._logger.info.apply(this._logger, args)
+            return this._logger.info.apply(this._logger, ['info', ...args])
           }
 
           return console.info('INFO: ', ...args)
@@ -30,7 +30,7 @@ export const Logger = logger => {
 
         warn(...args) {
           if (this._logger && typeof this._logger.warn === 'function') {
-            return this._logger.warn.apply(this._logger, args)
+            return this._logger.warn.apply(this._logger, ['warn', ...args])
           }
 
           return console.warn('WARNING: ', ...args)
@@ -38,7 +38,7 @@ export const Logger = logger => {
 
         error(...args) {
           if (this._logger && typeof this._logger.error === 'function') {
-            return this._logger.error.apply(this._logger, args)
+            return this._logger.error.apply(this._logger, ['error', ...args])
           }
           return console.error('ERROR: ', ...args)
         },

@@ -44,8 +44,8 @@ export const Logger = (logger) => {
         },
 
         debug(...args) {
-          if (this._logger && typeof this._logger.debug === 'function') {
-            return this._logger.debug.apply(this._logger, ['debug', ...args])
+          if (this._logger && typeof this._logger.log === 'function') {
+            return this._logger.log.apply(this._logger, ['debug', ...args])
           }
 
           return console.error('DEBUG: ', ...args)

@@ -29,7 +29,7 @@ export const api = task((t) => (ctx = {}) => {
     // Load app FeathersConfig
     api.configure(FeathersConfig())
 
-    const logConfig = app.get('logging')
+    const logConfig = api.get('logging')
     const transports = t.eq(true, t.atOr(false, 'file', logConfig || {}))
       ? [
           new Winston.transports.File({

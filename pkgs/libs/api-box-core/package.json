@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-core",
-  "version": "0.5.17",
+  "version": "0.5.18",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,7 +15,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/preset-feathers-server-core": "^0.5.8",
+    "@z1/preset-feathers-server-core": "^0.5.18",
     "@z1/preset-task": "^0.5.8",
     "@z1/preset-tools": "^0.5.8",
     "core-js": "^3.6.3",

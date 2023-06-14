@@ -35,18 +35,32 @@ export const api = task((t) => (ctx = {}) => {
           new Winston.transports.File({
             filename: 'error.log',
             level: 'error',
+            format: Winston.format.json(),
           }),
-          new Winston.transports.File({ filename: 'combined.log' }),
+          new Winston.transports.File({
+            filename: 'combined.log',
+            level: 'debug',
+            format: Winston.format.json(),
+          }),
         ]
       : []
 
     const logger = Winston.createLogger({
-      level: t.eq(process.env.NODE_ENV, 'development') ? 'debug' : 'info',
-      format: Winston.format.combine(
-        Winston.format.splat(),
-        Winston.format.simple()
-      ),
-      transports: t.flatten([new Winston.transports.Console(), transports]),
+      // level: t.eq(process.env.NODE_ENV, 'development') ? 'debug' : 'info',
+      // format: Winston.format.combine(
+      //   Winston.format.splat(),
+      //   Winston.format.simple()
+      // ),
+      transports: t.flatten([
+        transports,
+        new Winston.transports.Console({
+          level: 'debug',
+          format: Winston.format.combine(
+            Winston.format.splat(),
+            Winston.format.simple()
+          ),
+        }),
+      ]),
     })
     api.configure(FeathersLogger())
 

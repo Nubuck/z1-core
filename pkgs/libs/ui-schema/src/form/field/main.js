@@ -19,7 +19,9 @@ export const field = fn(
     const ui = t.atOr({}, 'ui', props)
     const required = t.atOr(false, 'required', props)
     // next
-    const fieldKey = t.to.camelCase(name)
+    // NOTE: Make fieldKey camelCase if issues occur of not being camelCase
+    // const fieldKey = t.to.camelCase(name)
+    const fieldKey = name
     const baseType = t.atOr('string', 'type', props)
     const fieldType = t.eq(baseType, 'array')
       ? isFixedItemList(children, additional)

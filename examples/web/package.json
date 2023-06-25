@@ -1,6 +1,6 @@
 {
   "name": "@z1/example-app-web",
-  "version": "0.5.23",
+  "version": "0.5.24",
   "main": "dist/index.js",
   "license": "MIT",
   "private": true,
@@ -17,7 +17,7 @@
     "@z1/lib-feature-ui": "^0.5.8",
     "@z1/lib-feature-ui-pro": "^0.5.8",
     "@z1/lib-ui-box-elements": "^0.5.8",
-    "@z1/lib-ui-schema": "^0.5.23",
+    "@z1/lib-ui-schema": "^0.5.24",
     "core-js": "^3.6.3",
     "dayjs": "^1.8.30",
     "pluralize": "^8.0.0",

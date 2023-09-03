@@ -324,6 +324,14 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
               )
             )
             done()
+          },
+          {
+            cancelType: actions.routeExit,
+            warnTimeout: 0,
+            // TODO: make this configurable
+            // latest: true,
+            // throttle: 100,
+            // debounce: 100,
           }
         ),
         // routes exit

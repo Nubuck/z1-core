@@ -326,7 +326,7 @@ export const configure = z.fn((t, a) => (boxName, props = {}) => {
             done()
           },
           {
-            cancelType: actions.routeExit,
+            cancelType: t.globrex(`[!${boxName}]*/ROUTING/*`).regex,
             warnTimeout: 0,
             // TODO: make this configurable
             // latest: true,

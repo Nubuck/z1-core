@@ -47,16 +47,37 @@ export const api = (z, props) => {
     app.set('verification', verification)
   })
 
-  return z.featureBox.fn((t, a) =>
-    z.featureBox.api.create('account', {
+  return z.featureBox.fn((t, a) => {
+    const hooks = {
+      before: {
+        get: t.atOr([], 'hooks.before.get', props),
+        find: t.atOr([], 'hooks.before.find', props),
+        create: t.atOr([], 'hooks.before.create', props),
+        patch: t.atOr([], 'hooks.before.patch', props),
+        remove: t.atOr([], 'hooks.before.remove', props),
+      },
+      after: {
+        all: t.atOr([], 'hooks.after.all', props),
+        get: t.atOr([], 'hooks.after.get', props),
+        find: t.atOr([], 'hooks.after.find', props),
+        create: t.atOr([], 'hooks.after.create', props),
+        patch: t.atOr([], 'hooks.after.patch', props),
+        remove: t.atOr([], 'hooks.after.remove', props),
+      },
+    }
+    return z.featureBox.api.create('account', {
       models: props.models,
       services(s, h) {
         const userKeys = ['verifyChanges']
         s([props.adapter, 'users'], props.serviceFactory, {
           hooks: {
             before: {
-              find: [h.auth.authenticate('jwt'), h.data.safeFindMSSQL],
-              get: [h.auth.authenticate('jwt')],
+              find: [
+                h.auth.authenticate('jwt'),
+                h.data.safeFindMSSQL,
+                ...hooks.before.find,
+              ],
+              get: [h.auth.authenticate('jwt'), ...hooks.before.get],
               create: [
                 h.common.when(
                   t.neq('nedb', props.adapter),
@@ -84,6 +105,7 @@ export const api = (z, props) => {
                   return ctx
                 },
                 h.common.setNow('createdAt', 'updatedAt'),
+                ...hooks.before.create,
               ],
               update: [
                 h.common.disallow('external'),
@@ -112,13 +134,14 @@ export const api = (z, props) => {
                   }
                   return hook
                 },
+                ...hooks.before.patch,
               ],
-              remove: [h.auth.authenticate('jwt')],
+              remove: [h.auth.authenticate('jwt'), ...hooks.before.remove],
             },
             after: {
-              all: [h.auth.protect('password')],
-              get: [h.data.withSafeParse(userKeys)],
-              find: [h.data.withSafeParse(userKeys)],
+              all: [h.auth.protect('password'), ...hooks.after.all],
+              get: [h.data.withSafeParse(userKeys), ...hooks.after.get],
+              find: [h.data.withSafeParse(userKeys), ...hooks.after.find],
               create: [
                 h.data.withSafeParse(userKeys),
                 (hook) => {
@@ -135,9 +158,10 @@ export const api = (z, props) => {
                   return hook
                 },
                 AuthManagement.hooks.removeVerification(),
+                ...hooks.after.create,
               ],
-              patch: [h.data.withSafeParse(userKeys)],
-              update: [h.data.withSafeParse(userKeys)],
+              patch: [h.data.withSafeParse(userKeys), ...hooks.after.patch],
+              update: [h.data.withSafeParse(userKeys), ...hooks.after.remove],
             },
           },
         })
@@ -273,5 +297,5 @@ export const api = (z, props) => {
         },
       },
     })
-  )
+  })
 }

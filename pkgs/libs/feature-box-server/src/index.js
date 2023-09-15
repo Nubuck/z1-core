@@ -10,7 +10,7 @@ export const apiBox = Fn(t =>
 export const featureBox = Fn(t =>
   t.mergeAll([
     core,
-    { api: t.pick(['create', 'combine', 'configure', 'lifecycle'], apiBox) },
+    { api: t.pick(['create', 'combine', 'configure', 'lifecycle', 'hooks'], apiBox) },
     t.pick(['server', 'app'], apiBox),
   ])
 )

@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-feature-box-server",
-  "version": "0.5.28",
+  "version": "0.5.29",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,9 +15,9 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-api-box-core": "^0.5.28",
-    "@z1/lib-api-box-nedb": "^0.5.28",
-    "@z1/lib-api-box-sql": "^0.5.28",
+    "@z1/lib-api-box-core": "^0.5.29",
+    "@z1/lib-api-box-nedb": "^0.5.29",
+    "@z1/lib-api-box-sql": "^0.5.29",
     "@z1/lib-feature-box-server-core": "^0.5.8",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",

@@ -43,6 +43,6 @@ export const apiBoxCore = Fn(t => (ctx = {}) => {
       configure: Api,
     },
     Servers,
-    { lifecycle },
+    { lifecycle, common },
   ])
 })

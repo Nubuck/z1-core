@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-core",
-  "version": "0.5.22",
+  "version": "0.5.28",
   "main": "dist/index.js",
   "files": [
     "dist"

@@ -50,19 +50,19 @@ export const api = (z, props) => {
   return z.featureBox.fn((t, a) => {
     const hooks = {
       before: {
-        get: t.atOr([], 'hooks.before.get', props),
-        find: t.atOr([], 'hooks.before.find', props),
-        create: t.atOr([], 'hooks.before.create', props),
-        patch: t.atOr([], 'hooks.before.patch', props),
-        remove: t.atOr([], 'hooks.before.remove', props),
+        get: t.atOr([], 'userHooks.before.get', props),
+        find: t.atOr([], 'userHooks.before.find', props),
+        create: t.atOr([], 'userHooks.before.create', props),
+        patch: t.atOr([], 'userHooks.before.patch', props),
+        remove: t.atOr([], 'userHooks.before.remove', props),
       },
       after: {
-        all: t.atOr([], 'hooks.after.all', props),
-        get: t.atOr([], 'hooks.after.get', props),
-        find: t.atOr([], 'hooks.after.find', props),
-        create: t.atOr([], 'hooks.after.create', props),
-        patch: t.atOr([], 'hooks.after.patch', props),
-        remove: t.atOr([], 'hooks.after.remove', props),
+        all: t.atOr([], 'userHooks.after.all', props),
+        get: t.atOr([], 'userHooks.after.get', props),
+        find: t.atOr([], 'userHooks.after.find', props),
+        create: t.atOr([], 'userHooks.after.create', props),
+        patch: t.atOr([], 'userHooks.after.patch', props),
+        // remove: t.atOr([], 'userHooks.after.remove', props),
       },
     }
     return z.featureBox.api.create('account', {
@@ -161,7 +161,7 @@ export const api = (z, props) => {
                 ...hooks.after.create,
               ],
               patch: [h.data.withSafeParse(userKeys), ...hooks.after.patch],
-              update: [h.data.withSafeParse(userKeys), ...hooks.after.remove],
+              update: [h.data.withSafeParse(userKeys)],
             },
           },
         })

@@ -8,7 +8,7 @@ export function toBlob(dataURI) {
   // Get mime-type from params
   const type = params[0].replace('data:', '')
   // Filter the name property from params
-  const properties = params.filter(param => {
+  const properties = params.filter((param) => {
     return param.split('=')[0] === 'name'
   })
   // Look for the name and use unknown if no name property.
@@ -33,8 +33,8 @@ export function toBlob(dataURI) {
   return { blob, name }
 }
 
-export const withRest = z.fn(t => api => {
-  api.on('login', payload => {
+export const withRest = z.fn((t) => (api) => {
+  api.on('login', (payload) => {
     api.set('accessToken', payload.accessToken)
   })
   api.on('logout', () => {
@@ -46,9 +46,10 @@ export const withRest = z.fn(t => api => {
   }/api`
   api.rest = ky.create({
     prefixUrl,
+    timeout: 30000,
     hooks: {
       beforeRequest: [
-        request => {
+        (request) => {
           request.headers.set(
             'Authorization',
             `Bearer ${api.get('accessToken')}`
@@ -57,7 +58,7 @@ export const withRest = z.fn(t => api => {
       ],
     },
   })
-  api.upload = async payload => {
+  api.upload = async (payload) => {
     const body = new FormData()
     const uri = t.at('uri', payload)
     const fileBlob = t.isType(uri, 'string') ? toBlob(uri) : uri

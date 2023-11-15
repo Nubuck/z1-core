@@ -70,6 +70,7 @@ import tryCatch from 'ramda/es/tryCatch'
 import rType from 'ramda/es/type'
 import update from 'ramda/es/update'
 import uniq from 'ramda/es/uniq'
+import uniqBy from 'ramda/es/uniqBy'
 import values from 'ramda/es/values'
 import when from 'ramda/es/when'
 // case
@@ -258,6 +259,7 @@ export const TASK = {
   type: rType,
   update,
   uniq,
+  uniqBy,
   values,
   isType,
   ofType,

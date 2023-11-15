@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-ui-box-elements",
-  "version": "0.5.8",
+  "version": "0.5.30",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,7 +15,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-ui-box": "^0.5.8",
+    "@z1/lib-ui-box": "^0.5.30",
     "core-js": "^3.6.3",
     "regenerator-runtime": "^0.13.3",
     "source-map-support": "0.4.3"

@@ -47,11 +47,11 @@ export const Layout = z.fn((t, a) => (ctx) => {
               style={{ backgroundColor: 'rgb(16, 19, 26)' }}
             >
               {/* We don't care to run validation on this img tag, so leave as is. */}
-              <img
+              {/* <img
                 src="https://spacepencil.co.uk/static/media/banner10.bf6b1165.png"
                 height="150px"
                 style={{ display: 'block' }}
-              />
+              /> */}
             </ctx.TD>
           </ctx.TR>
         </ctx.TBody>

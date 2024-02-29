@@ -22,14 +22,14 @@ export const header = z.fn((t, a) => (ctx) => {
                 <ctx.TBody key="email-header-logo">
                   <ctx.TR>
                     <ctx.TD align="center" style={style}>
-                      <img
+                      {/* <img
                         height="120"
                         style={{
                           display: 'block',
                           maxHeight: '120px',
                         }}
                         src="https://spacepencil.co.uk/static/media/Roboteur-v2-white.9ec99d89.png"
-                      />
+                      /> */}
                     </ctx.TD>
                   </ctx.TR>
                 </ctx.TBody>

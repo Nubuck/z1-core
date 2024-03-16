@@ -1,6 +1,6 @@
 {
   "name": "@z1/example-app-web",
-  "version": "0.5.30",
+  "version": "0.5.33",
   "main": "dist/index.js",
   "license": "MIT",
   "private": true,
@@ -9,7 +9,7 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
-    "@z1/kit-account-web": "^0.5.30",
+    "@z1/kit-account-web": "^0.5.33",
     "@z1/kit-bucket-storage-web": "^0.5.30",
     "@z1/lib-api-box-client": "^0.5.30",
     "@z1/lib-feature-box": "^0.5.30",

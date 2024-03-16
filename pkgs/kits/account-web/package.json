@@ -1,6 +1,6 @@
 {
   "name": "@z1/kit-account-web",
-  "version": "0.5.30",
+  "version": "0.5.33",
   "main": "dist/index.js",
   "files": [
     "dist"

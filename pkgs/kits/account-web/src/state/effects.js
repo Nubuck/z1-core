@@ -19,8 +19,9 @@ export const effects = z.fn((t, a) => (boxName, props) => (fx, box) => {
               t.and(authenticated(boxName, state), t.eq(connected, true))
             )
           ) {
+            const api = t.at(apiAt, ctx)
             const [_, statusResult] = await a.of(
-              ctx.api.service('account-status').get('')
+              api.service('account-status').get('')
             )
             dispatch(box.mutators.info(statusResult))
             done()
@@ -42,7 +43,7 @@ export const effects = z.fn((t, a) => (boxName, props) => (fx, box) => {
           api.authentication.reAuthenticate()
         )
         const [_, statusResult] = await a.of(
-          ctx.api.service('account-status').get('')
+          api.service('account-status').get('')
         )
         dispatch(box.mutators.info(statusResult))
         if (authError) {
@@ -136,8 +137,10 @@ export const effects = z.fn((t, a) => (boxName, props) => (fx, box) => {
       })
       const api = t.at(apiAt, ctx)
       await a.of(api.logout())
+      await a.of(api.get('storage').storage.clear())
+
       const [_, statusResult] = await a.of(
-        ctx.api.service('account-status').get('')
+        api.service('account-status').get('')
       )
       dispatch(box.mutators.info(statusResult))
       const state = ctx.getState()

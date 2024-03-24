@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-sql",
-  "version": "0.5.32",
+  "version": "0.5.34",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,7 +15,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-api-box-core": "^0.5.32",
+    "@z1/lib-api-box-core": "^0.5.34",
     "@z1/preset-feathers-server-sql": "^0.5.14",
     "@z1/preset-task": "^0.5.30",
     "core-js": "^3.6.3",

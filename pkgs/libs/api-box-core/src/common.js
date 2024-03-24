@@ -61,13 +61,27 @@ export const common = task((t) => {
       data: {
         withIdUUIDV4(hook) {
           if (t.and(t.eq(hook.type, 'before'), t.eq(hook.method, 'create'))) {
-            hook.data[hook.service.id] = uuidv4()
+            if (t.ofType('array', hook.data)) {
+              hook.data = t.map((rec) => {
+                rec[hook.service.id] = uuidv4()
+                return rec
+              })(hook.data)
+            } else {
+              hook.data[hook.service.id] = uuidv4()
+            }
           }
           return hook
         },
         withUUIDV4: (field) => (hook) => {
           if (t.and(t.eq(hook.type, 'before'), t.eq(hook.method, 'create'))) {
-            hook.data[field] = uuidv4()
+            if (t.ofType('array', hook.data)) {
+              hook.data = t.map((rec) => {
+                rec[field] = uuidv4()
+                return rec
+              })(hook.data)
+            } else {
+              hook.data[field] = uuidv4()
+            }
           }
           return hook
         },

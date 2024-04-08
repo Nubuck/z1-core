@@ -6,5 +6,8 @@
   ],
   "hoist": false,
   "useWorkspaces": false,
-  "npmClient": "yarn"
+  "npmClient": "yarn",
+  "npmClientArgs": [
+    "--ignore-engines"
+  ]
 }

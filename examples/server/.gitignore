@@ -1,4 +1,5 @@
 nedb
 bucket
 z1.sqlite
+z1.sqlite-journal
 config/default.json

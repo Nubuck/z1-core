@@ -1,6 +1,6 @@
 {
   "name": "@z1/preset-feathers-server-sql",
-  "version": "0.5.14",
+  "version": "0.5.35",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,11 +15,11 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
+    "better-sqlite3": "^9.4.3",
     "core-js": "^3.6.3",
     "feathers-knex": "^8.0.1",
     "feathers-sequelize": "^6.1.0",
     "knex": "^2.4.2",
-    "better-sqlite3":"^9.4.3",
     "mysql2": "^3.3.3",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",

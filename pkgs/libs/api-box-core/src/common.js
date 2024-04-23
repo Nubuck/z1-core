@@ -5,7 +5,7 @@ import {
   FeathersCommonHooks,
   FeathersAuthHooks,
 } from '@z1/preset-feathers-server-core'
-import uuidv4 from 'uuid/v4'
+import { uuidv4, validate } from 'uuid'
 
 // main
 export const common = task((t) => {
@@ -31,6 +31,14 @@ export const common = task((t) => {
     }
     return t.ofType('string', val) ? val : '{}'
   }
+  const idOrUuid = (idKey, data) => {
+    const idVal = data[idKey]
+    if (t.notNil(idVal) && idVal !== '' && validate(idVal || '______')) {
+      return idVal
+    }
+    return uuidv4()
+  }
+
   return {
     hookSignature(def) {
       return t.anyOf([
@@ -63,11 +71,11 @@ export const common = task((t) => {
           if (t.and(t.eq(hook.type, 'before'), t.eq(hook.method, 'create'))) {
             if (t.ofType('array', hook.data)) {
               hook.data = t.map((rec) => {
-                rec[hook.service.id] = uuidv4()
+                rec[hook.service.id] = idOrUuid(hook.service.id, rec)
                 return rec
               })(hook.data)
             } else {
-              hook.data[hook.service.id] = uuidv4()
+              hook.data[hook.service.id] = idOrUuid(hook.service.id, hook.data)
             }
           }
           return hook

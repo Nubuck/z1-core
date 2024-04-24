@@ -5,7 +5,7 @@ import {
   FeathersCommonHooks,
   FeathersAuthHooks,
 } from '@z1/preset-feathers-server-core'
-import { uuidv4, validate } from 'uuid'
+import { v4, validate } from 'uuid'
 
 // main
 export const common = task((t) => {
@@ -36,7 +36,7 @@ export const common = task((t) => {
     if (t.notNil(idVal) && idVal !== '' && validate(idVal || '______')) {
       return idVal
     }
-    return uuidv4()
+    return v4()
   }
 
   return {

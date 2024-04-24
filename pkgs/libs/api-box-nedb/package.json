@@ -1,6 +1,6 @@
 {
   "name": "@z1/lib-api-box-nedb",
-  "version": "0.5.36",
+  "version": "0.5.37",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,7 +15,7 @@
     "prepublish": "yarn run build"
   },
   "dependencies": {
-    "@z1/lib-api-box-core": "^0.5.36",
+    "@z1/lib-api-box-core": "^0.5.37",
     "@z1/preset-feathers-server-nedb": "^0.5.8",
     "@z1/preset-task": "^0.5.30",
     "core-js": "^3.6.3",

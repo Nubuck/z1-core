@@ -23,7 +23,7 @@
     "regenerator-runtime": "^0.13.3",
     "rxjs": "^6.5.3",
     "source-map-support": "0.4.3",
-    "uuid": "^3.2.1"
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@neutrinojs/library": "^9.5.0",

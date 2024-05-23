@@ -8,42 +8,60 @@
       - /src
         - /features
         - /parts
-        - main
+        - main.(js | ts)
 
 
 ```
 
-## server
+## server features
 ```
 /[feature name]
   - /parts
     - /[part name]
-      - models
-      - services
-      - lifecycle
-  - main
+      - models.(js | ts)
+      - services.(js | ts)
+      - lifecycle.(js | ts)
+  - main.(js | ts)
 
 ```
 
-## web
+## web features
 ```
 /[feature name]
   - /parts
-    - universal
-    - state
-    - ui
+    - /universal
+    - /state
+    - /ui
   - /views
     - /[view name]
       - /state
-        - data
-        - form
-        - load
-        - modal
-        - transmit
-        - sub
+        - data.(js | ts)
+        - form.(js | ts)
+        - load.(js | ts)
+        - modal.(js | ts)
+        - transmit.(js | ts)
+        - subcribe.(js | ts)
       - /ui
-        - [component name]
-        - layout
-      - main
-  - main
+        - [component name].(jsx | tsx)
+        - layout.(jsx | tsx)
+      - main.(js | ts)
+  - main.(js | ts)
+```
+
+## web complex view
+```
+/[view name]
+  - /parts
+    - [part name]
+      - /state
+        - data.(js | ts)
+        - form.(js | ts)
+        - load.(js | ts)
+        - modal.(js | ts)
+        - transmit.(js | ts)
+        - subcribe.(js | ts)
+      - /ui
+        - [component name].(jsx | tsx)
+        - layout.(jsx | tsx)
+  - main.(js | ts)
 ```

@@ -288,6 +288,7 @@ export const api = (z, props) =>
           },
         })
         // bucket
+        const maxSize = t.atOr(250 * 1024 * 1024, 'maxSize', props)
         s(
           SERVICES.STORAGE,
           (app) => {
@@ -303,8 +304,8 @@ export const api = (z, props) =>
                   `/${SERVICES.STORAGE}`,
                   Multer({
                     limits: {
-                      fileSize: 25 * 1024 * 1024,
-                      fieldSize: 25 * 1024 * 1024,
+                      fileSize: maxSize,
+                      fieldSize: maxSize,
                     },
                   }).single('uri'),
                   function (req, res, next) {

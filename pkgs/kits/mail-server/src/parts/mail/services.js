@@ -48,33 +48,30 @@ export const services = z.fn((t, a) => ({ hooks }) => {
                   t.omit(['_id'], hook.result),
                 ])
 
+                const pl = t.pick(
+                  [
+                    'transport',
+                    'from',
+                    'to',
+                    'subject',
+                    'messageTime',
+                    'messageSize',
+                    'messageId',
+                    'response',
+                    'accepted',
+                    'rejected',
+                    'pending',
+                  ],
+                  deliveryPayload
+                )
+
                 const [reportError] = await a.of(
-                  hook.app
-                    .service('mail-delivery')
-                    .create(
-                      t.pick(
-                        [
-                          'transport',
-                          'from',
-                          'to',
-                          'subject',
-                          'messageTime',
-                          'messageSize',
-                          'messageId',
-                          'message',
-                          'response',
-                          'accepted',
-                          'rejected',
-                          'pending',
-                          'error',
-                        ],
-                        deliveryPayload
-                      )
-                    )
+                  hook.app.service('mail-delivery').create(pl)
                 )
 
                 if (reportError) {
                   hook.app.error('MAIL DELIVERY ERROR', reportError)
+                  hook.app.error('PAYLOAD DUMP', pl)
                 }
                 return hook
               },

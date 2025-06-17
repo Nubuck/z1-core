@@ -49,7 +49,9 @@ export const services = z.fn((t, a) => ({ hooks }) => {
                 ])
 
                 const [reportError] = await a.of(
-                  hook.app.service('mail-delivery').create(deliveryPayload)
+                  hook.app
+                    .service('mail-delivery')
+                    .create(t.omit(['message'], deliveryPayload))
                 )
 
                 if (reportError) {

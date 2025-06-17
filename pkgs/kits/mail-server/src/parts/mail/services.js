@@ -71,7 +71,7 @@ export const services = z.fn((t, a) => ({ hooks }) => {
 
                 if (reportError) {
                   hook.app.error('MAIL DELIVERY ERROR', reportError)
-                  hook.app.error('PAYLOAD DUMP', pl)
+                  hook.app.error('MAIL DELIVERY PAYLOAD DUMP', pl)
                 }
                 return hook
               },
